@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<handler-chains xmlns="http://java.sun.com/xml/ns/javaee">
+	<handler-chain>
+		<handler>
+			<handler-name>DefaultLogicalInHandler</handler-name>
+			<handler-class>es.mercadona.fwk.ws.handlers.DefaultLogicalInHandler</handler-class>
+		</handler>				
+        <handler>
+            <!-- Este handler debe ser el último en la cadena! -->
+            <handler-name>DefaultSoapInHandler</handler-name>
+            <handler-class>es.mercadona.fwk.ws.handlers.DefaultSoapInHandler</handler-class>
+        </handler>
+	</handler-chain>
+</handler-chains>

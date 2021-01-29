@@ -1,0 +1,17 @@
+# Extensions #
+
+*.class
+*.project
+*.classpath
+
+# Folders #
+
+target/
+bin/
+.settings/
+.vscode/
+
+# Package Files #
+
+*.jar
+hs_err_pid*

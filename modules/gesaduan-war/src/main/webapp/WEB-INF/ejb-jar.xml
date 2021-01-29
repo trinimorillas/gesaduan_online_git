@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ejb-jar xmlns="http://java.sun.com/xml/ns/javaee" version="3.1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+http://java.sun.com/xml/ns/javaee/ejb-jar_3_1.xsd">
+	<!-- Activate interceptor for EJBs -->
+	<interceptors>
+		<interceptor>
+			<interceptor-class>es.mercadona.fwk.core.logger.LoggerInterceptor</interceptor-class>
+		</interceptor>
+        <interceptor>
+            <interceptor-class>es.mercadona.fwk.core.services.BusinessOperationInterceptor</interceptor-class>
+        </interceptor>		
+	</interceptors>
+	<assembly-descriptor>
+	    <interceptor-binding>
+            <ejb-name>*BO</ejb-name>
+            <interceptor-class>es.mercadona.fwk.core.services.BusinessOperationInterceptor</interceptor-class>
+        </interceptor-binding>      
+		<interceptor-binding>
+			<ejb-name>*</ejb-name>
+			<interceptor-class>es.mercadona.fwk.core.logger.LoggerInterceptor</interceptor-class>
+		</interceptor-binding>
+	</assembly-descriptor>
+</ejb-jar>

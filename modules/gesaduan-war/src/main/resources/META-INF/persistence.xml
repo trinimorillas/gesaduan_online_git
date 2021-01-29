@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+                       http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+
+	<persistence-unit name="gesaduan-model" transaction-type="JTA">
+		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+		<jta-data-source>jdbc/ejb/gesaduan_adm_gesaduan</jta-data-source>
+		<!-- <class>JPA CLASSES</class> -->
+		<exclude-unlisted-classes>false</exclude-unlisted-classes>
+		<properties>
+			
+			<!-- Propiedades para EclipseLink -->			
+			<property name="eclipselink.logging.logger" value="DefaultLogger" />
+			<property name="eclipselink.logging.level" value="SEVERE" />
+			<property name="eclipselink.logging.level.sql" value="FINE" />
+			<property name="eclipselink.logging.parameters" value="true" />
+			<property name="eclipselink.query-results-cache" value="false" />
+			
+			<!-- The shared cache can also be disabled. This can be done using the EclipseLink persistence unit property: 'eclipselink.cache.shared.default' 
+				Hemos introducido esta propiedad por problemas de refresco de datos -->
+			<property name="eclipselink.cache.shared.default" value="false" />
+
+			<!-- 43 - Control de tiempos de respuesta -->
+			<property name="javax.persistence.query.timeout" value="60" />
+			<property name="eclipselink.jdbc.batch-writing.size" value="100"/>
+			<property name="eclipselink.jdbc.batch-writing" value="Oracle-JDBC"/> <!-- El campo value se expresa en segundos para EclipseLink -->
+
+
+
+		</properties>
+	</persistence-unit>
+
+</persistence>
