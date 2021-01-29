@@ -13,5 +13,9 @@ bin/
 
 # Package Files #
 
+modules/gesaduan-ear/deploy.cmd
+
+# Package Files #
+
 *.jar
 hs_err_pid*
