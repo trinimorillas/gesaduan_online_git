@@ -1,2 +1,0 @@
-# gesaduan_online
-
