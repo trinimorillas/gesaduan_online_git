@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<!-- GESADUAN app -->
+	<parent>
+		<groupId>es.mercadona.fwk</groupId>
+		<artifactId>fwk-parent-ear</artifactId>
+		<version>3.7.10</version>
+	</parent>
+
+	<properties>
+		<ear.directory>${project.build.directory}</ear.directory>
+		<ear.name>gesaduan</ear.name>
+	</properties>
+
+	<groupId>es.mercadona.gesaduan</groupId>
+	<artifactId>gesaduan-ear</artifactId>
+	<packaging>ear</packaging>
+
+	<version>0.0.1</version>
+
+
+	<name>Empaquetado empresarial (ear) de la aplicación de Servicios gesaduan</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>gesaduan-war</artifactId>
+			<version>${project.version}</version>
+			<type>war</type>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-ear-plugin</artifactId>
+				<configuration>
+					<outputDirectory>${ear.directory}</outputDirectory>
+					<finalName>${ear.name}</finalName>
+					<modules>
+						<webModule>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>gesaduan-war</artifactId>
+							<contextRoot>/gesaduan</contextRoot>
+							<bundleFileName>gesaduanWAR.war</bundleFileName>
+						</webModule>
+					</modules>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
