@@ -11,9 +11,18 @@ bin/
 .settings/
 .vscode/
 
+# Project Folders #
+
+modules/gesaduan-ear/.project
+modules/gesaduan-ear/deploy.cmd
+modules/gesaduan-ear/target/
+modules/gesaduan-war/.classpath
+modules/gesaduan-war/.project
+modules/gesaduan-war/.settings/
+modules/gesaduan-war/target/
+
 # Package Files #
 
-modules/gesaduan-ear/deploy.cmd
 
 # Package Files #
 
