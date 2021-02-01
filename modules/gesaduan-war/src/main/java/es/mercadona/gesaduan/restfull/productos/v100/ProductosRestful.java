@@ -31,6 +31,7 @@ import es.mercadona.gesaduan.dto.productos.getproductos.v1.InputGetProductoDTO;
 import es.mercadona.gesaduan.dto.productos.getproductos.v1.restfull.OutputProductosDTO;
 import es.mercadona.gesaduan.dto.productos.getproductosdetalle.v1.InputProductosDetalleDTO;
 import es.mercadona.gesaduan.dto.productos.getproductosdetalle.v1.restfull.OutputProductosDetalleDTO;
+import es.mercadona.gesaduan.dto.productos.putproductos.v1.InputMetadatosDTO;
 import es.mercadona.gesaduan.dto.productos.putproductos.v1.InputPutProductosDTO;
 import es.mercadona.gesaduan.dto.productos.putproductos.v1.restfull.OutputPutProductosDTO;
 
@@ -162,14 +163,12 @@ public class ProductosRestful {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateProductos(
 			@NotNull @PathParam("codigoProducto") Long codigoProducto,
-			InputPutProductosDTO input
-			
-		) {
+			InputPutProductosDTO input, InputMetadatosDTO metadatos) {
 		
 		OutputPutProductosDTO response;
 		
 		try {
-			response = putProductosService.actualizarProducto(codigoProducto, input);
+			response = putProductosService.actualizarProducto(codigoProducto, input, metadatos);
 		}catch(Exception e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
 		}

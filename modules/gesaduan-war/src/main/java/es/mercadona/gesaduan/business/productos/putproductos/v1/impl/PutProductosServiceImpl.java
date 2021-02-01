@@ -6,7 +6,9 @@ import es.mercadona.gesaduan.business.productos.putproductos.v1.PutProductosServ
 import es.mercadona.gesaduan.dao.productos.putproductos.v1.ActualizarProductosDAO;
 import es.mercadona.gesaduan.dao.productos.putproductos.v1.AsignarRelacionReaDAO;
 import es.mercadona.gesaduan.dao.productos.putproductos.v1.AsignarRelacionTaricDAO;
+import es.mercadona.gesaduan.dao.productos.putproductos.v1.ResolverAlertasDAO;
 import es.mercadona.gesaduan.dto.productos.getproductos.v1.restfull.DatosProductosDTO;
+import es.mercadona.gesaduan.dto.productos.putproductos.v1.InputMetadatosDTO;
 import es.mercadona.gesaduan.dto.productos.putproductos.v1.InputPutProductosDTO;
 import es.mercadona.gesaduan.dto.productos.putproductos.v1.restfull.OutputPutProductosDTO;
 
@@ -21,8 +23,11 @@ public class PutProductosServiceImpl implements PutProductosService{
 	@Inject
 	private AsignarRelacionTaricDAO asignarRelacionTaricDao;
 	
+	@Inject
+	private ResolverAlertasDAO resolverAlertasDao;
+	
 	@Override
-	public OutputPutProductosDTO actualizarProducto(Long codigoProducto, InputPutProductosDTO input) {
+	public OutputPutProductosDTO actualizarProducto(Long codigoProducto, InputPutProductosDTO input, InputMetadatosDTO metadatos) {
 				
 		OutputPutProductosDTO response = new OutputPutProductosDTO();
 		DatosProductosDTO datosProductos = new DatosProductosDTO();
@@ -61,6 +66,10 @@ public class PutProductosServiceImpl implements PutProductosService{
 			asignarRelacionTaricDao.asigarTaricProducto(codigoTaric, codigoProducto, nuevoCodigoTaric, codigoUsuario);
 			
 			asignarRelacionReaDao.desasociarReaProducto(codigoProducto, codigoUsuario);
+		}
+		
+		if (input.getDatos().getNuevoCodigoTaric() != null) {
+			resolverAlertasDao.resolverAlertas(input, metadatos);
 		}
 		
 		if(input.getDatos().getNuevoCodigoRea() != null) {

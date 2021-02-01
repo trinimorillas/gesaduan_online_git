@@ -1,5 +1,6 @@
 package es.mercadona.gesaduan.dao.declaracionesdevalor.getdvdetalle.v1.impl;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,6 +30,7 @@ import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvdetalle.v1.restfull.O
 import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvdetalle.v1.restfull.ProductoDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvdetalle.v1.restfull.ProveedorDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvdetalle.v1.restfull.ProvinciaDeCargaDTO;
+import es.mercadona.gesaduan.dto.equipotransporte.getequipotransportedetalle.v1.restfull.CargaDTO;
 import es.mercadona.gesaduan.jpa.declaracionesdevalor.DeclaracionesDeValorJPA;
 
 @SuppressWarnings("unchecked")
@@ -426,7 +428,27 @@ public class GetDVDetalleDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> implem
 						linea.setMarca(tmp[44] != null ? (String) tmp[44] : null);
 						linea.setDenominacionProducto(tmp[45] != null ? (String) tmp[45] : null);
 						linea.setFormatoVentaEstandar(tmp[46] != null ? (String) tmp[46] : null);
-									
+						
+						if (linea.getCodigoTaric() == null) {
+							final StringBuilder sqlTaric = new StringBuilder();
+
+							String selectTaric = "SELECT ";		
+							String camposTaric = "TP.COD_N_TARIC ";			
+							String fromTaric   = "FROM S_TARIC_PRODUCTO TP ";
+							String whereTaric  = "WHERE TP.COD_N_PRODUCTO = ?codigoPublico";
+							
+							sqlTaric.append(selectTaric).append(camposTaric).append(fromTaric).append(whereTaric);					
+							final Query queryTaric = getEntityManager().createNativeQuery(sqlTaric.toString());							
+							queryTaric.setParameter("codigoPublico", linea.getCodigoPublico());
+
+							List<BigDecimal> listadoTaric = queryTaric.getResultList();
+							
+							if (listadoTaric != null && !listadoTaric.isEmpty()) {								
+								for (BigDecimal tmpTaric : listadoTaric) {
+									if (tmpTaric != null) linea.setCodigoTaricProducto(Long.parseLong(String.valueOf(tmpTaric)));
+								}
+							}
+						}									
 						
 						ProductoDTO newProducto = new ProductoDTO();
 						newProducto.setProducto(linea);
