@@ -5,7 +5,7 @@ import es.mercadona.gesaduan.dto.declaracionesdevalor.AbstractDTO;
 public class LineaDTO extends AbstractDTO{
 
 	/**
-	 * 
+	 * Pruebas GIT
 	 */
 	private static final long serialVersionUID = 1L;
 	
