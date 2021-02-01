@@ -12,6 +12,8 @@ public class LineaDTO extends AbstractDTO{
     private Integer codigoPublico;
 
     private Long codigoTaric;
+    
+    private Long codigoTaricProducto;
 
     private String codigoRea;
     
@@ -50,9 +52,15 @@ public class LineaDTO extends AbstractDTO{
 	private String paisOrigen;
 
     private boolean esListoParaComer;
+    
+	public Long getCodigoTaricProducto() {
+		return codigoTaricProducto;
+	}
 
-    
-    
+	public void setCodigoTaricProducto(Long codigoTaricProducto) {
+		this.codigoTaricProducto = codigoTaricProducto;
+	}
+
 	public String getCodigoEan13() {
 		return codigoEan13;
 	}
