@@ -27,7 +27,7 @@ public class PutProductosServiceImpl implements PutProductosService{
 	private ResolverAlertasDAO resolverAlertasDao;
 	
 	@Override
-	public OutputPutProductosDTO actualizarProducto(Long codigoProducto, InputPutProductosDTO input, InputMetadatosDTO metadatos) {
+	public OutputPutProductosDTO actualizarProducto(Long codigoProducto, InputPutProductosDTO input) {
 				
 		OutputPutProductosDTO response = new OutputPutProductosDTO();
 		DatosProductosDTO datosProductos = new DatosProductosDTO();
@@ -69,7 +69,7 @@ public class PutProductosServiceImpl implements PutProductosService{
 		}
 		
 		if (input.getDatos().getNuevoCodigoTaric() != null) {
-			resolverAlertasDao.resolverAlertas(input, metadatos);
+			resolverAlertasDao.resolverAlertas(input);
 		}
 		
 		if(input.getDatos().getNuevoCodigoRea() != null) {

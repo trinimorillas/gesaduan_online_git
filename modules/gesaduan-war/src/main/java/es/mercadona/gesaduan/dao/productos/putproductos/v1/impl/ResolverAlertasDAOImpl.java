@@ -33,7 +33,7 @@ public class ResolverAlertasDAOImpl extends DaoBaseImpl<Long, ProductosJPA> impl
 
 	@Transactional
 	@Override
-	public void resolverAlertas(InputPutProductosDTO datos, InputMetadatosDTO metadatos) {
+	public void resolverAlertas(InputPutProductosDTO datos) {
 		String sql = "";
 		
 		try {		
@@ -44,8 +44,8 @@ public class ResolverAlertasDAOImpl extends DaoBaseImpl<Long, ProductosJPA> impl
 				  "WHERE COD_V_ELEMENTO = ?codigo AND COD_N_ALERTA IN (2,5)";	
 			
 			final Query query = getEntityManager().createNativeQuery(sql);	
-			query.setParameter("codigoUsuario", metadatos.getCodigoUsuario());	
-			query.setParameter("codigo", datos.getDatos().getCodigo());	
+			query.setParameter("codigoUsuario", datos.getMetadatos().getCodigoUsuario());	
+			query.setParameter("codigo", datos.getDatos().getCodigo());
 			
 			query.executeUpdate();
 		
