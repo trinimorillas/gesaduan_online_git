@@ -11,6 +11,10 @@ bin/
 .settings/
 .vscode/
 
+# Project Folders #
+
+deploy.cmd
+
 # Package Files #
 
 *.jar
