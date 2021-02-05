@@ -165,10 +165,10 @@ public class GetCargasDAOImpl extends BaseDAO<CargasJPA> implements GetCargasDAO
 				order += "ORDER BY TC.TXT_NOMBRE_TIPO_CARGA DESC";
 			else if (orden.equals("+nombreTipoCarga"))
 				order += "ORDER BY TC.TXT_NOMBRE_TIPO_CARGA ASC";
-			else if (orden.equals("-codigoSuministro"))
-				order += "ORDER BY CA.COD_N_TIPO_SUMINISTRO DESC";
-			else if (orden.equals("+codigoSuministro"))
-				order += "ORDER BY CA.COD_N_TIPO_SUMINISTRO ASC";				
+			else if (orden.equals("-nombreSuministro"))
+				order += "ORDER BY TS.TXT_NOMBRE_TIPO_SUMINISTRO DESC";
+			else if (orden.equals("+nombreSuministro"))
+				order += "ORDER BY TS.TXT_NOMBRE_TIPO_SUMINISTRO ASC";
 			else if (orden.equals("-codigoTipoSuministro"))
 				order += "ORDER BY CA.COD_N_TIPO_SUMINISTRO DESC";
 			else if (orden.equals("+codigoTipoSuministro"))
@@ -205,9 +205,9 @@ public class GetCargasDAOImpl extends BaseDAO<CargasJPA> implements GetCargasDAO
 				order += "ORDER BY CA.FEC_DT_CREACION DESC";
 			else if (orden.equals("+fechaSIntroduccion"))
 				order += "ORDER BY CA.FEC_DT_CREACION ASC";			
-			else if (orden.equals("-divisiones"))
+			else if (orden.equals("-numeroDivisiones"))
 				order += "ORDER BY CA.NUM_DIVISIONES DESC";
-			else if (orden.equals("+divisiones"))
+			else if (orden.equals("+numeroDivisiones"))
 				order += "ORDER BY CA.NUM_DIVISIONES ASC";
 			else if (orden.equals("-numeroDivisiones"))
 				order += "ORDER BY CA.NUM_DIVISIONES DESC";
@@ -257,10 +257,18 @@ public class GetCargasDAOImpl extends BaseDAO<CargasJPA> implements GetCargasDAO
 				order += "ORDER BY CA.FEC_DT_VALIDACION DESC";
 			else if (orden.equals("+fechaValidacion"))
 				order += "ORDER BY CA.FEC_DT_VALIDACION ASC";
-			else if (orden.equals("-usuarioValidacion"))
+			else if (orden.equals("-codigoUsuarioValidacion"))
 				order += "ORDER BY CA.COD_V_USUARIO_VALIDACION DESC";
-			else if (orden.equals("+usuarioValidacion"))
-				order += "ORDER BY CA.COD_V_USUARIO_VALIDACION ASC";
+			else if (orden.equals("+codigoUsuarioValidacion"))
+				order += "ORDER BY CA.COD_V_USUARIO_VALIDACION ASC";			
+			else if (orden.equals("-numeroTotalHuecos"))
+				order += "ORDER BY CA.NUM_HUECOS DESC";
+			else if (orden.equals("+numeroTotalHuecos"))
+				order += "ORDER BY CA.NUM_HUECOS ASC";			
+			else if (orden.equals("-numeroTotalPeso"))
+				order += "ORDER BY CA.NUM_PESO_TOTAL DESC";
+			else if (orden.equals("+numeroTotalPeso"))
+				order += "ORDER BY CA.NUM_PESO_TOTAL ASC";
 			
 			sql.append(select).append(campos).append(from).append(where).append(order);
 			sqlCount.append(count).append(select).append(campos).append(from).append(where).append(countFin);
