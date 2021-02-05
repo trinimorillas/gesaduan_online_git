@@ -119,7 +119,7 @@ public class GetCargasDAOImpl extends BaseDAO<CargasJPA> implements GetCargasDAO
 							"CA.COD_V_ALMACEN_ORIGEN, CA.COD_V_CENTRO_DESTINO, TO_CHAR(CA.FEC_DT_SERVICIO,'DD/MM/YYYY'), TO_CHAR(CA.FEC_D_ENTREGA,'DD/MM/YYYY'), TO_CHAR(CA.FEC_DT_CREACION,'DD/MM/YYYY'), " +
 							"CA.NUM_DIVISIONES, CA.NUM_HUECOS_ORIGEN, CA.NUM_HUECOS, CA.NUM_HUECOS_RESTANTES, CA.NUM_PESO_TOTAL, CA.NUM_PESO_RESTANTE, CA.NUM_VOLUMEN_TOTAL, CA.COD_N_CATEGORIA, CC.TXT_NOMBRE_CATEGORIA, " +
 							"CA.MCA_CONTIENE_LPC, CA.COD_N_ESTADO, EC.TXT_NOMBRE_ESTADO, CA.MCA_PEDIDOS_SIN_VALIDAR, CA.COD_V_APLICACION_ORIGEN, CA.COD_V_USUARIO_CREACION, "+ 
-							"TO_CHAR(CA.FEC_DT_VALIDACION,'DD/MM/YYYY HH24:MI') , CA.COD_V_USUARIO_VALIDACION ";
+							"TO_CHAR(CA.FEC_DT_VALIDACION,'DD/MM/YYYY HH24:MI'), CA.COD_V_USUARIO_VALIDACION ";
 			String from = "FROM D_CARGA CA " +
 					"LEFT JOIN D_TIPO_CARGA TC ON (TC.COD_N_TIPO_CARGA = CA.COD_N_TIPO_CARGA) " +
 					"LEFT JOIN D_TIPO_SUMINISTRO TS ON (TS.COD_N_TIPO_SUMINISTRO = CA.COD_N_TIPO_SUMINISTRO) " +
@@ -180,7 +180,7 @@ public class GetCargasDAOImpl extends BaseDAO<CargasJPA> implements GetCargasDAO
 			else if (orden.equals("-codigoProveedor"))
 				order += "ORDER BY CA.COD_N_PROVEEDOR DESC";
 			else if (orden.equals("+codigoProveedor"))
-				order += "ORDER BY CA.COD_N_PROVEEDOR ASC";		
+				order += "ORDER BY CA.COD_N_PROVEEDOR ASC";
 			else if (orden.equals("-nombreProveedor"))
 				order += "ORDER BY PR.TXT_RAZON_SOCIAL DESC";
 			else if (orden.equals("+nombreProveedor"))
@@ -212,7 +212,7 @@ public class GetCargasDAOImpl extends BaseDAO<CargasJPA> implements GetCargasDAO
 			else if (orden.equals("-numeroDivisiones"))
 				order += "ORDER BY CA.NUM_DIVISIONES DESC";
 			else if (orden.equals("+numeroDivisiones"))
-				order += "ORDER BY CA.NUM_DIVISIONES ASC";		
+				order += "ORDER BY CA.NUM_DIVISIONES ASC";
 			else if (orden.equals("-numeroHuecosRestantes"))
 				order += "ORDER BY CA.NUM_HUECOS_RESTANTES DESC";
 			else if (orden.equals("+numeroHuecosRestantes"))
@@ -249,6 +249,18 @@ public class GetCargasDAOImpl extends BaseDAO<CargasJPA> implements GetCargasDAO
 				order += "ORDER BY CA.MCA_PEDIDOS_SIN_VALIDAR DESC";
 			else if (orden.equals("+mcaPedidosSinValidar"))
 				order += "ORDER BY CA.MCA_PEDIDOS_SIN_VALIDAR ASC";
+			else if (orden.equals("-numeroVolumenTotal"))
+				order += "ORDER BY CA.NUM_VOLUMEN_TOTAL DESC";
+			else if (orden.equals("+numeroVolumenTotal"))
+				order += "ORDER BY CA.NUM_VOLUMEN_TOTAL ASC";
+			else if (orden.equals("-fechaValidacion"))
+				order += "ORDER BY CA.FEC_DT_VALIDACION DESC";
+			else if (orden.equals("+fechaValidacion"))
+				order += "ORDER BY CA.FEC_DT_VALIDACION ASC";
+			else if (orden.equals("-usuarioValidacion"))
+				order += "ORDER BY CA.COD_V_USUARIO_VALIDACION DESC";
+			else if (orden.equals("+usuarioValidacion"))
+				order += "ORDER BY CA.COD_V_USUARIO_VALIDACION ASC";
 			
 			sql.append(select).append(campos).append(from).append(where).append(order);
 			sqlCount.append(count).append(select).append(campos).append(from).append(where).append(countFin);
