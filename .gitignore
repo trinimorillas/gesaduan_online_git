@@ -11,9 +11,11 @@ bin/
 .settings/
 .vscode/
 
-# Package Files #
+# Project Folders #
 
-modules/gesaduan-ear/deploy.cmd
+
+# Package Files #
+deploy.cmd
 
 # Package Files #
 

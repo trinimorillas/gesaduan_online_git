@@ -63,7 +63,7 @@ import es.mercadona.gesaduan.util.ResponseUtil;
 public class EquipoTransporteRestful {
 	
 	@Inject
-	private org.slf4j.Logger logger;	
+	private org.slf4j.Logger logger;
 	
 	@Inject
 	private GetEquiposTransporteService getEquiposTransporteService;
