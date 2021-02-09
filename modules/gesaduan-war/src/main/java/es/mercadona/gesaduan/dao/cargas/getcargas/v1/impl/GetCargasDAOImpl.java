@@ -173,9 +173,9 @@ public class GetCargasDAOImpl extends BaseDAO<CargasJPA> implements GetCargasDAO
 				order += "ORDER BY CA.COD_N_TIPO_SUMINISTRO DESC";
 			else if (orden.equals("+codigoTipoSuministro"))
 				order += "ORDER BY CA.COD_N_TIPO_SUMINISTRO ASC";		
-			else if (orden.equals("-nombreTipoSuministro"))
+			else if (orden.equals("-nombreTipoSuministro") || orden.equals("-codigoSuministro"))
 				order += "ORDER BY TS.TXT_NOMBRE_TIPO_SUMINISTRO DESC";
-			else if (orden.equals("+nombreTipoSuministro"))
+			else if (orden.equals("+nombreTipoSuministro")  || orden.equals("+codigoSuministro"))
 				order += "ORDER BY TS.TXT_NOMBRE_TIPO_SUMINISTRO ASC";
 			else if (orden.equals("-codigoProveedor"))
 				order += "ORDER BY CA.COD_N_PROVEEDOR DESC";
