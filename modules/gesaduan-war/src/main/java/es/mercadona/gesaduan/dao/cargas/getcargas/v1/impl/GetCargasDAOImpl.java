@@ -209,10 +209,10 @@ public class GetCargasDAOImpl extends BaseDAO<CargasJPA> implements GetCargasDAO
 				order += "ORDER BY CA.NUM_DIVISIONES DESC";
 			else if (orden.equals("+numeroDivisiones"))
 				order += "ORDER BY CA.NUM_DIVISIONES ASC";
-			else if (orden.equals("-numeroDivisiones"))
-				order += "ORDER BY CA.NUM_DIVISIONES DESC";
-			else if (orden.equals("+numeroDivisiones"))
-				order += "ORDER BY CA.NUM_DIVISIONES ASC";
+			else if (orden.equals("-numeroHuecosOrigen"))
+				order += "ORDER BY CA.NUM_HUECOS_ORIGEN DESC";
+			else if (orden.equals("+numeroHuecosOrigen"))
+				order += "ORDER BY CA.NUM_HUECOS_ORIGEN ASC";
 			else if (orden.equals("-numeroHuecosRestantes"))
 				order += "ORDER BY CA.NUM_HUECOS_RESTANTES DESC";
 			else if (orden.equals("+numeroHuecosRestantes"))
