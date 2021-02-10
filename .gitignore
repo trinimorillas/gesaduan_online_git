@@ -11,8 +11,10 @@ bin/
 .settings/
 .vscode/
 
-# Package Files #
+# Project Folders #
 
+
+# Package Files #
 deploy.cmd
 
 # Package Files #
