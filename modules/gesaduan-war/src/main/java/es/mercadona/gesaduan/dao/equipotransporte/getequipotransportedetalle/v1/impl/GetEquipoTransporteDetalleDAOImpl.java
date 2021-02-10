@@ -268,13 +268,13 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 		List<ContenedorDTO> listaContenedor = null;		
 		
 		try {		
-			String select = "SELECT CE.COD_V_CARGA, CE.NUM_CONTENEDOR " + 
+			String select = "SELECT CE.NUM_CONTENEDOR, CE.COD_V_CARGA " + 
 						    "FROM O_CONTENEDOR_EXPEDIDO CE " +
 							"WHERE " + 
 						    "  CE.COD_N_EQUIPO = ?codigoEquipo AND " + 
 							"  CE.COD_V_ALMACEN = ?codigoAlmacenOrigen AND " + 
 						    "  CE.COD_V_CARGA = ?codigoCarga " +
-							" ORDER BY CE.COD_V_CARGA, CE.NUM_CONTENEDOR";			
+							" ORDER BY CE.COD_V_CARGA, CE.NUM_CONTENEDOR ASC";			
 			
 			final Query query = getEntityManager().createNativeQuery(select);			
 			query.setParameter("codigoEquipo", codigoEquipo);
@@ -282,13 +282,13 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 			query.setParameter("codigoCarga", codigoCarga);			
 			
 			@SuppressWarnings("unchecked")
-			List<BigDecimal> listado = query.getResultList();
+			List<Object[]> listado = query.getResultList();
 			
 			if (listado != null && !listado.isEmpty()) {
 				listaContenedor = new ArrayList<>(); 
-				for (BigDecimal tmp : listado) {		
+				for (Object[] tmp : listado) {		
 					ContenedorDTO contenedor = new ContenedorDTO();
-					contenedor.setNumContenedor(Long.parseLong(String.valueOf(tmp)));
+					contenedor.setNumContenedor(Long.parseLong(String.valueOf(tmp[0])));
 					listaContenedor.add(contenedor);
 				}
 			}		

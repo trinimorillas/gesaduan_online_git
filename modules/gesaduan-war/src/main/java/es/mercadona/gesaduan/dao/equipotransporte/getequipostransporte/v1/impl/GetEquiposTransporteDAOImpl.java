@@ -179,7 +179,7 @@ public class GetEquiposTransporteDAOImpl extends BaseDAO<EquipoTransporteJPA> im
 			else if (orden.equals("+matricula"))
 				order += "ORDER BY ET.TXT_MATRICULA ASC";
 			else if (orden.equals("-ocupacion"))
-				order += "ORDER BY PORCENTAJE DESC, ET.NUM_CAPACIDAD DESC";
+				order += "ORDER BY PORCENTAJE DESC, ET.NUM_CAPACIDAD ASC";
 			else if (orden.equals("+ocupacion"))
 				order += "ORDER BY PORCENTAJE ASC, ET.NUM_CAPACIDAD ASC";
 			else if (orden.equals("-nombrePuertoDesembarque"))

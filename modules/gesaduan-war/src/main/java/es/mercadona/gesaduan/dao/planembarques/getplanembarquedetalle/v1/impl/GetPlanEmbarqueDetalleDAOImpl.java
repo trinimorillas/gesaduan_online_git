@@ -144,7 +144,7 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 			String select = "SELECT ";		
 			String campos = "ET.COD_N_EQUIPO, ET.TXT_MATRICULA, PT.COD_N_PROVEEDOR, PT.TXT_RAZON_SOCIAL, T.COD_N_TEMPERATURA," + 
 					"T.TXT_TEMPERATURA, ET.NUM_CAPACIDAD, ET.NUM_OCUPACION, TO_CHAR(ET.FEC_DT_CARGA,'DD/MM/YYYY HH24:MI:SS'), ET.COD_N_ESTADO, " +
-					"EE.TXT_NOMBRE_ESTADO, ET.COD_V_USUARIO_CREACION ";
+					"EE.TXT_NOMBRE_ESTADO, ET.COD_V_USUARIO_CREACION, (ET.NUM_OCUPACION / ET.NUM_CAPACIDAD) AS PORCENTAJE ";
 			String from = "FROM D_EQUIPO_TRANSPORTE ET " +
 					"LEFT JOIN D_ESTADO_EQUIPO EE ON (EE.COD_N_ESTADO = ET.COD_N_ESTADO) " +
 					"LEFT JOIN D_PROVEEDOR_R PT ON (PT.COD_N_PROVEEDOR = ET.COD_N_PROVEEDOR AND PT.MCA_TRANSPORTISTA = 'S') " + 
@@ -211,6 +211,10 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 				order += "ORDER BY EE.TXT_NOMBRE_ESTADO DESC";
 			else if (orden.equals("+nombreEstado"))
 				order += "ORDER BY EE.TXT_NOMBRE_ESTADO ASC";
+			else if (orden.equals("-ocupacion"))
+				order += "ORDER BY PORCENTAJE DESC, ET.NUM_CAPACIDAD ASC";
+			else if (orden.equals("+ocupacion"))
+				order += "ORDER BY PORCENTAJE ASC, ET.NUM_CAPACIDAD ASC";
 			
 			sql.append(select).append(campos).append(from).append(where).append(order);
 			sqlCount.append(count).append(select).append(campos).append(from).append(where).append(countFin);
