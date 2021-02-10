@@ -201,6 +201,18 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 				order += "ORDER BY CA.MCA_CONTIENE_LPC DESC";
 			else if (orden.equals("+marcaLpC"))
 				order += "ORDER BY CA.MCA_CONTIENE_LPC ASC";
+			else if (orden.equals("-numeroDivision"))
+				order += "ORDER BY EC.NUM_DIVISION DESC";
+			else if (orden.equals("+numeroDivision"))
+				order += "ORDER BY EC.NUM_DIVISION ASC";
+			else if (orden.equals("-numeroHuecoOcupado"))
+				order += "ORDER BY EC.NUM_HUECO_OCUPADO DESC";
+			else if (orden.equals("+numeroHuecoOcupado"))
+				order += "ORDER BY EC.NUM_HUECO_OCUPADO ASC";
+			else if (orden.equals("-numeroPesoOcupado"))
+				order += "ORDER BY EC.NUM_PESO_OCUPADO DESC";
+			else if (orden.equals("+numeroPesoOcupado"))
+				order += "ORDER BY EC.NUM_PESO_OCUPADO ASC";
 			
 			sql.append(select).append(campos).append(from).append(where).append(order);
 			sqlCount.append(count).append(select).append(campos).append(from).append(where).append(groupBy).append(countFin);
@@ -256,13 +268,13 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 		List<ContenedorDTO> listaContenedor = null;		
 		
 		try {		
-			String select = "SELECT " + 
-						    "  CE.NUM_CONTENEDOR " + 
+			String select = "SELECT CE.NUM_CONTENEDOR, CE.COD_V_CARGA " + 
 						    "FROM O_CONTENEDOR_EXPEDIDO CE " +
 							"WHERE " + 
 						    "  CE.COD_N_EQUIPO = ?codigoEquipo AND " + 
 							"  CE.COD_V_ALMACEN = ?codigoAlmacenOrigen AND " + 
-						    "  CE.COD_V_CARGA = ?codigoCarga ";			
+						    "  CE.COD_V_CARGA = ?codigoCarga " +
+							" ORDER BY CE.COD_V_CARGA, CE.NUM_CONTENEDOR ASC";			
 			
 			final Query query = getEntityManager().createNativeQuery(select);			
 			query.setParameter("codigoEquipo", codigoEquipo);
@@ -270,13 +282,13 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 			query.setParameter("codigoCarga", codigoCarga);			
 			
 			@SuppressWarnings("unchecked")
-			List<BigDecimal> listado = query.getResultList();
+			List<Object[]> listado = query.getResultList();
 			
 			if (listado != null && !listado.isEmpty()) {
 				listaContenedor = new ArrayList<>(); 
-				for (BigDecimal tmp : listado) {		
+				for (Object[] tmp : listado) {		
 					ContenedorDTO contenedor = new ContenedorDTO();
-					contenedor.setNumContenedor(Long.parseLong(String.valueOf(tmp)));
+					contenedor.setNumContenedor(Long.parseLong(String.valueOf(tmp[0])));
 					listaContenedor.add(contenedor);
 				}
 			}		

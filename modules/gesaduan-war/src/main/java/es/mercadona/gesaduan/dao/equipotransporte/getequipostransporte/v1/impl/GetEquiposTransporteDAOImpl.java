@@ -111,7 +111,7 @@ public class GetEquiposTransporteDAOImpl extends BaseDAO<EquipoTransporteJPA> im
 			String campos = "ET.COD_N_EQUIPO, ET.TXT_MATRICULA, PR.COD_N_PROVEEDOR, PR.TXT_RAZON_SOCIAL, T.COD_N_TEMPERATURA, " +
 							"T.TXT_TEMPERATURA, ET.NUM_CAPACIDAD, ET.NUM_OCUPACION, ET.COD_N_ESTADO, EE.TXT_NOMBRE_ESTADO, TO_CHAR(ET.FEC_DT_CARGA,'DD/MM/YYYY HH24:MI:SS'), " +
 							"ET.TXT_OBSERVACIONES, ET.COD_V_USUARIO_CREACION, ET.COD_N_EMBARQUE, PUD.COD_N_PUERTO, PUD.TXT_NOMBRE_PUERTO, " +
-							"TO_CHAR(PE.FEC_DT_EMBARQUE,'DD/MM/YYYY') ";
+							"TO_CHAR(PE.FEC_DT_EMBARQUE,'DD/MM/YYYY'), (ET.NUM_OCUPACION/ET.NUM_CAPACIDAD) AS PORCENTAJE ";
 			String from = "FROM D_EQUIPO_TRANSPORTE ET " +
 					"INNER JOIN D_PLAN_EMBARQUE PE ON (PE.COD_N_EMBARQUE = ET.COD_N_EMBARQUE) " +
 					"INNER JOIN D_ESTADO_EQUIPO EE ON (EE.COD_N_ESTADO = ET.COD_N_ESTADO) " +
@@ -179,9 +179,9 @@ public class GetEquiposTransporteDAOImpl extends BaseDAO<EquipoTransporteJPA> im
 			else if (orden.equals("+matricula"))
 				order += "ORDER BY ET.TXT_MATRICULA ASC";
 			else if (orden.equals("-ocupacion"))
-				order += "ORDER BY ET.NUM_OCUPACION DESC";
+				order += "ORDER BY PORCENTAJE DESC, ET.NUM_CAPACIDAD ASC";
 			else if (orden.equals("+ocupacion"))
-				order += "ORDER BY ET.NUM_OCUPACION ASC";
+				order += "ORDER BY PORCENTAJE ASC, ET.NUM_CAPACIDAD ASC";
 			else if (orden.equals("-nombrePuertoDesembarque"))
 				order += "ORDER BY PUD.TXT_NOMBRE_PUERTO DESC";
 			else if (orden.equals("+nombrePuertoDesembarque"))
