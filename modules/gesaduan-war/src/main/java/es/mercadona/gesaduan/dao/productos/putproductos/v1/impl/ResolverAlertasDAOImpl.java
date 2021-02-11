@@ -38,8 +38,8 @@ public class ResolverAlertasDAOImpl extends DaoBaseImpl<Long, ProductosJPA> impl
 		
 		try {		
 			sql = "UPDATE S_NOTIFICACION_ALERTA NA " + 
-				  "SET MCA_RESUELTA = 'S' " + 
-				  "FEC_D_MODIFICACION = SYSDATE " + 
+				  "SET MCA_RESUELTA = 'S', " + 
+				  "FEC_D_MODIFICACION = SYSDATE, " + 
 				  "COD_V_USUARIO_MODIFICACION = ?codigoUsuario " + 
 				  "WHERE COD_V_ELEMENTO = ?codigo AND COD_N_ALERTA IN (2,5)";	
 			
