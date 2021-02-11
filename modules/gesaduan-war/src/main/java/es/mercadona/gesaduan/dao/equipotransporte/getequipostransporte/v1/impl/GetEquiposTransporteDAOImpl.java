@@ -182,9 +182,9 @@ public class GetEquiposTransporteDAOImpl extends BaseDAO<EquipoTransporteJPA> im
 				order += "ORDER BY PORCENTAJE DESC, ET.NUM_CAPACIDAD ASC";
 			else if (orden.equals("+ocupacion"))
 				order += "ORDER BY PORCENTAJE ASC, ET.NUM_CAPACIDAD ASC";
-			else if (orden.equals("-nombrePuertoDesembarque"))
+			else if (orden.equals("-puertoDestino"))
 				order += "ORDER BY PUD.TXT_NOMBRE_PUERTO DESC";
-			else if (orden.equals("+nombrePuertoDesembarque"))
+			else if (orden.equals("+puertoDestino"))
 				order += "ORDER BY PUD.TXT_NOMBRE_PUERTO ASC";
 			else if (orden.equals("-fechaCarga"))
 				order += "ORDER BY ET.FEC_DT_CARGA DESC";
