@@ -198,6 +198,10 @@ public class GetEquiposTransporteDAOImpl extends BaseDAO<EquipoTransporteJPA> im
 				order += "ORDER BY EE.TXT_NOMBRE_ESTADO DESC";
 			else if (orden.equals("+nombreEstado"))
 				order += "ORDER BY EE.TXT_NOMBRE_ESTADO ASC";
+			else if (orden.equals("-valorTemperatura"))
+				order += "ORDER BY T.TXT_TEMPERATURA DESC";
+			else if (orden.equals("+valorTemperatura"))
+				order += "ORDER BY T.TXT_TEMPERATURA ASC";
 
 			sql.append(select).append(campos).append(from).append(where).append(order);
 			sqlCount.append(count).append(select).append(campos).append(from).append(where).append(countFin);
