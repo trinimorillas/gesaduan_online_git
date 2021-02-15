@@ -16,7 +16,7 @@ public class DatosPlanEmbarqueDetalleDTO extends AbstractDTO {
 	private String nombrePuertoEmbarque;
 	private Integer codigoPuertoDesembarque;
 	private String nombrePuertoDesembarque;
-	private Long codigoNaviera;
+	private String codigoNaviera;
 	private String nombreNaviera;
 	private Integer numeroEquipos;
 	private Integer codigoEstado;
@@ -88,11 +88,11 @@ public class DatosPlanEmbarqueDetalleDTO extends AbstractDTO {
 		this.nombrePuertoDesembarque = nombrePuertoDesembarque;
 	}
 
-	public Long getCodigoNaviera() {
+	public String getCodigoNaviera() {
 		return codigoNaviera;
 	}
 
-	public void setCodigoNaviera(Long codigoNaviera) {
+	public void setCodigoNaviera(String codigoNaviera) {
 		this.codigoNaviera = codigoNaviera;
 	}
 

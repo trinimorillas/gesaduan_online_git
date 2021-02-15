@@ -82,7 +82,7 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 					planEmbarque.setNombrePuertoEmbarque(String.valueOf(tmp[5]));
 					planEmbarque.setCodigoPuertoDesembarque(Integer.parseInt(String.valueOf(tmp[6])));
 					planEmbarque.setNombrePuertoDesembarque(String.valueOf(tmp[7]));
-					if (tmp[8] != null) planEmbarque.setCodigoNaviera(Long.parseLong(String.valueOf(tmp[8])));
+					if (tmp[8] != null) planEmbarque.setCodigoNaviera(String.valueOf(tmp[8]));
 					if (tmp[9] != null) planEmbarque.setNombreNaviera(String.valueOf(tmp[9]));
 					planEmbarque.setNumeroEquipos(Integer.parseInt(String.valueOf(tmp[10])));
 					planEmbarque.setCodigoEstado(Integer.parseInt(String.valueOf(tmp[11])));
@@ -244,7 +244,7 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 					equipo = new EquipoDTO();
 					equipo.setCodigoEquipo(Long.parseLong(String.valueOf(tmp[0])));
 					equipo.setMatricula(String.valueOf(tmp[1]));
-					if (tmp[2] != null) equipo.setCodigoTransportista(Long.parseLong(String.valueOf(tmp[2])));
+					if (tmp[2] != null) equipo.setCodigoTransportista(String.valueOf(tmp[2]));
 					if (tmp[3] != null) equipo.setNombreTransportista(String.valueOf(tmp[3]));
 					equipo.setCodigoTemperatura(Integer.parseInt(String.valueOf(tmp[4])));
 					equipo.setValorTemperatura(String.valueOf(tmp[5]));
@@ -399,7 +399,7 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 					carga.setNombreSuministro(String.valueOf(tmp[4]));
 					if (tmp[5] != null) carga.setCodigoCategoria(Integer.parseInt(String.valueOf(tmp[5])));
 					if (tmp[6] != null) carga.setNombreCategoria(String.valueOf(tmp[6]));
-					if (tmp[7] != null) carga.setCodigoProveedor(Long.parseLong(String.valueOf(tmp[7])));
+					if (tmp[7] != null) carga.setCodigoProveedor(String.valueOf(tmp[7]));
 					if (tmp[8] != null) carga.setNombreProveedor(String.valueOf(tmp[8]));
 					carga.setCodigoAlmacenOrigen(String.valueOf(tmp[9]));
 					carga.setCodigoCentroDestino(String.valueOf(tmp[10]));
