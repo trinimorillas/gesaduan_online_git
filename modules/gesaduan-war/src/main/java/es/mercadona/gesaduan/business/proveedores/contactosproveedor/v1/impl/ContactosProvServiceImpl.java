@@ -13,14 +13,14 @@ public class ContactosProvServiceImpl implements ContactosProvService {
 	private ProvContactoDAO provContactoDAO;
 	
 	@Override
-	public ProveedorContactoJPA putContactoProveedor(InputPutProveedoresContactos datos, Long codigoProveedor) {
+	public ProveedorContactoJPA putContactoProveedor(InputPutProveedoresContactos datos, String codigoProveedor) {
 		
 		return provContactoDAO.putContactoProveedor(datos, codigoProveedor);
 		
 	}
 
 	@Override
-	public ProveedorContactoJPA deleteContactoProveedor(Long idProveedor, Long idContacto) {
+	public ProveedorContactoJPA deleteContactoProveedor(String idProveedor, Long idContacto) {
 		
 		return provContactoDAO.deleteContactoProveedor(idProveedor, idContacto);
 		

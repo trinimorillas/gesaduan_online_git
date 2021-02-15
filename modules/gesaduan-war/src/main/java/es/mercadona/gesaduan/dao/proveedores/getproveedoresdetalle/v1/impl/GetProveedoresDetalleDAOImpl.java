@@ -43,7 +43,7 @@ public class GetProveedoresDetalleDAOImpl extends BaseDAO<ProveedoresJPA> implem
 
 		HashMap<String, String> metadatos = new HashMap<>();
 
-		Long codigoProveedor = input.getCodigoProveedor();
+		String codigoProveedor = input.getCodigoProveedor();
 
 		datos = getDetalle(codigoProveedor);
 	
@@ -54,7 +54,7 @@ public class GetProveedoresDetalleDAOImpl extends BaseDAO<ProveedoresJPA> implem
 	}
 
 	
-	private DatosProveedoresDetalleDTO getDetalle(Long codigoProveedor){
+	private DatosProveedoresDetalleDTO getDetalle(String codigoProveedor){
 		
 		DatosProveedoresDetalleDTO result = new DatosProveedoresDetalleDTO();
 		
@@ -126,7 +126,7 @@ public class GetProveedoresDetalleDAOImpl extends BaseDAO<ProveedoresJPA> implem
 	
 
 	
-	private List<PersonasContactoDTO> getPersonasContacto(Long codigoProveedor){
+	private List<PersonasContactoDTO> getPersonasContacto(String codigoProveedor){
 
 		List<PersonasContactoDTO> resultList = new ArrayList<>();		
 		

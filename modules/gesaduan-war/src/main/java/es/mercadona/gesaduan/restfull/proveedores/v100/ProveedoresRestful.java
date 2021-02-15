@@ -80,11 +80,11 @@ public class ProveedoresRestful {
 	@Path("proveedores")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getProveedores(@DefaultValue("es-ES") @QueryParam("locale") String locale,
+	public Response listarProveedor(@DefaultValue("es-ES") @QueryParam("locale") String locale,
 			@NotNull @DefaultValue("true") @QueryParam("estaActivo") Boolean estaActivo,
 			@DefaultValue("false") @QueryParam("esAgencia") Boolean esAgencia,
-			@QueryParam("codigoProveedor") Integer codigoProveedor,
-			@QueryParam("codigoProveedorPublico") Long codigoProveedorPublico,
+			@QueryParam("codigoProveedor") String codigoProveedor,
+			@QueryParam("codigoProveedorPublico") String codigoProveedorPublico,
 			@QueryParam("nombreProveedor") String nombreProveedor,
 			@QueryParam("mcaNaviera") String mcaNaviera,
 			@QueryParam("mcaTransportista") String mcaTransportista,
@@ -160,9 +160,9 @@ public class ProveedoresRestful {
 	@Path("proveedores/{codigoProveedor}")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getProveedoresDetalle(
+	public Response getProveedorDetalle(
 			@DefaultValue("es-ES") @QueryParam("locale") String locale,
-			@NotNull @PathParam("codigoProveedor") Long codigoProveedor
+			@NotNull @PathParam("codigoProveedor") String codigoProveedor
 			) {
 
 		OutputProveedoresDetalleDTO proveedoresDetalle = null;
@@ -183,7 +183,123 @@ public class ProveedoresRestful {
 
 		return Response.ok(proveedoresDetalle, MediaType.APPLICATION_JSON).build();
 	}
+	
+	@PUT
+	@Path("proveedores")
+	@Consumes(MediaType.WILDCARD)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response putProveedor(InputPutProveedores input) {
 
+		OutputProveedoresPut response = new OutputProveedoresPut();
+
+		try {
+
+			response = putProveedoresService.activarProveedores(input);
+
+		} catch(Exception e) {
+			this.logger.error("({}-{}) ERROR - {} {}","ProveedoresRestful(GESADUAN)","putProveedores",e.getClass().getSimpleName(),e.getMessage());	
+			return Response.status(Status.BAD_REQUEST).entity(ResponseUtil.getError(e, EnumGesaduanException.ERROR_GENERICO.getCodigo(), e.getMessage())).build();
+		}
+
+		return Response.status(Status.OK).entity(response).build();
+
+	}
+	
+	@PUT
+	@Path("proveedores/{codigoProveedor}/contacto")
+	@Consumes(MediaType.WILDCARD)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response putContactoProveedor(
+			@NotNull @PathParam("codigoProveedor") String codigoProveedor,
+			InputPutProveedoresContactos datos
+			) {
+	
+		OutputProveedoresContactos salida = new OutputProveedoresContactos();
+		PutProveedorContacto contacto = new PutProveedorContacto();
+		
+		try {
+			
+			ProveedorContactoJPA result = contactosProvService.putContactoProveedor(datos, codigoProveedor);
+			
+			if(result != null) {
+				
+				contacto.setCodMecanismoContactoEmail(result.getCodMecanismoContactoEmail());
+				contacto.setCodLocalizacionEmail(result.getCodLocalizacionEmail());
+				contacto.setCodMecanismoContactoSMS(result.getCodMecanismoContactoSMS());
+				contacto.setCodLocalizacionSMS(result.getCodLocalizacionSMS());
+				
+				
+				//contacto.setEnvioEmail();
+				//contacto.setEnvioSMS();
+				
+				
+				salida.setDatos(contacto);
+				
+				
+				return Response.status(Status.OK).entity(salida).build();
+			}else {
+				return Response.status(Status.BAD_REQUEST).entity(salida).build();
+			}
+
+		} catch(Exception e) {
+			this.logger.error("({}-{}) ERROR - {} {}","ProveedoresRestful(GESADUAN)","putContactoProveedor",e.getClass().getSimpleName(),e.getMessage());	
+			return Response.status(Status.BAD_REQUEST).entity(ResponseUtil.getError(e, EnumGesaduanException.ERROR_GENERICO.getCodigo(), e.getMessage())).build();
+		}
+		
+	}
+	
+	
+	@DELETE
+	@Path("proveedores/{codigoProveedor}/contacto/{codigoContacto}")
+	@Consumes(MediaType.WILDCARD)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteContactoProveedor(
+			@NotNull @PathParam("codigoProveedor") String codigoProveedor,
+			@NotNull @PathParam("codigoContacto") Long codigoContacto
+			) {
+	
+		OutputProveedoresContactos salida = new OutputProveedoresContactos();
+		PutProveedorContacto contacto = new PutProveedorContacto();
+		
+		try {
+
+			ProveedorContactoJPA result = contactosProvService.deleteContactoProveedor(codigoProveedor, codigoContacto);
+			
+			if(result != null) {
+				
+				contacto.setCodigoContacto(result.getCodContacto());
+				contacto.setCodMecanismoContactoEmail(result.getCodMecanismoContactoEmail());
+				contacto.setCodMecanismoContactoSMS(result.getCodMecanismoContactoSMS());
+				contacto.setCodLocalizacionEmail(result.getCodLocalizacionEmail());
+				contacto.setCodLocalizacionSMS(result.getCodLocalizacionSMS());				
+				
+				salida.setDatos(contacto);
+						
+				return Response.status(Status.OK).entity(salida).build();
+				
+			}else {
+				salida.setDatos(contacto);
+				
+			}
+
+		} catch(Exception e) {
+			this.logger.error("({}-{}) ERROR - {} {}","ProveedoresRestful(GESADUAN)","deleteContactoProveedor",e.getClass().getSimpleName(),e.getMessage());	
+			return Response.status(Status.BAD_REQUEST).entity(ResponseUtil.getError(e, EnumGesaduanException.ERROR_GENERICO.getCodigo(), e.getMessage())).build();
+		}
+
+		return Response.status(Status.NO_CONTENT).entity(salida).build();
+		
+		
+	}	
+
+	
+	/*
+	 * 
+	 * Los servicios de relaciones no se usan ya, toda la parte de relaciones se gestiona llamando a los 
+	 * servicios de TERCE
+	 * 
+	 * */
+	
 	@GET
 	@Path("proveedores/{codigoProveedor}/relaciones")
 	@Consumes(MediaType.WILDCARD)
@@ -233,26 +349,13 @@ public class ProveedoresRestful {
 		return Response.ok(relacionesProveedores, MediaType.APPLICATION_JSON).build();
 	}
 
-	@PUT
-	@Path("proveedores")
-	@Consumes(MediaType.WILDCARD)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response putProveedores(InputPutProveedores input) {
-
-		OutputProveedoresPut response = new OutputProveedoresPut();
-
-		try {
-
-			response = putProveedoresService.activarProveedores(input);
-
-		} catch(Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}","ProveedoresRestful(GESADUAN)","putProveedores",e.getClass().getSimpleName(),e.getMessage());	
-			return Response.status(Status.BAD_REQUEST).entity(ResponseUtil.getError(e, EnumGesaduanException.ERROR_GENERICO.getCodigo(), e.getMessage())).build();
-		}
-
-		return Response.status(Status.OK).entity(response).build();
-
-	}
+	
+	/*
+	 * 
+	 * Los servicios de relaciones no se usan ya, toda la parte de relaciones se gestiona llamando a los 
+	 * servicios de TERCE
+	 * 
+	 * */	
 	
 	@PUT
 	@Path("proveedores/{codigoProveedor}/relaciones")
@@ -278,92 +381,7 @@ public class ProveedoresRestful {
 	}
 	
 	
-	@PUT
-	@Path("proveedores/{codigoProveedor}/contacto")
-	@Consumes(MediaType.WILDCARD)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response putContactoProveedor(
-			@NotNull @PathParam("codigoProveedor") Long codigoProveedor,
-			InputPutProveedoresContactos datos
-			) {
-	
-		OutputProveedoresContactos salida = new OutputProveedoresContactos();
-		PutProveedorContacto contacto = new PutProveedorContacto();
-		
-		try {
-			
-			ProveedorContactoJPA result = contactosProvService.putContactoProveedor(datos, codigoProveedor);
-			
-			if(result != null) {
-				
-				contacto.setCodMecanismoContactoEmail(result.getCodMecanismoContactoEmail());
-				contacto.setCodLocalizacionEmail(result.getCodLocalizacionEmail());
-				contacto.setCodMecanismoContactoSMS(result.getCodMecanismoContactoSMS());
-				contacto.setCodLocalizacionSMS(result.getCodLocalizacionSMS());
-				
-				
-				//contacto.setEnvioEmail();
-				//contacto.setEnvioSMS();
-				
-				
-				salida.setDatos(contacto);
-				
-				
-				return Response.status(Status.OK).entity(salida).build();
-			}else {
-				return Response.status(Status.BAD_REQUEST).entity(salida).build();
-			}
 
-		} catch(Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}","ProveedoresRestful(GESADUAN)","putContactoProveedor",e.getClass().getSimpleName(),e.getMessage());	
-			return Response.status(Status.BAD_REQUEST).entity(ResponseUtil.getError(e, EnumGesaduanException.ERROR_GENERICO.getCodigo(), e.getMessage())).build();
-		}
-		
-	}
-	
-	
-	@DELETE
-	@Path("proveedores/{codigoProveedor}/contacto/{codigoContacto}")
-	@Consumes(MediaType.WILDCARD)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response deleteContactoProveedor(
-			@NotNull @PathParam("codigoProveedor") Long codigoProveedor,
-			@NotNull @PathParam("codigoContacto") Long codigoContacto
-			) {
-	
-		OutputProveedoresContactos salida = new OutputProveedoresContactos();
-		PutProveedorContacto contacto = new PutProveedorContacto();
-		
-		try {
-
-			ProveedorContactoJPA result = contactosProvService.deleteContactoProveedor(codigoProveedor, codigoContacto);
-			
-			if(result != null) {
-				
-				contacto.setCodigoContacto(result.getCodContacto());
-				contacto.setCodMecanismoContactoEmail(result.getCodMecanismoContactoEmail());
-				contacto.setCodMecanismoContactoSMS(result.getCodMecanismoContactoSMS());
-				contacto.setCodLocalizacionEmail(result.getCodLocalizacionEmail());
-				contacto.setCodLocalizacionSMS(result.getCodLocalizacionSMS());				
-				
-				salida.setDatos(contacto);
-						
-				return Response.status(Status.OK).entity(salida).build();
-				
-			}else {
-				salida.setDatos(contacto);
-				
-			}
-
-		} catch(Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}","ProveedoresRestful(GESADUAN)","deleteContactoProveedor",e.getClass().getSimpleName(),e.getMessage());	
-			return Response.status(Status.BAD_REQUEST).entity(ResponseUtil.getError(e, EnumGesaduanException.ERROR_GENERICO.getCodigo(), e.getMessage())).build();
-		}
-
-		return Response.status(Status.NO_CONTENT).entity(salida).build();
-		
-		
-	}
 	
 
 }
