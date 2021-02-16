@@ -9,7 +9,6 @@ import javax.inject.Inject;
 import javax.persistence.Query;
 
 import es.mercadona.fwk.core.exceptions.ApplicationException;
-import es.mercadona.fwk.core.exceptions.ApplicationException;
 import es.mercadona.fwk.core.web.BoPage;
 import es.mercadona.gesaduan.dao.BaseDAO;
 import es.mercadona.gesaduan.dao.cargas.getcargas.v1.GetCargasDAO;
@@ -46,7 +45,7 @@ public class GetCargasDAOImpl extends BaseDAO<CargasJPA> implements GetCargasDAO
 			if (datos.getDatos().getCodigoPedido() != null)
 				codigoPedido = datos.getDatos().getCodigoPedido();
 			
-			Long codigoProveedor = null;
+			String codigoProveedor = null;
 			if (datos.getDatos().getCodigoProveedor() != null)
 				codigoProveedor = datos.getDatos().getCodigoProveedor();
 			
@@ -370,7 +369,7 @@ public class GetCargasDAOImpl extends BaseDAO<CargasJPA> implements GetCargasDAO
 					if (tmp[2] != null) cargas.setNombreTipoCarga(String.valueOf(tmp[2]));
 					if (tmp[3] != null) cargas.setCodigoTipoSuministro(Integer.parseInt(String.valueOf(tmp[3])));
 					if (tmp[4] != null) cargas.setNombreTipoSuministro(String.valueOf(tmp[4]));
-					if (tmp[5] != null) cargas.setCodigoProveedor(Long.parseLong(String.valueOf(tmp[5])));
+					if (tmp[5] != null) cargas.setCodigoProveedor(String.valueOf(tmp[5]));
 					if (tmp[6] != null) cargas.setNombreProveedor(String.valueOf(tmp[6]));
 					if (tmp[7] != null) cargas.setCodigoCentroOrigen(String.valueOf(tmp[7]));
 					if (tmp[8] != null) cargas.setCodigoCentroDestino(String.valueOf(tmp[8]));

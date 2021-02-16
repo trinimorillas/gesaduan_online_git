@@ -38,7 +38,7 @@ public class PlanEmbarquesJPA implements Serializable {
 	private Integer puertoDestino;
 	
 	@Column(name = "COD_N_NAVIERA")
-	private Long naviera;
+	private String naviera;
 	
 	@Column(name = "COD_N_ESTADO")
 	private Integer estado;
@@ -103,11 +103,11 @@ public class PlanEmbarquesJPA implements Serializable {
 		this.puertoDestino = puertoDestino;
 	}
 
-	public Long getNaviera() {
+	public String getNaviera() {
 		return naviera;
 	}
 
-	public void setNaviera(Long naviera) {
+	public void setNaviera(String naviera) {
 		this.naviera = naviera;
 	}
 

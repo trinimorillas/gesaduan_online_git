@@ -10,7 +10,7 @@ public class EquipoDTO extends AbstractDTO {
     	
     private Long codigoEquipo;
 	private String matricula;
-	private Long codigoTransportista;
+	private String codigoTransportista;
 	private String nombreTransportista;
 	private Integer codigoTemperatura;
 	private String valorTemperatura;
@@ -39,11 +39,11 @@ public class EquipoDTO extends AbstractDTO {
 		this.matricula = matricula;
 	}
 
-	public Long getCodigoTransportista() {
+	public String getCodigoTransportista() {
 		return codigoTransportista;
 	}
 
-	public void setCodigoTransportista(Long codigoTransportista) {
+	public void setCodigoTransportista(String codigoTransportista) {
 		this.codigoTransportista = codigoTransportista;
 	}
 

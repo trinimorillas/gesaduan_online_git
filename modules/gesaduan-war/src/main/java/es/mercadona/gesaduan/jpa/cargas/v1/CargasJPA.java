@@ -29,7 +29,7 @@ public class CargasJPA implements Serializable {
 	private Integer categoria;
 	
 	@Column(name = "COD_N_PROVEEDOR")
-	private Long codigoProveedor;
+	private String codigoProveedor;
 	
 	@Column(name = "COD_V_CENTRO_DESTINO")
 	private String codigoCentroDestino;
@@ -119,11 +119,11 @@ public class CargasJPA implements Serializable {
 		this.categoria = categoria;
 	}
 
-	public Long getCodigoProveedor() {
+	public String getCodigoProveedor() {
 		return codigoProveedor;
 	}
 
-	public void setCodigoProveedor(Long codigoProveedor) {
+	public void setCodigoProveedor(String codigoProveedor) {
 		this.codigoProveedor = codigoProveedor;
 	}
 
