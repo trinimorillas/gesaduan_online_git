@@ -11,7 +11,7 @@ public class RelacionesProveedorDTO extends AbstractDTO implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 
-    private Long codigo;
+    private String codigo;
 	private String nombre;
 	private String provincia;
 	private String fechaInicio;
@@ -19,10 +19,10 @@ public class RelacionesProveedorDTO extends AbstractDTO implements Serializable{
 	
 	private String codigoPublico;
 	
-	public Long getCodigo() {
+	public String getCodigo() {
 		return codigo;
 	}
-	public void setCodigo(Long codigo) {
+	public void setCodigo(String codigo) {
 		this.codigo = codigo;
 	}
 	public String getNombre() {

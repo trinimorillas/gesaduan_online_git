@@ -18,12 +18,12 @@ public class ProveedoresJPA implements Serializable{
 	 * 
 	 */
 	
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L; 
 	
 	
 	@Id  
 	@Column(name="COD_N_PROVEEDOR")  
-	private Long codProveedor;
+	private String codProveedor;
 	
 	@Column(name="COD_N_LEGACY_PROVEEDOR")
 	private Integer codPublico;
@@ -94,11 +94,11 @@ public class ProveedoresJPA implements Serializable{
 	@Column(name = "MCA_TRANSPORTISTA")
 	private String mcaTransportista;
 
-	public Long getCodProveedor() {
+	public String getCodProveedor() {
 		return codProveedor;
 	}
 
-	public void setCodProveedor(Long codProveedor) {
+	public void setCodProveedor(String codProveedor) {
 		this.codProveedor = codProveedor;
 	}
 

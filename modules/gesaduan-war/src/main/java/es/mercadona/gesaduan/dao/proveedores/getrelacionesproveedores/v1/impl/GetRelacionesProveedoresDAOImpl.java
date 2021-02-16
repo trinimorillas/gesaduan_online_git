@@ -49,7 +49,7 @@ public class GetRelacionesProveedoresDAOImpl extends BaseDAO<ProveedoresJPA> imp
 			String tipo = input.getTipoBusqueda();
 			boolean esVigente = input.getRelacionesVigentes();
 	
-			Long codigoProveedor = input.getCodigoProveedor();
+			String codigoProveedor = input.getCodigoProveedor();
 	
 			Integer paginaTamanyo = pagination.getLimit().intValue();
 			Integer paginaInicio = (pagination.getPage().intValue() * paginaTamanyo) - paginaTamanyo;

@@ -154,7 +154,7 @@ public class GetDVSumarioDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> implem
 			sqlCount.append(" AND DV.COD_V_PEDIDO = ?codigoPedido ");
 		}
 		
-		Integer codigoProveedor = null;
+		String codigoProveedor = null;
 		if(input.getCodigoProveedor() != null) {
 			codigoProveedor = input.getCodigoProveedor();
 			sql.append(" AND P.COD_N_LEGACY_PROVEEDOR = ?codigoProveedor ");

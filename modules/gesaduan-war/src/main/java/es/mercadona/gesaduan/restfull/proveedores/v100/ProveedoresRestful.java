@@ -305,7 +305,7 @@ public class ProveedoresRestful {
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getRelacionProveedores(@DefaultValue("es-ES") @QueryParam("locale") String locale,
-			@NotNull @PathParam("codigoProveedor") Long codigoProveedor,
+			@NotNull @PathParam("codigoProveedor") String codigoProveedor,
 			@NotNull @QueryParam("tipoBusqueda") String tipoBusqueda,
 			@NotNull @QueryParam("relacionesVigentes") boolean relacionesVigentes ,
 			@QueryParam("numeroProveedorRelacionado") String numeroProveedorRelacionado,
@@ -363,7 +363,7 @@ public class ProveedoresRestful {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response putRelacionesProveedores(
 			InputRelacionesProveedorDTO input, 
-			@NotNull @PathParam("codigoProveedor") Long codigoProveedor) {
+			@NotNull @PathParam("codigoProveedor") String codigoProveedor) {
 		
 		
 		input.getDatos().setCodigo(String.valueOf(codigoProveedor));

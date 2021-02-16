@@ -87,11 +87,10 @@ public class PostDVServiceImpl implements PostDVService {
 
 			if (proveedor != null) {
 
-				BigDecimal codigoProv = getProveedoresDetalleService
-						.getCodigoProveedorSap(Long.parseLong(proveedor.getCodigo()));
+				String codigoProv = getProveedoresDetalleService.getCodigoProveedorSap(proveedor.getCodigo());
 
 				if (codigoProv != null) {
-					declaracionJPA.setProveedor(codigoProv.longValue());
+					declaracionJPA.setProveedor(codigoProv);
 				}
 			}
 

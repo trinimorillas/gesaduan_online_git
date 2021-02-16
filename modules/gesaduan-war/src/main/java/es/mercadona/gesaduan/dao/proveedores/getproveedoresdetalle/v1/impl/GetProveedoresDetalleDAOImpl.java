@@ -198,7 +198,7 @@ public class GetProveedoresDetalleDAOImpl extends BaseDAO<ProveedoresJPA> implem
 	
 
 	@Override
-	public BigDecimal getCodigoProveedorSap(Long codigoProveedor) {
+	public String getCodigoProveedorSap(String codigoProveedor) {
 		
 		try {
 			final StringBuilder sql = new StringBuilder();
@@ -213,7 +213,7 @@ public class GetProveedoresDetalleDAOImpl extends BaseDAO<ProveedoresJPA> implem
 					
 			query.setParameter("codigoProveedor", codigoProveedor);
 			
-			return (BigDecimal) query.getSingleResult();
+			return (String) query.getSingleResult();
 			
 		} catch (Exception ex) {
 			this.logger.error("({}-{}) ERROR - {} {}","GetProveedoresDetalleDAOImpl(GESADUAN)","getCodigoProveedorSap",ex.getClass().getSimpleName(),ex.getMessage());	

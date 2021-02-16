@@ -78,8 +78,8 @@ public class PutRelacionesProveedorDAOImpl extends
 				for (RelacionesProveedorDTO tmp : relacionesList) {
 					RelacionAgenciaProveedorPkJPA id = new RelacionAgenciaProveedorPkJPA();
 	
-					Long codigoAgencia = Long.parseLong(input.getDatos().getCodigo());
-					Long codigoProveedor = tmp.getCodigo();
+					String codigoAgencia = input.getDatos().getCodigo();
+					String codigoProveedor = tmp.getCodigo();
 	
 					id.setCodigoAgencia(codigoAgencia);
 					id.setCodigoProveedor(codigoProveedor);
@@ -150,8 +150,8 @@ public class PutRelacionesProveedorDAOImpl extends
 				for (RelacionesProveedorDTO tmp : relacionesList) {
 					RelacionAgenciaProveedorPkJPA id = new RelacionAgenciaProveedorPkJPA();
 	
-					Long codigoProveedor = Long.parseLong(input.getDatos().getCodigo());
-					Long codigoAgencia = tmp.getCodigo();
+					String codigoProveedor = input.getDatos().getCodigo();
+					String codigoAgencia = tmp.getCodigo();
 	
 					id.setCodigoProveedor(codigoProveedor);
 					id.setCodigoAgencia(codigoAgencia);
@@ -208,7 +208,7 @@ public class PutRelacionesProveedorDAOImpl extends
 		}				
 	}
 
-	private void darDeBajaExistentes(Long codigoAgencia, Long codigoProveedor, String codigoUsuario) {
+	private void darDeBajaExistentes(String codigoAgencia, String codigoProveedor, String codigoUsuario) {
 
 		try {
 		

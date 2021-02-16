@@ -56,7 +56,7 @@ public class GetAlertasDAOImpl extends BaseDAO<AlertasJPA> implements GetAlertas
 			
 			Date fechaDesde = (input.getFechaDesde() != null) ? input.getFechaDesde() : null;
 			Date fechaHasta = (input.getFechaHasta() != null) ? input.getFechaHasta() : null;
-			Long numeroProveedor = (input.getNumeroProveedor() != null) ? input.getNumeroProveedor() : null;
+			String numeroProveedor = (input.getNumeroProveedor() != null) ? input.getNumeroProveedor() : null;
 			String nombreProveedor = (input.getNombreProveedor() != null) ? input.getNombreProveedor() : null;
 			String tipoAlerta = (input.getTipoAlerta() != null) ? input.getTipoAlerta() : null;
 			String estado = (input.getEstado() != null) ? input.getEstado() : null;

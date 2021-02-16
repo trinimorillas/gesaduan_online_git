@@ -80,6 +80,118 @@ public class DeclaracionesDeValorRestful {
 	private static final String FILE_BASE_NAME_CSV = "csv_";
 
 	@GET
+	@Path("declaraciones-valor/sumario")
+	@Consumes(MediaType.WILDCARD)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getDeclaracionesDeValorSumario(
+			@NotNull @DefaultValue("es-ES") @QueryParam("locale") String locale,
+			@NotNull @QueryParam("codigoUsuario") String codigoUsuario,
+			@QueryParam("codigoAgencia") String codigoAgencia,
+			@DefaultValue("1") @QueryParam("paginaInicio") Integer paginaInicio, 
+			@QueryParam("anyo") Integer anyo,
+			@QueryParam("numeroDeclaracion") Integer numeroDeclaracion, 
+			@QueryParam("codigoPedido") String codigoPedido,
+			@QueryParam("codigoAlmacen") String codigoAlmacen, 
+			@QueryParam("nombreAlmacen") String nombreAlmacen,
+			@DefaultValue("10") @QueryParam("paginaTamanyo") Integer paginaTamanyo,
+			@DefaultValue("-numeroDeclaracion") @QueryParam("orden") String orden,
+			@QueryParam("codigoProveedor") Integer codigoProveedor,
+			@QueryParam("nombreProveedor") String nombreProveedor,
+			@DefaultValue("T") @QueryParam("tipoDeclaracion") String tipoDeclaracion,
+			@DefaultValue("TD") @QueryParam("estadoDeclaracion") String estadoDeclaracion,
+			@DefaultValue("T") @QueryParam("estadoDescarga") String estadoDescarga,
+			@QueryParam("tipoFechaFiltro") String tipoFechaFiltro,
+			@QueryParam("fechaDesde") String fechaDesde,
+			@QueryParam("fechaHasta") String fechaHasta) {
+
+		OutputDeclaracionesDeValorDTO response = null;
+
+		try {
+			InputDeclaracionesDeValorDTO inputParams = new InputDeclaracionesDeValorDTO();
+
+			inputParams.setLocale(locale);
+			inputParams.setCodigoUsuario(codigoUsuario);
+
+			if (codigoAgencia != null) {
+				inputParams.setCodigoAgencia(codigoAgencia);
+			}
+
+			if (anyo != null) {
+				inputParams.setAnyo(anyo);
+			}
+			if (numeroDeclaracion != null) {
+				inputParams.setNumeroDeclaracion(numeroDeclaracion);
+			}
+
+			if (codigoPedido != null) {
+				inputParams.setCodigoPedido(codigoPedido);
+			}
+
+			if (codigoAlmacen != null) {
+				inputParams.setCodigoAlmacen(codigoAlmacen);
+			}
+
+			if (nombreAlmacen != null) {
+				inputParams.setNombreAlmacen(nombreAlmacen);
+			}
+
+			if (orden != null) {
+				inputParams.setOrden(orden);
+			}
+
+			if (codigoProveedor != null) {
+				inputParams.setCodigoProveedor(Integer.toString(codigoProveedor));
+			}
+
+			if (nombreProveedor != null) {
+				inputParams.setNombreProveedor(nombreProveedor);
+			}
+
+			inputParams.setTipoDeclaracion(tipoDeclaracion);
+			inputParams.setEstadoDeclaracion(estadoDeclaracion);
+			inputParams.setEstadoDescarga(estadoDescarga);
+
+			if (tipoFechaFiltro != null) {
+
+				inputParams.setTipoFechaFiltro(tipoFechaFiltro);			
+				SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+				
+				if (fechaDesde != null) {
+					
+					Date fDesde = inFormat.parse(fechaDesde);
+					inputParams.setFechaDesde(fDesde);
+				}
+
+				if (fechaHasta != null) {
+					Date fHasta = inFormat.parse(fechaHasta);
+					inputParams.setFechaHasta(fHasta);
+					
+				}
+
+			}
+
+			BoPage paginacion = new BoPage();
+
+			if (paginaInicio != null) {
+				paginacion.setPage(Long.valueOf(paginaInicio));
+			}
+
+			if (paginaTamanyo != null) {
+				paginacion.setLimit(Long.valueOf(paginaTamanyo));
+			}
+
+			response = getDVSumarioService.getDeclaracionesDeValorList(inputParams, paginacion);
+
+		} catch (Exception e) {
+			this.logger.error("({}-{}) ERROR - {} {}","DeclaracionesDeValorRestful(GESADUAN)","getDeclaracionesDeValorSumario",e.getClass().getSimpleName(),e.getMessage());			
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
+		}
+
+		return Response.ok(response, MediaType.APPLICATION_JSON).build();
+	}
+	
+	
+	@GET
 	@Path("declaraciones-valor/{codigoDeclaracion}-{anyo}-{version}")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -124,6 +236,27 @@ public class DeclaracionesDeValorRestful {
 		}
 
 	}
+	
+	
+	@POST
+	@Path("declaraciones-valor")
+	@Consumes(MediaType.WILDCARD)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response postDeclaracionesDeValor(
+			@NotNull InputPostDeclaracionesDeValorDTO valoresDeEntrada) {
+
+		OutputPostDeclaracionesDeValorDTO response = null;
+		try {
+			response = postDVService.createDeclaracionesDeValor(valoresDeEntrada);
+		} catch (Exception e) {
+			this.logger.error("({}-{}) ERROR - {} {}","DeclaracionesDeValorRestful(GESADUAN)","postDeclaracionesDeValor",e.getClass().getSimpleName(),e.getMessage());	
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
+		}
+
+		return Response.status(Status.CREATED).entity(response).build();
+
+	}
+	
 
 	@GET
 	@Path("declaraciones-valor/{codigoDeclaracion}-{anyo}-{version}/documento")
@@ -241,116 +374,6 @@ public class DeclaracionesDeValorRestful {
 		return rb.build();
 	}
 
-	@GET
-	@Path("declaraciones-valor/sumario")
-	@Consumes(MediaType.WILDCARD)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getDeclaracionesDeValorSumario(
-			@NotNull @DefaultValue("es-ES") @QueryParam("locale") String locale,
-			@NotNull @QueryParam("codigoUsuario") String codigoUsuario,
-			@QueryParam("codigoAgencia") String codigoAgencia,
-			@DefaultValue("1") @QueryParam("paginaInicio") Integer paginaInicio, 
-			@QueryParam("anyo") Integer anyo,
-			@QueryParam("numeroDeclaracion") Integer numeroDeclaracion, 
-			@QueryParam("codigoPedido") String codigoPedido,
-			@QueryParam("codigoAlmacen") String codigoAlmacen, 
-			@QueryParam("nombreAlmacen") String nombreAlmacen,
-			@DefaultValue("10") @QueryParam("paginaTamanyo") Integer paginaTamanyo,
-			@DefaultValue("-numeroDeclaracion") @QueryParam("orden") String orden,
-			@QueryParam("codigoProveedor") Integer codigoProveedor,
-			@QueryParam("nombreProveedor") String nombreProveedor,
-			@DefaultValue("T") @QueryParam("tipoDeclaracion") String tipoDeclaracion,
-			@DefaultValue("TD") @QueryParam("estadoDeclaracion") String estadoDeclaracion,
-			@DefaultValue("T") @QueryParam("estadoDescarga") String estadoDescarga,
-			@QueryParam("tipoFechaFiltro") String tipoFechaFiltro,
-			@QueryParam("fechaDesde") String fechaDesde,
-			@QueryParam("fechaHasta") String fechaHasta) {
-
-		OutputDeclaracionesDeValorDTO response = null;
-
-		try {
-			InputDeclaracionesDeValorDTO inputParams = new InputDeclaracionesDeValorDTO();
-
-			inputParams.setLocale(locale);
-			inputParams.setCodigoUsuario(codigoUsuario);
-
-			if (codigoAgencia != null) {
-				inputParams.setCodigoAgencia(codigoAgencia);
-			}
-
-			if (anyo != null) {
-				inputParams.setAnyo(anyo);
-			}
-			if (numeroDeclaracion != null) {
-				inputParams.setNumeroDeclaracion(numeroDeclaracion);
-			}
-
-			if (codigoPedido != null) {
-				inputParams.setCodigoPedido(codigoPedido);
-			}
-
-			if (codigoAlmacen != null) {
-				inputParams.setCodigoAlmacen(codigoAlmacen);
-			}
-
-			if (nombreAlmacen != null) {
-				inputParams.setNombreAlmacen(nombreAlmacen);
-			}
-
-			if (orden != null) {
-				inputParams.setOrden(orden);
-			}
-
-			if (codigoProveedor != null) {
-				inputParams.setCodigoProveedor(codigoProveedor);
-			}
-
-			if (nombreProveedor != null) {
-				inputParams.setNombreProveedor(nombreProveedor);
-			}
-
-			inputParams.setTipoDeclaracion(tipoDeclaracion);
-			inputParams.setEstadoDeclaracion(estadoDeclaracion);
-			inputParams.setEstadoDescarga(estadoDescarga);
-
-			if (tipoFechaFiltro != null) {
-
-				inputParams.setTipoFechaFiltro(tipoFechaFiltro);			
-				SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-				
-				if (fechaDesde != null) {
-					
-					Date fDesde = inFormat.parse(fechaDesde);
-					inputParams.setFechaDesde(fDesde);
-				}
-
-				if (fechaHasta != null) {
-					Date fHasta = inFormat.parse(fechaHasta);
-					inputParams.setFechaHasta(fHasta);
-					
-				}
-
-			}
-
-			BoPage paginacion = new BoPage();
-
-			if (paginaInicio != null) {
-				paginacion.setPage(Long.valueOf(paginaInicio));
-			}
-
-			if (paginaTamanyo != null) {
-				paginacion.setLimit(Long.valueOf(paginaTamanyo));
-			}
-
-			response = getDVSumarioService.getDeclaracionesDeValorList(inputParams, paginacion);
-
-		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}","DeclaracionesDeValorRestful(GESADUAN)","getDeclaracionesDeValorSumario",e.getClass().getSimpleName(),e.getMessage());			
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
-		}
-
-		return Response.ok(response, MediaType.APPLICATION_JSON).build();
-	}
 
 	@PUT
 	@Path("declaraciones-valor/{codigoDeclaracion}-{anyo}-{version}/confirmar-descarga")
@@ -403,24 +426,6 @@ public class DeclaracionesDeValorRestful {
 
 	}
 
-	@POST
-	@Path("declaraciones-valor")
-	@Consumes(MediaType.WILDCARD)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response postDeclaracionesDeValor(
-			@NotNull InputPostDeclaracionesDeValorDTO valoresDeEntrada) {
-
-		OutputPostDeclaracionesDeValorDTO response = null;
-		try {
-			response = postDVService.createDeclaracionesDeValor(valoresDeEntrada);
-		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}","DeclaracionesDeValorRestful(GESADUAN)","postDeclaracionesDeValor",e.getClass().getSimpleName(),e.getMessage());	
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
-		}
-
-		return Response.status(Status.CREATED).entity(response).build();
-
-	}
 
 	
 	
