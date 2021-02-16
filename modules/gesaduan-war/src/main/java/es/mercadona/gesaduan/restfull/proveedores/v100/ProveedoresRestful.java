@@ -80,11 +80,11 @@ public class ProveedoresRestful {
 	@Path("proveedores")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getProveedores(@DefaultValue("es-ES") @QueryParam("locale") String locale,
+	public Response listarProveedor(@DefaultValue("es-ES") @QueryParam("locale") String locale,
 			@NotNull @DefaultValue("true") @QueryParam("estaActivo") Boolean estaActivo,
 			@DefaultValue("false") @QueryParam("esAgencia") Boolean esAgencia,
-			@QueryParam("codigoProveedor") Integer codigoProveedor,
-			@QueryParam("codigoProveedorPublico") Long codigoProveedorPublico,
+			@QueryParam("codigoProveedor") String codigoProveedor,
+			@QueryParam("codigoProveedorPublico") String codigoProveedorPublico,
 			@QueryParam("nombreProveedor") String nombreProveedor,
 			@QueryParam("mcaNaviera") String mcaNaviera,
 			@QueryParam("mcaTransportista") String mcaTransportista,
@@ -160,9 +160,9 @@ public class ProveedoresRestful {
 	@Path("proveedores/{codigoProveedor}")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getProveedoresDetalle(
+	public Response getProveedorDetalle(
 			@DefaultValue("es-ES") @QueryParam("locale") String locale,
-			@NotNull @PathParam("codigoProveedor") Long codigoProveedor
+			@NotNull @PathParam("codigoProveedor") String codigoProveedor
 			) {
 
 		OutputProveedoresDetalleDTO proveedoresDetalle = null;
@@ -183,61 +183,12 @@ public class ProveedoresRestful {
 
 		return Response.ok(proveedoresDetalle, MediaType.APPLICATION_JSON).build();
 	}
-
-	@GET
-	@Path("proveedores/{codigoProveedor}/relaciones")
-	@Consumes(MediaType.WILDCARD)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getRelacionProveedores(@DefaultValue("es-ES") @QueryParam("locale") String locale,
-			@NotNull @PathParam("codigoProveedor") Long codigoProveedor,
-			@NotNull @QueryParam("tipoBusqueda") String tipoBusqueda,
-			@NotNull @QueryParam("relacionesVigentes") boolean relacionesVigentes ,
-			@QueryParam("numeroProveedorRelacionado") String numeroProveedorRelacionado,
-			@QueryParam("nombreProveedorRelacionado") String nombreProveedorRelacionado,
-			@DefaultValue("1") @QueryParam("paginaInicio") Long paginaInicio,
-			@DefaultValue("10") @QueryParam("paginaTamanyo") Long paginaTamanyo,
-			@DefaultValue("+codigo") @QueryParam("orden") String orden) {
-		
-		OutputRelacionesProveedoresDTO relacionesProveedores = null;
-		
-		try {
-
-			InputRelacionesProveedoresDTO input = new InputRelacionesProveedoresDTO();
-			
-			input.setCodigoProveedor(codigoProveedor);
-			input.setTipoBusqueda(tipoBusqueda);
-			input.setRelacionesVigentes(relacionesVigentes);
-			
-			if(numeroProveedorRelacionado != null) {
-				input.setNumeroProveedorRelacionado(numeroProveedorRelacionado);
-			}
-			
-			if(nombreProveedorRelacionado != null) {
-				input.setNombreProveedorRelacionado(nombreProveedorRelacionado);
-			}
-			
-			input.setOrden(orden);
-			
-			BoPage pagination = new BoPage();
-			
-			pagination.setPage(paginaInicio);
-			pagination.setLimit(paginaTamanyo);
-			
-			relacionesProveedores = getRelacionesProveedoresService.getRelacionesProveedores(input, pagination);
-
-		} catch(Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}","ProveedoresRestful(GESADUAN)","getRelacionProveedores",e.getClass().getSimpleName(),e.getMessage());	
-			return Response.status(Status.BAD_REQUEST).entity(ResponseUtil.getError(e, EnumGesaduanException.ERROR_GENERICO.getCodigo(), e.getMessage())).build();
-		}
-
-		return Response.ok(relacionesProveedores, MediaType.APPLICATION_JSON).build();
-	}
-
+	
 	@PUT
 	@Path("proveedores")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response putProveedores(InputPutProveedores input) {
+	public Response putProveedor(InputPutProveedores input) {
 
 		OutputProveedoresPut response = new OutputProveedoresPut();
 
@@ -255,35 +206,11 @@ public class ProveedoresRestful {
 	}
 	
 	@PUT
-	@Path("proveedores/{codigoProveedor}/relaciones")
-	@Consumes(MediaType.WILDCARD)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response putRelacionesProveedores(
-			InputRelacionesProveedorDTO input, 
-			@NotNull @PathParam("codigoProveedor") Long codigoProveedor) {
-		
-		
-		input.getDatos().setCodigo(String.valueOf(codigoProveedor));
-		
-		try {
-
-			putRelacionesProveedorService.editRelacionesProveedor(input);
-
-		} catch(Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}","ProveedoresRestful(GESADUAN)","putRelacionesProveedores",e.getClass().getSimpleName(),e.getMessage());	
-			return Response.status(Status.BAD_REQUEST).entity(ResponseUtil.getError(e, EnumGesaduanException.ERROR_GENERICO.getCodigo(), e.getMessage())).build();
-		}
-
-		return Response.status(Status.CREATED).type("text/plain").entity("Ejecución correcta.").build();
-	}
-	
-	
-	@PUT
 	@Path("proveedores/{codigoProveedor}/contacto")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response putContactoProveedor(
-			@NotNull @PathParam("codigoProveedor") Long codigoProveedor,
+			@NotNull @PathParam("codigoProveedor") String codigoProveedor,
 			InputPutProveedoresContactos datos
 			) {
 	
@@ -327,7 +254,7 @@ public class ProveedoresRestful {
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteContactoProveedor(
-			@NotNull @PathParam("codigoProveedor") Long codigoProveedor,
+			@NotNull @PathParam("codigoProveedor") String codigoProveedor,
 			@NotNull @PathParam("codigoContacto") Long codigoContacto
 			) {
 	
@@ -363,7 +290,98 @@ public class ProveedoresRestful {
 		return Response.status(Status.NO_CONTENT).entity(salida).build();
 		
 		
+	}	
+
+	
+	/*
+	 * 
+	 * Los servicios de relaciones no se usan ya, toda la parte de relaciones se gestiona llamando a los 
+	 * servicios de TERCE
+	 * 
+	 * */
+	
+	@GET
+	@Path("proveedores/{codigoProveedor}/relaciones")
+	@Consumes(MediaType.WILDCARD)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getRelacionProveedores(@DefaultValue("es-ES") @QueryParam("locale") String locale,
+			@NotNull @PathParam("codigoProveedor") String codigoProveedor,
+			@NotNull @QueryParam("tipoBusqueda") String tipoBusqueda,
+			@NotNull @QueryParam("relacionesVigentes") boolean relacionesVigentes ,
+			@QueryParam("numeroProveedorRelacionado") String numeroProveedorRelacionado,
+			@QueryParam("nombreProveedorRelacionado") String nombreProveedorRelacionado,
+			@DefaultValue("1") @QueryParam("paginaInicio") Long paginaInicio,
+			@DefaultValue("10") @QueryParam("paginaTamanyo") Long paginaTamanyo,
+			@DefaultValue("+codigo") @QueryParam("orden") String orden) {
+		
+		OutputRelacionesProveedoresDTO relacionesProveedores = null;
+		
+		try {
+
+			InputRelacionesProveedoresDTO input = new InputRelacionesProveedoresDTO();
+			
+			input.setCodigoProveedor(codigoProveedor);
+			input.setTipoBusqueda(tipoBusqueda);
+			input.setRelacionesVigentes(relacionesVigentes);
+			
+			if(numeroProveedorRelacionado != null) {
+				input.setNumeroProveedorRelacionado(numeroProveedorRelacionado);
+			}
+			
+			if(nombreProveedorRelacionado != null) {
+				input.setNombreProveedorRelacionado(nombreProveedorRelacionado);
+			}
+			
+			input.setOrden(orden);
+			
+			BoPage pagination = new BoPage();
+			
+			pagination.setPage(paginaInicio);
+			pagination.setLimit(paginaTamanyo);
+			
+			relacionesProveedores = getRelacionesProveedoresService.getRelacionesProveedores(input, pagination);
+
+		} catch(Exception e) {
+			this.logger.error("({}-{}) ERROR - {} {}","ProveedoresRestful(GESADUAN)","getRelacionProveedores",e.getClass().getSimpleName(),e.getMessage());	
+			return Response.status(Status.BAD_REQUEST).entity(ResponseUtil.getError(e, EnumGesaduanException.ERROR_GENERICO.getCodigo(), e.getMessage())).build();
+		}
+
+		return Response.ok(relacionesProveedores, MediaType.APPLICATION_JSON).build();
 	}
+
+	
+	/*
+	 * 
+	 * Los servicios de relaciones no se usan ya, toda la parte de relaciones se gestiona llamando a los 
+	 * servicios de TERCE
+	 * 
+	 * */	
+	
+	@PUT
+	@Path("proveedores/{codigoProveedor}/relaciones")
+	@Consumes(MediaType.WILDCARD)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response putRelacionesProveedores(
+			InputRelacionesProveedorDTO input, 
+			@NotNull @PathParam("codigoProveedor") String codigoProveedor) {
+		
+		
+		input.getDatos().setCodigo(String.valueOf(codigoProveedor));
+		
+		try {
+
+			putRelacionesProveedorService.editRelacionesProveedor(input);
+
+		} catch(Exception e) {
+			this.logger.error("({}-{}) ERROR - {} {}","ProveedoresRestful(GESADUAN)","putRelacionesProveedores",e.getClass().getSimpleName(),e.getMessage());	
+			return Response.status(Status.BAD_REQUEST).entity(ResponseUtil.getError(e, EnumGesaduanException.ERROR_GENERICO.getCodigo(), e.getMessage())).build();
+		}
+
+		return Response.status(Status.CREATED).type("text/plain").entity("Ejecución correcta.").build();
+	}
+	
+	
+
 	
 
 }

@@ -1,0 +1,2 @@
+# Declara que los archivos texto siempre tendrán los finales de línea CRLF en el control.
+* text eol=lf

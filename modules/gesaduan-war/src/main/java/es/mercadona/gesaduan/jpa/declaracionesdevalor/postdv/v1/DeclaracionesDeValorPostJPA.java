@@ -55,7 +55,7 @@ public class DeclaracionesDeValorPostJPA implements Serializable{
 	private String pedido;
 	
 	@Column(name = "COD_N_PROVEEDOR")
-	private Long proveedor;
+	private String proveedor;
 	
 	@Column (name = "COD_N_PROVINCIA_CARGA")
 	private Integer provinciaCarga;
@@ -168,11 +168,11 @@ public class DeclaracionesDeValorPostJPA implements Serializable{
 		this.pedido = pedido;
 	}
 
-	public Long getProveedor() {
+	public String getProveedor() {
 		return proveedor;
 	}
 
-	public void setProveedor(Long proveedor) {
+	public void setProveedor(String proveedor) {
 		this.proveedor = proveedor;
 	}
 

@@ -14,28 +14,28 @@ public class RelacionAgenciaProveedorPkJPA implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Column(name = "COD_N_AGENCIA_ADUANA")
-    private Long codigoAgencia;
-	
+    private String codigoAgencia;
+	 
 	@Column(name = "COD_N_PROVEEDOR")
-    private Long codigoProveedor;
+    private String codigoProveedor;
 
     @Temporal(TemporalType.DATE)
 	@Column(name = "FEC_D_INICIO")
     private Date fechaInicio;
 
-	public Long getCodigoAgencia() {
+	public String getCodigoAgencia() {
 		return codigoAgencia;
 	}
 
-	public void setCodigoAgencia(Long codigoAgencia) {
+	public void setCodigoAgencia(String codigoAgencia) {
 		this.codigoAgencia = codigoAgencia;
 	}
 
-	public Long getCodigoProveedor() {
+	public String getCodigoProveedor() {
 		return codigoProveedor;
 	}
 
-	public void setCodigoProveedor(Long codigoProveedor) {
+	public void setCodigoProveedor(String codigoProveedor) {
 		this.codigoProveedor = codigoProveedor;
 	}
 

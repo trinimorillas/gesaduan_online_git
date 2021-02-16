@@ -29,7 +29,7 @@ public class ProvContactoDAOImpl extends DaoBaseImpl<Long, ProveedorContactoJPA>
 
 	@Transactional
 	@Override
-	public ProveedorContactoJPA putContactoProveedor(InputPutProveedoresContactos datos, Long codigoProveedor) {
+	public ProveedorContactoJPA putContactoProveedor(InputPutProveedoresContactos datos, String codigoProveedor) {
 
 		ProveedorContactoJPA contacto = null;
 
@@ -168,7 +168,7 @@ public class ProvContactoDAOImpl extends DaoBaseImpl<Long, ProveedorContactoJPA>
 
 	@Transactional
 	@Override
-	public ProveedorContactoJPA deleteContactoProveedor(Long idProveedor, Long idContacto) {
+	public ProveedorContactoJPA deleteContactoProveedor(String idProveedor, Long idContacto) {
 
 		ProveedorContactoJPA contactoDelete = null;
 

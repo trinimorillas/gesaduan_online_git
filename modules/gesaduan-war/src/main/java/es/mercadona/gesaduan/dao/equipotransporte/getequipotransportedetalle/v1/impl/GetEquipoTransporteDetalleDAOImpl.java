@@ -66,7 +66,7 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 					equipoTransporte.setCodigoEquipo(Long.parseLong(String.valueOf(tmp[0])));
 					equipoTransporte.setCodigoEmbarque(Long.parseLong(String.valueOf(tmp[1])));
 					equipoTransporte.setMatricula(String.valueOf(tmp[2]));
-					if (tmp[3] != null) equipoTransporte.setCodigoTransportista(Long.parseLong(String.valueOf(tmp[3])));
+					if (tmp[3] != null) equipoTransporte.setCodigoTransportista(String.valueOf(tmp[3]));
 					if (tmp[4] != null) equipoTransporte.setNombreTransportista(String.valueOf(tmp[4]));
 					if (tmp[5] != null) equipoTransporte.setCodigoTemperatura(Integer.parseInt(String.valueOf(tmp[5])));
 					if (tmp[6] != null) equipoTransporte.setValorTemperatura(String.valueOf(tmp[6]));
@@ -237,7 +237,7 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 					if (tmp[4] != null) carga.setNombreSuministro(String.valueOf(tmp[4]));
 					if (tmp[5] != null) carga.setCodigoCategoria(Integer.parseInt(String.valueOf(tmp[5])));
 					if (tmp[6] != null) carga.setNombreCategoria(String.valueOf(tmp[6]));
-					if (tmp[7] != null) carga.setCodigoProveedor(Long.parseLong(String.valueOf(tmp[7])));
+					if (tmp[7] != null) carga.setCodigoProveedor(String.valueOf(tmp[7]));
 					if (tmp[8] != null) carga.setNombreProveedor(String.valueOf(tmp[8]));
 					carga.setCodigoAlmacenOrigen(String.valueOf(tmp[9]));
 					carga.setCodigoCentroDestino(String.valueOf(tmp[10]));

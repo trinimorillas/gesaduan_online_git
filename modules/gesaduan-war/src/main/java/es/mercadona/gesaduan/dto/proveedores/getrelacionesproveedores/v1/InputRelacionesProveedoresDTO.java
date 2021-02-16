@@ -8,10 +8,10 @@ public class InputRelacionesProveedoresDTO extends AbstractDTO implements Serial
 
 	/**
 	 * 
-	 */
+	 */ 
 	private static final long serialVersionUID = 1L;
 	
-	private Long codigoProveedor;
+	private String codigoProveedor;
 	private String codigoUsuario;
 	private String locale;
 	private String tipoBusqueda;
@@ -20,10 +20,10 @@ public class InputRelacionesProveedoresDTO extends AbstractDTO implements Serial
 	private String nombreProveedorRelacionado;
 	private Boolean relacionesVigentes;
 	
-	public Long getCodigoProveedor() {
+	public String getCodigoProveedor() {
 		return codigoProveedor;
 	}
-	public void setCodigoProveedor(Long codigoProveedor) {
+	public void setCodigoProveedor(String codigoProveedor) {
 		this.codigoProveedor = codigoProveedor;
 	}
 	public String getCodigoUsuario() {
