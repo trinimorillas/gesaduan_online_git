@@ -1,5 +1,7 @@
 package es.mercadona.gesaduan.dao.equipotransporte.movercargas.v1.impl;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -11,6 +13,7 @@ import es.mercadona.gesaduan.dao.BaseDAO;
 import es.mercadona.gesaduan.dao.equipotransporte.movercargas.v1.PutMoverCargasDAO;
 import es.mercadona.gesaduan.dto.equipotransporte.movercargas.v1.CargasDTO;
 import es.mercadona.gesaduan.dto.equipotransporte.movercargas.v1.InputDatosMoverCargasDTO;
+import es.mercadona.gesaduan.dto.equipotransporte.putrelacionequipocarga.v1.CargaDTO;
 import es.mercadona.gesaduan.jpa.equipotransporte.v1.EquipoTransporteJPA;
 
 public class PutMoverCargasDAOImpl extends BaseDAO<EquipoTransporteJPA> implements PutMoverCargasDAO {
@@ -255,6 +258,36 @@ public class PutMoverCargasDAOImpl extends BaseDAO<EquipoTransporteJPA> implemen
 			this.logger.error("({}-{}) ERROR - {} {}","PutMoverCargasDAOImpl(GESADUAN)","cambiarRelacion",ex.getClass().getSimpleName(),ex.getMessage());	
 			throw new ApplicationException(ex.getMessage());			
 		}			
+	}
+	
+	@Transactional
+	@Override
+	public Integer comprobarCargaContenedorFacturado(InputDatosMoverCargasDTO datos) {
+		Integer restultadoQuery;
+		
+		try {		
+			final StringBuilder sql = new StringBuilder();
+	
+			String select = "SELECT COUNT(NUM_CONTENEDOR) ";
+			String from   = "FROM O_CONTENEDOR_EXPEDIDO ";
+			String where  = "WHERE COD_N_EQUIPO = ?codigoEquipoOrigen AND (";
+			List<CargasDTO> cargas = datos.getDatos().getCargas();
+			
+			for (int i = 0; i < cargas.size(); i++) {
+				if (cargas.size()-1 == i) where += "(COD_V_CARGA = '"+cargas.get(i).getCodigoCarga()+"' AND COD_V_ALMACEN = '"+cargas.get(i).getCodigoCentroOrigen()+"'))";
+				else where += "(COD_V_CARGA = '"+cargas.get(i).getCodigoCarga()+"' AND COD_V_ALMACEN = '"+cargas.get(i).getCodigoCentroOrigen()+"') OR ";
+			}
+			
+			sql.append(select).append(from).append(where);
+			final Query query = getEntityManager().createNativeQuery(sql.toString());
+			query.setParameter("codigoEquipoOrigen", datos.getDatos().getCodigoEquipoOrigen());
+			restultadoQuery = Integer.parseInt(query.getSingleResult().toString());		
+		} catch(Exception ex) {
+			this.logger.error("({}-{}) ERROR - {} {}","PutMoverCargasDAOImpl(GESADUAN)","comprobarCargaContenedorFacturado",ex.getClass().getSimpleName(),ex.getMessage());	
+			throw new ApplicationException(ex.getMessage());			
+		}		
+		
+		return restultadoQuery;	
 	}
 
 }

@@ -21,7 +21,8 @@ public enum EnumGesaduanException {
 	CARGA_NO_VALIDADA_NO_TIENE_PEDIDOS("Las siguientes cargas no han sido validadas por que no tiene pedidos asociados $CARGAS.",null,  "GES-00017", "CARGAS", "VALIDAR PEDIDOS CARGAS"),
 	NUM_ALBARAN_DISTINTO("El número de albarán no coincide con el número de expedición de la pestaña de resultados", null, "GES-00018", "EXPEDICION", "CARGAR EXPEDICION"),
 	NUM_PEDIDO_DISTINTO("El número de pedido del Excel no coincide con el número de pedido de la pestaña de resultados", null, "GES-00019", "EXPEDICION", "CARGAR EXPEDICION"),
-	VERSION_DISTINTA_EXCEL("La versión del Excel no coincide con la versión indicada en la base de datos", null, "GES-00020", "EXPEDICION", "CARGAR EXPEDICION");
+	VERSION_DISTINTA_EXCEL("La versión del Excel no coincide con la versión indicada en la base de datos", null, "GES-00020", "EXPEDICION", "CARGAR EXPEDICION"),
+	CARGA_CONTENEDOR_FACTURADO("El equipo origen tiene alguna carga en un contenedor ya facturado, no es posible moverla en este estado", null, "GES-00021", "EQUIPO TRANSPORTE", "MOVER CARGAS");
 
     private String descripcion;
     private String descripcionSingular;    
