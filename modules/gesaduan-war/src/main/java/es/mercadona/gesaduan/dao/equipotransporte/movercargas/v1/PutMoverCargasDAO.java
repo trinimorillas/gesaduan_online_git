@@ -12,4 +12,5 @@ public interface PutMoverCargasDAO {
 	public void cambiarRelacion(InputDatosMoverCargasDTO datos, CargasDTO carga);
 	public void actualizarOcupacionEquipoOrigen(InputDatosMoverCargasDTO datos, CargasDTO carga);
 	public void actualizarOcupacionEquipoDestino(InputDatosMoverCargasDTO datos, CargasDTO carga);
+	public Integer comprobarCargaContenedorFacturado(InputDatosMoverCargasDTO datos);
 }

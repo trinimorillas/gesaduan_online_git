@@ -26,6 +26,8 @@ public class PutMoverCargasServiceImpl implements PutMoverCargasService {
 			throw new GesaduanException(EnumGesaduanException.EQUIPO_ORIGEN_CARGADO);
 		if (putMoverCargasDao.comprobarEquipoCargado(datos.getDatos().getCodigoEquipoDestino()) == 0)
 			throw new GesaduanException(EnumGesaduanException.EQUIPO_DESTINO_CARGADO);
+		if (putMoverCargasDao.comprobarCargaContenedorFacturado(datos) > 0)
+			throw new GesaduanException(EnumGesaduanException.CARGA_CONTENEDOR_FACTURADO);
 		
 		List<CargasDTO> cargas = datos.getDatos().getCargas();
 		for (CargasDTO carga : cargas) {
