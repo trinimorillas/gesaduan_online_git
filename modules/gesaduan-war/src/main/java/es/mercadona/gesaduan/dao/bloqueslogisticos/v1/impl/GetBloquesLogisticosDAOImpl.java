@@ -52,7 +52,7 @@ public class GetBloquesLogisticosDAOImpl extends BaseDAO<BloquesLogisticosJPA> i
 			
 				Integer campoanterior1 = 0;
 			
-				List<CentroDTO> listaCentro = null;
+				List<CentroDTO> listaCentro = new ArrayList<>();
 				CentroDTO centro = null;
 				DatosBloquesLogisticosDTO bloqueLogistico = null;
 
