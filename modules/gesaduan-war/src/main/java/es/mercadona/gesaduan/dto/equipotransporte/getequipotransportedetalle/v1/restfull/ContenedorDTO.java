@@ -10,7 +10,10 @@ public class ContenedorDTO extends AbstractDTO {
 	private String codigoCarga;
 	private String codigoCentroOrigen;
 	private String mcaFacturado;
-	private String fechaExpedicion;	
+	private String fechaExpedicion;
+	private String codigoAlmacen;
+	private Integer numDosier;
+	private Integer anyoDosier;
 
 	public Long getNumContenedor() {
 		return numContenedor;
@@ -52,7 +55,28 @@ public class ContenedorDTO extends AbstractDTO {
 		this.fechaExpedicion = fechaExpedicion;
 	}
 
+	public String getCodigoAlmacen() {
+		return codigoAlmacen;
+	}
 
-	
+	public void setCodigoAlmacen(String codigoAlmacen) {
+		this.codigoAlmacen = codigoAlmacen;
+	}
+
+	public Integer getNumDosier() {
+		return numDosier;
+	}
+
+	public void setNumDosier(Integer numDosier) {
+		this.numDosier = numDosier;
+	}
+
+	public Integer getAnyoDosier() {
+		return anyoDosier;
+	}
+
+	public void setAnyoDosier(Integer anyoDosier) {
+		this.anyoDosier = anyoDosier;
+	}	
 	
 }

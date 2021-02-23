@@ -43,11 +43,12 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 			String select = "SELECT ";		
 			String campos = "ET.COD_N_EQUIPO, ET.COD_N_EMBARQUE, ET.TXT_MATRICULA, PR.COD_N_PROVEEDOR, PR.TXT_RAZON_SOCIAL, T.COD_N_TEMPERATURA, " +
 					"T.TXT_TEMPERATURA, ET.NUM_CAPACIDAD, ET.NUM_OCUPACION, ET.COD_N_ESTADO, EE.TXT_NOMBRE_ESTADO, TO_CHAR(ET.FEC_DT_CARGA,'DD/MM/YYYY'), " +
-					"TO_CHAR(ET.FEC_DT_CARGA, 'HH24:MI:SS'), ET.TXT_OBSERVACIONES, ET.COD_V_USUARIO_CREACION ";
+					"TO_CHAR(ET.FEC_DT_CARGA, 'HH24:MI:SS'), ET.TXT_OBSERVACIONES, ET.COD_V_USUARIO_CREACION, ET.COD_N_ESTADO_DOCUMENTACION, EDE.TXT_NOMBRE_ESTADO ";
 			String from = "FROM D_EQUIPO_TRANSPORTE ET " +
 					"INNER JOIN D_ESTADO_EQUIPO EE ON (EE.COD_N_ESTADO = ET.COD_N_ESTADO) " +
 					"LEFT JOIN D_PROVEEDOR_R PR ON (PR.COD_N_PROVEEDOR = ET.COD_N_PROVEEDOR) " +
-					"LEFT JOIN D_TEMPERATURA T ON (T.COD_N_TEMPERATURA = ET.COD_N_TEMPERATURA) ";
+					"LEFT JOIN D_TEMPERATURA T ON (T.COD_N_TEMPERATURA = ET.COD_N_TEMPERATURA) " +
+					"LEFT JOIN D_ESTADO_DOCUMENTACION_EQUIPO EDE ON (EDE.COD_N_ESTADO = ET.COD_N_ESTADO_DOCUMENTACION)";
 			String where = "WHERE ET.COD_N_EQUIPO = ?codigoEquipo ";
 			
 			sql.append(select).append(campos).append(from).append(where);
@@ -78,6 +79,8 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 					if (tmp[12] != null) equipoTransporte.setHoraCarga(String.valueOf(tmp[12]));
 					if (tmp[13] != null) equipoTransporte.setObservaciones(String.valueOf(tmp[13]));
 					if (tmp[14] != null) equipoTransporte.setCodigoUsuarioCreacion(String.valueOf(tmp[14]));
+					if (tmp[15] != null) equipoTransporte.setCodigoEstadoDocumentacion(Integer.parseInt(String.valueOf(tmp[15])));
+					if (tmp[16] != null) equipoTransporte.setNombreEstadoDocumentacion(String.valueOf(tmp[16]));
 					equipoTransporte.setMcaExistenContenedoresFacturados(hayContenedores(codigoEquipo));
 					listaCarga = new ArrayList<>();				
 					listaCarga = getCargas(equipoTransporte.getCodigoEquipo(), input.getOrden(), input.getMcaIncluyeContenedores());
@@ -267,7 +270,7 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 		List<ContenedorDTO> listaContenedor = null;		
 		
 		try {		
-			String select = "SELECT CE.NUM_CONTENEDOR, CE.COD_V_CARGA " + 
+			String select = "SELECT CE.NUM_CONTENEDOR, CE.COD_V_CARGA, CE.COD_V_ALMACEN, TO_CHAR(CE.FEC_DT_EXPEDICION,'DD/MM/YYYY HH24:MI:SS'), CE.NUM_DOSIER, CE.NUM_ANYO " + 
 						    "FROM O_CONTENEDOR_EXPEDIDO CE " +
 							"WHERE " + 
 						    "  CE.COD_N_EQUIPO = ?codigoEquipo AND " + 
@@ -288,6 +291,10 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 				for (Object[] tmp : listado) {		
 					ContenedorDTO contenedor = new ContenedorDTO();
 					contenedor.setNumContenedor(Long.parseLong(String.valueOf(tmp[0])));
+					if (tmp[2] != null) contenedor.setCodigoAlmacen(String.valueOf(tmp[2]));
+					if (tmp[3] != null) contenedor.setFechaExpedicion(String.valueOf(tmp[3]));
+					if (tmp[4] != null) contenedor.setNumDosier(Integer.parseInt(String.valueOf(tmp[4])));
+					if (tmp[5] != null) contenedor.setAnyoDosier(Integer.parseInt(String.valueOf(tmp[5])));
 					listaContenedor.add(contenedor);
 				}
 			}		
