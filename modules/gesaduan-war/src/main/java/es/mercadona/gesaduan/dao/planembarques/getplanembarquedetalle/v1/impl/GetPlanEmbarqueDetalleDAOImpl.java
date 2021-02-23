@@ -15,7 +15,9 @@ import es.mercadona.gesaduan.dto.planembarques.getplanembarquedetalle.v1.InputDa
 import es.mercadona.gesaduan.dto.planembarques.getplanembarquedetalle.v1.InputPlanEmbarqueDetalleDTO;
 import es.mercadona.gesaduan.dto.planembarques.getplanembarquedetalle.v1.restfull.CargaDTO;
 import es.mercadona.gesaduan.dto.planembarques.getplanembarquedetalle.v1.restfull.DatosPlanEmbarqueDetalleDTO;
+import es.mercadona.gesaduan.dto.planembarques.getplanembarquedetalle.v1.restfull.DosierDTO;
 import es.mercadona.gesaduan.dto.planembarques.getplanembarquedetalle.v1.restfull.EquipoDTO;
+import es.mercadona.gesaduan.dto.planembarques.getplanembarquedetalle.v1.restfull.EquipoSimpleDTO;
 import es.mercadona.gesaduan.dto.planembarques.getplanembarquedetalle.v1.restfull.OutputPlanEmbarqueDetalleDTO;
 import es.mercadona.gesaduan.dto.planembarques.getplanembarquedetalle.v1.restfull.PedidoDTO;
 import es.mercadona.gesaduan.dto.planembarques.getplanembarquedetalle.v1.restfull.SuministroDTO;
@@ -49,15 +51,25 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 			final StringBuilder sql = new StringBuilder();		
 	
 			String select = "SELECT ";		
-			String campos = "PE.COD_N_EMBARQUE, TO_CHAR(PE.FEC_DT_EMBARQUE,'DD/MM/YYYY'), BL.COD_N_BLOQUE_LOGISTICO, BL.TXT_NOMBRE, PUE.COD_N_PUERTO," + 
-					"PUE.TXT_NOMBRE_PUERTO, PUD.COD_N_PUERTO, PUD.TXT_NOMBRE_PUERTO, PN.COD_N_PROVEEDOR, PN.TXT_RAZON_SOCIAL, NVL(PE.NUM_EQUIPOS, 0), EPE.COD_N_ESTADO," + 
-					"EPE.TXT_NOMBRE_ESTADO, PE.COD_V_USUARIO_VALIDACION ";
+			String campos = "   PE.COD_N_EMBARQUE, " + 
+			                "   TO_CHAR(PE.FEC_DT_EMBARQUE,'DD/MM/YYYY'), " + 
+			                "   BL.COD_N_BLOQUE_LOGISTICO, " + 
+			                "   BL.TXT_NOMBRE, PUE.COD_N_PUERTO, " + 
+			                "	PUE.TXT_NOMBRE_PUERTO, " + 
+			                "	PUD.COD_N_PUERTO, " + 
+			                "	PUD.TXT_NOMBRE_PUERTO, " + 
+			                "	PN.COD_N_PROVEEDOR, " + 
+			                "	PN.TXT_RAZON_SOCIAL, " + 
+			                "	NVL(PE.NUM_EQUIPOS, 0), " + 
+			                "	EPE.COD_N_ESTADO," + 
+			                "	EPE.TXT_NOMBRE_ESTADO, " + 
+			                "	PE.COD_V_USUARIO_VALIDACION ";
 			String from = "FROM D_PLAN_EMBARQUE PE " + 
-					"INNER JOIN D_BLOQUE_LOGISTICO_R BL ON (BL.COD_N_BLOQUE_LOGISTICO = PE.COD_N_BLOQUE_ORIGEN) " + 
-					"INNER JOIN D_PUERTO PUE ON (PUE.COD_N_PUERTO = PE.COD_N_PUERTO_EMBARQUE) " + 
-					"INNER JOIN D_PUERTO PUD ON (PUD.COD_N_PUERTO = PE.COD_N_PUERTO_DESEMBARQUE) " + 
-					"INNER JOIN D_ESTADO_PLAN_EMBARQUE EPE ON (EPE.COD_N_ESTADO = PE.COD_N_ESTADO) " +
-					"LEFT JOIN D_PROVEEDOR_R PN ON (PN.COD_N_PROVEEDOR = PE.COD_N_NAVIERA)";		
+							"INNER JOIN D_BLOQUE_LOGISTICO_R BL ON (BL.COD_N_BLOQUE_LOGISTICO = PE.COD_N_BLOQUE_ORIGEN) " + 
+							"INNER JOIN D_PUERTO PUE ON (PUE.COD_N_PUERTO = PE.COD_N_PUERTO_EMBARQUE) " + 
+							"INNER JOIN D_PUERTO PUD ON (PUD.COD_N_PUERTO = PE.COD_N_PUERTO_DESEMBARQUE) " + 
+							"INNER JOIN D_ESTADO_PLAN_EMBARQUE EPE ON (EPE.COD_N_ESTADO = PE.COD_N_ESTADO) " +
+							"LEFT JOIN D_PROVEEDOR_R PN ON (PN.COD_N_PROVEEDOR = PE.COD_N_NAVIERA)";		
 			String where = "WHERE PE.COD_N_EMBARQUE = ?codigoPlanEmbarque ";
 								
 			sql.append(select).append(campos).append(from).append(where);
@@ -68,7 +80,10 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 			List<Object[]> listado = query.getResultList();
 			
 			List<EquipoDTO> listaEquipo = null;
-			listaEquipo = new ArrayList<EquipoDTO>();		
+			listaEquipo = new ArrayList<EquipoDTO>();
+			
+			List<DosierDTO> listaDosier = null;
+			listaDosier = new ArrayList<DosierDTO>();					
 	
 			if (listado != null && !listado.isEmpty()) {			
 				for (Object[] tmp : listado) {			
@@ -89,8 +104,14 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 					planEmbarque.setNombreEstado(String.valueOf(tmp[12]));
 					if (tmp[13] != null) planEmbarque.setCodigoUsuarioValidacion(String.valueOf(tmp[13]));
 		
-					listaEquipo = consultarEquiposPlanEmbarque(datos);				
+					listaEquipo = consultarEquiposPlanEmbarque(datos);	
+					
+					if ("S".equals(input.getMcaIncluyeDosieres()) && listaEquipo.size()>0) {
+						listaDosier = consultarDosieresPlanEmbarque(datos,listaEquipo);
+					}
+					
 					planEmbarque.setEquipo(listaEquipo);
+					planEmbarque.setDosier(listaDosier);					
 				}						
 			}		
 		
@@ -256,6 +277,7 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 					if (tmp[11] != null) equipo.setCodigoUsuarioCreacion(String.valueOf(tmp[11]));
 	
 					listaSuministro = consultarSuministroEquipos(equipo.getCodigoEquipo());
+					listaSuministro = consultarSuministroEquipos(equipo.getCodigoEquipo());					
 					equipo.setSuministro(listaSuministro);
 					if ("S".equals(mcaIncluyeCargas)) {
 						listaCarga = consultarCargaEquipos(datos,equipo.getCodigoEquipo());
@@ -276,7 +298,7 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 		return listaEquipo;
 	}	
 	
-	private List<SuministroDTO> consultarSuministroEquipos(Long codigoEquipo) {	
+	private List<SuministroDTO> consultarCategoriaEquipos(Long codigoEquipo) {	
 		
 		List<SuministroDTO> listaSuministro = null;		
 		
@@ -341,10 +363,26 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 			final StringBuilder sql = new StringBuilder();
 			
 			String select = "SELECT ";		
-			String campos = "CA.COD_V_CARGA, TC.COD_N_TIPO_CARGA, TC.TXT_NOMBRE_TIPO_CARGA, TS.COD_N_TIPO_SUMINISTRO, TS.TXT_NOMBRE_TIPO_SUMINISTRO, " +
-					"CC.COD_N_CATEGORIA, CC.TXT_NOMBRE_CATEGORIA, PP.COD_N_PROVEEDOR, PP.TXT_RAZON_SOCIAL, CA.COD_V_ALMACEN_ORIGEN, CA.COD_V_CENTRO_DESTINO, " +
-					"TO_CHAR(CA.FEC_D_ENTREGA,'DD/MM/YYYY'), TO_CHAR(CA.FEC_DT_SERVICIO,'DD/MM/YYYY'), ESC.COD_N_ESTADO, ESC.TXT_NOMBRE_ESTADO, " +
-					"EC.NUM_HUECO_OCUPADO, EC.NUM_PESO_OCUPADO, EC.NUM_DIVISION, CA.MCA_CONTIENE_LPC, CA.MCA_PEDIDOS_SIN_VALIDAR ";
+			String campos = "	CA.COD_V_CARGA, " + 
+							"	TC.COD_N_TIPO_CARGA, " + 
+							"	TC.TXT_NOMBRE_TIPO_CARGA, " + 
+							"	TS.COD_N_TIPO_SUMINISTRO, " + 
+							"	TS.TXT_NOMBRE_TIPO_SUMINISTRO, " + 
+							"	CC.COD_N_CATEGORIA, " + 
+							"	CC.TXT_NOMBRE_CATEGORIA, " + 
+							"	PP.COD_N_PROVEEDOR, " + 
+							"	PP.TXT_RAZON_SOCIAL, " + 
+							"	CA.COD_V_ALMACEN_ORIGEN, " + 
+							"	CA.COD_V_CENTRO_DESTINO, " + 
+							"	TO_CHAR(CA.FEC_D_ENTREGA,'DD/MM/YYYY'), " + 
+							"	TO_CHAR(CA.FEC_DT_SERVICIO,'DD/MM/YYYY'), " + 
+							"	ESC.COD_N_ESTADO, " + 
+							"	ESC.TXT_NOMBRE_ESTADO, " + 
+							"	EC.NUM_HUECO_OCUPADO, " + 
+							"	EC.NUM_PESO_OCUPADO, " + 
+							"	EC.NUM_DIVISION, " + 
+							"	CA.MCA_CONTIENE_LPC, " + 
+							"	CA.MCA_PEDIDOS_SIN_VALIDAR ";
 			String from = "FROM D_EQUIPO_TRANSPORTE ET " +
 					"INNER JOIN S_EQUIPO_CARGA EC ON (EC.COD_N_EQUIPO = ET.COD_N_EQUIPO) " +
 					"INNER JOIN D_CARGA CA ON (CA.COD_V_CARGA = EC.COD_V_CARGA AND CA.COD_V_ALMACEN_ORIGEN = EC.COD_V_ALMACEN_ORIGEN) " +
@@ -486,5 +524,109 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 		
 		return false;
 	}
+	
+	private List<DosierDTO> consultarDosieresPlanEmbarque(InputDatosDetalleDTO datos,List<EquipoDTO> listaEquipo) {		
+		
+		InputPlanEmbarqueDetalleDTO input = datos.getDatos();
+		List<DosierDTO> listaDosier = new ArrayList<DosierDTO>() ;		
+		
+		try {
+		
+			Long codigoPlanEmbarque = input.getCodigoEmbarque();
+			
+			/*
+			String orden = null;
+			if (input.getOrden() != null)
+				orden = input.getOrden();
+			*/	
+			
+			final StringBuilder sql = new StringBuilder();
+			final StringBuilder sqlCount = new StringBuilder();
+			
+			String count = "SELECT COUNT(*) FROM (";
+			String select = "SELECT ";		
+			String campos = "   D.NUM_DOSIER, " + 
+							"   D.NUM_ANYO, " + 
+							"	TO_CHAR(D.FEC_DT_CREACION,'DD/MM/YYYY'), " + 
+							"	D.COD_V_USUARIO_CREACION, " + 
+							"	D.COD_N_ESTADO," + 
+							" 	ED.TXT_NOMBRE_ESTADO, " + 
+							"	TO_CHAR(D.FEC_DT_DESCARGA,'DD/MM/YYYY'), " + 
+							"	DE.COD_N_EQUIPO, " + 
+							"	DE.TXT_MATRICULA " ;
+			String from = "FROM S_DOSIER_EQUIPO DE " +
+						  "JOIN D_DOSIER D ON (D.NUM_DOSIER = DE.NUM_DOSIER AND D.NUM_ANYO = DE.NUM_ANYO) " +
+						  "JOIN D_ESTADO_DOSIER ED ON (ED.COD_N_ESTADO = D.COD_N_ESTADO)" ;	
+			String where = "WHERE DE.COD_N_EQUIPO IN ( ";
+			
+			for (EquipoDTO equipo : listaEquipo) {
+				where += equipo.getCodigoEquipo() + ","; 
+			}
+			where = where.substring(0,where.length()-1);
+			
+			where += ") ";			
+							
+			String countFin = ")";
+			
+			String order = "";			
+			/*
+			
+			if (orden.equals("-matricula"))
+				order += "ORDER BY ET.TXT_MATRICULA DESC";
+			*/
+			
+			sql.append(select).append(campos).append(from).append(where).append(order);
+			sqlCount.append(count).append(select).append(campos).append(from).append(where).append(countFin);
+	
+			final Query query = getEntityManager().createNativeQuery(sql.toString());
+			final Query queryCount = getEntityManager().createNativeQuery(sqlCount.toString());
+			
+			query.setParameter("codigoPlanEmbarque", codigoPlanEmbarque);
+			queryCount.setParameter("codigoPlanEmbarque", codigoPlanEmbarque);
+			
+			@SuppressWarnings("unchecked")
+			List<Object[]> listado = query.getResultList();
+			
+			Long numeroDosier = 0L;
+			DosierDTO dosier = null;			
+	
+			if (listado != null && !listado.isEmpty()) {
+				for (Object[] tmp : listado) {	
+					
+					Long nuevoNumeroDosier = Long.parseLong(String.valueOf(tmp[0]));
+					
+					if (numeroDosier != nuevoNumeroDosier) {
+						dosier = new DosierDTO();
+						dosier.setNumDosier(nuevoNumeroDosier);
+						dosier.setAnyoDosier(Long.parseLong(String.valueOf(tmp[1])));
+						dosier.setFechaCreacion(String.valueOf(tmp[2]));
+						dosier.setUsuarioCreacion(String.valueOf(tmp[3]));
+						dosier.setCodigoEstado(Long.parseLong(String.valueOf(tmp[4])));
+						dosier.setNombreEstado(String.valueOf(tmp[5]));	
+						dosier.setFechaDescarga(String.valueOf(tmp[6]));
+						
+						listaDosier.add(dosier);	
+					}
+					
+					
+					EquipoSimpleDTO equipo = new EquipoSimpleDTO();
+					
+					equipo.setCodigoEquipo(Long.parseLong(String.valueOf(tmp[7])));
+					equipo.setMatricula(String.valueOf(tmp[8]));	
+					
+					dosier.setEquipo(equipo);
+					
+					numeroDosier = nuevoNumeroDosier;					
+			
+				}			
+			}
+		
+		} catch (Exception e) {
+			this.logger.error("({}-{}) ERROR - {} {}","GetPlanEmbarqueDetalleDAOImpl(GESADUAN)","consultarDosieresPlanEmbarque",e.getClass().getSimpleName(),e.getMessage());	
+			throw new ApplicationException(e.getMessage());
+		}		
+				
+		return listaDosier;
+	}		
 	
 }

@@ -112,6 +112,7 @@ public class PlanEmbarquesRestful {
 			@QueryParam("mcaOcultaLlenos") String mcaOcultaLlenos,
 			@QueryParam("mcaIncluyeCargas") String mcaIncluyeCargas,			
 			@QueryParam("mcaIncluyePedidos") String mcaIncluyePedidos,			
+			@QueryParam("mcaIncluyeDosieres") String mcaIncluyeDosieres,			
 			@DefaultValue("+matricula") @QueryParam("orden") String orden,
 			InputDatosDetalleDTO input) {	
 		OutputPlanEmbarqueDetalleDTO response = null;
@@ -128,7 +129,12 @@ public class PlanEmbarquesRestful {
 				input.getDatos().setMcaIncluyePedidos(mcaIncluyePedidos);
 			} else {
 				input.getDatos().setMcaIncluyePedidos("N");			
-			}			
+			}		
+			if (mcaIncluyeDosieres != null) {
+				input.getDatos().setMcaIncluyeDosieres(mcaIncluyeDosieres);
+			} else {
+				input.getDatos().setMcaIncluyeDosieres("N");			
+			}				
 			
 			input.getDatos().setCodigoEmbarque(codigoEmbarque);
 			input.getDatos().setOrden(orden);
