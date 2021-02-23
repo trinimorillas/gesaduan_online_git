@@ -19,6 +19,7 @@ public class DatosPlanEmbarquesDTO extends AbstractDTO implements Serializable {
 	private String codigoNaviera;
 	private String nombreNaviera;
 	private Integer numeroEquipos;
+	private String estadoDocumentacion;
 	private Integer codigoEstado;
 	private String nombreEstado;
 	private String codigoUsuarioValidacion;
@@ -110,6 +111,14 @@ public class DatosPlanEmbarquesDTO extends AbstractDTO implements Serializable {
 		this.numeroEquipos = numeroEquipos;
 	}
 	
+	public String getEstadoDocumentacion() {
+		return estadoDocumentacion;
+	}
+
+	public void setEstadoDocumentacion(String estadoDocumentacion) {
+		this.estadoDocumentacion = estadoDocumentacion;
+	}
+
 	public Integer getCodigoEstado() {
 		return codigoEstado;
 	}
