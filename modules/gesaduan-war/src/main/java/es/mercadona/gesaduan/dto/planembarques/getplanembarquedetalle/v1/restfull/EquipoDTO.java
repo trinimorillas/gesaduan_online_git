@@ -21,6 +21,7 @@ public class EquipoDTO extends AbstractDTO {
 	private String nombreEstado;
 	private String codigoUsuarioCreacion;
 	private List<SuministroDTO> suministro;
+	private List<CategoriaDTO> categoria;	
 	private List<CargaDTO> carga;	
 
 	public Long getCodigoEquipo() {
@@ -127,6 +128,14 @@ public class EquipoDTO extends AbstractDTO {
 		this.suministro = suministro;
 	}
 
+	public List<CategoriaDTO> getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(List<CategoriaDTO> categoria) {
+		this.categoria = categoria;
+	}	
+	
 	public List<CargaDTO> getCarga() {
 		return carga;
 	}

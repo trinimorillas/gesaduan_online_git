@@ -19,14 +19,14 @@ public class DeleteAlertasServiceImpl implements DeleteAlertasService{
 		
 		OutputDeleteAlertasDTO response = new OutputDeleteAlertasDTO();
 		
-		boolean esExpedicion = (input.getExpedicion() != null) ? true : false;
+		boolean esExpedicion = (input.getExpedicion() != null);
 		if(esExpedicion) {
 			deleteAlertasDao.eliminarAlertasExpedicion(input);
 		}else {
 			deleteAlertasDao.eliminarAlertas(input);
 		}
 		
-		HashMap<String, String> metadatos = new HashMap<String, String>();
+		HashMap<String, String> metadatos = new HashMap<>();
 		response.setMetadatos(metadatos);
 		return response;
 	}

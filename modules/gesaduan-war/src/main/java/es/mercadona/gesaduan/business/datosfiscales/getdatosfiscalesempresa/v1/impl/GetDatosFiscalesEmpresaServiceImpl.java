@@ -4,7 +4,6 @@ import javax.inject.Inject;
 
 import es.mercadona.fwk.auth.SecurityService;
 import es.mercadona.fwk.core.exceptions.ApplicationException;
-import es.mercadona.fwk.core.exceptions.ExceptionUtils;
 import es.mercadona.gesaduan.business.datosfiscales.getdatosfiscalesempresa.v1.GetDatosFiscalesEmpresaService;
 import es.mercadona.gesaduan.dao.datosfiscales.getdatosfiscalesempresa.v1.GetDatosFiscalesEmpresaDAO;
 import es.mercadona.gesaduan.dto.datosfiscales.getdatosfiscalesporempresa.v1.restfull.DatosFiscalesDTO;
@@ -36,7 +35,6 @@ public class GetDatosFiscalesEmpresaServiceImpl implements GetDatosFiscalesEmpre
 
 			data.setDescCodigoPostal(datosFiscales.getCodPostal());
 			data.setDescDireccion(datosFiscales.getDireccion());
-			//data.setDescPais(datosFiscales.getCodPais());
 			data.setDescPoblacion(datosFiscales.getPoblacion());
 			data.setDescProvincia(datosFiscales.getProvincia());
 			data.setDescRazonSocial(datosFiscales.getProvincia());
@@ -50,7 +48,7 @@ public class GetDatosFiscalesEmpresaServiceImpl implements GetDatosFiscalesEmpre
 
 		} catch (Exception e) {
 
-			establecerSalidaError(e, "getDatosFiscalesPorEmpresa", "error.Exception");
+			establecerSalidaError(e, "getDatosFiscalesPorEmpresa");
 			throw new ApplicationException(e.getMessage());
 		}
 
@@ -60,12 +58,11 @@ public class GetDatosFiscalesEmpresaServiceImpl implements GetDatosFiscalesEmpre
 	
 	
 	
-	  private void establecerSalidaError(Exception exception, String metodo, String codError) {
+	  private void establecerSalidaError(Exception exception, String metodo) {
 
 		    String login = this.securityService.getPrincipal().getLogin();
 		    
-		    this.logger.error("Error ejecutando la clase: GetDatosFiscalesEmpresaServiceImpl",
-		        new Object[] { metodo, login, ExceptionUtils.getStackTrace(exception) });
+		    this.logger.error("({}-{}) ERROR - {}{} {} {}","setPOSIXFilePermissions(GESADUAN)","establecerSalidaError",metodo,login,exception.getClass().getSimpleName(),exception.getMessage());
 	  }
 
 }

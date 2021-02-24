@@ -14,6 +14,7 @@ import es.mercadona.gesaduan.dao.planembarques.getplanembarquedetalle.v1.GetPlan
 import es.mercadona.gesaduan.dto.planembarques.getplanembarquedetalle.v1.InputDatosDetalleDTO;
 import es.mercadona.gesaduan.dto.planembarques.getplanembarquedetalle.v1.InputPlanEmbarqueDetalleDTO;
 import es.mercadona.gesaduan.dto.planembarques.getplanembarquedetalle.v1.restfull.CargaDTO;
+import es.mercadona.gesaduan.dto.planembarques.getplanembarquedetalle.v1.restfull.CategoriaDTO;
 import es.mercadona.gesaduan.dto.planembarques.getplanembarquedetalle.v1.restfull.DatosPlanEmbarqueDetalleDTO;
 import es.mercadona.gesaduan.dto.planembarques.getplanembarquedetalle.v1.restfull.DosierDTO;
 import es.mercadona.gesaduan.dto.planembarques.getplanembarquedetalle.v1.restfull.EquipoDTO;
@@ -255,6 +256,7 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 			List<Object[]> listado = query.getResultList();
 			
 			List<SuministroDTO> listaSuministro = null;
+			List<CategoriaDTO> listaCategoria = null;			
 			List<CargaDTO> listaCarga = null;		
 			listaEquipo = new ArrayList<EquipoDTO>() ;					
 	
@@ -277,8 +279,9 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 					if (tmp[11] != null) equipo.setCodigoUsuarioCreacion(String.valueOf(tmp[11]));
 	
 					listaSuministro = consultarSuministroEquipos(equipo.getCodigoEquipo());
-					listaSuministro = consultarSuministroEquipos(equipo.getCodigoEquipo());					
+					listaCategoria = consultarCategoriaEquipos(equipo.getCodigoEquipo());					
 					equipo.setSuministro(listaSuministro);
+					equipo.setCategoria(listaCategoria);					
 					if ("S".equals(mcaIncluyeCargas)) {
 						listaCarga = consultarCargaEquipos(datos,equipo.getCodigoEquipo());
 					} else {
@@ -296,9 +299,9 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 		}		
 				
 		return listaEquipo;
-	}	
+	}
 	
-	private List<SuministroDTO> consultarCategoriaEquipos(Long codigoEquipo) {	
+	private List<SuministroDTO> consultarSuministroEquipos(Long codigoEquipo) {	
 		
 		List<SuministroDTO> listaSuministro = null;		
 		
@@ -344,6 +347,54 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 		}			
 				
 		return listaSuministro;
+	}	
+	
+	private List<CategoriaDTO> consultarCategoriaEquipos(Long codigoEquipo) {	
+		
+		List<CategoriaDTO> listaCategoria = null;		
+		
+		try { 
+		
+			final StringBuilder sql = new StringBuilder();
+			final StringBuilder sqlCount = new StringBuilder();
+			
+			String select = "SELECT ";		
+			String campos = "DISTINCT CC.COD_N_CATEGORIA, CC.TXT_NOMBRE_CATEGORIA ";
+			String from = "FROM S_EQUIPO_CARGA EC " +   
+					"LEFT JOIN D_CARGA CA ON (CA.COD_V_CARGA = EC.COD_V_CARGA AND CA.COD_V_ALMACEN_ORIGEN = EC.COD_V_ALMACEN_ORIGEN) " + 
+					"INNER JOIN D_CATEGORIA_CARGA CC ON (CC.COD_N_CATEGORIA = CA.COD_N_CATEGORIA) ";		
+			String where = "WHERE EC.COD_N_EQUIPO = ?codigoEquipo ";			
+			String order = "ORDER BY CC.TXT_NOMBRE_CATEGORIA ASC";
+			
+			sql.append(select).append(campos).append(from).append(where).append(order);
+	
+			final Query query = getEntityManager().createNativeQuery(sql.toString());
+			final Query queryCount = getEntityManager().createNativeQuery(sqlCount.toString());
+			
+			query.setParameter("codigoEquipo", codigoEquipo);
+			queryCount.setParameter("codigoEquipo", codigoEquipo);
+			
+			
+			@SuppressWarnings("unchecked")
+			List<Object[]> listado = query.getResultList();		
+			listaCategoria = new ArrayList<CategoriaDTO>();
+	
+			if (listado != null && !listado.isEmpty()) {
+				for (Object[] tmp : listado) {			
+					CategoriaDTO categoria = new CategoriaDTO();
+					categoria.setCodigoCategoria(Long.parseLong(String.valueOf(tmp[0])));
+					categoria.setNombreCategoria(String.valueOf(tmp[1]));
+					
+					listaCategoria.add(categoria);				
+				}			
+			}
+		
+		} catch (Exception e) {
+			this.logger.error("({}-{}) ERROR - {} {}","GetPlanEmbarqueDetalleDAOImpl(GESADUAN)","consultarCategoriaEquipos",e.getClass().getSimpleName(),e.getMessage());	
+			throw new ApplicationException(e.getMessage());
+		}			
+				
+		return listaCategoria;
 	}		
 	
 	private List<CargaDTO> consultarCargaEquipos(InputDatosDetalleDTO datos,Long codigoEquipo) {	
@@ -604,8 +655,6 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 						dosier.setCodigoEstado(Long.parseLong(String.valueOf(tmp[4])));
 						dosier.setNombreEstado(String.valueOf(tmp[5]));	
 						dosier.setFechaDescarga(String.valueOf(tmp[6]));
-						
-						listaDosier.add(dosier);	
 					}
 					
 					
@@ -615,6 +664,8 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 					equipo.setMatricula(String.valueOf(tmp[8]));	
 					
 					dosier.setEquipo(equipo);
+					
+					listaDosier.add(dosier);					
 					
 					numeroDosier = nuevoNumeroDosier;					
 			

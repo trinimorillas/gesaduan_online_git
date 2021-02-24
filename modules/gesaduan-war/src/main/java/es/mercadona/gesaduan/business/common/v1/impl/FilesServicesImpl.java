@@ -12,18 +12,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+
 import javax.inject.Inject;
+
 import org.apache.commons.io.FileUtils;
 
 import es.mercadona.fwk.auth.SecurityService;
 import es.mercadona.fwk.batch.BatchService;
-import es.mercadona.fwk.core.exceptions.ExceptionUtils;
 import es.mercadona.fwk.core.io.CustomFileAttributes;
 import es.mercadona.fwk.core.io.FileSystemItem;
 import es.mercadona.fwk.core.io.FileSystemService;
-import es.mercadona.gesaduan.business.common.v1.FilesService;
 import es.mercadona.fwk.core.jaxrs.ResponseFormat;
 import es.mercadona.fwk.core.jaxrs.ResponseTypeInfo;
+import es.mercadona.gesaduan.business.common.v1.FilesService;
 
 
 public class FilesServicesImpl implements FilesService{
@@ -46,7 +47,7 @@ public class FilesServicesImpl implements FilesService{
 	public boolean createFile(String name, boolean tieneContenido, List<String> contenido) {
 			
 		try {
-			Map<String, FileSystemItem> ficheros = new HashMap<String, FileSystemItem>();
+			Map<String, FileSystemItem> ficheros = new HashMap<>();
 
 			final CustomFileAttributes tempFileInfo = new CustomFileAttributes();
 			tempFileInfo.setUuid(UUID.randomUUID().toString());
@@ -74,8 +75,7 @@ public class FilesServicesImpl implements FilesService{
 
 		} catch (IOException e) {
 			
-			establecerSalidaError(e, "createFile", "error.IOException");
-			
+			establecerSalidaError(e, "createFile");			
 			return false;
 			
 		}
@@ -86,28 +86,26 @@ public class FilesServicesImpl implements FilesService{
 	private void setPOSIXFilePermissions(String filePath) throws IOException {
 		
 		
-        Set<PosixFilePermission> perms = new HashSet<PosixFilePermission>();
+        Set<PosixFilePermission> perms = new HashSet<>();
         
         perms.add(PosixFilePermission.OWNER_READ);
         perms.add(PosixFilePermission.OWNER_WRITE);
-        /* perms.add(PosixFilePermission.OWNER_EXECUTE); */
         perms.add(PosixFilePermission.GROUP_READ);     
         perms.add(PosixFilePermission.OTHERS_READ);
         
         try {
             Files.setPosixFilePermissions(Paths.get(filePath), perms);
         } catch (IOException e) {
-            
+        	this.logger.error("({}-{}) ERROR - {} {}","FilesServicesImpl(GESADUAN)","setPOSIXFilePermissions",e.getClass().getSimpleName(),e.getMessage());	            
         }
     }
 	
 	
-	  private void establecerSalidaError(Exception exception, String metodo, String codError) {
+	  private void establecerSalidaError(Exception exception, String metodo) {
 
 		    String login = this.securityService.getPrincipal().getLogin();
 		    
-		    this.logger.error("Error ejecutando la clase: FilesServicesImpl",
-		        new Object[] { metodo, login, ExceptionUtils.getStackTrace(exception) });
+		    this.logger.error("({}-{}) ERROR - {}{} {} {}","FilesServicesImpl(GESADUAN)","establecerSalidaError",metodo,login,exception.getClass().getSimpleName(),exception.getMessage());	
 	  }
 }
 	
