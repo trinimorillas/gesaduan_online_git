@@ -15,7 +15,7 @@ public class DosierDTO extends AbstractDTO {
 	private Long codigoEstado;
 	private String nombreEstado;
 	private String fechaDescarga;
-	private EquipoSimpleDTO equipo;
+	private List<EquipoSimpleDTO> equipo;
 	/**
 	 * @return the numDosier
 	 */
@@ -103,13 +103,13 @@ public class DosierDTO extends AbstractDTO {
 	/**
 	 * @return the equipo
 	 */
-	public EquipoSimpleDTO getEquipo() {
+	public List<EquipoSimpleDTO> getEquipo() {
 		return equipo;
 	}
 	/**
 	 * @param equipo the equipo to set
 	 */
-	public void setEquipo(EquipoSimpleDTO equipo) {
+	public void setEquipo(List<EquipoSimpleDTO> equipo) {
 		this.equipo = equipo;
 	}
 
