@@ -31,6 +31,7 @@ import es.mercadona.gesaduan.dto.planembarques.deleteplanembarque.v1.InputMetada
 import es.mercadona.gesaduan.dto.planembarques.deleteplanembarque.v1.InputPlanEmbarqueDeleteDTO;
 import es.mercadona.gesaduan.dto.planembarques.getplanembarquedetalle.v1.InputDatosDetalleDTO;
 import es.mercadona.gesaduan.dto.planembarques.getplanembarquedetalle.v1.restfull.OutputPlanEmbarqueDetalleDTO;
+import es.mercadona.gesaduan.dto.planembarques.getplanembarques.v1.InputDatosGetPlanEmbarqueDTO;
 import es.mercadona.gesaduan.dto.planembarques.getplanembarques.v1.InputPlanEmbarquesDTO;
 import es.mercadona.gesaduan.dto.planembarques.getplanembarques.v1.restfull.OutputPlanEmbarquesDTO;
 import es.mercadona.gesaduan.dto.planembarques.putplanembarque.v1.InputDatosPutDTO;
@@ -62,7 +63,7 @@ public class PlanEmbarquesRestful {
 	@Inject
 	private org.slf4j.Logger logger;		
 	
-	@GET
+	@POST
 	@Path("plan-embarque/sumario")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -71,10 +72,11 @@ public class PlanEmbarquesRestful {
 		@QueryParam("codigoBloqueOrigen") Integer codigoBloqueOrigen,
 		@QueryParam("codigoPuertoEmbarque") Integer codigoPuertoEmbarque,
 		@QueryParam("codigoPuertoDesembarque") Integer codigoPuertoDesembarque,
-		@QueryParam("codigoEstado") Integer codigoEstado,
+		@QueryParam("codigoEstadoDocumentacion") Integer codigoEstadoDocumentacion,
 		@DefaultValue("1") @QueryParam("paginaInicio") Integer paginaInicio,
 		@DefaultValue("14") @QueryParam("paginaTamanyo") Integer paginaTamanyo,
-		@DefaultValue("-fechaEmbarque") @QueryParam("orden") String orden) {
+		@DefaultValue("-fechaEmbarque") @QueryParam("orden") String orden,
+		InputDatosGetPlanEmbarqueDTO datos) {
 		
 		OutputPlanEmbarquesDTO response;
 		
@@ -83,16 +85,16 @@ public class PlanEmbarquesRestful {
 			pagination.setPage(Long.valueOf(paginaInicio));
 			pagination.setLimit(Long.valueOf(paginaTamanyo));
 			
-			InputPlanEmbarquesDTO input = new InputPlanEmbarquesDTO();
+			//InputPlanEmbarquesDTO input = new InputPlanEmbarquesDTO();
 			
-			if (fechaEmbarque != null) input.setFechaEmbarque(fechaEmbarque);			
-			if (codigoBloqueOrigen != null) input.setCodigoBloqueOrigen(codigoBloqueOrigen);			
-			if (codigoPuertoEmbarque != null) input.setCodigoPuertoEmbarque(codigoPuertoEmbarque);			
-			if (codigoPuertoDesembarque != null) input.setCodigoPuertoDesembarque(codigoPuertoDesembarque);			
-			if (codigoEstado != null) input.setCodigoEstado(codigoEstado);			
-			input.setOrden(orden);
-			
-			response = getPlanEmbarquesService.listarPlanEmbarques(input, pagination);		
+			if (fechaEmbarque != null) datos.getDatos().setFechaEmbarque(fechaEmbarque);			
+			if (codigoBloqueOrigen != null) datos.getDatos().setCodigoBloqueOrigen(codigoBloqueOrigen);			
+			if (codigoPuertoEmbarque != null) datos.getDatos().setCodigoPuertoEmbarque(codigoPuertoEmbarque);			
+			if (codigoPuertoDesembarque != null) datos.getDatos().setCodigoPuertoDesembarque(codigoPuertoDesembarque);			
+			if (codigoEstadoDocumentacion != null) datos.getDatos().setCodigoEstadoDocumentacion(codigoEstadoDocumentacion);
+			datos.getDatos().setOrden(orden);
+
+			response = getPlanEmbarquesService.listarPlanEmbarques(datos, pagination);		
 			
 		} catch(Exception e) {
 			this.logger.error("({}-{}) ERROR - {} {}","PlanEmbarquesRestful(GESADUAN)","getPlanEmbarques",e.getClass().getSimpleName(),e.getMessage());	
