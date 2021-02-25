@@ -15,9 +15,7 @@ public class GetPlanEmbarqueDetalleServiceImpl implements GetPlanEmbarqueDetalle
 	@Override
 	public OutputPlanEmbarqueDetalleDTO getPlanEmbarqueDetalle(InputDatosDetalleDTO input) {
 		
-		OutputPlanEmbarqueDetalleDTO result = getPlanEmbarqueDetalleDao.consultarPlanEmbarque(input);
-
-		return result;
+		return getPlanEmbarqueDetalleDao.consultarPlanEmbarque(input);
 		
 	}
 

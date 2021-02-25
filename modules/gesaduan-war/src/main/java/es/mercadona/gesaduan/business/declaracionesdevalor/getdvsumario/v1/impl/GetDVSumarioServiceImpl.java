@@ -15,13 +15,8 @@ public class GetDVSumarioServiceImpl implements GetDVSumarioService {
 	private GetDVSumarioDAO getDVSumarioDAO;
 
 	@Override
-	public OutputDeclaracionesDeValorDTO getDeclaracionesDeValorList(InputDeclaracionesDeValorDTO bodata,
-			BoPage paginacion) {
-
-		OutputDeclaracionesDeValorDTO result = getDVSumarioDAO.obtenerDeclaraciones(bodata, paginacion);
-
-		return result;
-
+	public OutputDeclaracionesDeValorDTO getDeclaracionesDeValorList(InputDeclaracionesDeValorDTO bodata,BoPage paginacion) {
+		return getDVSumarioDAO.obtenerDeclaraciones(bodata, paginacion);
 	}
 
 }
