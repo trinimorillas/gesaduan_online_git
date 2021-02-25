@@ -619,10 +619,10 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 				order += "ORDER BY D.COD_V_USUARIO_CREACION DESC";
 			else if (orden.equals("+usuarioCreacion"))
 				order += "ORDER BY D.COD_V_USUARIO_CREACION ASC";
-			else if (orden.equals("-nombreEstado"))
-				order += "ORDER BY ED.TXT_NOMBRE_ESTADO DESC";
-			else if (orden.equals("+nombreEstado"))
-				order += "ORDER BY ED.TXT_NOMBRE_ESTADO ASC";	
+			else if (orden.equals("-codigoEstado"))
+				order += "ORDER BY D.COD_N_ESTADO DESC";
+			else if (orden.equals("+codigoEstado"))
+				order += "ORDER BY D.COD_N_ESTADO ASC";	
 			else if (orden.equals("-fechaDescarga"))
 				order += "ORDER BY D.FEC_DT_DESCARGA DESC";
 			else if (orden.equals("+fechaDescarga"))
