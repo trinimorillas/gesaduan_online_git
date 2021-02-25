@@ -85,8 +85,6 @@ public class PlanEmbarquesRestful {
 			pagination.setPage(Long.valueOf(paginaInicio));
 			pagination.setLimit(Long.valueOf(paginaTamanyo));
 			
-			//InputPlanEmbarquesDTO input = new InputPlanEmbarquesDTO();
-			
 			if (fechaEmbarque != null) datos.getDatos().setFechaEmbarque(fechaEmbarque);			
 			if (codigoBloqueOrigen != null) datos.getDatos().setCodigoBloqueOrigen(codigoBloqueOrigen);			
 			if (codigoPuertoEmbarque != null) datos.getDatos().setCodigoPuertoEmbarque(codigoPuertoEmbarque);			

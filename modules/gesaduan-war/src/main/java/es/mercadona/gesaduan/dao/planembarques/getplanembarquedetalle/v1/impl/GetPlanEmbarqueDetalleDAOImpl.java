@@ -360,15 +360,21 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 			final StringBuilder sql = new StringBuilder();
 			final StringBuilder sqlCount = new StringBuilder();
 			
+			
+			
+			
 			String select = "SELECT ";		
-			String campos = "DISTINCT CC.COD_N_CATEGORIA, CC.TXT_NOMBRE_CATEGORIA ";
-			String from = "FROM S_EQUIPO_CARGA EC " +   
-					"LEFT JOIN D_CARGA CA ON (CA.COD_V_CARGA = EC.COD_V_CARGA AND CA.COD_V_ALMACEN_ORIGEN = EC.COD_V_ALMACEN_ORIGEN) " + 
-					"INNER JOIN D_CATEGORIA_CARGA CC ON (CC.COD_N_CATEGORIA = CA.COD_N_CATEGORIA) ";		
+			String campos = " DISTINCT COD_N_CATEGORIA,TXT_NOMBRE_CATEGORIA FROM ";
+			String from = "SELECT " + 
+						  "NVL(CC.COD_N_CATEGORIA,-1) COD_N_CATEGORIA , " + 
+						  "NVL(CC.TXT_NOMBRE_CATEGORIA,'Sin categoria') TXT_NOMBRE_CATEGORIA " + 
+						  "FROM S_EQUIPO_CARGA EC " +   
+						  "LEFT JOIN D_CARGA CA ON (CA.COD_V_CARGA = EC.COD_V_CARGA AND CA.COD_V_ALMACEN_ORIGEN = EC.COD_V_ALMACEN_ORIGEN) " + 
+						  "LEFT JOIN D_CATEGORIA_CARGA CC ON (CC.COD_N_CATEGORIA = CA.COD_N_CATEGORIA) ";		
 			String where = "WHERE EC.COD_N_EQUIPO = ?codigoEquipo ";			
 			String order = "ORDER BY CC.TXT_NOMBRE_CATEGORIA ASC";
 			
-			sql.append(select).append(campos).append(from).append(where).append(order);
+			sql.append(select).append(campos).append("(").append(from).append(where).append(order).append(")");
 	
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
 			final Query queryCount = getEntityManager().createNativeQuery(sqlCount.toString());
@@ -567,6 +573,10 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 		
 			Long codigoPlanEmbarque = input.getCodigoEmbarque();
 			
+			String orden = "numDosier";
+			if (input.getOrden() != null)
+				orden = input.getOrden();			
+			
 			final StringBuilder sql = new StringBuilder();
 			final StringBuilder sqlCount = new StringBuilder();
 			
@@ -595,7 +605,28 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 							
 			String countFin = ")";
 			
-			String order = " ORDER BY D.NUM_DOSIER,D.NUM_ANYO,DE.COD_N_EQUIPO,DE.TXT_MATRICULA";			
+			String order = "";
+			
+			if (orden.equals("-numDosier"))
+				order += "ORDER BY D.NUM_DOSIER DESC,D.NUM_ANYO DESC";
+			else if (orden.equals("+numDosier"))
+				order += "ORDER BY D.NUM_DOSIER ASC,D.NUM_ANYO ASC";
+			else if (orden.equals("-fechaCreacion"))
+				order += "ORDER BY D.FEC_DT_CREACION DESC";
+			else if (orden.equals("+fechaCreacion"))
+				order += "ORDER BY D.FEC_DT_CREACION ASC";		
+			else if (orden.equals("-usuarioCreacion"))
+				order += "ORDER BY D.COD_V_USUARIO_CREACION DESC";
+			else if (orden.equals("+usuarioCreacion"))
+				order += "ORDER BY D.COD_V_USUARIO_CREACION ASC";
+			else if (orden.equals("-nombreEstado"))
+				order += "ORDER BY ED.TXT_NOMBRE_ESTADO DESC";
+			else if (orden.equals("+nombreEstado"))
+				order += "ORDER BY ED.TXT_NOMBRE_ESTADO ASC";	
+			else if (orden.equals("-fechaDescarga"))
+				order += "ORDER BY D.FEC_DT_DESCARGA DESC";
+			else if (orden.equals("+fechaDescarga"))
+				order += "ORDER BY D.FEC_DT_DESCARGA ASC";
 			
 			sql.append(select).append(campos).append(from).append(where).append(order);
 			sqlCount.append(count).append(select).append(campos).append(from).append(where).append(countFin);
