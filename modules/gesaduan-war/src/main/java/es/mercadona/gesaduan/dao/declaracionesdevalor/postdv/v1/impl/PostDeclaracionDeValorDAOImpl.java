@@ -228,6 +228,9 @@ public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeVa
 							if (lineaEdit.getGradoPlato() != null) {
 								lineaJPA.setGradoPlato(lineaEdit.getGradoPlato());
 							}
+							if (lineaEdit.getCodigoTaric() != null) {
+								lineaJPA.setCodigoTaric(lineaEdit.getCodigoTaric());
+							}
 
 							lineaJPA.setFechaCreacion(fechaInicio);
 							lineaJPA.setFechaModificacion(fechaInicio);

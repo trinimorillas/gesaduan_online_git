@@ -90,7 +90,7 @@ public class CargasRestful {
 	public Response getCargas(
 		@QueryParam("codigoCarga") String codigoCarga,
 		@QueryParam("codigoPedido") String codigoPedido,
-		@QueryParam("codigoProveedor") Long codigoProveedor,
+		@QueryParam("codigoProveedor") String codigoProveedor,
 		@QueryParam("codigoTipoCarga") Integer codigoTipoCarga,
 		@QueryParam("codigoSuministro") Integer codigoSuministro,
 		@QueryParam("fechaServicio") String fechaServicio,

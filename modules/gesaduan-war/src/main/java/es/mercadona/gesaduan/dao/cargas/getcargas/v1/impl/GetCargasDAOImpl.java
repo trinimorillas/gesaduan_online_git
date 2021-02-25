@@ -9,7 +9,6 @@ import javax.inject.Inject;
 import javax.persistence.Query;
 
 import es.mercadona.fwk.core.exceptions.ApplicationException;
-import es.mercadona.fwk.core.exceptions.ApplicationException;
 import es.mercadona.fwk.core.web.BoPage;
 import es.mercadona.gesaduan.dao.BaseDAO;
 import es.mercadona.gesaduan.dao.cargas.getcargas.v1.GetCargasDAO;
@@ -46,7 +45,7 @@ public class GetCargasDAOImpl extends BaseDAO<CargasJPA> implements GetCargasDAO
 			if (datos.getDatos().getCodigoPedido() != null)
 				codigoPedido = datos.getDatos().getCodigoPedido();
 			
-			Long codigoProveedor = null;
+			String codigoProveedor = null;
 			if (datos.getDatos().getCodigoProveedor() != null)
 				codigoProveedor = datos.getDatos().getCodigoProveedor();
 			
@@ -119,7 +118,7 @@ public class GetCargasDAOImpl extends BaseDAO<CargasJPA> implements GetCargasDAO
 							"CA.COD_V_ALMACEN_ORIGEN, CA.COD_V_CENTRO_DESTINO, TO_CHAR(CA.FEC_DT_SERVICIO,'DD/MM/YYYY'), TO_CHAR(CA.FEC_D_ENTREGA,'DD/MM/YYYY'), TO_CHAR(CA.FEC_DT_CREACION,'DD/MM/YYYY'), " +
 							"CA.NUM_DIVISIONES, CA.NUM_HUECOS_ORIGEN, CA.NUM_HUECOS, CA.NUM_HUECOS_RESTANTES, CA.NUM_PESO_TOTAL, CA.NUM_PESO_RESTANTE, CA.NUM_VOLUMEN_TOTAL, CA.COD_N_CATEGORIA, CC.TXT_NOMBRE_CATEGORIA, " +
 							"CA.MCA_CONTIENE_LPC, CA.COD_N_ESTADO, EC.TXT_NOMBRE_ESTADO, CA.MCA_PEDIDOS_SIN_VALIDAR, CA.COD_V_APLICACION_ORIGEN, CA.COD_V_USUARIO_CREACION, "+ 
-							"TO_CHAR(CA.FEC_DT_VALIDACION,'DD/MM/YYYY HH24:MI') , CA.COD_V_USUARIO_VALIDACION ";
+							"TO_CHAR(CA.FEC_DT_VALIDACION,'DD/MM/YYYY HH24:MI'), CA.COD_V_USUARIO_VALIDACION ";
 			String from = "FROM D_CARGA CA " +
 					"LEFT JOIN D_TIPO_CARGA TC ON (TC.COD_N_TIPO_CARGA = CA.COD_N_TIPO_CARGA) " +
 					"LEFT JOIN D_TIPO_SUMINISTRO TS ON (TS.COD_N_TIPO_SUMINISTRO = CA.COD_N_TIPO_SUMINISTRO) " +
@@ -165,22 +164,22 @@ public class GetCargasDAOImpl extends BaseDAO<CargasJPA> implements GetCargasDAO
 				order += "ORDER BY TC.TXT_NOMBRE_TIPO_CARGA DESC";
 			else if (orden.equals("+nombreTipoCarga"))
 				order += "ORDER BY TC.TXT_NOMBRE_TIPO_CARGA ASC";
-			else if (orden.equals("-codigoSuministro"))
-				order += "ORDER BY CA.COD_N_TIPO_SUMINISTRO DESC";
-			else if (orden.equals("+codigoSuministro"))
-				order += "ORDER BY CA.COD_N_TIPO_SUMINISTRO ASC";				
+			else if (orden.equals("-nombreSuministro"))
+				order += "ORDER BY TS.TXT_NOMBRE_TIPO_SUMINISTRO DESC";
+			else if (orden.equals("+nombreSuministro"))
+				order += "ORDER BY TS.TXT_NOMBRE_TIPO_SUMINISTRO ASC";
 			else if (orden.equals("-codigoTipoSuministro"))
 				order += "ORDER BY CA.COD_N_TIPO_SUMINISTRO DESC";
 			else if (orden.equals("+codigoTipoSuministro"))
 				order += "ORDER BY CA.COD_N_TIPO_SUMINISTRO ASC";		
-			else if (orden.equals("-nombreTipoSuministro"))
+			else if (orden.equals("-nombreTipoSuministro") || orden.equals("-codigoSuministro"))
 				order += "ORDER BY TS.TXT_NOMBRE_TIPO_SUMINISTRO DESC";
-			else if (orden.equals("+nombreTipoSuministro"))
+			else if (orden.equals("+nombreTipoSuministro")  || orden.equals("+codigoSuministro"))
 				order += "ORDER BY TS.TXT_NOMBRE_TIPO_SUMINISTRO ASC";
 			else if (orden.equals("-codigoProveedor"))
 				order += "ORDER BY CA.COD_N_PROVEEDOR DESC";
 			else if (orden.equals("+codigoProveedor"))
-				order += "ORDER BY CA.COD_N_PROVEEDOR ASC";		
+				order += "ORDER BY CA.COD_N_PROVEEDOR ASC";
 			else if (orden.equals("-nombreProveedor"))
 				order += "ORDER BY PR.TXT_RAZON_SOCIAL DESC";
 			else if (orden.equals("+nombreProveedor"))
@@ -205,14 +204,14 @@ public class GetCargasDAOImpl extends BaseDAO<CargasJPA> implements GetCargasDAO
 				order += "ORDER BY CA.FEC_DT_CREACION DESC";
 			else if (orden.equals("+fechaSIntroduccion"))
 				order += "ORDER BY CA.FEC_DT_CREACION ASC";			
-			else if (orden.equals("-divisiones"))
-				order += "ORDER BY CA.NUM_DIVISIONES DESC";
-			else if (orden.equals("+divisiones"))
-				order += "ORDER BY CA.NUM_DIVISIONES ASC";
 			else if (orden.equals("-numeroDivisiones"))
 				order += "ORDER BY CA.NUM_DIVISIONES DESC";
 			else if (orden.equals("+numeroDivisiones"))
-				order += "ORDER BY CA.NUM_DIVISIONES ASC";		
+				order += "ORDER BY CA.NUM_DIVISIONES ASC";
+			else if (orden.equals("-numeroHuecosOrigen"))
+				order += "ORDER BY CA.NUM_HUECOS_ORIGEN DESC";
+			else if (orden.equals("+numeroHuecosOrigen"))
+				order += "ORDER BY CA.NUM_HUECOS_ORIGEN ASC";
 			else if (orden.equals("-numeroHuecosRestantes"))
 				order += "ORDER BY CA.NUM_HUECOS_RESTANTES DESC";
 			else if (orden.equals("+numeroHuecosRestantes"))
@@ -249,6 +248,26 @@ public class GetCargasDAOImpl extends BaseDAO<CargasJPA> implements GetCargasDAO
 				order += "ORDER BY CA.MCA_PEDIDOS_SIN_VALIDAR DESC";
 			else if (orden.equals("+mcaPedidosSinValidar"))
 				order += "ORDER BY CA.MCA_PEDIDOS_SIN_VALIDAR ASC";
+			else if (orden.equals("-numeroVolumenTotal"))
+				order += "ORDER BY CA.NUM_VOLUMEN_TOTAL DESC";
+			else if (orden.equals("+numeroVolumenTotal"))
+				order += "ORDER BY CA.NUM_VOLUMEN_TOTAL ASC";
+			else if (orden.equals("-fechaValidacion"))
+				order += "ORDER BY CA.FEC_DT_VALIDACION DESC";
+			else if (orden.equals("+fechaValidacion"))
+				order += "ORDER BY CA.FEC_DT_VALIDACION ASC";
+			else if (orden.equals("-codigoUsuarioValidacion"))
+				order += "ORDER BY CA.COD_V_USUARIO_VALIDACION DESC";
+			else if (orden.equals("+codigoUsuarioValidacion"))
+				order += "ORDER BY CA.COD_V_USUARIO_VALIDACION ASC";			
+			else if (orden.equals("-numeroTotalHuecos"))
+				order += "ORDER BY CA.NUM_HUECOS DESC";
+			else if (orden.equals("+numeroTotalHuecos"))
+				order += "ORDER BY CA.NUM_HUECOS ASC";			
+			else if (orden.equals("-numeroTotalPeso"))
+				order += "ORDER BY CA.NUM_PESO_TOTAL DESC";
+			else if (orden.equals("+numeroTotalPeso"))
+				order += "ORDER BY CA.NUM_PESO_TOTAL ASC";
 			
 			sql.append(select).append(campos).append(from).append(where).append(order);
 			sqlCount.append(count).append(select).append(campos).append(from).append(where).append(countFin);
@@ -350,7 +369,7 @@ public class GetCargasDAOImpl extends BaseDAO<CargasJPA> implements GetCargasDAO
 					if (tmp[2] != null) cargas.setNombreTipoCarga(String.valueOf(tmp[2]));
 					if (tmp[3] != null) cargas.setCodigoTipoSuministro(Integer.parseInt(String.valueOf(tmp[3])));
 					if (tmp[4] != null) cargas.setNombreTipoSuministro(String.valueOf(tmp[4]));
-					if (tmp[5] != null) cargas.setCodigoProveedor(Long.parseLong(String.valueOf(tmp[5])));
+					if (tmp[5] != null) cargas.setCodigoProveedor(String.valueOf(tmp[5]));
 					if (tmp[6] != null) cargas.setNombreProveedor(String.valueOf(tmp[6]));
 					if (tmp[7] != null) cargas.setCodigoCentroOrigen(String.valueOf(tmp[7]));
 					if (tmp[8] != null) cargas.setCodigoCentroDestino(String.valueOf(tmp[8]));

@@ -111,7 +111,7 @@ public class GetEquiposTransporteDAOImpl extends BaseDAO<EquipoTransporteJPA> im
 			String campos = "ET.COD_N_EQUIPO, ET.TXT_MATRICULA, PR.COD_N_PROVEEDOR, PR.TXT_RAZON_SOCIAL, T.COD_N_TEMPERATURA, " +
 							"T.TXT_TEMPERATURA, ET.NUM_CAPACIDAD, ET.NUM_OCUPACION, ET.COD_N_ESTADO, EE.TXT_NOMBRE_ESTADO, TO_CHAR(ET.FEC_DT_CARGA,'DD/MM/YYYY HH24:MI:SS'), " +
 							"ET.TXT_OBSERVACIONES, ET.COD_V_USUARIO_CREACION, ET.COD_N_EMBARQUE, PUD.COD_N_PUERTO, PUD.TXT_NOMBRE_PUERTO, " +
-							"TO_CHAR(PE.FEC_DT_EMBARQUE,'DD/MM/YYYY') ";
+							"TO_CHAR(PE.FEC_DT_EMBARQUE,'DD/MM/YYYY'), (ET.NUM_OCUPACION/ET.NUM_CAPACIDAD) AS PORCENTAJE ";
 			String from = "FROM D_EQUIPO_TRANSPORTE ET " +
 					"INNER JOIN D_PLAN_EMBARQUE PE ON (PE.COD_N_EMBARQUE = ET.COD_N_EMBARQUE) " +
 					"INNER JOIN D_ESTADO_EQUIPO EE ON (EE.COD_N_ESTADO = ET.COD_N_ESTADO) " +
@@ -179,12 +179,12 @@ public class GetEquiposTransporteDAOImpl extends BaseDAO<EquipoTransporteJPA> im
 			else if (orden.equals("+matricula"))
 				order += "ORDER BY ET.TXT_MATRICULA ASC";
 			else if (orden.equals("-ocupacion"))
-				order += "ORDER BY ET.NUM_OCUPACION DESC";
+				order += "ORDER BY PORCENTAJE DESC, ET.NUM_CAPACIDAD ASC";
 			else if (orden.equals("+ocupacion"))
-				order += "ORDER BY ET.NUM_OCUPACION ASC";
-			else if (orden.equals("-nombrePuertoDesembarque"))
+				order += "ORDER BY PORCENTAJE ASC, ET.NUM_CAPACIDAD ASC";
+			else if (orden.equals("-puertoDestino"))
 				order += "ORDER BY PUD.TXT_NOMBRE_PUERTO DESC";
-			else if (orden.equals("+nombrePuertoDesembarque"))
+			else if (orden.equals("+puertoDestino"))
 				order += "ORDER BY PUD.TXT_NOMBRE_PUERTO ASC";
 			else if (orden.equals("-fechaCarga"))
 				order += "ORDER BY ET.FEC_DT_CARGA DESC";
@@ -198,6 +198,10 @@ public class GetEquiposTransporteDAOImpl extends BaseDAO<EquipoTransporteJPA> im
 				order += "ORDER BY EE.TXT_NOMBRE_ESTADO DESC";
 			else if (orden.equals("+nombreEstado"))
 				order += "ORDER BY EE.TXT_NOMBRE_ESTADO ASC";
+			else if (orden.equals("-valorTemperatura"))
+				order += "ORDER BY T.TXT_TEMPERATURA DESC";
+			else if (orden.equals("+valorTemperatura"))
+				order += "ORDER BY T.TXT_TEMPERATURA ASC";
 
 			sql.append(select).append(campos).append(from).append(where).append(order);
 			sqlCount.append(count).append(select).append(campos).append(from).append(where).append(countFin);
@@ -268,7 +272,7 @@ public class GetEquiposTransporteDAOImpl extends BaseDAO<EquipoTransporteJPA> im
 					DatosEquiposTransporteDTO equipoTransporte = new DatosEquiposTransporteDTO();
 					equipoTransporte.setCodigoEquipo(Long.parseLong(String.valueOf(tmp[0])));
 					equipoTransporte.setMatricula(String.valueOf(tmp[1]));
-					if (tmp[2] != null) equipoTransporte.setCodigoTransportista(Long.parseLong(String.valueOf(tmp[2])));
+					if (tmp[2] != null) equipoTransporte.setCodigoTransportista(String.valueOf(tmp[2]));
 					if (tmp[3] != null) equipoTransporte.setNombreTransportista(String.valueOf(tmp[3]));
 					if (tmp[4] != null) equipoTransporte.setCodigoTemperatura(Integer.parseInt(String.valueOf(tmp[4])));
 					if (tmp[5] != null) equipoTransporte.setValorTemperatura(String.valueOf(tmp[5]));
@@ -484,7 +488,7 @@ public class GetEquiposTransporteDAOImpl extends BaseDAO<EquipoTransporteJPA> im
 					carga.setNombreSuministro(String.valueOf(tmp[4]));
 					if (tmp[5] != null) carga.setCodigoCategoria(Integer.parseInt(String.valueOf(tmp[5])));
 					if (tmp[6] != null) carga.setNombreCategoria(String.valueOf(tmp[6]));
-					if (tmp[7] != null) carga.setCodigoProveedor(Long.parseLong(String.valueOf(tmp[7])));
+					if (tmp[7] != null) carga.setCodigoProveedor(String.valueOf(tmp[7]));
 					if (tmp[8] != null) carga.setNombreProveedor(String.valueOf(tmp[8]));
 					carga.setCodigoAlmacenOrigen(String.valueOf(tmp[9]));
 					carga.setCodigoCentroDestino(String.valueOf(tmp[10]));

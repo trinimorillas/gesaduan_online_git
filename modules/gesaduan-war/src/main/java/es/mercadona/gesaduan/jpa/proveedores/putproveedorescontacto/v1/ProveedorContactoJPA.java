@@ -18,7 +18,7 @@ public class ProveedorContactoJPA {
 	private Long codContacto;
 	
 	@Column(name="COD_N_PROVEEDOR")
-	private Long codProveedor;
+	private String codProveedor;
 		
 	@Column(name="COD_N_MECANISMO_CONTACTO_SMS")
 	private Long codMecanismoContactoSMS;
@@ -71,11 +71,11 @@ public class ProveedorContactoJPA {
 		this.codContacto = codContacto;
 	}
 
-	public Long getCodProveedor() {
+	public String getCodProveedor() {
 		return codProveedor;
 	}
 
-	public void setCodProveedor(Long codProveedor) {
+	public void setCodProveedor(String codProveedor) {
 		this.codProveedor = codProveedor;
 	}
 

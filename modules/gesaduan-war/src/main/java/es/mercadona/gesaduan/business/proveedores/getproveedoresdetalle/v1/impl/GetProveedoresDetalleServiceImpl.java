@@ -1,7 +1,5 @@
 package es.mercadona.gesaduan.business.proveedores.getproveedoresdetalle.v1.impl;
 
-import java.math.BigDecimal;
-
 import javax.inject.Inject;
 
 import es.mercadona.gesaduan.business.proveedores.getproveedoresdetalle.v1.GetProveedoresDetalleService;
@@ -23,7 +21,7 @@ public class GetProveedoresDetalleServiceImpl implements GetProveedoresDetalleSe
 	}
 
 	@Override
-	public BigDecimal getCodigoProveedorSap(Long codigoProveedor) {
+	public String getCodigoProveedorSap(String codigoProveedor) {
 		
 		return getProveedoresDetalleDao.getCodigoProveedorSap(codigoProveedor);
 		

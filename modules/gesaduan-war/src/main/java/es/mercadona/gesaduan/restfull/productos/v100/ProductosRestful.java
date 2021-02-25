@@ -31,14 +31,21 @@ import es.mercadona.gesaduan.dto.productos.getproductos.v1.InputGetProductoDTO;
 import es.mercadona.gesaduan.dto.productos.getproductos.v1.restfull.OutputProductosDTO;
 import es.mercadona.gesaduan.dto.productos.getproductosdetalle.v1.InputProductosDetalleDTO;
 import es.mercadona.gesaduan.dto.productos.getproductosdetalle.v1.restfull.OutputProductosDetalleDTO;
+import es.mercadona.gesaduan.dto.productos.putproductos.v1.InputMetadatosDTO;
 import es.mercadona.gesaduan.dto.productos.putproductos.v1.InputPutProductosDTO;
 import es.mercadona.gesaduan.dto.productos.putproductos.v1.restfull.OutputPutProductosDTO;
+import es.mercadona.gesaduan.exception.EnumGesaduanException;
+import es.mercadona.gesaduan.exception.GesaduanException;
+import es.mercadona.gesaduan.util.ResponseUtil;
 
 
 @RESTful
 @Path("logistica/gestion-aduanas/v1.0")
 @RequestScoped
 public class ProductosRestful {
+	
+	@Inject
+	private org.slf4j.Logger logger;
 	
 	@Inject
 	private GetProductosService getProductosService;
@@ -162,16 +169,19 @@ public class ProductosRestful {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateProductos(
 			@NotNull @PathParam("codigoProducto") Long codigoProducto,
-			InputPutProductosDTO input
-			
-		) {
+			InputPutProductosDTO input) {
 		
 		OutputPutProductosDTO response;
 		
 		try {
+			if (input.getMetadatos() == null || input.getMetadatos().getCodigoUsuario() == null) throw new GesaduanException(EnumGesaduanException.PARAMETROS_OBLIGATORIOS);
 			response = putProductosService.actualizarProducto(codigoProducto, input);
-		}catch(Exception e) {
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
+		} catch(GesaduanException ex) {
+			this.logger.error("({}-{}) ERROR - {} {}","ProductosRestful(GESADUAN)","updateProductos",ex.getClass().getSimpleName(),ex.getMessage());
+			return Response.status(Status.BAD_REQUEST).entity(ResponseUtil.getError(ex, ex.getEnumGesaduan().getCodigo(), ex.getEnumGesaduan().getDescripcion())).build();
+		} catch(Exception e) {
+			this.logger.error("({}-{}) ERROR - {} {}","ProductosRestful(GESADUAN)","updateProductos",e.getClass().getSimpleName(),e.getMessage());	
+			return Response.status(Status.BAD_REQUEST).entity(ResponseUtil.getError(e, EnumGesaduanException.ERROR_GENERICO.getCodigo(), e.getMessage())).build();
 		}
 		
 		return Response.ok(response, MediaType.APPLICATION_JSON).build();

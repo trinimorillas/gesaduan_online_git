@@ -11,8 +11,8 @@ public class InputGetProveedoresDTO extends AbstractDTO{
 	String locale;
     boolean estaActivo;
     boolean esAgencia;
-    Integer codigoProveedorLegacy;
-    Long codigoProveedorPublico;
+    String codigoProveedorLegacy;
+    String codigoProveedorPublico;
     String nombreProveedor;
     String mcaNaviera;
     String mcaTransportista;
@@ -45,19 +45,19 @@ public class InputGetProveedoresDTO extends AbstractDTO{
 		this.estaActivo = estaActivo;
 	}
 
-	public Integer getCodigoProveedorLegacy() {
+	public String getCodigoProveedorLegacy() {
 		return codigoProveedorLegacy;
 	}
 
-	public void setCodigoProveedorLegacy(Integer codigoProveedorLegacy) {
+	public void setCodigoProveedorLegacy(String codigoProveedorLegacy) {
 		this.codigoProveedorLegacy = codigoProveedorLegacy;
 	}
 
-	public Long getCodigoProveedorPublico() {
+	public String getCodigoProveedorPublico() {
 		return codigoProveedorPublico;
 	}
 
-	public void setCodigoProveedorPublico(Long codigoProveedorPublico) {
+	public void setCodigoProveedorPublico(String codigoProveedorPublico) {
 		this.codigoProveedorPublico = codigoProveedorPublico;
 	}
 

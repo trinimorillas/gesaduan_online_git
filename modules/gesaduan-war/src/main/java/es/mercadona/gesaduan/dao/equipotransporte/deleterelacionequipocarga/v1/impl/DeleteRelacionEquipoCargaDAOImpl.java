@@ -196,6 +196,11 @@ public class DeleteRelacionEquipoCargaDAOImpl extends BaseDAO<EquipoCargaJPA> im
 									"    WHEN (CA.COD_V_APLICACION_ORIGEN != 'GESADUAN' AND CA.MCA_PEDIDOS_SIN_VALIDAR = 'S'  AND CA.COD_N_ESTADO = 2 AND CA.NUM_DIVISIONES = 1) THEN 1 " +									
 									"    WHEN (CA.COD_V_APLICACION_ORIGEN != 'GESADUAN' AND CA.MCA_PEDIDOS_SIN_VALIDAR != 'S' AND CA.COD_N_ESTADO = 3) THEN 2 " + 
 									"    ELSE CA.COD_N_ESTADO " + 
+									"END, "	+ 
+									"CA.NUM_HUECOS = CASE " + 
+									"	 WHEN (CA.COD_V_APLICACION_ORIGEN != 'GESADUAN' AND CA.MCA_PEDIDOS_SIN_VALIDAR = 'S' AND CA.COD_N_ESTADO = 3 AND CA.NUM_DIVISIONES = 0) THEN CA.NUM_HUECOS_ORIGEN " + 
+									"	 WHEN (CA.COD_V_APLICACION_ORIGEN != 'GESADUAN' AND CA.MCA_PEDIDOS_SIN_VALIDAR = 'S' AND CA.COD_N_ESTADO = 2 AND CA.NUM_DIVISIONES = 1) THEN CA.NUM_HUECOS_ORIGEN " +
+									"    ELSE CA.NUM_HUECOS " +									
 									"END ";
 					final Query query = getEntityManager().createNativeQuery(merge);
 					query.executeUpdate();

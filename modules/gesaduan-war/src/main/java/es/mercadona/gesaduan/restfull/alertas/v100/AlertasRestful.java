@@ -62,7 +62,7 @@ public class AlertasRestful {
 			@NotNull @DefaultValue("es-ES") @QueryParam("locale") String locale,
 			@QueryParam("fechaDesde") String fechaDesde,
 			@QueryParam("fechaHasta") String fechaHasta,
-			@QueryParam("numeroProveedor") Long numeroProveedor,
+			@QueryParam("numeroProveedor") String numeroProveedor,
 			@QueryParam("nombreProveedor") String nombreProveedor,
 			@QueryParam("tipoDeAlerta") String tipoDeAlerta,
 			@QueryParam("estado") String estado,

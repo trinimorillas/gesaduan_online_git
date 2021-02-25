@@ -19,7 +19,7 @@ public class InputDeclaracionesDeValorDTO extends AbstractDTO implements Seriali
 	private Integer anyo;
 	private Integer numeroDeclaracion;
 	private String codigoPedido;
-	private Integer codigoProveedor;
+	private String codigoProveedor ;
 	private String nombreProveedor;
 	private String codigoAlmacen;
 	private String nombreAlmacen;
@@ -123,10 +123,10 @@ public class InputDeclaracionesDeValorDTO extends AbstractDTO implements Seriali
 	public void setCodigoPedido(String codigoPedido) {
 		this.codigoPedido = codigoPedido;
 	}
-	public Integer getCodigoProveedor() {
+	public String getCodigoProveedor() {
 		return codigoProveedor;
 	}
-	public void setCodigoProveedor(Integer codigoProveedor) {
+	public void setCodigoProveedor(String codigoProveedor) {
 		this.codigoProveedor = codigoProveedor;
 	}
 

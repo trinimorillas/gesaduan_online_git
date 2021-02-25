@@ -5,8 +5,8 @@ import es.mercadona.gesaduan.jpa.proveedores.putproveedorescontacto.v1.Proveedor
 
 public interface ContactosProvService {
 
-	public ProveedorContactoJPA putContactoProveedor(InputPutProveedoresContactos datos, Long codigoProveedor);
+	public ProveedorContactoJPA putContactoProveedor(InputPutProveedoresContactos datos, String codigoProveedor);
 	
-	public ProveedorContactoJPA deleteContactoProveedor(Long idProveedor, Long idContacto);
+	public ProveedorContactoJPA deleteContactoProveedor(String idProveedor, Long idContacto);
 	
 }

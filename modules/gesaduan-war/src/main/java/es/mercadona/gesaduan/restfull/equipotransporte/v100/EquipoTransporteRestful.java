@@ -63,7 +63,7 @@ import es.mercadona.gesaduan.util.ResponseUtil;
 public class EquipoTransporteRestful {
 	
 	@Inject
-	private org.slf4j.Logger logger;	
+	private org.slf4j.Logger logger;
 	
 	@Inject
 	private GetEquiposTransporteService getEquiposTransporteService;
@@ -99,7 +99,7 @@ public class EquipoTransporteRestful {
 	@Path("equipo-transporte/sumario")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response listarEquiposTransporte(
+	public Response listarEquipoTransporte(
 		@QueryParam("codigoEmbarque") Long codigoEmbarque,
 		@QueryParam("matricula") String matricula,
 		@QueryParam("codigoCentroOrigen") Integer codigoCentroOrigen,
@@ -152,7 +152,7 @@ public class EquipoTransporteRestful {
 	@Path("equipo-transporte/{codigoEquipo}")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response consultarEquipoTransporte (@NotNull @PathParam("codigoEquipo") Long codigoEquipo,
+	public Response getEquipoTransporte (@NotNull @PathParam("codigoEquipo") Long codigoEquipo,
 			@DefaultValue("+codigoCarga") @QueryParam("orden") String orden,
 			@DefaultValue("N") @QueryParam("mcaIncluyeContenedores") String mcaIncluyeContenedores) {
 		OutputEquipoTransporteDetalleDTO response = null;		
@@ -175,7 +175,7 @@ public class EquipoTransporteRestful {
 	@Path("equipo-transporte")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response crearEquipoTransporte(@DefaultValue("1") @QueryParam("codigoEstado") Integer codigoEstado,
+	public Response putEquipoTransporte(@DefaultValue("1") @QueryParam("codigoEstado") Integer codigoEstado,
 			@DefaultValue("0") @QueryParam("ocupacion") Integer ocupacion, InputDatosPutDTO input) {	
 		OutputEquipoTransportePutDTO response = null;
 

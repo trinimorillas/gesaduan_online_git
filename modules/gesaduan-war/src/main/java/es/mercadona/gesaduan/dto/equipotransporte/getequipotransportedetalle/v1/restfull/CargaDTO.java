@@ -16,7 +16,7 @@ public class CargaDTO extends AbstractDTO {
 	private String nombreSuministro;
 	private Integer codigoCategoria;
 	private String nombreCategoria;
-	private Long codigoProveedor;
+	private String codigoProveedor;
 	private String nombreProveedor;
 	private String codigoAlmacenOrigen;
 	private String codigoCentroDestino;
@@ -87,11 +87,11 @@ public class CargaDTO extends AbstractDTO {
 		this.nombreCategoria = nombreCategoria;
 	}
 	
-	public Long getCodigoProveedor() {
+	public String getCodigoProveedor() {
 		return codigoProveedor;
 	}
 	
-	public void setCodigoProveedor(Long codigoProveedor) {
+	public void setCodigoProveedor(String codigoProveedor) {
 		this.codigoProveedor = codigoProveedor;
 	}
 	

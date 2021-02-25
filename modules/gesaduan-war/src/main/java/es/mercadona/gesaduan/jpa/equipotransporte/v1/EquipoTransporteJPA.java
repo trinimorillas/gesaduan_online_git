@@ -32,7 +32,7 @@ public class EquipoTransporteJPA implements Serializable {
 	private String matricula;
 
 	@Column(name = "COD_N_PROVEEDOR")
-	private Long codigoProveedor;
+	private String codigoProveedor;
 	
 	@Column(name = "COD_N_TEMPERATURA")
 	private Integer temperatura;
@@ -93,11 +93,11 @@ public class EquipoTransporteJPA implements Serializable {
 		this.matricula = matricula;
 	}
 
-	public Long getCodigoProveedor() {
+	public String getCodigoProveedor() {
 		return codigoProveedor;
 	}
 
-	public void setCodigoProveedor(Long codigoProveedor) {
+	public void setCodigoProveedor(String codigoProveedor) {
 		this.codigoProveedor = codigoProveedor;
 	}
 

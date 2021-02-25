@@ -57,12 +57,12 @@ public class GetProveedoresDAOImpl extends BaseDAO<ProveedoresJPA> implements Ge
 				nombreProveedor = input.getNombreProveedor();
 			}
 			
-			Integer codigoProveedorLegacy = null;
+			String codigoProveedorLegacy = null;
 			if(input.getCodigoProveedorLegacy() != null) {
 				codigoProveedorLegacy = input.getCodigoProveedorLegacy();
 			}
 			
-			Long codigoProveedorPublico = null;
+			String codigoProveedorPublico = null;
 			if(input.getCodigoProveedorPublico() != null) {
 				codigoProveedorPublico = input.getCodigoProveedorPublico();
 			}

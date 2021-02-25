@@ -1,6 +1,5 @@
 package es.mercadona.gesaduan.dao.equipotransporte.getequipotransportedetalle.v1.impl;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -67,7 +66,7 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 					equipoTransporte.setCodigoEquipo(Long.parseLong(String.valueOf(tmp[0])));
 					equipoTransporte.setCodigoEmbarque(Long.parseLong(String.valueOf(tmp[1])));
 					equipoTransporte.setMatricula(String.valueOf(tmp[2]));
-					if (tmp[3] != null) equipoTransporte.setCodigoTransportista(Long.parseLong(String.valueOf(tmp[3])));
+					if (tmp[3] != null) equipoTransporte.setCodigoTransportista(String.valueOf(tmp[3]));
 					if (tmp[4] != null) equipoTransporte.setNombreTransportista(String.valueOf(tmp[4]));
 					if (tmp[5] != null) equipoTransporte.setCodigoTemperatura(Integer.parseInt(String.valueOf(tmp[5])));
 					if (tmp[6] != null) equipoTransporte.setValorTemperatura(String.valueOf(tmp[6]));
@@ -201,6 +200,18 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 				order += "ORDER BY CA.MCA_CONTIENE_LPC DESC";
 			else if (orden.equals("+marcaLpC"))
 				order += "ORDER BY CA.MCA_CONTIENE_LPC ASC";
+			else if (orden.equals("-numeroDivision"))
+				order += "ORDER BY EC.NUM_DIVISION DESC";
+			else if (orden.equals("+numeroDivision"))
+				order += "ORDER BY EC.NUM_DIVISION ASC";
+			else if (orden.equals("-numeroHuecoOcupado"))
+				order += "ORDER BY EC.NUM_HUECO_OCUPADO DESC";
+			else if (orden.equals("+numeroHuecoOcupado"))
+				order += "ORDER BY EC.NUM_HUECO_OCUPADO ASC";
+			else if (orden.equals("-numeroPesoOcupado"))
+				order += "ORDER BY EC.NUM_PESO_OCUPADO DESC";
+			else if (orden.equals("+numeroPesoOcupado"))
+				order += "ORDER BY EC.NUM_PESO_OCUPADO ASC";
 			
 			sql.append(select).append(campos).append(from).append(where).append(order);
 			sqlCount.append(count).append(select).append(campos).append(from).append(where).append(groupBy).append(countFin);
@@ -226,7 +237,7 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 					if (tmp[4] != null) carga.setNombreSuministro(String.valueOf(tmp[4]));
 					if (tmp[5] != null) carga.setCodigoCategoria(Integer.parseInt(String.valueOf(tmp[5])));
 					if (tmp[6] != null) carga.setNombreCategoria(String.valueOf(tmp[6]));
-					if (tmp[7] != null) carga.setCodigoProveedor(Long.parseLong(String.valueOf(tmp[7])));
+					if (tmp[7] != null) carga.setCodigoProveedor(String.valueOf(tmp[7]));
 					if (tmp[8] != null) carga.setNombreProveedor(String.valueOf(tmp[8]));
 					carga.setCodigoAlmacenOrigen(String.valueOf(tmp[9]));
 					carga.setCodigoCentroDestino(String.valueOf(tmp[10]));
@@ -256,13 +267,13 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 		List<ContenedorDTO> listaContenedor = null;		
 		
 		try {		
-			String select = "SELECT " + 
-						    "  CE.NUM_CONTENEDOR " + 
+			String select = "SELECT CE.NUM_CONTENEDOR, CE.COD_V_CARGA " + 
 						    "FROM O_CONTENEDOR_EXPEDIDO CE " +
 							"WHERE " + 
 						    "  CE.COD_N_EQUIPO = ?codigoEquipo AND " + 
 							"  CE.COD_V_ALMACEN = ?codigoAlmacenOrigen AND " + 
-						    "  CE.COD_V_CARGA = ?codigoCarga ";			
+						    "  CE.COD_V_CARGA = ?codigoCarga " +
+							" ORDER BY CE.COD_V_CARGA, CE.NUM_CONTENEDOR ASC";			
 			
 			final Query query = getEntityManager().createNativeQuery(select);			
 			query.setParameter("codigoEquipo", codigoEquipo);
@@ -270,13 +281,13 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 			query.setParameter("codigoCarga", codigoCarga);			
 			
 			@SuppressWarnings("unchecked")
-			List<BigDecimal> listado = query.getResultList();
+			List<Object[]> listado = query.getResultList();
 			
 			if (listado != null && !listado.isEmpty()) {
 				listaContenedor = new ArrayList<>(); 
-				for (BigDecimal tmp : listado) {		
+				for (Object[] tmp : listado) {		
 					ContenedorDTO contenedor = new ContenedorDTO();
-					contenedor.setNumContenedor(Long.parseLong(String.valueOf(tmp)));
+					contenedor.setNumContenedor(Long.parseLong(String.valueOf(tmp[0])));
 					listaContenedor.add(contenedor);
 				}
 			}		

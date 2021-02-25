@@ -13,7 +13,7 @@ public class DatosCargasDTO extends AbstractDTO implements Serializable {
 	private String nombreTipoCarga;
 	private Integer codigoTipoSuministro;
 	private String nombreTipoSuministro;
-	private Long codigoProveedor;
+	private String codigoProveedor;
 	private String nombreProveedor;
 	private String codigoCentroOrigen;
 	private String codigoCentroDestino;
@@ -78,11 +78,11 @@ public class DatosCargasDTO extends AbstractDTO implements Serializable {
 		this.nombreTipoSuministro = nombreTipoSuministro;
 	}
 	
-	public Long getCodigoProveedor() {
+	public String getCodigoProveedor() {
 		return codigoProveedor;
 	}
 	
-	public void setCodigoProveedor(Long codigoProveedor) {
+	public void setCodigoProveedor(String codigoProveedor) {
 		this.codigoProveedor = codigoProveedor;
 	}
 	

@@ -54,13 +54,13 @@ public class PutProveedoresDAOImpl extends DaoBaseImpl<Integer, ProveedoresJPA> 
 				}
 			}
 			
-			List<Long> proveedores = new ArrayList<>();
+			List<String> proveedores = new ArrayList<>();
 			
 			List<PutProveedor> listaProveedores = input.getDatos().getProveedores();
 			
 			if (listaProveedores != null && !listaProveedores.isEmpty()) {
 				for (PutProveedor tmp : listaProveedores) {
-					Long codigoProveedor = Long.parseLong(tmp.getCodigo());
+					String codigoProveedor = tmp.getCodigo();
 					proveedores.add(codigoProveedor);
 					/* Si existen relaciones con el proveedor que se va a desactivar como marca sobre el muelle, se dan por finalizadas */
 					if(existeRelacion(codigoProveedor) && marcaMuelle.equals("N")) {
@@ -97,7 +97,7 @@ public class PutProveedoresDAOImpl extends DaoBaseImpl<Integer, ProveedoresJPA> 
 		
 	}
 	
-	private boolean existeRelacion(Long codigoProveedor) {
+	private boolean existeRelacion(String codigoProveedor) {
 		
 		try {
 		
@@ -118,7 +118,7 @@ public class PutProveedoresDAOImpl extends DaoBaseImpl<Integer, ProveedoresJPA> 
 			
 	}
 	
-	private void finalizarRelacion(Long codigoProveedor) {
+	private void finalizarRelacion(String codigoProveedor) {
 		
 		try {
 		

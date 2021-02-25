@@ -82,7 +82,7 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 					planEmbarque.setNombrePuertoEmbarque(String.valueOf(tmp[5]));
 					planEmbarque.setCodigoPuertoDesembarque(Integer.parseInt(String.valueOf(tmp[6])));
 					planEmbarque.setNombrePuertoDesembarque(String.valueOf(tmp[7]));
-					if (tmp[8] != null) planEmbarque.setCodigoNaviera(Long.parseLong(String.valueOf(tmp[8])));
+					if (tmp[8] != null) planEmbarque.setCodigoNaviera(String.valueOf(tmp[8]));
 					if (tmp[9] != null) planEmbarque.setNombreNaviera(String.valueOf(tmp[9]));
 					planEmbarque.setNumeroEquipos(Integer.parseInt(String.valueOf(tmp[10])));
 					planEmbarque.setCodigoEstado(Integer.parseInt(String.valueOf(tmp[11])));
@@ -144,7 +144,7 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 			String select = "SELECT ";		
 			String campos = "ET.COD_N_EQUIPO, ET.TXT_MATRICULA, PT.COD_N_PROVEEDOR, PT.TXT_RAZON_SOCIAL, T.COD_N_TEMPERATURA," + 
 					"T.TXT_TEMPERATURA, ET.NUM_CAPACIDAD, ET.NUM_OCUPACION, TO_CHAR(ET.FEC_DT_CARGA,'DD/MM/YYYY HH24:MI:SS'), ET.COD_N_ESTADO, " +
-					"EE.TXT_NOMBRE_ESTADO, ET.COD_V_USUARIO_CREACION ";
+					"EE.TXT_NOMBRE_ESTADO, ET.COD_V_USUARIO_CREACION, (ET.NUM_OCUPACION / ET.NUM_CAPACIDAD) AS PORCENTAJE ";
 			String from = "FROM D_EQUIPO_TRANSPORTE ET " +
 					"LEFT JOIN D_ESTADO_EQUIPO EE ON (EE.COD_N_ESTADO = ET.COD_N_ESTADO) " +
 					"LEFT JOIN D_PROVEEDOR_R PT ON (PT.COD_N_PROVEEDOR = ET.COD_N_PROVEEDOR AND PT.MCA_TRANSPORTISTA = 'S') " + 
@@ -211,6 +211,10 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 				order += "ORDER BY EE.TXT_NOMBRE_ESTADO DESC";
 			else if (orden.equals("+nombreEstado"))
 				order += "ORDER BY EE.TXT_NOMBRE_ESTADO ASC";
+			else if (orden.equals("-ocupacion"))
+				order += "ORDER BY PORCENTAJE DESC, ET.NUM_CAPACIDAD ASC";
+			else if (orden.equals("+ocupacion"))
+				order += "ORDER BY PORCENTAJE ASC, ET.NUM_CAPACIDAD ASC";
 			
 			sql.append(select).append(campos).append(from).append(where).append(order);
 			sqlCount.append(count).append(select).append(campos).append(from).append(where).append(countFin);
@@ -240,7 +244,7 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 					equipo = new EquipoDTO();
 					equipo.setCodigoEquipo(Long.parseLong(String.valueOf(tmp[0])));
 					equipo.setMatricula(String.valueOf(tmp[1]));
-					if (tmp[2] != null) equipo.setCodigoTransportista(Long.parseLong(String.valueOf(tmp[2])));
+					if (tmp[2] != null) equipo.setCodigoTransportista(String.valueOf(tmp[2]));
 					if (tmp[3] != null) equipo.setNombreTransportista(String.valueOf(tmp[3]));
 					equipo.setCodigoTemperatura(Integer.parseInt(String.valueOf(tmp[4])));
 					equipo.setValorTemperatura(String.valueOf(tmp[5]));
@@ -395,7 +399,7 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 					carga.setNombreSuministro(String.valueOf(tmp[4]));
 					if (tmp[5] != null) carga.setCodigoCategoria(Integer.parseInt(String.valueOf(tmp[5])));
 					if (tmp[6] != null) carga.setNombreCategoria(String.valueOf(tmp[6]));
-					if (tmp[7] != null) carga.setCodigoProveedor(Long.parseLong(String.valueOf(tmp[7])));
+					if (tmp[7] != null) carga.setCodigoProveedor(String.valueOf(tmp[7]));
 					if (tmp[8] != null) carga.setNombreProveedor(String.valueOf(tmp[8]));
 					carga.setCodigoAlmacenOrigen(String.valueOf(tmp[9]));
 					carga.setCodigoCentroDestino(String.valueOf(tmp[10]));

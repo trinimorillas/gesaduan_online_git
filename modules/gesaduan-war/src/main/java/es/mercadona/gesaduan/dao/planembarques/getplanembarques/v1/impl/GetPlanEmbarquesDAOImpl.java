@@ -178,7 +178,7 @@ public class GetPlanEmbarquesDAOImpl extends BaseDAO<PlanEmbarquesJPA> implement
 					datos.setNombrePuertoEmbarque(String.valueOf(tmp[5]));
 					datos.setCodigoPuertoDesembarque(Integer.parseInt(String.valueOf(tmp[6])));
 					datos.setNombrePuertoDesembarque(String.valueOf(tmp[7]));
-					if (tmp[8] != null) datos.setCodigoNaviera(Long.parseLong(String.valueOf(tmp[8])));
+					if (tmp[8] != null) datos.setCodigoNaviera(String.valueOf(tmp[8]));
 					if (tmp[9] != null) datos.setNombreNaviera(String.valueOf(tmp[9]));
 					datos.setNumeroEquipos(Integer.parseInt(String.valueOf(tmp[10])));
 					datos.setCodigoEstado(Integer.parseInt(String.valueOf(tmp[11])));

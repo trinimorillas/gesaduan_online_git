@@ -11,13 +11,13 @@ public class InputProveedoresDetalleDTO extends AbstractDTO implements Serializa
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private Long codigoProveedor;
+	private String codigoProveedor;
 	private String locale;
 	
-	public Long getCodigoProveedor() {
+	public String getCodigoProveedor() {
 		return codigoProveedor;
 	}
-	public void setCodigoProveedor(Long codigoProveedor) {
+	public void setCodigoProveedor(String codigoProveedor) {
 		this.codigoProveedor = codigoProveedor;
 	}
 

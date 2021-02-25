@@ -15,7 +15,7 @@ public class InputAlertasDTO extends AbstractDTO implements Serializable{
 	private String locale;
 	private Date fechaDesde;
 	private Date fechaHasta;
-	private Long numeroProveedor;
+	private String numeroProveedor;
 	private String nombreProveedor;
 	private String tipoAlerta;
 	private String estado;
@@ -42,10 +42,10 @@ public class InputAlertasDTO extends AbstractDTO implements Serializable{
 	public void setFechaHasta(Date fechaHasta) {
 		this.fechaHasta = fechaHasta;
 	}
-	public Long getNumeroProveedor() {
+	public String getNumeroProveedor() {
 		return numeroProveedor;
 	}
-	public void setNumeroProveedor(Long numeroProveedor) {
+	public void setNumeroProveedor(String numeroProveedor) {
 		this.numeroProveedor = numeroProveedor;
 	}
 	public String getNombreProveedor() {
