@@ -27,6 +27,7 @@ public class DatosEquipoTransporteDetalleDTO extends AbstractDTO {
 	private Integer codigoEstadoDocumentacion;
 	private String nombreEstadoDocumentacion;
 	private List<CargaDTO> carga;
+	private List<ContenedorDTO> contenedor;
 	
 	public Long getCodigoEquipo() {
 		return codigoEquipo;
@@ -178,6 +179,14 @@ public class DatosEquipoTransporteDetalleDTO extends AbstractDTO {
 
 	public void setMcaExistenContenedoresFacturados(String mcaExistenContenedoresFacturados) {
 		this.mcaExistenContenedoresFacturados = mcaExistenContenedoresFacturados;
+	}
+
+	public List<ContenedorDTO> getContenedor() {
+		return contenedor;
+	}
+
+	public void setContenedor(List<ContenedorDTO> contenedor) {
+		this.contenedor = contenedor;
 	}
 
 }
