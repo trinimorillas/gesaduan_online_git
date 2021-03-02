@@ -49,6 +49,7 @@ public class PutEquipoTransporteServiceImpl implements PutEquipoTransporteServic
 		datos.setOcupacion(input.getDatos().getOcupacion());
 		datos.setCodigoEstado(input.getDatos().getCodigoEstado());
 		datos.setFechaCarga(fechaCarga);
+		datos.setCodigoEstadoDocumentacion(1);		
 		datos.setObservaciones(input.getDatos().getObservaciones());
 		datos.setUsuarioCreacion(input.getMetadatos().getCodigoUsuario().toUpperCase());
 		
