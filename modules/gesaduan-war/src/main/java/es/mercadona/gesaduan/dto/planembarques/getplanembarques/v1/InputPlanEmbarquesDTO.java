@@ -1,5 +1,7 @@
 package es.mercadona.gesaduan.dto.planembarques.getplanembarques.v1;
 
+import java.util.List;
+
 import es.mercadona.gesaduan.dto.common.AbstractDTO;
 
 public class InputPlanEmbarquesDTO extends AbstractDTO {
@@ -10,10 +12,11 @@ public class InputPlanEmbarquesDTO extends AbstractDTO {
 	private Integer codigoBloqueOrigen;
 	private Integer codigoPuertoEmbarque;
 	private Integer codigoPuertoDesembarque;
-	private Integer codigoEstado;
+	private Integer codigoEstadoDocumentacion;
 	private Integer paginaInicio;
 	private Integer paginaTamanyo;
 	private String orden;
+	private List<EstadoDTO> estado;
 	
 	public String getFechaEmbarque() {
 		return fechaEmbarque;
@@ -46,13 +49,21 @@ public class InputPlanEmbarquesDTO extends AbstractDTO {
 	public void setCodigoPuertoDesembarque(Integer codigoPuertoDesembarque) {
 		this.codigoPuertoDesembarque = codigoPuertoDesembarque;
 	}
-	
-	public Integer getCodigoEstado() {
-		return codigoEstado;
+
+	public List<EstadoDTO> getEstado() {
+		return estado;
 	}
-	
-	public void setCodigoEstado(Integer codigoEstado) {
-		this.codigoEstado = codigoEstado;
+
+	public void setEstado(List<EstadoDTO> estado) {
+		this.estado = estado;
+	}
+
+	public Integer getCodigoEstadoDocumentacion() {
+		return codigoEstadoDocumentacion;
+	}
+
+	public void setCodigoEstadoDocumentacion(Integer codigoEstadoDocumentacion) {
+		this.codigoEstadoDocumentacion = codigoEstadoDocumentacion;
 	}
 
 	public Integer getPaginaInicio() {

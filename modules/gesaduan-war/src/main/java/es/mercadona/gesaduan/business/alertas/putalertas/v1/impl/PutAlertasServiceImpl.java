@@ -19,7 +19,7 @@ public class PutAlertasServiceImpl implements PutAlertasService{
 		
 		OutputPutAlertasDTO response = new OutputPutAlertasDTO();
 		
-		boolean esExpedicion = (input.getDatos().getExpedicion() != null) ? true : false;
+		boolean esExpedicion = (input.getDatos().getExpedicion() != null);
 		
 		if(esExpedicion) {
 			putAlertasDao.editarAlertasExpedicion(input);
@@ -27,7 +27,7 @@ public class PutAlertasServiceImpl implements PutAlertasService{
 			putAlertasDao.editarAlertas(input);
 		}
 		
-		HashMap<String, String> metadatos = new HashMap<String, String>();
+		HashMap<String, String> metadatos = new HashMap<>();
 		response.setMetadatos(metadatos);
 		return response;
 		

@@ -12,11 +12,7 @@ public class GetBloquesLogisticosServiceImpl implements GetBloquesLogisticosServ
 	private GetBloquesLogisticosDAO getBloquesLogisticosDao;
 	
 	public OutputBloquesLogisticosDTO listarBloquesLogisticos() {
-		
-		OutputBloquesLogisticosDTO result = getBloquesLogisticosDao.listarBloquesLogisticos();
-
-		return result;
-		
+		return getBloquesLogisticosDao.listarBloquesLogisticos();
 	}
 
 }

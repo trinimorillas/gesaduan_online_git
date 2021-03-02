@@ -14,11 +14,7 @@ public class GetCentrosServiceImpl implements GetCentrosService {
 	private GetCentrosDAO getCentrosDao;
 	
 	public OutputCentrosDTO listarCentros(InputCentrosDTO input, BoPage pagination) {
-		
-		OutputCentrosDTO result = getCentrosDao.listarCentros(input, pagination);
-
-		return result;
-		
+		return getCentrosDao.listarCentros(input, pagination);
 	}
 
 }

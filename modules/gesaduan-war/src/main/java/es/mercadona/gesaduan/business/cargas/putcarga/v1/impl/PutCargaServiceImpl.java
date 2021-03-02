@@ -22,6 +22,9 @@ import es.mercadona.gesaduan.jpa.cargas.v1.CargasPkJPA;
 public class PutCargaServiceImpl implements PutCargaService {
 
 	@Inject
+	private org.slf4j.Logger logger;		
+	
+	@Inject
 	private PutCargaDAO putCargaDao;
 	
 	@Override
@@ -34,8 +37,8 @@ public class PutCargaServiceImpl implements PutCargaService {
 		
 		for (CargaDTO carga: cargas) {
 			CargasPkJPA pkCarga = new CargasPkJPA();
-			CargasJPA datosCarga = new CargasJPA();
-			if (carga.getCodigoCarga() == null || carga.getCodigoCarga().toString().equals("")) {
+			CargasJPA datosCarga = null;
+			if (carga.getCodigoCarga() == null || "".equals(carga.getCodigoCarga())) {
 				datosCarga = anyadirDatosCarga(carga, pkCarga);
 				datosCarga.setUsuarioCreacion(input.getMetadatos().getCodigoUsuario());
 				CargaOutputDTO cargaOutput = new CargaOutputDTO();
@@ -43,26 +46,17 @@ public class PutCargaServiceImpl implements PutCargaService {
 				cargaOutput.setResultadoOK("S");
 				listaCargas.add(cargaOutput);
 			} else {
-				/* if (putCargaDao.validarEstadoCarga(carga) == 0) {*/
-					pkCarga.setCodigoCarga(carga.getCodigoCarga());
-					datosCarga = anyadirDatosCarga(carga, pkCarga);
-					datosCarga.setUsuarioModificacion(input.getMetadatos().getCodigoUsuario());
-					CargaOutputDTO cargaOutput = new CargaOutputDTO();
-					cargaOutput.setCodigoCarga(putCargaDao.modificarCarga(datosCarga));
-					cargaOutput.setResultadoOK("S");
-					listaCargas.add(cargaOutput);
-				/* }
-				else {
-					CargaOutputDTO cargaOutput = new CargaOutputDTO();
-					cargaOutput.setCodigoCarga(carga.getCodigoCarga());
-					cargaOutput.setResultadoOK("N");
-					cargaOutput.setMensajeResultado("No se pueden modificar cargas con estado distinto de Pendiente Asignar o con divisiones asignadas.");
-					listaCargas.add(cargaOutput);
-				} */
+				pkCarga.setCodigoCarga(carga.getCodigoCarga());
+				datosCarga = anyadirDatosCarga(carga, pkCarga);
+				datosCarga.setUsuarioModificacion(input.getMetadatos().getCodigoUsuario());
+				CargaOutputDTO cargaOutput = new CargaOutputDTO();
+				cargaOutput.setCodigoCarga(putCargaDao.modificarCarga(datosCarga));
+				cargaOutput.setResultadoOK("S");
+				listaCargas.add(cargaOutput);
 			}
 		}
 		
-		if (listaCargas.size() == 0) listaCargas = null;
+		if (listaCargas.isEmpty()) listaCargas = null;
 		datos.setCarga(listaCargas);
 		result.setDatos(datos);
 		
@@ -86,7 +80,7 @@ public class PutCargaServiceImpl implements PutCargaService {
 				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 				fechaServicio = dateFormat.parse(cargaOrigen.getFechaServicio());
 			} catch (ParseException e) {
-				e.printStackTrace();
+				this.logger.error("({}-{}) ERROR - {} {}","PutCargaServiceImpl(GESADUAN)","anyadirDatosCarga",e.getClass().getSimpleName(),e.getMessage());			
 			}
 		}
 		datosCarga.setFechaServicio(fechaServicio);
@@ -96,7 +90,7 @@ public class PutCargaServiceImpl implements PutCargaService {
 				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 				fechaEntrega = dateFormat.parse(cargaOrigen.getFechaEntrega());
 			} catch (ParseException e) {
-				e.printStackTrace();
+				this.logger.error("({}-{}) ERROR - {} {}","PutCargaServiceImpl(GESADUAN)","anyadirDatosCarga",e.getClass().getSimpleName(),e.getMessage());
 			}
 		}
 		datosCarga.setFechaEntrega(fechaEntrega);

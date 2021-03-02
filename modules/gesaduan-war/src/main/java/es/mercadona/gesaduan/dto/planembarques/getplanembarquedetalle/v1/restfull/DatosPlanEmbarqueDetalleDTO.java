@@ -23,6 +23,7 @@ public class DatosPlanEmbarqueDetalleDTO extends AbstractDTO {
 	private String nombreEstado;
 	private String codigoUsuarioValidacion;
 	private List<EquipoDTO> equipo;
+	private List<DosierDTO> dosier;	
 
 	public Long getCodigoEmbarque() {
 		return codigoEmbarque;
@@ -143,5 +144,21 @@ public class DatosPlanEmbarqueDetalleDTO extends AbstractDTO {
 	public void setEquipo(List<EquipoDTO> equipo) {
 		this.equipo = equipo;
 	}
+
+	/**
+	 * @return the dosier
+	 */
+	public List<DosierDTO> getDosier() {
+		return dosier;
+	}
+
+	/**
+	 * @param dosier the dosier to set
+	 */
+	public void setDosier(List<DosierDTO> dosier) {
+		this.dosier = dosier;
+	}
+	
+	
 
 }

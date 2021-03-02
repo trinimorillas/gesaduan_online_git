@@ -16,16 +16,12 @@ public class GetAlertasServiceImpl implements GetAlertasService{
 	
 	@Override
 	public OutputAlertasDTO getAlertas(InputAlertasDTO input, BoPage paginacion) {
-		
-		OutputAlertasDTO result = getAlertasDao.getAlertas(input, paginacion);
-		
-		return result;
+		return getAlertasDao.getAlertas(input, paginacion);
 	}
 
 
 	@Override
 	public boolean checkNotificacionExiste(String codigoElemento) {
-
 		return getAlertasDao.checkNotificacionExiste(codigoElemento);
 	}
 	

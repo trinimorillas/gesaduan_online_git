@@ -79,6 +79,8 @@ public class DeclaracionesDeValorRestful {
 	private static final String FILE_BASE_NAME_PDF = "dv_";
 	private static final String FILE_BASE_NAME_CSV = "csv_";
 
+	private static final String LOG_FILE = "DeclaracionesDeValorRestful(GESADUAN)"; 	
+	
 	@GET
 	@Path("declaraciones-valor/sumario")
 	@Consumes(MediaType.WILDCARD)
@@ -183,7 +185,7 @@ public class DeclaracionesDeValorRestful {
 			response = getDVSumarioService.getDeclaracionesDeValorList(inputParams, paginacion);
 
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}","DeclaracionesDeValorRestful(GESADUAN)","getDeclaracionesDeValorSumario",e.getClass().getSimpleName(),e.getMessage());			
+			this.logger.error("({}-{}) ERROR - {} {}",LOG_FILE,"getDeclaracionesDeValorSumario",e.getClass().getSimpleName(),e.getMessage());			
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
 		}
 
@@ -231,7 +233,7 @@ public class DeclaracionesDeValorRestful {
 			
 			
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}","DeclaracionesDeValorRestful(GESADUAN)","getDeclaracionDeValorDetalle",e.getClass().getSimpleName(),e.getMessage());
+			this.logger.error("({}-{}) ERROR - {} {}",LOG_FILE,"getDeclaracionDeValorDetalle",e.getClass().getSimpleName(),e.getMessage());
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
 		}
 
@@ -249,7 +251,7 @@ public class DeclaracionesDeValorRestful {
 		try {
 			response = postDVService.createDeclaracionesDeValor(valoresDeEntrada);
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}","DeclaracionesDeValorRestful(GESADUAN)","postDeclaracionesDeValor",e.getClass().getSimpleName(),e.getMessage());	
+			this.logger.error("({}-{}) ERROR - {} {}",LOG_FILE,"postDeclaracionesDeValor",e.getClass().getSimpleName(),e.getMessage());	
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
 		}
 
@@ -275,7 +277,7 @@ public class DeclaracionesDeValorRestful {
 		try {
 			String fileExtension = ".";
 			String mimeType = null;
-			String FILE_BASE_NAME = null;
+			String fileBaseName = null;
 
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 			Date date = new Date(System.currentTimeMillis());
@@ -283,13 +285,13 @@ public class DeclaracionesDeValorRestful {
 			if (tipoDocumento.equalsIgnoreCase("pdf")) {
 				fileExtension += tipoDocumento.toLowerCase();
 				mimeType = MIMETYPE_PDF;
-				FILE_BASE_NAME = FILE_BASE_NAME_PDF.concat(codigoDeclaracion.toString()).concat("_")
+				fileBaseName = FILE_BASE_NAME_PDF.concat(codigoDeclaracion.toString()).concat("_")
 						.concat(anyo.toString()).concat("_").concat(version.toString()).concat("_")
 						.concat(formatter.format(date));
 			} else if (tipoDocumento.equalsIgnoreCase("csv")) {
 				fileExtension += tipoDocumento.toLowerCase();
 				mimeType = MIMETYPE_CSV;
-				FILE_BASE_NAME = FILE_BASE_NAME_CSV.concat(codigoDeclaracion.toString()).concat("_")
+				fileBaseName = FILE_BASE_NAME_CSV.concat(codigoDeclaracion.toString()).concat("_")
 						.concat(anyo.toString()).concat("_").concat(version.toString()).concat("_")
 						.concat(formatter.format(date));
 			}
@@ -318,18 +320,16 @@ public class DeclaracionesDeValorRestful {
 				
 				if(file != null) {
 						
-					Resource resource = resourceService.createResource(file, FILE_BASE_NAME, fileExtension);
+					Resource resource = resourceService.createResource(file, fileBaseName, fileExtension);
 		
 					rb = Response.ok(resource.getInputStream(), mimeType);
 		
-					/* rb.header("Content-Disposition", "inline; filename=" + FILE_BASE_NAME + fileExtension); */
-					
-					rb.header("Content-Disposition", "attachment; filename=" + FILE_BASE_NAME + fileExtension);
+					rb.header("Content-Disposition", "attachment; filename=" + fileBaseName + fileExtension);
 					rb.header("file-md5", resource.getMd5());
 				} else {
 					OutputResponseErrorDTO error = new OutputResponseErrorDTO();
 					ErrorDTO errorDesc = new ErrorDTO();
-					List<String> partsError = new ArrayList();
+					List<String> partsError = new ArrayList<>();
 					
 					partsError.add("Recurso no encontrado");
 					
@@ -347,7 +347,7 @@ public class DeclaracionesDeValorRestful {
 				
 				OutputResponseErrorDTO error = new OutputResponseErrorDTO();
 				ErrorDTO errorDesc = new ErrorDTO();
-				List<String> partsError = new ArrayList();
+				List<String> partsError = new ArrayList<>();
 				
 				partsError.add("Recurso no encontrado");
 				
@@ -361,13 +361,13 @@ public class DeclaracionesDeValorRestful {
 			}
 
 		} catch (ResourceNotFoundException e) {
-			this.logger.error("({}-{}) ERROR - {} {}","DeclaracionesDeValorRestful(GESADUAN)","getDeclaracionesDeValorDocumento-1",e.getClass().getSimpleName(),e.getMessage());			
+			this.logger.error("({}-{}) ERROR - {} {}",LOG_FILE,"getDeclaracionesDeValorDocumento-1",e.getClass().getSimpleName(),e.getMessage());			
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
 		} catch (IllegalResourceNameException e) {
-			this.logger.error("({}-{}) ERROR - {} {}","DeclaracionesDeValorRestful(GESADUAN)","getDeclaracionesDeValorDocumento-2",e.getClass().getSimpleName(),e.getMessage());			
+			this.logger.error("({}-{}) ERROR - {} {}",LOG_FILE,"getDeclaracionesDeValorDocumento-2",e.getClass().getSimpleName(),e.getMessage());			
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}","DeclaracionesDeValorRestful(GESADUAN)","getDeclaracionesDeValorDocumento-3",e.getClass().getSimpleName(),e.getMessage());			
+			this.logger.error("({}-{}) ERROR - {} {}",LOG_FILE,"getDeclaracionesDeValorDocumento-3",e.getClass().getSimpleName(),e.getMessage());			
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
 		}
 
@@ -417,7 +417,7 @@ public class DeclaracionesDeValorRestful {
 			}
 			
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}","DeclaracionesDeValorRestful(GESADUAN)","putDeclaracionesDeValorConfirmaDescarga",e.getClass().getSimpleName(),e.getMessage());	
+			this.logger.error("({}-{}) ERROR - {} {}",LOG_FILE,"putDeclaracionesDeValorConfirmaDescarga",e.getClass().getSimpleName(),e.getMessage());	
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
 
 		}
@@ -434,7 +434,7 @@ public class DeclaracionesDeValorRestful {
 		OutputResponseErrorDTO error = new OutputResponseErrorDTO();
 		ErrorDTO errorDesc = new ErrorDTO();
 		
-		List<String> partsError = Arrays.asList(ex.getMessage().toString().replaceAll("\\t", "").replaceAll("\\r", "").split("\\n"));
+		List<String> partsError = Arrays.asList(ex.getMessage().replace("\\t", "").replace("\\r", "").split("\\n"));
 
 		errorDesc.setCodigo("500");
 		errorDesc.setDescripcion("Se ha producido un error en el servicio: ".concat(this.getClass().getSimpleName()));

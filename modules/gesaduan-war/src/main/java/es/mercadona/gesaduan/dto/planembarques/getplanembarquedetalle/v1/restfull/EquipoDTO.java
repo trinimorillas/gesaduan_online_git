@@ -20,7 +20,10 @@ public class EquipoDTO extends AbstractDTO {
 	private Integer codigoEstado;
 	private String nombreEstado;
 	private String codigoUsuarioCreacion;
+	private Integer codigoEstadoDocumentacion;
+	private String nombreEstadoDocumentacion;	
 	private List<SuministroDTO> suministro;
+	private List<CategoriaDTO> categoria;	
 	private List<CargaDTO> carga;	
 
 	public Long getCodigoEquipo() {
@@ -118,6 +121,34 @@ public class EquipoDTO extends AbstractDTO {
 	public void setCodigoUsuarioCreacion(String codigoUsuarioCreacion) {
 		this.codigoUsuarioCreacion = codigoUsuarioCreacion;
 	}
+	
+	/**
+	 * @return the codigoEstadoDocumentacion
+	 */
+	public Integer getCodigoEstadoDocumentacion() {
+		return codigoEstadoDocumentacion;
+	}
+
+	/**
+	 * @param codigoEstadoDocumentacion the codigoEstadoDocumentacion to set
+	 */
+	public void setCodigoEstadoDocumentacion(Integer codigoEstadoDocumentacion) {
+		this.codigoEstadoDocumentacion = codigoEstadoDocumentacion;
+	}
+
+	/**
+	 * @return the nombreEstadoDocumentacion
+	 */
+	public String getNombreEstadoDocumentacion() {
+		return nombreEstadoDocumentacion;
+	}
+
+	/**
+	 * @param nombreEstadoDocumentacion the nombreEstadoDocumentacion to set
+	 */
+	public void setNombreEstadoDocumentacion(String nombreEstadoDocumentacion) {
+		this.nombreEstadoDocumentacion = nombreEstadoDocumentacion;
+	}
 
 	public List<SuministroDTO> getSuministro() {
 		return suministro;
@@ -127,6 +158,14 @@ public class EquipoDTO extends AbstractDTO {
 		this.suministro = suministro;
 	}
 
+	public List<CategoriaDTO> getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(List<CategoriaDTO> categoria) {
+		this.categoria = categoria;
+	}	
+	
 	public List<CargaDTO> getCarga() {
 		return carga;
 	}
