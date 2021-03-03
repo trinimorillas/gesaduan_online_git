@@ -126,10 +126,10 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 			final StringBuilder sqlCount = new StringBuilder();
 			
 			String count = "SELECT COUNT(*) FROM (";
-			String select = "SELECT DISTINCT ";		
+			String select = "SELECT * FROM (SELECT DISTINCT ";		
 			String campos = "CA.COD_V_CARGA, TC.COD_N_TIPO_CARGA, TC.TXT_NOMBRE_TIPO_CARGA, TS.COD_N_TIPO_SUMINISTRO, TS.TXT_NOMBRE_TIPO_SUMINISTRO, " +
 					"CC.COD_N_CATEGORIA, CC.TXT_NOMBRE_CATEGORIA, PP.COD_N_PROVEEDOR, PP.TXT_RAZON_SOCIAL, CA.COD_V_ALMACEN_ORIGEN, CA.COD_V_CENTRO_DESTINO, " +
-					"TO_CHAR(CA.FEC_D_ENTREGA,'DD/MM/YYYY') AS FECHAENTREGA, TO_CHAR(CA.FEC_DT_SERVICIO,'DD/MM/YYYY'), ESC.COD_N_ESTADO, ESC.TXT_NOMBRE_ESTADO, " +
+					"TO_CHAR(CA.FEC_D_ENTREGA, 'DD/MM/YYYY') AS FECHAENTREGA, TO_CHAR(CA.FEC_DT_SERVICIO, 'DD/MM/YYYY'), ESC.COD_N_ESTADO, ESC.TXT_NOMBRE_ESTADO, " +
 					"EC.NUM_HUECO_OCUPADO, EC.NUM_PESO_OCUPADO, EC.NUM_DIVISION, CA.MCA_CONTIENE_LPC, CA.MCA_PEDIDOS_SIN_VALIDAR ";
 			String from = "FROM D_EQUIPO_TRANSPORTE ET " +
 					"INNER JOIN S_EQUIPO_CARGA EC ON (EC.COD_N_EQUIPO = ET.COD_N_EQUIPO) " +
@@ -139,59 +139,59 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 					"LEFT JOIN D_CATEGORIA_CARGA CC ON (CC.COD_N_CATEGORIA = CA.COD_N_CATEGORIA) " +
 					"LEFT JOIN D_PROVEEDOR_R PP ON (PP.COD_N_PROVEEDOR = CA.COD_N_PROVEEDOR) " +
 					"INNER JOIN D_ESTADO_CARGA ESC ON (ESC.COD_N_ESTADO = CA.COD_N_ESTADO) ";
-			String where = "WHERE ET.COD_N_EQUIPO = ?codigoEquipo ";
+			String where = "WHERE ET.COD_N_EQUIPO = ?codigoEquipo) ";
 			
 			String order = "";
 			String countFin = ")";
 			
 			if (orden.equals("-codigoCarga"))
-				order += "ORDER BY CA.COD_V_CARGA DESC";
+				order += "ORDER BY COD_V_CARGA DESC";
 			else if (orden.equals("+codigoCarga"))
-				order += "ORDER BY CA.COD_V_CARGA ASC";
+				order += "ORDER BY COD_V_CARGA ASC";
 			else if (orden.equals("-codigoTipoCarga"))
-				order += "ORDER BY TC.COD_N_TIPO_CARGA DESC";
+				order += "ORDER BY COD_N_TIPO_CARGA DESC";
 			else if (orden.equals("+codigoTipoCarga"))
-				order += "ORDER BY TC.COD_N_TIPO_CARGA ASC";
+				order += "ORDER BY COD_N_TIPO_CARGA ASC";
 			else if (orden.equals("-nombreSuministro"))
-				order += "ORDER BY TS.TXT_NOMBRE_TIPO_SUMINISTRO DESC";
+				order += "ORDER BY TXT_NOMBRE_TIPO_SUMINISTRO DESC";
 			else if (orden.equals("+nombreSuministro"))
-				order += "ORDER BY TS.TXT_NOMBRE_TIPO_SUMINISTRO ASC";
+				order += "ORDER BY TXT_NOMBRE_TIPO_SUMINISTRO ASC";
 			else if (orden.equals("-nombreProveedor"))
-				order += "ORDER BY PP.TXT_RAZON_SOCIAL DESC";
+				order += "ORDER BY TXT_RAZON_SOCIAL DESC";
 			else if (orden.equals("+nombreProveedor"))
-				order += "ORDER BY PP.TXT_RAZON_SOCIAL ASC";
+				order += "ORDER BY TXT_RAZON_SOCIAL ASC";
 			else if (orden.equals("-codigoAlmacenOrigen"))
-				order += "ORDER BY CA.COD_V_ALMACEN_ORIGEN DESC";
+				order += "ORDER BY COD_V_ALMACEN_ORIGEN DESC";
 			else if (orden.equals("+codigoAlmacenOrigen"))
-				order += "ORDER BY CA.COD_V_ALMACEN_ORIGEN ASC";
+				order += "ORDER BY COD_V_ALMACEN_ORIGEN ASC";
 			else if (orden.equals("-codigoCentroDestino"))
-				order += "ORDER BY CA.COD_V_CENTRO_DESTINO DESC";
+				order += "ORDER BY COD_V_CENTRO_DESTINO DESC";
 			else if (orden.equals("+codigoCentroDestino"))
-				order += "ORDER BY CA.COD_V_CENTRO_DESTINO ASC";
+				order += "ORDER BY COD_V_CENTRO_DESTINO ASC";
 			else if (orden.equals("-fechaEntrega"))
-				order += "ORDER BY FECHAENTREGA DESC";
+				order += "ORDER BY TO_DATE(FECHAENTREGA, 'DD/MM/YYYY') DESC";
 			else if (orden.equals("+fechaEntrega"))
-				order += "ORDER BY FECHAENTREGA ASC";			
+				order += "ORDER BY TO_DATE(FECHAENTREGA, 'DD/MM/YYYY') ASC";			
 			else if (orden.equals("-nombreCategoria"))
-				order += "ORDER BY CC.TXT_NOMBRE_CATEGORIA DESC";
+				order += "ORDER BY TXT_NOMBRE_CATEGORIA DESC";
 			else if (orden.equals("+nombreCategoria"))
-				order += "ORDER BY CC.TXT_NOMBRE_CATEGORIA ASC";
+				order += "ORDER BY TXT_NOMBRE_CATEGORIA ASC";
 			else if (orden.equals("-marcaLpC"))
-				order += "ORDER BY CA.MCA_CONTIENE_LPC DESC";
+				order += "ORDER BY MCA_CONTIENE_LPC DESC";
 			else if (orden.equals("+marcaLpC"))
-				order += "ORDER BY CA.MCA_CONTIENE_LPC ASC";
+				order += "ORDER BY MCA_CONTIENE_LPC ASC";
 			else if (orden.equals("-numeroDivision"))
-				order += "ORDER BY EC.NUM_DIVISION DESC";
+				order += "ORDER BY NUM_DIVISION DESC";
 			else if (orden.equals("+numeroDivision"))
-				order += "ORDER BY EC.NUM_DIVISION ASC";
+				order += "ORDER BY NUM_DIVISION ASC";
 			else if (orden.equals("-numeroHuecoOcupado"))
-				order += "ORDER BY EC.NUM_HUECO_OCUPADO DESC";
+				order += "ORDER BY NUM_HUECO_OCUPADO DESC";
 			else if (orden.equals("+numeroHuecoOcupado"))
-				order += "ORDER BY EC.NUM_HUECO_OCUPADO ASC";
+				order += "ORDER BY NUM_HUECO_OCUPADO ASC";
 			else if (orden.equals("-numeroPesoOcupado"))
-				order += "ORDER BY EC.NUM_PESO_OCUPADO DESC";
+				order += "ORDER BY NUM_PESO_OCUPADO DESC";
 			else if (orden.equals("+numeroPesoOcupado"))
-				order += "ORDER BY EC.NUM_PESO_OCUPADO ASC";
+				order += "ORDER BY NUM_PESO_OCUPADO ASC";
 			
 			sql.append(select).append(campos).append(from).append(where).append(order);
 			sqlCount.append(count).append(select).append(campos).append(from).append(where).append(countFin);
@@ -263,11 +263,11 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 							"LEFT JOIN D_CATEGORIA_CARGA CC ON (CC.COD_N_CATEGORIA = CA.COD_N_CATEGORIA) " +
 							"LEFT JOIN D_PROVEEDOR_R PP ON (PP.COD_N_PROVEEDOR = CA.COD_N_PROVEEDOR) ";
 			
-			if (mcaContenedorSinDosier.equals("S")) from += "LEFT JOIN S_DOSIER_EQUIPO DE ON (DE.COD_N_EQUIPO = ET.COD_N_EQUIPO) ";
+			if (mcaContenedorSinDosier != null && mcaContenedorSinDosier.equals("S")) from += "LEFT JOIN S_DOSIER_EQUIPO DE ON (DE.COD_N_EQUIPO = ET.COD_N_EQUIPO) ";
 			
 			String where = "WHERE ET.COD_N_EQUIPO = ?codigoEquipo "; 
 			
-			if (mcaContenedorSinDosier != null && mcaContenedorSinDosier.equals("S")) where += "AND CE.NUM_DOSIER = NULL ";
+			if (mcaContenedorSinDosier != null && mcaContenedorSinDosier.equals("S")) where += "AND CE.NUM_DOSIER IS NULL ";
 			
 			String order = "";
 			String countFin = ")";
