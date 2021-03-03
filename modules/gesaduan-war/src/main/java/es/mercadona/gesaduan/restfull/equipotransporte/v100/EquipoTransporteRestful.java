@@ -154,15 +154,17 @@ public class EquipoTransporteRestful {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getEquipoTransporte (@NotNull @PathParam("codigoEquipo") Long codigoEquipo,
 			@DefaultValue("+codigoCarga") @QueryParam("orden") String orden,
-			@DefaultValue("N") @QueryParam("mcaIncluyeContenedores") String mcaIncluyeContenedores) {
+			@DefaultValue("N") @QueryParam("mcaIncluyeContenedores") String mcaIncluyeContenedores,
+			@DefaultValue("N") @QueryParam("mcaContenedorSinDosier") String mcaContenedorSinDosier) {
 		OutputEquipoTransporteDetalleDTO response = null;		
 		try {			
 			InputEquipoTransporteDetalleDTO input = new InputEquipoTransporteDetalleDTO();
 			input.setCodigoEquipo(codigoEquipo);
 			input.setMcaIncluyeContenedores(mcaIncluyeContenedores);
+			input.setMcaContenedorSinDosier(mcaContenedorSinDosier);
 			input.setOrden(orden);
 			
-			response = getEquipoTransporteDetalleService.getEquipoTransporteDetalle(input);			
+			response = getEquipoTransporteDetalleService.getEquipoTransporteDetalle(input);
 		} catch(Exception e) {
 			this.logger.error("({}-{}) ERROR - {} {}","EquipoTransporteRestful(GESADUAN)","consultarEquipoTransporte",e.getClass().getSimpleName(),e.getMessage());	
 			return Response.status(Status.BAD_REQUEST).entity(ResponseUtil.getError(e, EnumGesaduanException.ERROR_GENERICO.getCodigo(), e.getMessage())).build();

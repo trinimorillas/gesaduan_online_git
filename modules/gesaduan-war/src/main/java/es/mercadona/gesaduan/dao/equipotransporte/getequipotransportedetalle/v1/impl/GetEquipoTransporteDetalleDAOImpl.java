@@ -43,11 +43,20 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 			String select = "SELECT ";		
 			String campos = "ET.COD_N_EQUIPO, ET.COD_N_EMBARQUE, ET.TXT_MATRICULA, PR.COD_N_PROVEEDOR, PR.TXT_RAZON_SOCIAL, T.COD_N_TEMPERATURA, " +
 					"T.TXT_TEMPERATURA, ET.NUM_CAPACIDAD, ET.NUM_OCUPACION, ET.COD_N_ESTADO, EE.TXT_NOMBRE_ESTADO, TO_CHAR(ET.FEC_DT_CARGA,'DD/MM/YYYY'), " +
-					"TO_CHAR(ET.FEC_DT_CARGA, 'HH24:MI:SS'), ET.TXT_OBSERVACIONES, ET.COD_V_USUARIO_CREACION ";
+					"TO_CHAR(ET.FEC_DT_CARGA, 'HH24:MI:SS'), ET.TXT_OBSERVACIONES, ET.COD_V_USUARIO_CREACION, ET.COD_N_ESTADO_DOCUMENTACION, EDE.TXT_NOMBRE_ESTADO, " +
+					"CASE WHEN (SELECT COUNT(*) FROM O_CONTENEDOR_EXPEDIDO CE WHERE CE.COD_N_EQUIPO = ?codigoEquipo) > 0 THEN 'S' ELSE 'N' END ";
 			String from = "FROM D_EQUIPO_TRANSPORTE ET " +
 					"INNER JOIN D_ESTADO_EQUIPO EE ON (EE.COD_N_ESTADO = ET.COD_N_ESTADO) " +
-					"LEFT JOIN D_PROVEEDOR_R PR ON (PR.COD_N_PROVEEDOR = ET.COD_N_PROVEEDOR) " +
-					"LEFT JOIN D_TEMPERATURA T ON (T.COD_N_TEMPERATURA = ET.COD_N_TEMPERATURA) ";
+					"LEFT JOIN D_PROVEEDOR_R PR ON (PR .COD_N_PROVEEDOR = ET.COD_N_PROVEEDOR) " +
+					"LEFT JOIN D_TEMPERATURA T ON (T.COD_N_TEMPERATURA = ET.COD_N_TEMPERATURA) " +
+					"LEFT JOIN S_EQUIPO_CARGA EC ON (EC .COD_N_EQUIPO = ET.COD_N_EQUIPO) " +
+					"LEFT JOIN D_CARGA CA ON (CA.COD_V_CARGA = EC .COD_V_CARGA AND  CA .COD_V_ALMACEN_ORIGEN = EC .COD_V_ALMACEN_ORIGEN) " +
+					"LEFT JOIN D_TIPO_CARGA TC ON (TC.COD_N_TIPO_CARGA= CA .COD_N_TIPO_CARGA) " +
+					"LEFT JOIN D_TIPO_SUMINISTRO TS ON (TS.COD_N_TIPO_SUMINISTRO = CA .COD_N_TIPO_SUMINISTRO) " +
+					"LEFT JOIN D_CATEGORIA_CARGA CC ON (CC.COD_N_CATEGORIA= CA .COD_N_CATEGORIA) " +
+					"LEFT JOIN D_PROVEEDOR_R PP ON (PP.COD_N_PROVEEDOR = CA .COD_N_PROVEEDOR) " +
+					"LEFT JOIN D_ESTADO_CARGA ESC ON (ESC.COD_N_ESTADO = CA .COD_N_ESTADO) " +
+					"LEFT JOIN D_ESTADO_DOCUMENTACION_EQUIPO EDE ON (EDE.COD_N_ESTADO = ET.COD_N_ESTADO_DOCUMENTACION) ";
 			String where = "WHERE ET.COD_N_EQUIPO = ?codigoEquipo ";
 			
 			sql.append(select).append(campos).append(from).append(where);
@@ -59,6 +68,7 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 			@SuppressWarnings("unchecked")
 			List<Object[]> listado = query.getResultList();		
 			List<CargaDTO> listaCarga = null;
+			List<ContenedorDTO> listaContenedores = null;
 	
 			if (listado != null && !listado.isEmpty()) {			
 				for (Object[] tmp : listado) {				
@@ -78,16 +88,23 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 					if (tmp[12] != null) equipoTransporte.setHoraCarga(String.valueOf(tmp[12]));
 					if (tmp[13] != null) equipoTransporte.setObservaciones(String.valueOf(tmp[13]));
 					if (tmp[14] != null) equipoTransporte.setCodigoUsuarioCreacion(String.valueOf(tmp[14]));
-					equipoTransporte.setMcaExistenContenedoresFacturados(hayContenedores(codigoEquipo));
-					listaCarga = new ArrayList<>();				
+					if (tmp[15] != null) equipoTransporte.setCodigoEstadoDocumentacion(Integer.parseInt(String.valueOf(tmp[15])));
+					if (tmp[16] != null) equipoTransporte.setNombreEstadoDocumentacion(String.valueOf(tmp[16]));
+					if (tmp[17] != null) equipoTransporte.setMcaExistenContenedoresFacturados(String.valueOf(tmp[17]));
+					listaCarga = new ArrayList<>();
 					listaCarga = getCargas(equipoTransporte.getCodigoEquipo(), input.getOrden(), input.getMcaIncluyeContenedores());
-					equipoTransporte.setCarga(listaCarga);					
+					listaContenedores = new ArrayList<>();
+					if (input.getMcaIncluyeContenedores().equals("S")) listaContenedores = getContenedores(codigoEquipo, input.getOrden(), input.getMcaContenedorSinDosier());
+
+					equipoTransporte.setCarga(listaCarga);
+					equipoTransporte.setContenedor(listaContenedores);
 				}			
 					
 			}
 
 			Map<String, String> mapaMetaData = new HashMap<String, String>();
-			mapaMetaData.put("totalItemsCount", (listaCarga != null) ? String.valueOf(listaCarga.size()) : "0");	
+			mapaMetaData.put("totalCargas", (listaCarga != null) ? String.valueOf(listaCarga.size()) : "0");
+			mapaMetaData.put("totalContenedores", (listaContenedores != null) ? String.valueOf(listaContenedores.size()) : "0");
 
 			result.setDatos(equipoTransporte);
 			result.setMetadatos(mapaMetaData);
@@ -100,24 +117,7 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 		return result;
 	}
 	
-	private String hayContenedores(Long codigoEquipo) {
-		String hayContenedores = "N";		
-		try {		
-			String select = "SELECT COUNT(*) FROM O_CONTENEDOR_EXPEDIDO CE WHERE CE.COD_N_EQUIPO = ?codigoEquipo";
-			
-			final Query query = getEntityManager().createNativeQuery(select);				
-			query.setParameter("codigoEquipo", codigoEquipo);		
-			int resultadoQuery = Integer.parseInt(query.getSingleResult().toString());
-			if (resultadoQuery > 0) hayContenedores = "S";			
-		} catch(Exception ex) {
-			this.logger.error("({}-{}) ERROR - {} {}","GetEquipoTransporteDetalleDAOImpl(GESADUAN)","hayContenedores",ex.getClass().getSimpleName(),ex.getMessage());	
-			throw new ApplicationException(ex.getMessage());			
-		}		
-		return hayContenedores;
-	}
-	
-	private List<CargaDTO> getCargas(Long codigoEquipo, String orden, String hayContenedores) {	
-		
+	private List<CargaDTO> getCargas(Long codigoEquipo, String orden, String hayContenedores) {		
 		List<CargaDTO> listaCarga = null;		
 		
 		try {
@@ -126,10 +126,10 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 			final StringBuilder sqlCount = new StringBuilder();
 			
 			String count = "SELECT COUNT(*) FROM (";
-			String select = "SELECT ";		
+			String select = "SELECT * FROM (SELECT DISTINCT ";		
 			String campos = "CA.COD_V_CARGA, TC.COD_N_TIPO_CARGA, TC.TXT_NOMBRE_TIPO_CARGA, TS.COD_N_TIPO_SUMINISTRO, TS.TXT_NOMBRE_TIPO_SUMINISTRO, " +
 					"CC.COD_N_CATEGORIA, CC.TXT_NOMBRE_CATEGORIA, PP.COD_N_PROVEEDOR, PP.TXT_RAZON_SOCIAL, CA.COD_V_ALMACEN_ORIGEN, CA.COD_V_CENTRO_DESTINO, " +
-					"TO_CHAR(CA.FEC_D_ENTREGA,'DD/MM/YYYY'), TO_CHAR(CA.FEC_DT_SERVICIO,'DD/MM/YYYY'), ESC.COD_N_ESTADO, ESC.TXT_NOMBRE_ESTADO, " +
+					"TO_CHAR(CA.FEC_D_ENTREGA, 'DD/MM/YYYY') AS FECHAENTREGA, TO_CHAR(CA.FEC_DT_SERVICIO, 'DD/MM/YYYY'), ESC.COD_N_ESTADO, ESC.TXT_NOMBRE_ESTADO, " +
 					"EC.NUM_HUECO_OCUPADO, EC.NUM_PESO_OCUPADO, EC.NUM_DIVISION, CA.MCA_CONTIENE_LPC, CA.MCA_PEDIDOS_SIN_VALIDAR ";
 			String from = "FROM D_EQUIPO_TRANSPORTE ET " +
 					"INNER JOIN S_EQUIPO_CARGA EC ON (EC.COD_N_EQUIPO = ET.COD_N_EQUIPO) " +
@@ -139,82 +139,62 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 					"LEFT JOIN D_CATEGORIA_CARGA CC ON (CC.COD_N_CATEGORIA = CA.COD_N_CATEGORIA) " +
 					"LEFT JOIN D_PROVEEDOR_R PP ON (PP.COD_N_PROVEEDOR = CA.COD_N_PROVEEDOR) " +
 					"INNER JOIN D_ESTADO_CARGA ESC ON (ESC.COD_N_ESTADO = CA.COD_N_ESTADO) ";
-			String where = "WHERE ET.COD_N_EQUIPO = ?codigoEquipo ";
-			String groupBy = "GROUP BY CA.COD_V_CARGA, " +
-					"TC.COD_N_TIPO_CARGA, " +
-					"TC.TXT_NOMBRE_TIPO_CARGA, " +
-					"TS.COD_N_TIPO_SUMINISTRO, " +
-					"TS.TXT_NOMBRE_TIPO_SUMINISTRO, " + 
-					"CC.COD_N_CATEGORIA, " +
-					"CC.TXT_NOMBRE_CATEGORIA, " +
-					"PP.COD_N_PROVEEDOR, " +
-					"PP.TXT_RAZON_SOCIAL, " +
-					"CA.COD_V_ALMACEN_ORIGEN, " +
-					"CA.COD_V_CENTRO_DESTINO, " + 
-					"CA.FEC_D_ENTREGA, " +
-					"CA.FEC_DT_SERVICIO, " +
-					"ESC.COD_N_ESTADO, " +
-					"ESC.TXT_NOMBRE_ESTADO, " + 
-					"EC.NUM_HUECO_OCUPADO, " +
-					"EC.NUM_PESO_OCUPADO, " +
-					"EC.NUM_DIVISION, " +
-					"CA.MCA_CONTIENE_LPC, " +
-					"CA.MCA_PEDIDOS_SIN_VALIDAR ";
+			String where = "WHERE ET.COD_N_EQUIPO = ?codigoEquipo) ";
 			
 			String order = "";
 			String countFin = ")";
 			
 			if (orden.equals("-codigoCarga"))
-				order += "ORDER BY CA.COD_V_CARGA DESC";
+				order += "ORDER BY COD_V_CARGA DESC";
 			else if (orden.equals("+codigoCarga"))
-				order += "ORDER BY CA.COD_V_CARGA ASC";
+				order += "ORDER BY COD_V_CARGA ASC";
 			else if (orden.equals("-codigoTipoCarga"))
-				order += "ORDER BY TC.COD_N_TIPO_CARGA DESC";
+				order += "ORDER BY COD_N_TIPO_CARGA DESC";
 			else if (orden.equals("+codigoTipoCarga"))
-				order += "ORDER BY TC.COD_N_TIPO_CARGA ASC";
+				order += "ORDER BY COD_N_TIPO_CARGA ASC";
 			else if (orden.equals("-nombreSuministro"))
-				order += "ORDER BY TS.TXT_NOMBRE_TIPO_SUMINISTRO DESC";
+				order += "ORDER BY TXT_NOMBRE_TIPO_SUMINISTRO DESC";
 			else if (orden.equals("+nombreSuministro"))
-				order += "ORDER BY TS.TXT_NOMBRE_TIPO_SUMINISTRO ASC";
+				order += "ORDER BY TXT_NOMBRE_TIPO_SUMINISTRO ASC";
 			else if (orden.equals("-nombreProveedor"))
-				order += "ORDER BY PP.TXT_RAZON_SOCIAL DESC";
+				order += "ORDER BY TXT_RAZON_SOCIAL DESC";
 			else if (orden.equals("+nombreProveedor"))
-				order += "ORDER BY PP.TXT_RAZON_SOCIAL ASC";
+				order += "ORDER BY TXT_RAZON_SOCIAL ASC";
 			else if (orden.equals("-codigoAlmacenOrigen"))
-				order += "ORDER BY CA.COD_V_ALMACEN_ORIGEN DESC";
+				order += "ORDER BY COD_V_ALMACEN_ORIGEN DESC";
 			else if (orden.equals("+codigoAlmacenOrigen"))
-				order += "ORDER BY CA.COD_V_ALMACEN_ORIGEN ASC";
+				order += "ORDER BY COD_V_ALMACEN_ORIGEN ASC";
 			else if (orden.equals("-codigoCentroDestino"))
-				order += "ORDER BY CA.COD_V_CENTRO_DESTINO DESC";
+				order += "ORDER BY COD_V_CENTRO_DESTINO DESC";
 			else if (orden.equals("+codigoCentroDestino"))
-				order += "ORDER BY CA.COD_V_CENTRO_DESTINO ASC";
+				order += "ORDER BY COD_V_CENTRO_DESTINO ASC";
 			else if (orden.equals("-fechaEntrega"))
-				order += "ORDER BY CA.FEC_D_ENTREGA DESC";
+				order += "ORDER BY TO_DATE(FECHAENTREGA, 'DD/MM/YYYY') DESC";
 			else if (orden.equals("+fechaEntrega"))
-				order += "ORDER BY CA.FEC_D_ENTREGA ASC";
+				order += "ORDER BY TO_DATE(FECHAENTREGA, 'DD/MM/YYYY') ASC";			
 			else if (orden.equals("-nombreCategoria"))
-				order += "ORDER BY CC.TXT_NOMBRE_CATEGORIA DESC";
+				order += "ORDER BY TXT_NOMBRE_CATEGORIA DESC";
 			else if (orden.equals("+nombreCategoria"))
-				order += "ORDER BY CC.TXT_NOMBRE_CATEGORIA ASC";
+				order += "ORDER BY TXT_NOMBRE_CATEGORIA ASC";
 			else if (orden.equals("-marcaLpC"))
-				order += "ORDER BY CA.MCA_CONTIENE_LPC DESC";
+				order += "ORDER BY MCA_CONTIENE_LPC DESC";
 			else if (orden.equals("+marcaLpC"))
-				order += "ORDER BY CA.MCA_CONTIENE_LPC ASC";
+				order += "ORDER BY MCA_CONTIENE_LPC ASC";
 			else if (orden.equals("-numeroDivision"))
-				order += "ORDER BY EC.NUM_DIVISION DESC";
+				order += "ORDER BY NUM_DIVISION DESC";
 			else if (orden.equals("+numeroDivision"))
-				order += "ORDER BY EC.NUM_DIVISION ASC";
+				order += "ORDER BY NUM_DIVISION ASC";
 			else if (orden.equals("-numeroHuecoOcupado"))
-				order += "ORDER BY EC.NUM_HUECO_OCUPADO DESC";
+				order += "ORDER BY NUM_HUECO_OCUPADO DESC";
 			else if (orden.equals("+numeroHuecoOcupado"))
-				order += "ORDER BY EC.NUM_HUECO_OCUPADO ASC";
+				order += "ORDER BY NUM_HUECO_OCUPADO ASC";
 			else if (orden.equals("-numeroPesoOcupado"))
-				order += "ORDER BY EC.NUM_PESO_OCUPADO DESC";
+				order += "ORDER BY NUM_PESO_OCUPADO DESC";
 			else if (orden.equals("+numeroPesoOcupado"))
-				order += "ORDER BY EC.NUM_PESO_OCUPADO ASC";
+				order += "ORDER BY NUM_PESO_OCUPADO ASC";
 			
 			sql.append(select).append(campos).append(from).append(where).append(order);
-			sqlCount.append(count).append(select).append(campos).append(from).append(where).append(groupBy).append(countFin);
+			sqlCount.append(count).append(select).append(campos).append(from).append(where).append(countFin);
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
 			final Query queryCount = getEntityManager().createNativeQuery(sqlCount.toString());
 			
@@ -250,7 +230,6 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 					carga.setNumeroDivision(Integer.parseInt(String.valueOf(tmp[17])));
 					carga.setMarcaLpC(String.valueOf(tmp[18]));
 					carga.setPedidosSinValidar(String.valueOf(tmp[19]));
-					if (hayContenedores.equals("S")) carga.setContenedor(getContenedores(codigoEquipo, carga.getCodigoAlmacenOrigen(), carga.getCodigoCarga()));
 					listaCarga.add(carga);
 				}
 			}
@@ -263,22 +242,90 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 		return listaCarga;
 	}
 	
-	private List<ContenedorDTO> getContenedores(Long codigoEquipo, String codigoAlmacenOrigen, String codigoCarga) {
-		List<ContenedorDTO> listaContenedor = null;		
+	private List<ContenedorDTO> getContenedores(Long codigoEquipo, String orden, String mcaContenedorSinDosier) {
+		List<ContenedorDTO> listaContenedor = null;
+		final StringBuilder sql = new StringBuilder();
+		final StringBuilder sqlCount = new StringBuilder();
 		
-		try {		
-			String select = "SELECT CE.NUM_CONTENEDOR, CE.COD_V_CARGA " + 
-						    "FROM O_CONTENEDOR_EXPEDIDO CE " +
-							"WHERE " + 
-						    "  CE.COD_N_EQUIPO = ?codigoEquipo AND " + 
-							"  CE.COD_V_ALMACEN = ?codigoAlmacenOrigen AND " + 
-						    "  CE.COD_V_CARGA = ?codigoCarga " +
-							" ORDER BY CE.COD_V_CARGA, CE.NUM_CONTENEDOR ASC";			
+		try {
+			String count  = "SELECT COUNT(*) FROM (";
+			String select = "SELECT ";
+			String campos = "CA.COD_V_CARGA, CE.NUM_CONTENEDOR, TS.COD_N_TIPO_SUMINISTRO, TS.TXT_NOMBRE_TIPO_SUMINISTRO, PP.COD_N_PROVEEDOR, PP.TXT_RAZON_SOCIAL, CA.COD_V_ALMACEN_ORIGEN, " +
+							"CA.COD_V_CENTRO_DESTINO, TO_CHAR(CE.FEC_DT_EXPEDICION, 'DD/MM/YYYY'), TO_CHAR(CA.FEC_DT_SERVICIO, 'DD/MM/YYYY'), CC.COD_N_CATEGORIA, CC.TXT_NOMBRE_CATEGORIA, " +
+							"CA.MCA_CONTIENE_LPC, CE.NUM_DOSIER, CE.NUM_ANYO ";
+			String from   = "FROM D_EQUIPO_TRANSPORTE ET " +
+							"INNER JOIN S_EQUIPO_CARGA EC ON (EC.COD_N_EQUIPO = ET.COD_N_EQUIPO) " +
+							"INNER JOIN D_CARGA CA ON ( " +
+							"CA.COD_V_CARGA = EC.COD_V_CARGA " +
+							"AND CA.COD_V_ALMACEN_ORIGEN = EC.COD_V_ALMACEN_ORIGEN) " +
+							"INNER JOIN O_CONTENEDOR_EXPEDIDO CE ON (CE.COD_N_EQUIPO = ET.COD_N_EQUIPO AND CE.COD_V_ALMACEN = EC.COD_V_ALMACEN_ORIGEN AND CE.COD_V_CARGA = EC.COD_V_CARGA) " +
+							"LEFT JOIN D_TIPO_SUMINISTRO TS ON (TS.COD_N_TIPO_SUMINISTRO = CA.COD_N_TIPO_SUMINISTRO) " +
+							"LEFT JOIN D_CATEGORIA_CARGA CC ON (CC.COD_N_CATEGORIA = CA.COD_N_CATEGORIA) " +
+							"LEFT JOIN D_PROVEEDOR_R PP ON (PP.COD_N_PROVEEDOR = CA.COD_N_PROVEEDOR) ";
 			
-			final Query query = getEntityManager().createNativeQuery(select);			
-			query.setParameter("codigoEquipo", codigoEquipo);
-			query.setParameter("codigoAlmacenOrigen", codigoAlmacenOrigen);
-			query.setParameter("codigoCarga", codigoCarga);			
+			if (mcaContenedorSinDosier != null && mcaContenedorSinDosier.equals("S")) from += "LEFT JOIN S_DOSIER_EQUIPO DE ON (DE.COD_N_EQUIPO = ET.COD_N_EQUIPO) ";
+			
+			String where = "WHERE ET.COD_N_EQUIPO = ?codigoEquipo "; 
+			
+			if (mcaContenedorSinDosier != null && mcaContenedorSinDosier.equals("S")) where += "AND CE.NUM_DOSIER IS NULL ";
+			
+			String order = "";
+			String countFin = ")";
+			
+			if (orden.equals("-codigoCarga"))
+				order += "ORDER BY CA.COD_V_CARGA DESC";
+			else if (orden.equals("+codigoCarga"))
+				order += "ORDER BY CA.COD_V_CARGA ASC";			
+			if (orden.equals("-numeroContenedor"))
+				order += "ORDER BY CE.NUM_CONTENEDOR DESC";
+			else if (orden.equals("+numeroContenedor"))
+				order += "ORDER BY CE.NUM_CONTENEDOR ASC";			
+			if (orden.equals("-nombreSuministro"))
+				order += "ORDER BY TS.TXT_NOMBRE_TIPO_SUMINISTRO DESC";
+			else if (orden.equals("+nombreSuministro"))
+				order += "ORDER BY TS.TXT_NOMBRE_TIPO_SUMINISTRO ASC";			
+			if (orden.equals("-nombreProveedor"))
+				order += "ORDER BY PP.TXT_RAZON_SOCIAL DESC";
+			else if (orden.equals("+nombreProveedor"))
+				order += "ORDER BY PP.TXT_RAZON_SOCIAL ASC";			
+			if (orden.equals("-codigoAlmacenOrigen"))
+				order += "ORDER BY CA.COD_V_ALMACEN_ORIGEN DESC";
+			else if (orden.equals("+codigoAlmacenOrigen"))
+				order += "ORDER BY CA.COD_V_ALMACEN_ORIGEN ASC";			
+			if (orden.equals("-codigoCentroDestino"))
+				order += "ORDER BY CA.COD_V_CENTRO_DESTINO DESC";
+			else if (orden.equals("+codigoCentroDestino"))
+				order += "ORDER BY CA.COD_V_CENTRO_DESTINO ASC";			
+			if (orden.equals("-fechaEntrega"))
+				order += "ORDER BY CA.FEC_DT_SERVICIO DESC";
+			else if (orden.equals("+fechaEntrega"))
+				order += "ORDER BY CA.FEC_DT_SERVICIO ASC";			
+			if (orden.equals("-fechaExpedicion"))
+				order += "ORDER BY CE.FEC_DT_EXPEDICION DESC";
+			else if (orden.equals("+fechaExpedicion"))
+				order += "ORDER BY CE.FEC_DT_EXPEDICION ASC";			
+			if (orden.equals("-nombreCategoria"))
+				order += "ORDER BY CC.TXT_NOMBRE_CATEGORIA DESC";
+			else if (orden.equals("+nombreCategoria"))
+				order += "ORDER BY CC.TXT_NOMBRE_CATEGORIA ASC";			
+			if (orden.equals("-marcaLpC"))
+				order += "ORDER BY CA.MCA_CONTIENE_LPC DESC";
+			else if (orden.equals("+marcaLpC"))
+				order += "ORDER BY CA.MCA_CONTIENE_LPC ASC";			
+			if (orden.equals("-numDosier"))
+				order += "ORDER BY CE.NUM_DOSIER DESC";
+			else if (orden.equals("+numDosier"))
+				order += "ORDER BY CE.NUM_DOSIER ASC";
+			
+			sql.append(select).append(campos).append(from).append(where).append(order);
+			sqlCount.append(count).append(select).append(campos).append(from).append(where).append(countFin);
+			final Query query = getEntityManager().createNativeQuery(sql.toString());
+			final Query queryCount = getEntityManager().createNativeQuery(sqlCount.toString());
+			
+			if (codigoEquipo != null) {
+				query.setParameter("codigoEquipo", codigoEquipo);
+				queryCount.setParameter("codigoEquipo", codigoEquipo);
+			}		
 			
 			@SuppressWarnings("unchecked")
 			List<Object[]> listado = query.getResultList();
@@ -287,7 +334,22 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 				listaContenedor = new ArrayList<>(); 
 				for (Object[] tmp : listado) {		
 					ContenedorDTO contenedor = new ContenedorDTO();
-					contenedor.setNumContenedor(Long.parseLong(String.valueOf(tmp[0])));
+					
+					if (tmp[0] != null) contenedor.setCodigoCarga(String.valueOf(tmp[0]));
+					if (tmp[1] != null) contenedor.setNumContenedor(Long.parseLong(String.valueOf(tmp[1])));
+					if (tmp[2] != null) contenedor.setCodigoSuministro(Integer.parseInt(String.valueOf(tmp[2])));
+					if (tmp[3] != null) contenedor.setNombreSuministro(String.valueOf(tmp[3]));
+					if (tmp[4] != null) contenedor.setCodigoProveedor(Long.parseLong(String.valueOf(tmp[4])));
+					if (tmp[5] != null) contenedor.setNombreProveedor(String.valueOf(tmp[5]));
+					if (tmp[6] != null) contenedor.setCodigoCentroOrigen(String.valueOf(tmp[6]));
+					if (tmp[7] != null) contenedor.setCodigoCentroDestino(String.valueOf(tmp[7]));
+					if (tmp[8] != null) contenedor.setFechaExpedicion(String.valueOf(tmp[8]));
+					if (tmp[9] != null) contenedor.setFechaEntrega(String.valueOf(tmp[9]));
+					if (tmp[10] != null) contenedor.setCodigoCategoria(Integer.parseInt(String.valueOf(tmp[10])));
+					if (tmp[11] != null) contenedor.setNombreCategoria(String.valueOf(tmp[11]));
+					if (tmp[12] != null) contenedor.setMarcaLpC(String.valueOf(tmp[12]));
+					if (tmp[13] != null) contenedor.setNumDosier(Integer.parseInt(String.valueOf(tmp[13])));
+					if (tmp[14] != null) contenedor.setAnyoDosier(Integer.parseInt(String.valueOf(tmp[14])));
 					listaContenedor.add(contenedor);
 				}
 			}		

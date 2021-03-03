@@ -191,19 +191,19 @@ public class CargaDTO extends AbstractDTO {
 		this.pedidosSinValidar = pedidosSinValidar;
 	}
 
-	public List<ContenedorDTO> getContenedor() {
-		return contenedor;
-	}
-
-	public void setContenedor(List<ContenedorDTO> contenedor) {
-		this.contenedor = contenedor;
-	}
-
 	public List<PedidoDTO> getPedido() {
 		return pedido;
 	}
 
 	public void setPedido(List<PedidoDTO> pedido) {
 		this.pedido = pedido;
+	}
+
+	public List<ContenedorDTO> getContenedor() {
+		return contenedor;
+	}
+
+	public void setContenedor(List<ContenedorDTO> contenedor) {
+		this.contenedor = contenedor;
 	}
 }
