@@ -24,7 +24,7 @@ public class DosierJPA implements Serializable {
 	private Long numDosier;
 		
 	@Column(name = "NUM_ANYO")
-	private Integer anyDosier;
+	private Integer anyoDosier;
 	
 	@Column(name = "COD_N_EMBARQUE")
 	private Long codigoEmbarque;
@@ -78,15 +78,15 @@ public class DosierJPA implements Serializable {
 	/**
 	 * @return the anyDosier
 	 */
-	public Integer getAnyDosier() {
-		return anyDosier;
+	public Integer getAnyoDosier() {
+		return anyoDosier;
 	}
 
 	/**
 	 * @param anyDosier the anyDosier to set
 	 */
-	public void setAnyDosier(Integer anyDosier) {
-		this.anyDosier = anyDosier;
+	public void setAnyoDosier(Integer anyoDosier) {
+		this.anyoDosier = anyoDosier;
 	}
 
 	/**
@@ -234,7 +234,7 @@ public class DosierJPA implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((numDosier == null) ? 0 : numDosier.hashCode());
-		result = prime * result + ((anyDosier == null) ? 0 : anyDosier.hashCode());
+		result = prime * result + ((anyoDosier == null) ? 0 : anyoDosier.hashCode());
 		result = prime * result + ((codigoEmbarque == null) ? 0 : codigoEmbarque.hashCode());
 		result = prime * result + ((agenciaExportacion == null) ? 0 : agenciaExportacion.hashCode());
 		result = prime * result + ((agenciaImportacion == null) ? 0 : agenciaImportacion.hashCode());
@@ -262,10 +262,10 @@ public class DosierJPA implements Serializable {
 				return false;
 		} else if (!numDosier.equals(other.numDosier))
 			return false;
-		if (anyDosier == null) {
-			if (other.anyDosier != null)
+		if (anyoDosier == null) {
+			if (other.anyoDosier != null)
 				return false;
-		} else if (!anyDosier.equals(other.anyDosier))
+		} else if (!anyoDosier.equals(other.anyoDosier))
 			return false;
 		if (codigoEmbarque == null) {
 			if (other.codigoEmbarque != null)

@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -15,11 +16,15 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import es.mercadona.fwk.restful.service.annotate.RESTful;
+import es.mercadona.gesaduan.business.dosier.cambiarestado.v1.CambiarEstadoService;
 import es.mercadona.gesaduan.business.dosier.getdosierdetalle.v1.GetDosierDetalleService;
+import es.mercadona.gesaduan.dto.dosier.cambiarestado.v1.InputDatosCambiarEstadoDTO;
+import es.mercadona.gesaduan.dto.dosier.cambiarestado.v1.resfull.OutputCambiarEstadoDTO;
 import es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.InputDatosDetalleDTO;
 import es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.InputDosierDetalleDTO;
 import es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.resfull.OutputDosierDetalleDTO;
 import es.mercadona.gesaduan.exception.EnumGesaduanException;
+import es.mercadona.gesaduan.exception.GesaduanException;
 import es.mercadona.gesaduan.util.ResponseUtil;
 
 @RESTful
@@ -29,6 +34,9 @@ public class DosierResful {
 	
 	@Inject
 	private GetDosierDetalleService getDosierDetalleService;
+	
+	@Inject
+	private CambiarEstadoService cambiarEstadoService;
 	
 	@Inject
 	private org.slf4j.Logger logger;		
@@ -66,6 +74,32 @@ public class DosierResful {
 		return Response.ok(response, MediaType.APPLICATION_JSON).build();
 	}
 	
+
+	@PUT
+	@Path("dosier/cambio-estado")
+	@Consumes(MediaType.WILDCARD)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response putCambiarEstado (InputDatosCambiarEstadoDTO datos) {
+		 
+		OutputCambiarEstadoDTO response = null;
+		
+		try {			
+			
+			if (datos.getDatos().getNumDosier() == null || datos.getDatos().getAnyoDosier() == null || datos.getMetadatos().getCodigoUsuario() == null)
+				throw new GesaduanException(EnumGesaduanException.PARAMETROS_OBLIGATORIOS);
+			
+			response = cambiarEstadoService.cambiarEstado(datos);	
+			
+		} catch(GesaduanException ex) {
+			this.logger.error("({}-{}) ERROR - {} {}","DosierResful(GESADUAN)","putCambiarEstado",ex.getClass().getSimpleName(),ex.getMessage());	
+			return Response.status(Status.BAD_REQUEST).entity(ResponseUtil.getError(ex, ex.getEnumGesaduan().getCodigo(), ex.getEnumGesaduan().getDescripcion())).build();
+		} catch(Exception e) {
+			this.logger.error("({}-{}) ERROR - {} {}","DosierResful(GESADUAN)","putCambiarEstado",e.getClass().getSimpleName(),e.getMessage());	
+			return Response.status(Status.BAD_REQUEST).entity(ResponseUtil.getError(e, EnumGesaduanException.ERROR_GENERICO.getCodigo(), e.getMessage())).build();
+		}		
+		
+		return Response.ok(response, MediaType.APPLICATION_JSON).build();
+	}	
 
 
 }

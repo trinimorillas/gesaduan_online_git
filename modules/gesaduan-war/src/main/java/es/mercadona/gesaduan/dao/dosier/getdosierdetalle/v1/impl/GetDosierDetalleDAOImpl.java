@@ -55,7 +55,7 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 			campos.append("D.COD_V_USUARIO_CREACION, "); 
 			campos.append("D.COD_N_ESTADO, "); 
 			campos.append("ED.TXT_NOMBRE_ESTADO, "); 
-			campos.append("D.FEC_DT_DESCARGA ");
+			campos.append("TO_CHAR(D.FEC_DT_DESCARGA,'DD/MM/YYYY') ");
 			StringBuilder from = new StringBuilder();	 
 			from.append("FROM D_DOSIER D "); 
 			from.append("JOIN D_ESTADO_DOSIER ED ON (ED.COD_N_ESTADO = D.COD_N_ESTADO) "); 
@@ -71,15 +71,13 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 			query.setParameter("anyoDosier", anyoDosier);			
 					
 			@SuppressWarnings("unchecked")
-			List<Object[]> listado = query.getResultList();
-			
-			List<EquipoDTO> listaEquipo = null;
-			listaEquipo = new ArrayList<>();
-			
-			List<ContenedorDTO> listaContenedor = null;
-			listaContenedor = new ArrayList<>();					
+			List<Object[]> listado = query.getResultList();			
 	
-			if (listado != null && !listado.isEmpty()) {			
+			if (listado != null && !listado.isEmpty()) {
+				
+				List<EquipoDTO> listaEquipo = new ArrayList<>();				
+				List<ContenedorDTO> listaContenedor = new ArrayList<>();				
+				
 				for (Object[] tmp : listado) {			
 					dosier = new DatosDosierDetalleDTO();
 					
@@ -193,8 +191,9 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 			final StringBuilder sql = new StringBuilder();
 			
 			StringBuilder select = new StringBuilder();	
-			select.append("SELECT ");		
-			StringBuilder campos = new StringBuilder();	 
+			select.append("SELECT * FROM ( ");		
+			StringBuilder campos = new StringBuilder();
+			campos.append("SELECT ");			
 			campos.append("DISTINCT CE.NUM_CONTENEDOR, "); 
 			campos.append("DE.TXT_MATRICULA, ");
 			campos.append("CE.COD_V_CARGA, ");
@@ -204,7 +203,7 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 			campos.append("P.TXT_RAZON_SOCIAL, ");
 			campos.append("C.COD_V_ALMACEN_ORIGEN, ");
 			campos.append("C.COD_V_CENTRO_DESTINO, ");
-			campos.append("TO_CHAR(C.FEC_D_ENTREGA,'DD/MM/YYYY'), ");
+			campos.append("TO_CHAR(C.FEC_D_ENTREGA,'DD/MM/YYYY') FEC_D_ENTREGA, ");
 			campos.append("CC.COD_N_CATEGORIA, ");
 			campos.append("CC.TXT_NOMBRE_CATEGORIA, ");
 			campos.append("C.MCA_CONTIENE_LPC ");			
@@ -220,49 +219,50 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 			where.append("WHERE "); 
 			where.append("D.NUM_DOSIER=?numDosier AND "); 
 			where.append("D.NUM_ANYO=?anyoDosier ");
+			where.append(") ");			
 			
 			StringBuilder order = new StringBuilder();	 
 			
 			if (orden.equals("-numContenedor"))
-				order.append("ORDER BY CE.NUM_CONTENEDOR DESC");
+				order.append("ORDER BY NUM_CONTENEDOR DESC");
 			else if (orden.equals("+numContenedor"))
-				order.append("ORDER BY CE.NUM_CONTENEDOR ASC");
+				order.append("ORDER BY NUM_CONTENEDOR ASC");
 			else if (orden.equals("-matricula"))
-				order.append("ORDER BY DE.TXT_MATRICULA DESC");
+				order.append("ORDER BY TXT_MATRICULA DESC");
 			else if (orden.equals("+matricula"))
-				order.append("ORDER BY DE.TXT_MATRICULA ASC");
+				order.append("ORDER BY TXT_MATRICULA ASC");
 			else if (orden.equals("-codigoCarga"))
-				order.append("ORDER BY CE.COD_V_CARGA DESC");
+				order.append("ORDER BY COD_V_CARGA DESC");
 			else if (orden.equals("+codigoCarga"))
-				order.append("ORDER BY CE.COD_V_CARGA ASC");
+				order.append("ORDER BY COD_V_CARGA ASC");
 			else if (orden.equals("-nombreSuministro"))
-				order.append("ORDER BY TS.TXT_NOMBRE_TIPO_SUMINISTRO DESC");
+				order.append("ORDER BY TXT_NOMBRE_TIPO_SUMINISTRO DESC");
 			else if (orden.equals("+nombreSuministro"))
-				order.append("ORDER BY TS.TXT_NOMBRE_TIPO_SUMINISTRO ASC");
+				order.append("ORDER BY TXT_NOMBRE_TIPO_SUMINISTRO ASC");
 			else if (orden.equals("-nombreProveedor"))
-				order.append("ORDER BY P.TXT_RAZON_SOCIAL DESC");
+				order.append("ORDER BY TXT_RAZON_SOCIAL DESC");
 			else if (orden.equals("+nombreProveedor"))
-				order.append("ORDER BY P.TXT_RAZON_SOCIAL ASC");
+				order.append("ORDER BY TXT_RAZON_SOCIAL ASC");
 			else if (orden.equals("-codigoAlmacenOrigen"))
-				order.append("ORDER BY C.COD_V_ALMACEN_ORIGEN DESC");
+				order.append("ORDER BY COD_V_ALMACEN_ORIGEN DESC");
 			else if (orden.equals("+codigoAlmacenOrigen"))
-				order.append("ORDER BY C.COD_V_ALMACEN_ORIGEN ASC");
+				order.append("ORDER BY COD_V_ALMACEN_ORIGEN ASC");
 			else if (orden.equals("-codigoCentroDestino"))
-				order.append("ORDER BY C.COD_V_CENTRO_DESTINO DESC");
+				order.append("ORDER BY COD_V_CENTRO_DESTINO DESC");
 			else if (orden.equals("+codigoCentroDestino"))
-				order.append("ORDER BY C.COD_V_CENTRO_DESTINO ASC");
+				order.append("ORDER BY COD_V_CENTRO_DESTINO ASC");
 			else if (orden.equals("-fechaEntrega"))
-				order.append("ORDER BY C.FEC_D_ENTREGA DESC");
+				order.append("ORDER BY TO_DATE(FEC_D_ENTREGA,'DD/MM/YYYY') DESC");
 			else if (orden.equals("+fechaEntrega"))
-				order.append("ORDER BY C.FEC_D_ENTREGA ASC");			
+				order.append("ORDER BY TO_DATE(FEC_D_ENTREGA,'DD/MM/YYYY') ASC");			
 			else if (orden.equals("-nombreCategoria"))
-				order.append("ORDER BY CC.TXT_NOMBRE_CATEGORIA DESC");
+				order.append("ORDER BY TXT_NOMBRE_CATEGORIA DESC");
 			else if (orden.equals("+nombreCategoria"))
-				order.append("ORDER BY CC.TXT_NOMBRE_CATEGORIA ASC");				
+				order.append("ORDER BY TXT_NOMBRE_CATEGORIA ASC");				
 			else if (orden.equals("-marcaLpC"))
-				order.append("ORDER BY C.MCA_CONTIENE_LPC DESC");
+				order.append("ORDER BY MCA_CONTIENE_LPC DESC");
 			else if (orden.equals("+marcaLpC"))
-				order.append("ORDER BY C.MCA_CONTIENE_LPC ASC");				
+				order.append("ORDER BY MCA_CONTIENE_LPC ASC");				
 			
 			sql.append(select).append(campos).append(from).append(where).append(order);
 	
