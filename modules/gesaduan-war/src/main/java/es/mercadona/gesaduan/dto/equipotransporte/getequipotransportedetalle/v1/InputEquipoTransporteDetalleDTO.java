@@ -9,6 +9,7 @@ public class InputEquipoTransporteDetalleDTO extends AbstractDTO implements Seri
 	private static final long serialVersionUID = 1L;	
 	private Long codigoEquipo;
 	private String mcaIncluyeContenedores;
+	private String mcaContenedorSinDosier;
 	private String orden;
 	
 	public Long getCodigoEquipo() {
@@ -33,6 +34,14 @@ public class InputEquipoTransporteDetalleDTO extends AbstractDTO implements Seri
 
 	public void setMcaIncluyeContenedores(String mcaIncluyeContenedores) {
 		this.mcaIncluyeContenedores = mcaIncluyeContenedores;
+	}
+
+	public String getMcaContenedorSinDosier() {
+		return mcaContenedorSinDosier;
+	}
+
+	public void setMcaContenedorSinDosier(String mcaContenedorSinDosier) {
+		this.mcaContenedorSinDosier = mcaContenedorSinDosier;
 	}
 
 }
