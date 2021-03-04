@@ -30,7 +30,7 @@ public class CambiarEstadoServiceImpl implements CambiarEstadoService {
 		cambiarEstadoDao.actualizaEquipos(dosierJPA);
 		
 		// elimina asociación con los equipos
-		cambiarEstadoDao.eliminaRelacionEquipo(dosierJPA);
+		// cambiarEstadoDao.eliminaRelacionEquipo(dosierJPA);
 		
 		// cambia el estado del dosier
 		return cambiarEstadoDao.cambiarEstado(dosierJPA);

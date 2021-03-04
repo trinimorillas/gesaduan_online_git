@@ -9,7 +9,7 @@ public class DosierDTO extends AbstractDTO {
 	private static final long serialVersionUID = 1L;
     	
     private Long numDosier;
-	private Long anyoDosier;
+	private Integer anyoDosier;
 	private String fechaCreacion;
 	private String usuarioCreacion;
 	private Long codigoEstado;
@@ -31,13 +31,13 @@ public class DosierDTO extends AbstractDTO {
 	/**
 	 * @return the anyoDosier
 	 */
-	public Long getAnyoDosier() {
+	public Integer getAnyoDosier() {
 		return anyoDosier;
 	}
 	/**
 	 * @param anyoDosier the anyoDosier to set
 	 */
-	public void setAnyoDosier(Long anyoDosier) {
+	public void setAnyoDosier(Integer anyoDosier) {
 		this.anyoDosier = anyoDosier;
 	}
 	/**

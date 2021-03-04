@@ -2,8 +2,10 @@ package es.mercadona.gesaduan.dao.planembarques.getplanembarquedetalle.v1.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.persistence.Query;
@@ -109,7 +111,7 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 					listaEquipo = consultarEquiposPlanEmbarque(datos);	
 					
 					if ("S".equals(input.getMcaIncluyeDosieres()) && !listaEquipo.isEmpty()) {
-						listaDosier = consultarDosieresPlanEmbarque(datos,listaEquipo);
+						listaDosier = consultarDosieresPlanEmbarque(datos);
 					}
 					
 					planEmbarque.setEquipo(listaEquipo);
@@ -564,115 +566,98 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 		return false;
 	}
 	
-	private List<DosierDTO> consultarDosieresPlanEmbarque(InputDatosDetalleDTO datos,List<EquipoDTO> listaEquipo) {		
+	private List<DosierDTO> consultarDosieresPlanEmbarque(InputDatosDetalleDTO datos) {		
 		
 		InputPlanEmbarqueDetalleDTO input = datos.getDatos();
 		List<DosierDTO> listaDosier = new ArrayList<>() ;		
 		
 		try {
-		
+					
 			Long codigoPlanEmbarque = input.getCodigoEmbarque();
 			
-			String orden = "numDosier";
-			if (input.getOrden() != null)
-				orden = input.getOrden();			
+			String orden = "+numDosier";
+			if (input.getOrden() != null) {
+				
+				Set<String> strings = new HashSet<>();
+				strings.add("-numDosier");
+				strings.add("+numDosier");
+				strings.add("-fechaCreacion");
+				strings.add("+fechaCreacion");
+				strings.add("-usuarioCreacion");
+				strings.add("+usuarioCreacion");				
+				strings.add("-codigoEstado");				
+				strings.add("+codigoEstado");
+				strings.add("-fechaDescarga");
+				strings.add("+fechaDescarga");
+				
+				if (strings.contains(input.getOrden())) {
+					orden = input.getOrden();	
+				}
+			}
 			
 			final StringBuilder sql = new StringBuilder();
-			final StringBuilder sqlCount = new StringBuilder();
 			
-			String count = "SELECT COUNT(*) FROM (";
-			String select = "SELECT ";		
-			String campos = "D.NUM_DOSIER, " + 
+			String select = "SELECT * FROM (SELECT ";		
+			String campos = "DISTINCT D.NUM_DOSIER, " + 
 							"D.NUM_ANYO, " + 
-							"TO_CHAR(D.FEC_DT_CREACION,'DD/MM/YYYY'), " + 
+							"TO_CHAR(D.FEC_DT_CREACION,'DD/MM/YYYY') FEC_DT_CREACION, " + 
 							"D.COD_V_USUARIO_CREACION, " + 
 							"D.COD_N_ESTADO," + 
 							"ED.TXT_NOMBRE_ESTADO, " + 
-							"TO_CHAR(D.FEC_DT_DESCARGA,'DD/MM/YYYY'), " + 
-							"DE.COD_N_EQUIPO, " + 
-							"DE.TXT_MATRICULA " ;
-			String from = "FROM S_DOSIER_EQUIPO DE " +
-						  "JOIN D_DOSIER D ON (D.NUM_DOSIER = DE.NUM_DOSIER AND D.NUM_ANYO = DE.NUM_ANYO) " +
-						  "JOIN D_ESTADO_DOSIER ED ON (ED.COD_N_ESTADO = D.COD_N_ESTADO)" ;	
-			String where = "WHERE DE.COD_N_EQUIPO IN ( ";
-			
-			for (EquipoDTO equipo : listaEquipo) {
-				where += equipo.getCodigoEquipo() + ","; 
-			}
-			where = where.substring(0,where.length()-1);
-			
-			where += ") ";			
-							
-			String countFin = ")";
-			
-			String order = "";
+							"TO_CHAR(D.FEC_DT_DESCARGA,'DD/MM/YYYY') FEC_DT_DESCARGA " ;
+			String from = "FROM D_DOSIER D " +
+						  "JOIN D_ESTADO_DOSIER ED ON (ED.COD_N_ESTADO = D.COD_N_ESTADO) " ;	
+			String where = "WHERE D.COD_N_EMBARQUE = ?codigoPlanEmbarque ";
+						
+			String order = ")";
 			
 			if (orden.equals("-numDosier"))
-				order += "ORDER BY D.NUM_DOSIER DESC,D.NUM_ANYO DESC";
+				order += "ORDER BY NUM_DOSIER DESC,NUM_ANYO DESC";
 			else if (orden.equals("+numDosier"))
-				order += "ORDER BY D.NUM_DOSIER ASC,D.NUM_ANYO ASC";
+				order += "ORDER BY NUM_DOSIER ASC,NUM_ANYO ASC";
 			else if (orden.equals("-fechaCreacion"))
-				order += "ORDER BY D.FEC_DT_CREACION DESC";
+				order += "ORDER BY TO_DATE(FEC_DT_CREACION,'DD/MM/YYYY') DESC";
 			else if (orden.equals("+fechaCreacion"))
-				order += "ORDER BY D.FEC_DT_CREACION ASC";		
+				order += "ORDER BY TO_DATE(FEC_DT_CREACION,'DD/MM/YYYY') ASC";		
 			else if (orden.equals("-usuarioCreacion"))
-				order += "ORDER BY D.COD_V_USUARIO_CREACION DESC";
+				order += "ORDER BY COD_V_USUARIO_CREACION DESC";
 			else if (orden.equals("+usuarioCreacion"))
-				order += "ORDER BY D.COD_V_USUARIO_CREACION ASC";
+				order += "ORDER BY COD_V_USUARIO_CREACION ASC";
 			else if (orden.equals("-codigoEstado"))
-				order += "ORDER BY D.COD_N_ESTADO DESC";
+				order += "ORDER BY COD_N_ESTADO DESC";
 			else if (orden.equals("+codigoEstado"))
-				order += "ORDER BY D.COD_N_ESTADO ASC";	
+				order += "ORDER BY COD_N_ESTADO ASC";	
 			else if (orden.equals("-fechaDescarga"))
-				order += "ORDER BY D.FEC_DT_DESCARGA DESC";
+				order += "ORDER BY TO_DATE(FEC_DT_DESCARGA,'DD/MM/YYYY') DESC";
 			else if (orden.equals("+fechaDescarga"))
-				order += "ORDER BY D.FEC_DT_DESCARGA ASC";
+				order += "ORDER BY TO_DATE(FEC_DT_DESCARGA,'DD/MM/YYYY') ASC";
 			
 			sql.append(select).append(campos).append(from).append(where).append(order);
-			sqlCount.append(count).append(select).append(campos).append(from).append(where).append(countFin);
 	
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
-			final Query queryCount = getEntityManager().createNativeQuery(sqlCount.toString());
 			
 			query.setParameter("codigoPlanEmbarque", codigoPlanEmbarque);
-			queryCount.setParameter("codigoPlanEmbarque", codigoPlanEmbarque);
 			
 			@SuppressWarnings("unchecked")
 			List<Object[]> listado = query.getResultList();
-			
-			Long numeroDosier = 0L;
-			DosierDTO dosier = new DosierDTO();	
-			List<EquipoSimpleDTO> equiposDosier = new ArrayList<>();			
-	
+				
 			if (listado != null && !listado.isEmpty()) {
 				for (Object[] tmp : listado) {	
 					
-					Long nuevoNumeroDosier = Long.parseLong(String.valueOf(tmp[0]));
+					DosierDTO dosier = new DosierDTO();
+					dosier.setNumDosier(Long.parseLong(String.valueOf(tmp[0])));
+					dosier.setAnyoDosier(Integer.parseInt(String.valueOf(tmp[1])));
+					dosier.setFechaCreacion(String.valueOf(tmp[2]));
+					dosier.setUsuarioCreacion(String.valueOf(tmp[3]));
+					dosier.setCodigoEstado(Long.parseLong(String.valueOf(tmp[4])));
+					dosier.setNombreEstado(String.valueOf(tmp[5]));	
+					dosier.setFechaDescarga(String.valueOf(tmp[6]));
 					
-					if (!numeroDosier.equals(nuevoNumeroDosier) ) {
-						dosier = new DosierDTO();
-						dosier.setNumDosier(nuevoNumeroDosier);
-						dosier.setAnyoDosier(Long.parseLong(String.valueOf(tmp[1])));
-						dosier.setFechaCreacion(String.valueOf(tmp[2]));
-						dosier.setUsuarioCreacion(String.valueOf(tmp[3]));
-						dosier.setCodigoEstado(Long.parseLong(String.valueOf(tmp[4])));
-						dosier.setNombreEstado(String.valueOf(tmp[5]));	
-						dosier.setFechaDescarga(String.valueOf(tmp[6]));
-						
-						listaDosier.add(dosier);
-						
-						equiposDosier = new ArrayList<>();
-					}
+					List<EquipoSimpleDTO> equiposDosier = consultarEquipoDosieresPlanEmbarque(dosier.getNumDosier(),dosier.getAnyoDosier());
 					
-					EquipoSimpleDTO equipo = new EquipoSimpleDTO();
-					
-					equipo.setCodigoEquipo(Long.parseLong(String.valueOf(tmp[7])));
-					equipo.setMatricula(String.valueOf(tmp[8]));	
-					
-					equiposDosier.add(equipo);
 					dosier.setEquipo(equiposDosier);
 					
-					numeroDosier = nuevoNumeroDosier;					
+					listaDosier.add(dosier);
 			
 				}			
 			}
@@ -685,4 +670,52 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 		return listaDosier;
 	}		
 	
+	private List<EquipoSimpleDTO> consultarEquipoDosieresPlanEmbarque(Long numDosiser,Integer anyoDosier) {		
+		
+		List<EquipoSimpleDTO> listaEquipoSimple = new ArrayList<>() ;		
+		
+		try {
+		
+			
+			final StringBuilder sql = new StringBuilder();
+			
+			String select = "SELECT ";		
+			String campos = "DISTINCT DE.COD_N_EQUIPO, " + 
+							"DE.TXT_MATRICULA " ; 
+			String from  = "FROM S_DOSIER_EQUIPO DE ";
+			String where = "WHERE DE.NUM_DOSIER = ?numDosiser AND  " + 
+					       "DE.NUM_ANYO = ?anyoDosier " ;
+			
+			
+			String order = "ORDER BY DE.TXT_MATRICULA ";
+			
+			sql.append(select).append(campos).append(from).append(where).append(order);
+	
+			final Query query = getEntityManager().createNativeQuery(sql.toString());
+			
+			query.setParameter("numDosiser", numDosiser);
+			query.setParameter("anyoDosier", anyoDosier);			
+			
+			@SuppressWarnings("unchecked")
+			List<Object[]> listado = query.getResultList();
+				
+			if (listado != null && !listado.isEmpty()) {
+				for (Object[] tmp : listado) {	
+					
+					EquipoSimpleDTO equipoSimple = new EquipoSimpleDTO();
+					equipoSimple.setCodigoEquipo(Long.parseLong(String.valueOf(tmp[0])));
+					equipoSimple.setMatricula(String.valueOf(tmp[1]));
+					
+					listaEquipoSimple.add(equipoSimple);
+			
+				}			
+			}
+		
+		} catch (Exception e) {
+			this.logger.error("({}-{}) ERROR - {} {}","GetPlanEmbarqueDetalleDAOImpl(GESADUAN)","consultarEquipoDosieresPlanEmbarque",e.getClass().getSimpleName(),e.getMessage());	
+			throw new ApplicationException(e.getMessage());
+		}		
+				
+		return listaEquipoSimple;
+	}			
 }
