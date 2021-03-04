@@ -1,21 +1,24 @@
-package es.mercadona.gesaduan.dto.planembarques.getplanembarquedetalle.v1.restfull;
+package es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.resfull;
 
 import java.util.List;
 
 import es.mercadona.gesaduan.dto.common.AbstractDTO;
 
-public class DosierDTO extends AbstractDTO {
-
+public class DatosDosierDetalleDTO extends AbstractDTO {
+	
 	private static final long serialVersionUID = 1L;
-    	
+    
     private Long numDosier;
-	private Integer anyoDosier;
-	private String fechaCreacion;
-	private String usuarioCreacion;
-	private Long codigoEstado;
-	private String nombreEstado;
-	private String fechaDescarga;
-	private List<EquipoSimpleDTO> equipo;
+    private Integer anyoDosier;
+    
+    private String fechaCreacion;
+    private String usuarioCreacion;
+    private Integer codigoEstado;
+    private String nombreEstado;
+    private String fechaDescarga;
+    
+    private List<EquipoDTO> equipo;
+    private List<ContenedorDTO> contenedor;
 	/**
 	 * @return the numDosier
 	 */
@@ -67,13 +70,13 @@ public class DosierDTO extends AbstractDTO {
 	/**
 	 * @return the codigoEstado
 	 */
-	public Long getCodigoEstado() {
+	public Integer getCodigoEstado() {
 		return codigoEstado;
 	}
 	/**
 	 * @param codigoEstado the codigoEstado to set
 	 */
-	public void setCodigoEstado(Long codigoEstado) {
+	public void setCodigoEstado(Integer codigoEstado) {
 		this.codigoEstado = codigoEstado;
 	}
 	/**
@@ -103,16 +106,28 @@ public class DosierDTO extends AbstractDTO {
 	/**
 	 * @return the equipo
 	 */
-	public List<EquipoSimpleDTO> getEquipo() {
+	public List<EquipoDTO> getEquipo() {
 		return equipo;
 	}
 	/**
 	 * @param equipo the equipo to set
 	 */
-	public void setEquipo(List<EquipoSimpleDTO> equipo) {
+	public void setEquipo(List<EquipoDTO> equipo) {
 		this.equipo = equipo;
 	}
+	/**
+	 * @return the contenedor
+	 */
+	public List<ContenedorDTO> getContenedor() {
+		return contenedor;
+	}
+	/**
+	 * @param contenedor the contenedor to set
+	 */
+	public void setContenedor(List<ContenedorDTO> contenedor) {
+		this.contenedor = contenedor;
+	}    
+    
 
-
-	
+    
 }

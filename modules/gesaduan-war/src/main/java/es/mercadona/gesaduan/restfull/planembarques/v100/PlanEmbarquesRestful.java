@@ -184,7 +184,6 @@ public class PlanEmbarquesRestful {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deletePlanEmbarque(@NotNull @PathParam("codigoEmbarque") Long codigoEmbarque) {		
 		try {
-			//if (datos.getMetadatos() == null || datos.getMetadatos().getCodigoUsuario() == null) throw new GesaduanException(EnumGesaduanException.PARAMETROS_OBLIGATORIOS);
 			InputDatosDeletePlanEmbarqueDTO datos = new InputDatosDeletePlanEmbarqueDTO();
 			InputPlanEmbarqueDeleteDTO input = new InputPlanEmbarqueDeleteDTO();
 			input.setCodigoEmbarque(codigoEmbarque);

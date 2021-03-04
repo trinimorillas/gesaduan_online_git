@@ -41,9 +41,7 @@ public class CambiarEstadoServiceImpl implements CambiarEstadoService {
 		datos.setEstado(codigoEstado);
 		datos.setUsuarioModificacion(input.getMetadatos().getCodigoUsuario().toUpperCase());
 		
-		OutputCambiarEstadoDTO result = cambiarEstadoDao.cambiarEstado(datos);
-
-		return result;		
+		return cambiarEstadoDao.cambiarEstado(datos);	
 	}
 
 }
