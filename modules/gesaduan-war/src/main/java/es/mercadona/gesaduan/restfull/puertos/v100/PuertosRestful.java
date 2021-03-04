@@ -3,6 +3,7 @@ package es.mercadona.gesaduan.restfull.puertos.v100;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -16,6 +17,7 @@ import es.mercadona.fwk.restful.service.annotate.RESTful;
 import es.mercadona.gesaduan.business.puertos.getpuertoagencia.v1.GetPuertoAgenciaService;
 import es.mercadona.gesaduan.business.puertos.getpuertos.v1.GetPuertosService;
 import es.mercadona.gesaduan.dto.puertos.getpuertoagencia.v1.InputDatosPuertoAgenciaDTO;
+import es.mercadona.gesaduan.dto.puertos.getpuertoagencia.v1.restfull.OutputPuertoAgenciaDTO;
 import es.mercadona.gesaduan.dto.puertos.getpuertos.v1.OutputPuertosDTO;
 import es.mercadona.gesaduan.exception.EnumGesaduanException;
 import es.mercadona.gesaduan.exception.GesaduanException;
@@ -56,13 +58,12 @@ public class PuertosRestful {
 	@Path("puerto/listar")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response eliminarRelacionEquipoCarga(@QueryParam("codigoPuerto") Long codigoPuerto,
-			@QueryParam("codigoAgencia") Long codigoAgencia, InputDatosPuertoAgenciaDTO input) {		
+	public Response eliminarRelacionEquipoCarga(@DefaultValue("+nombrePuerto") @QueryParam("orden") String orden,
+			InputDatosPuertoAgenciaDTO datos) {
+		OutputPuertoAgenciaDTO response;
 		try {
-			if (codigoPuerto != null) input.setCodigoPuerto(codigoPuerto);
-			if (codigoAgencia != null) input.setCodigoAgencia(codigoAgencia);
-			
-			getPuertoAgenciaService.listarPuertoAgencia(input);
+			datos.getDatos().setOrden(orden);
+			response = getPuertoAgenciaService.listarPuertoAgencia(datos);
 		} catch(GesaduanException ex) {
 			this.logger.error("({}-{}) ERROR - {} {}","PuertosRestful(GESADUAN)","listarPuertoAgencia",ex.getClass().getSimpleName(),ex.getMessage());
 			return Response.status(Status.BAD_REQUEST).entity(ResponseUtil.getError(ex, ex.getEnumGesaduan().getCodigo(), ex.getEnumGesaduan().getDescripcion())).build();
@@ -71,7 +72,7 @@ public class PuertosRestful {
 			return Response.status(Status.BAD_REQUEST).entity(ResponseUtil.getError(e, EnumGesaduanException.ERROR_GENERICO.getCodigo(), e.getMessage())).build();
 		}
 		
-		return Response.status(Status.NO_CONTENT).build();
+		return Response.ok(response, MediaType.APPLICATION_JSON).build();
 	}
 
 }

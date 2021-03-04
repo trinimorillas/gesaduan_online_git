@@ -5,6 +5,6 @@ import es.mercadona.gesaduan.dto.puertos.getpuertoagencia.v1.restfull.OutputPuer
 
 public interface GetPuertoAgenciaDAO {
 	
-	public OutputPuertoAgenciaDTO listarPuertoAgencia(InputDatosPuertoAgenciaDTO input);
+	public OutputPuertoAgenciaDTO listarPuertoAgencia(InputDatosPuertoAgenciaDTO datos);
 	
 }

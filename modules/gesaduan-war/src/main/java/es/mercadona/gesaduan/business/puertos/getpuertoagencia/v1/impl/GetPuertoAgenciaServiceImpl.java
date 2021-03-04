@@ -12,12 +12,9 @@ public class GetPuertoAgenciaServiceImpl implements GetPuertoAgenciaService {
 	@Inject
 	private GetPuertoAgenciaDAO getPuertoAgenciaDao;
 	
-	public OutputPuertoAgenciaDTO listarPuertoAgencia(InputDatosPuertoAgenciaDTO input) {
+	public OutputPuertoAgenciaDTO listarPuertoAgencia(InputDatosPuertoAgenciaDTO datos) {
 		
-		OutputPuertoAgenciaDTO result = getPuertoAgenciaDao.listarPuertoAgencia(input);
-
-		return result;
-		
+		return getPuertoAgenciaDao.listarPuertoAgencia(datos);		
 	}
 
 }
