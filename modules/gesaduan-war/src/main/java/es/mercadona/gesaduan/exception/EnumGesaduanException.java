@@ -53,10 +53,6 @@ public enum EnumGesaduanException {
 		return descripcion;
 	}
 	
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}	
-	
     public String descripcionSingular() {
         return descripcionSingular;
     }
@@ -64,32 +60,14 @@ public enum EnumGesaduanException {
 	public String getDescripcionSingular() {
 		return descripcionSingular;
 	}	
-
-	public void setDescripcionSingular(String descripcionSingular) {
-		this.descripcionSingular = descripcionSingular;
-	}	
-
 	public String getCodigo() {
 		return codigo;
-	}
-
-	public void setCodigo(String codigo) {
-		this.codigo = codigo;
 	}
 
 	public String getEntidad() {
 		return entidad;
 	}
-
-	public void setEntidad(String entidad) {
-		this.entidad = entidad;
-	}
-
 	public String getOperacion() {
 		return operacion;
-	}
-
-	public void setOperacion(String operacion) {
-		this.operacion = operacion;
 	}
 }
