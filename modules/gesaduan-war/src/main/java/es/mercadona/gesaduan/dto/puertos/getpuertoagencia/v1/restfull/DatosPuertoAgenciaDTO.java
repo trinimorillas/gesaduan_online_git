@@ -8,20 +8,20 @@ public class DatosPuertoAgenciaDTO extends AbstractDTO {
 
 	private static final long serialVersionUID = 1L;
     
-    private List<PuertoDTO> puertos;
+    private List<PuertoDTO> puerto;
 
 	/**
 	 * @return the puertos
 	 */
-	public List<PuertoDTO> getPuertos() {
-		return puertos;
+	public List<PuertoDTO> getPuerto() {
+		return puerto;
 	}
 
 	/**
 	 * @param puertos the puertos to set
 	 */
-	public void setPuertos(List<PuertoDTO> puertos) {
-		this.puertos = puertos;
+	public void setPuerto(List<PuertoDTO> puerto) {
+		this.puerto = puerto;
 	}
 
 }

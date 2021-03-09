@@ -58,7 +58,7 @@ public class PuertosRestful {
 	@Path("puerto/listar")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response eliminarRelacionEquipoCarga(@DefaultValue("+nombrePuerto") @QueryParam("orden") String orden,
+	public Response getPuertoAgencia(@DefaultValue("+nombrePuerto") @QueryParam("orden") String orden,
 			InputDatosPuertoAgenciaDTO datos) {
 		OutputPuertoAgenciaDTO response;
 		try {

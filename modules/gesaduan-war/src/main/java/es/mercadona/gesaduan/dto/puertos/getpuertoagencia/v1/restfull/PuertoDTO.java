@@ -10,9 +10,9 @@ public class PuertoDTO extends AbstractDTO {
 
 	private Long codigoPuerto;
 	private String nombrePuerto;
-	private Long codigoAgenciaPreferente;
+	private String codigoAgenciaPreferente;
 	private String nombreAgenciaPreferente;
-	private List<AgenciaDTO> agencias;
+	private List<AgenciaDTO> agencia;
 
 	/**
 	 * @return the codigoPuerto
@@ -45,14 +45,14 @@ public class PuertoDTO extends AbstractDTO {
 	/**
 	 * @return the codigoAgenciaPreferente
 	 */
-	public Long getCodigoAgenciaPreferente() {
+	public String getCodigoAgenciaPreferente() {
 		return codigoAgenciaPreferente;
 	}
 
 	/**
 	 * @param codigoAgenciaPreferente the codigoAgenciaPreferente to set
 	 */
-	public void setCodigoAgenciaPreferente(Long codigoAgenciaPreferente) {
+	public void setCodigoAgenciaPreferente(String codigoAgenciaPreferente) {
 		this.codigoAgenciaPreferente = codigoAgenciaPreferente;
 	}
 
@@ -73,15 +73,15 @@ public class PuertoDTO extends AbstractDTO {
 	/**
 	 * @return the agencias
 	 */
-	public List<AgenciaDTO> getAgencias() {
-		return agencias;
+	public List<AgenciaDTO> getAgencia() {
+		return agencia;
 	}
 
 	/**
 	 * @param agencias the agencias to set
 	 */
-	public void setAgencias(List<AgenciaDTO> agencias) {
-		this.agencias = agencias;
+	public void setAgencia(List<AgenciaDTO> agencia) {
+		this.agencia = agencia;
 	}
 
 }

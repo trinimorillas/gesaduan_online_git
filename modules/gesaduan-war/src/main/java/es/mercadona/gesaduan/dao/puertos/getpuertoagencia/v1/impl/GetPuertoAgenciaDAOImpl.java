@@ -82,13 +82,13 @@ public class GetPuertoAgenciaDAOImpl extends BaseDAO<PuertosJPA> implements GetP
 					PuertoDTO puerto = new PuertoDTO();
 					if (tmp[0] != null) puerto.setCodigoPuerto(Long.parseLong(String.valueOf(tmp[0])));
 					if (tmp[1] != null) puerto.setNombrePuerto(String.valueOf(tmp[1]));
-					if (tmp[2] != null) puerto.setCodigoAgenciaPreferente(Long.parseLong(String.valueOf(tmp[2])));
+					if (tmp[2] != null) puerto.setCodigoAgenciaPreferente(String.valueOf(tmp[2]));
 					if (tmp[3] != null) puerto.setNombreAgenciaPreferente(String.valueOf(tmp[3]));
 					listaPuertos.add(puerto);
 					
 					final StringBuilder sqlAgencia = new StringBuilder();
 					String selectAgencia = "SELECT ";		
-					String camposAgencia = "PA.COD_V_AGENCIA_ADUANA, P.TXT_RAZON_SOCIAL ";
+					String camposAgencia = "PA.COD_V_AGENCIA_ADUANA, PR.TXT_RAZON_SOCIAL ";
 					String fromAgencia   = "FROM S_PUERTO_AGENCIA PA " +
 								    	   "INNER JOIN D_PUERTO PU ON (PU.COD_N_PUERTO = PA.COD_N_PUERTO) " +
 							               "INNER JOIN D_PROVEEDOR_R PR ON (PR.COD_N_PROVEEDOR = PA.COD_V_AGENCIA_ADUANA) ";
@@ -110,11 +110,11 @@ public class GetPuertoAgenciaDAOImpl extends BaseDAO<PuertosJPA> implements GetP
 							if (tmpAgencia[1] != null) agencia.setNombreAgencia(String.valueOf(tmpAgencia[1]));
 							listaAgencias.add(agencia);
 						}
-						puerto.setAgencias(listaAgencias);
+						puerto.setAgencia(listaAgencias);
 					}					
 				}
 				
-				listaPuertoAgencia.setPuertos(listaPuertos);
+				listaPuertoAgencia.setPuerto(listaPuertos);
 			}
 
 			result.setDatos(listaPuertoAgencia);			
