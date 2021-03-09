@@ -17,6 +17,7 @@ import es.mercadona.fwk.restful.service.annotate.RESTful;
 import es.mercadona.gesaduan.business.puertos.getpuertoagencia.v1.GetPuertoAgenciaService;
 import es.mercadona.gesaduan.business.puertos.getpuertos.v1.GetPuertosService;
 import es.mercadona.gesaduan.dto.puertos.getpuertoagencia.v1.InputDatosPuertoAgenciaDTO;
+import es.mercadona.gesaduan.dto.puertos.getpuertoagencia.v1.InputPuertoAgenciaDTO;
 import es.mercadona.gesaduan.dto.puertos.getpuertoagencia.v1.restfull.OutputPuertoAgenciaDTO;
 import es.mercadona.gesaduan.dto.puertos.getpuertos.v1.OutputPuertosDTO;
 import es.mercadona.gesaduan.exception.EnumGesaduanException;
@@ -54,16 +55,19 @@ public class PuertosRestful {
 		return Response.ok(response, MediaType.APPLICATION_JSON).build();
 	}
 	
-	@POST
+	@GET
 	@Path("puerto/listar")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getPuertoAgencia(@DefaultValue("+nombrePuerto") @QueryParam("orden") String orden,
-			InputDatosPuertoAgenciaDTO datos) {
+			@QueryParam("codigoPuerto") Long codigoPuerto, @QueryParam("codigoAgencia") String codigoAgencia) {
 		OutputPuertoAgenciaDTO response;
 		try {
-			datos.getDatos().setOrden(orden);
-			response = getPuertoAgenciaService.listarPuertoAgencia(datos);
+			InputPuertoAgenciaDTO input = new InputPuertoAgenciaDTO();
+			if (codigoPuerto != null) input.setCodigoPuerto(codigoPuerto);
+			if (codigoAgencia != null) input.setCodigoAgencia(codigoAgencia);
+			input.setOrden(orden);
+			response = getPuertoAgenciaService.listarPuertoAgencia(input);
 		} catch(GesaduanException ex) {
 			this.logger.error("({}-{}) ERROR - {} {}","PuertosRestful(GESADUAN)","listarPuertoAgencia",ex.getClass().getSimpleName(),ex.getMessage());
 			return Response.status(Status.BAD_REQUEST).entity(ResponseUtil.getError(ex, ex.getEnumGesaduan().getCodigo(), ex.getEnumGesaduan().getDescripcion())).build();

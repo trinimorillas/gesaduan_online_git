@@ -7,7 +7,7 @@ public class InputPuertoAgenciaDTO extends AbstractDTO {
 	private static final long serialVersionUID = 1L;
 	
 	private Long codigoPuerto;
-	private Long codigoAgencia;
+	private String codigoAgencia;
 	private String orden;
 	
 	/**
@@ -27,14 +27,14 @@ public class InputPuertoAgenciaDTO extends AbstractDTO {
 	/**
 	 * @return the codigoAgencia
 	 */
-	public Long getCodigoAgencia() {
+	public String getCodigoAgencia() {
 		return codigoAgencia;
 	}
 	
 	/**
 	 * @param codigoAgencia the codigoAgencia to set
 	 */
-	public void setCodigoAgencia(Long codigoAgencia) {
+	public void setCodigoAgencia(String codigoAgencia) {
 		this.codigoAgencia = codigoAgencia;
 	}
 
