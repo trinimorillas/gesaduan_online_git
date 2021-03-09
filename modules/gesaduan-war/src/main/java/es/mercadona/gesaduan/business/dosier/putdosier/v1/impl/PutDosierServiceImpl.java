@@ -1,10 +1,6 @@
 package es.mercadona.gesaduan.business.dosier.putdosier.v1.impl;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -68,7 +64,7 @@ public class PutDosierServiceImpl implements PutDosierService {
 		
 		// actualiza C_VARIABLE con el último numero de dosier
 		if (nuevoNumDosier != null) {
-			
+			putDosierDao.updateNumDosier(nuevoNumDosier);
 		}
 		
 		if (listaDosieres.isEmpty()) listaDosieres = null;
@@ -90,33 +86,49 @@ public class PutDosierServiceImpl implements PutDosierService {
 			dosierEquipoJPA.setAnyoDosier(dosierJPA.getId().getAnyoDosier());
 			dosierEquipoJPA.setCodigoEquipo(equipo.getCodigEquipo());
 			dosierEquipoJPA.setMatricula(equipo.getMatricula());
-			dosierEquipoJPA.setCodigoUsuario(dosierJPA.getUsuarioCreacion());
+			dosierEquipoJPA.setUsuarioCreacion(dosierJPA.getUsuarioCreacion());
 			
 			// Crea la realacion con equipo			
 			putDosierDao.crearRelacionDosierEquipo(dosierEquipoJPA);
 			
 			// Crea la realacion con contenedor
-			putRelacionEquipoContenedorDosier(dosierJPA ,equipo.getContenedor());
+			if (equipo.getContenedor().isEmpty()) {				
+				putRelacionDosierContenedorDeEquipo(dosierEquipoJPA);
+			} else {
+				putRelacionDosierContenedor(dosierEquipoJPA ,equipo.getContenedor());
+			}
 			
 			// actualiza estado de la documentacion del equipo 
+			putDosierDao.actualizaEstadoDocumentacionEquipo(dosierEquipoJPA);			
 			
 		}
 
+	}
+
+	private void putRelacionDosierContenedorDeEquipo(DosierEquipoJPA dosierEquipoJPA) {
+		DosierContenedorJPA dosierContenedorJPA = new DosierContenedorJPA();
+		
+		dosierContenedorJPA.setNumDosier(dosierEquipoJPA.getNumDosier());
+		dosierContenedorJPA.setAnyoDosier(dosierEquipoJPA.getAnyoDosier());
+		dosierContenedorJPA.setCodigoEquipo(dosierEquipoJPA.getCodigoEquipo());				
+		dosierContenedorJPA.setUsuarioCreacion(dosierEquipoJPA.getUsuarioCreacion());
+		
+		putDosierDao.crearRelacionDosierContenedorDeEquipo(dosierContenedorJPA);
 	}	
 	
-	private void putRelacionEquipoContenedorDosier(DosierJPA dosierJPA ,List<InputDosierEquipoContenedorDTO> contenedores) {
+	private void putRelacionDosierContenedor(DosierEquipoJPA dosierEquipoJPA ,List<InputDosierEquipoContenedorDTO> contenedores) {
 		
 		// Se crea un nuevo dosier
 		for (InputDosierEquipoContenedorDTO contenedor: contenedores) {
 			
 			DosierContenedorJPA dosierContenedorJPA = new DosierContenedorJPA();
 			
-			dosierContenedorJPA.setNumDosier(dosierJPA.getId().getNumDosier());
-			dosierContenedorJPA.setAnyoDosier(dosierJPA.getId().getAnyoDosier());
+			dosierContenedorJPA.setNumDosier(dosierEquipoJPA.getNumDosier());
+			dosierContenedorJPA.setAnyoDosier(dosierEquipoJPA.getAnyoDosier());
 			dosierContenedorJPA.setCodigoAlmacen(contenedor.getCodigoAlmacen());
 			dosierContenedorJPA.setNumContenedor(contenedor.getNumContenedor());
 			dosierContenedorJPA.setFechaExpedicion(contenedor.getFechaExpedicion());			
-			dosierContenedorJPA.setCodigoUsuario(dosierJPA.getUsuarioCreacion());
+			dosierContenedorJPA.setUsuarioCreacion(dosierEquipoJPA.getUsuarioCreacion());
 			
 			putDosierDao.crearRelacionDosierContenedor(dosierContenedorJPA);
 			

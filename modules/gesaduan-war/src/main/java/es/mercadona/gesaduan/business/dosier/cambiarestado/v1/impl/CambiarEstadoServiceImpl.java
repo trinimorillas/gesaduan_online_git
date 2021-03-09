@@ -8,6 +8,7 @@ import es.mercadona.gesaduan.dto.dosier.cambiarestado.v1.InputDatosCambiarEstado
 import es.mercadona.gesaduan.dto.dosier.cambiarestado.v1.resfull.OutputCambiarEstadoDTO;
 import es.mercadona.gesaduan.exception.GesaduanException;
 import es.mercadona.gesaduan.jpa.dosier.DosierJPA;
+import es.mercadona.gesaduan.jpa.dosier.DosierPkJPA;
 
 public class CambiarEstadoServiceImpl implements CambiarEstadoService {
 
@@ -18,9 +19,11 @@ public class CambiarEstadoServiceImpl implements CambiarEstadoService {
 	public OutputCambiarEstadoDTO cambiarEstado(InputDatosCambiarEstadoDTO input) throws GesaduanException {
 		
 		DosierJPA dosierJPA = new DosierJPA();
+		DosierPkJPA dosierPkJPA = new DosierPkJPA();
 		
-		dosierJPA.setNumDosier(input.getDatos().getNumDosier());
-		dosierJPA.setAnyoDosier(input.getDatos().getAnyoDosier());
+		dosierPkJPA.setNumDosier(input.getDatos().getNumDosier());
+		dosierPkJPA.setAnyoDosier(input.getDatos().getAnyoDosier());
+		dosierJPA.setId(dosierPkJPA);
 		dosierJPA.setUsuarioModificacion(input.getMetadatos().getCodigoUsuario());		
 		
 		// actualiza contenedores asociados al dosier

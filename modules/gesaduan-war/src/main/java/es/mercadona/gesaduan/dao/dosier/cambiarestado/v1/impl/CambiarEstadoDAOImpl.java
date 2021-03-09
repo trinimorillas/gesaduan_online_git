@@ -52,8 +52,8 @@ public class CambiarEstadoDAOImpl extends DaoBaseImpl<Long, DosierJPA> implement
 				
 			final Query query = getEntityManager().createNativeQuery(update.toString());
 			
-			query.setParameter("numDosier", dosierJPA.getNumDosier());	
-			query.setParameter("anyoDosier", dosierJPA.getAnyoDosier());
+			query.setParameter("numDosier", dosierJPA.getId().getNumDosier());	
+			query.setParameter("anyoDosier", dosierJPA.getId().getAnyoDosier());
 			query.setParameter("codigoUsuario", dosierJPA.getUsuarioModificacion());
 			
 			query.executeUpdate();
@@ -95,8 +95,8 @@ public class CambiarEstadoDAOImpl extends DaoBaseImpl<Long, DosierJPA> implement
 					
 			final Query query = getEntityManager().createNativeQuery(update.toString());
 			
-			query.setParameter("numDosier", dosierJPA.getNumDosier());	
-			query.setParameter("anyoDosier", dosierJPA.getAnyoDosier());
+			query.setParameter("numDosier", dosierJPA.getId().getNumDosier());	
+			query.setParameter("anyoDosier", dosierJPA.getId().getAnyoDosier());
 			query.setParameter("codigoUsuario", dosierJPA.getUsuarioModificacion());
 				
 			query.executeUpdate();
@@ -122,8 +122,8 @@ public class CambiarEstadoDAOImpl extends DaoBaseImpl<Long, DosierJPA> implement
 					
 			final Query query2 = getEntityManager().createNativeQuery(update2.toString());
 			
-			query2.setParameter("numDosier", dosierJPA.getNumDosier());	
-			query2.setParameter("anyoDosier", dosierJPA.getAnyoDosier());
+			query2.setParameter("numDosier", dosierJPA.getId().getNumDosier());	
+			query2.setParameter("anyoDosier", dosierJPA.getId().getAnyoDosier());
 			query2.setParameter("codigoUsuario", dosierJPA.getUsuarioModificacion());
 			/*query2.setParameter("numDosier2", dosierJPA.getNumDosier());	
 			query2.setParameter("anyoDosier2", dosierJPA.getAnyoDosier());*/			
@@ -152,8 +152,8 @@ public class CambiarEstadoDAOImpl extends DaoBaseImpl<Long, DosierJPA> implement
 				
 			final Query query = getEntityManager().createNativeQuery(delete.toString());
 			
-			query.setParameter("numDosier", dosierJPA.getNumDosier());	
-			query.setParameter("anyoDosier", dosierJPA.getAnyoDosier());
+			query.setParameter("numDosier", dosierJPA.getId().getNumDosier());	
+			query.setParameter("anyoDosier", dosierJPA.getId().getAnyoDosier());
 			
 			query.executeUpdate();
 		
@@ -183,16 +183,16 @@ public class CambiarEstadoDAOImpl extends DaoBaseImpl<Long, DosierJPA> implement
 				
 			final Query query = getEntityManager().createNativeQuery(update.toString());
 			
-			query.setParameter("numDosier", dosierJPA.getNumDosier());	
-			query.setParameter("anyoDosier", dosierJPA.getAnyoDosier());
+			query.setParameter("numDosier", dosierJPA.getId().getNumDosier());	
+			query.setParameter("anyoDosier", dosierJPA.getId().getAnyoDosier());
 			query.setParameter("codigoUsuario", dosierJPA.getUsuarioModificacion());
 			
 			query.executeUpdate();
 			
 			DatosCambiarEstadoDTO datos = new DatosCambiarEstadoDTO();
 			
-			datos.setNumDosier(dosierJPA.getNumDosier());
-			datos.setAnyoDosier(dosierJPA.getAnyoDosier());			
+			datos.setNumDosier(dosierJPA.getId().getNumDosier());
+			datos.setAnyoDosier(dosierJPA.getId().getAnyoDosier());			
 			
 			retorno.setDatos(datos);
 			

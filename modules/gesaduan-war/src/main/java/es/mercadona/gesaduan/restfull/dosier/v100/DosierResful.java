@@ -90,7 +90,7 @@ public class DosierResful {
 		
 		try {			
 			
-			if (datos.getDatos() == null || datos.getDatos().getDosier() == null || datos.getDatos().getDosier().size() == 0 )
+			if (datos.getDatos() == null || datos.getDatos().getDosier() == null || datos.getDatos().getDosier().isEmpty())
 				throw new GesaduanException(EnumGesaduanException.PARAMETROS_OBLIGATORIOS);
 			
 			response = putDosierService.putDosier(datos);	
