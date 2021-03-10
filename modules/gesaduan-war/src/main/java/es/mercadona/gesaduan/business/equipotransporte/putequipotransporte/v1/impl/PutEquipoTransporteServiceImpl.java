@@ -24,6 +24,9 @@ public class PutEquipoTransporteServiceImpl implements PutEquipoTransporteServic
 	@Inject
 	private CambiarEstadoDAO cambiarEstadoDao;
 	
+	@Inject
+	private org.slf4j.Logger logger;		
+	
 	@Override
 	public OutputEquipoTransportePutDTO crearEquipoTransporte(InputDatosPutDTO input) throws GesaduanException {
 		
@@ -36,7 +39,7 @@ public class PutEquipoTransporteServiceImpl implements PutEquipoTransporteServic
 				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 				fechaCarga = dateFormat.parse(input.getDatos().getFechaCarga());
 			} catch (ParseException e) {
-				e.printStackTrace();
+				this.logger.error("({}-{}) ERROR - {} {}","PutEquipoTransporteServiceImpl(GESADUAN)","crearEquipoTransporte",e.getClass().getSimpleName(),e.getMessage());	
 			}
 		}
 		
@@ -53,9 +56,7 @@ public class PutEquipoTransporteServiceImpl implements PutEquipoTransporteServic
 		datos.setObservaciones(input.getDatos().getObservaciones());
 		datos.setUsuarioCreacion(input.getMetadatos().getCodigoUsuario().toUpperCase());
 		
-		OutputEquipoTransportePutDTO result = putEquipoTransporteDao.crearEquipoTransporte(datos);
-
-		return result;
+		return putEquipoTransporteDao.crearEquipoTransporte(datos);
 	}
 	
 	@Override
@@ -73,7 +74,7 @@ public class PutEquipoTransporteServiceImpl implements PutEquipoTransporteServic
 				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 				fechaCarga = dateFormat.parse(input.getDatos().getFechaCarga());
 			} catch (ParseException e) {
-				e.printStackTrace();
+				this.logger.error("({}-{}) ERROR - {} {}","PutEquipoTransporteServiceImpl(GESADUAN)","modificarEquipoTransporte",e.getClass().getSimpleName(),e.getMessage());	
 			}
 		}
 				
@@ -92,8 +93,6 @@ public class PutEquipoTransporteServiceImpl implements PutEquipoTransporteServic
 		if (input.getDatos().getObservaciones() != null) datos.setObservaciones(input.getDatos().getObservaciones());
 		datos.setUsuarioModificacion(input.getMetadatos().getCodigoUsuario().toUpperCase());
 		
-		OutputEquipoTransportePutDTO result = putEquipoTransporteDao.modificarEquipoTransporte(datos);
-
-		return result;
+		return putEquipoTransporteDao.modificarEquipoTransporte(datos);
 	}
 }

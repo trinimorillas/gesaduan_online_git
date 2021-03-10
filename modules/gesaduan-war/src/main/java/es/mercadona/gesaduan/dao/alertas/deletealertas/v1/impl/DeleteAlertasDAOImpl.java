@@ -42,8 +42,8 @@ public class DeleteAlertasDAOImpl implements DeleteAlertasDAO{
 		Date fechaAlbaran = new Date();
 		try {
 			fechaAlbaran = format.parse(input.getFechaAlbaran());
-		} catch (ParseException e1) {
-			e1.printStackTrace();
+		} catch (ParseException e) {
+			this.logger.error("({}-{}) ERROR - {} {}","DeleteAlertasDAOImpl(GESADUAN)","eliminarAlertasExpedicion",e.getClass().getSimpleName(),e.getMessage());
 		}
 		
 		try {
@@ -64,6 +64,7 @@ public class DeleteAlertasDAOImpl implements DeleteAlertasDAO{
 			entityM.remove(alertaExpedicion);
 			
 		}catch(Exception e) {
+			this.logger.error("({}-{}) ERROR - {} {}","DeleteAlertasDAOImpl(GESADUAN)","eliminarAlertasExpedicion",e.getClass().getSimpleName(),e.getMessage());
 			establecerSalidaError(e, "eliminarAlertasExpedicion", "error.ioexception");
 			throw new ApplicationException(e.getMessage());
 		}
@@ -89,6 +90,7 @@ public class DeleteAlertasDAOImpl implements DeleteAlertasDAO{
 			entityM.remove(alertaEliminar);
 			
 		}catch(Exception e) {
+			this.logger.error("({}-{}) ERROR - {} {}","DeleteAlertasDAOImpl(GESADUAN)","eliminarAlertas",e.getClass().getSimpleName(),e.getMessage());
 			establecerSalidaError(e, "eliminarAlertas", "error.ioexception");
 			throw new ApplicationException(e.getMessage());
 		}

@@ -136,6 +136,7 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 			update.append("WHERE CE.COD_V_ALMACEN = ?codigoAlmacen ");
 			update.append("AND CE.NUM_CONTENEDOR = ?numContenedor ");
 			update.append("AND CE.FEC_DT_EXPEDICION = TO_DATE(?fechaExpedicion,'DD/MM/YYYY HH24:MI:SS') ");
+			update.append("AND CE.COD_N_EQUIPO = ?codigoEquipo ");			
 					
 			final Query query = getEntityManager().createNativeQuery(update.toString());
 			query.setParameter("numDosier", dosierContenedorJPA.getNumDosier());
@@ -144,6 +145,7 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 			query.setParameter("codigoAlmacen", dosierContenedorJPA.getCodigoAlmacen());			
 			query.setParameter("numContenedor", dosierContenedorJPA.getNumContenedor());
 			query.setParameter("fechaExpedicion", dosierContenedorJPA.getFechaExpedicion());
+			query.setParameter("codigoEquipo", dosierContenedorJPA.getCodigoEquipo());			
 			query.executeUpdate();		
 			
 			

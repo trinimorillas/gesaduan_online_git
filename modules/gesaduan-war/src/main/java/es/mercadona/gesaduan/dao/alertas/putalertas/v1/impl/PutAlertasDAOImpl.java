@@ -46,7 +46,7 @@ public class PutAlertasDAOImpl implements PutAlertasDAO{
 			try {
 				fechaAlbaran = format.parse(input.getDatos().getFechaAlbaran());
 			} catch (ParseException e) {
-				e.printStackTrace();
+				this.logger.error("({}-{}) ERROR - {} {}","PutAlertasDAOImpl(GESADUAN)","editarAlertasExpedicion",e.getClass().getSimpleName(),e.getMessage());
 			}
 			
 			id.setFechaAlbaran(fechaAlbaran);
@@ -62,6 +62,7 @@ public class PutAlertasDAOImpl implements PutAlertasDAO{
 			alertaExped.setUsuarioModificacion(input.getMetadatos().getCodigoUsuario().toUpperCase());
 			alertaExped.setFechaModificacion(fechaHoy);
 		}catch(Exception e) {
+			this.logger.error("({}-{}) ERROR - {} {}","PutAlertasDAOImpl(GESADUAN)","editarAlertasExpedicion",e.getClass().getSimpleName(),e.getMessage());
 			establecerSalidaError(e, "editarAlertasExpedicion", "error.ioexception");
 			throw new ApplicationException(e.getMessage());
 		}
@@ -89,6 +90,7 @@ public class PutAlertasDAOImpl implements PutAlertasDAO{
 			alerta.setUsuarioModificacion(input.getMetadatos().getCodigoUsuario().toUpperCase());
 			alerta.setFechaModificacion(fechaHoy);
 		}catch(Exception e) {
+			this.logger.error("({}-{}) ERROR - {} {}","PutAlertasDAOImpl(GESADUAN)","editarAlertas",e.getClass().getSimpleName(),e.getMessage());
 			establecerSalidaError(e, "editarAlertas", "error.ioexception");
 			throw new ApplicationException(e.getMessage());
 		}
