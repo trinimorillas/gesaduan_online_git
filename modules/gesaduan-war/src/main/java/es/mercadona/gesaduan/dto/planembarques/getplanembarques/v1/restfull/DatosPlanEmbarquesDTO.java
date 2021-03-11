@@ -110,7 +110,11 @@ public class DatosPlanEmbarquesDTO extends AbstractDTO implements Serializable {
 	public void setNumeroEquipos(Integer numeroEquipos) {
 		this.numeroEquipos = numeroEquipos;
 	}
+<<<<<<< HEAD
 	
+=======
+
+>>>>>>> refs/remotes/origin/develop
 	/**
 	 * @return the numEquipEstadoDocuCompleta
 	 */

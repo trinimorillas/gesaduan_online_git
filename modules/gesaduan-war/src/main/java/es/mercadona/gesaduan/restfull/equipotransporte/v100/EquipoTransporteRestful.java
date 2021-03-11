@@ -173,6 +173,27 @@ public class EquipoTransporteRestful {
 		return Response.ok(response, MediaType.APPLICATION_JSON).build();
 	}
 	
+	/*
+	@POST
+	@Path("equipo-transporte/{codigoEquipo}")
+	@Consumes(MediaType.WILDCARD)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response eliminarEquipoTransporte(@NotNull @PathParam("codigoEquipo") Long codigoEquipo,
+			InputDatosBorrarEquipoTransporteDTO datos) {		
+		try {
+			if (datos.getMetadatos() == null || datos.getMetadatos().getCodigoUsuario() == null) throw new GesaduanException(EnumGesaduanException.PARAMETROS_OBLIGATORIOS);
+			InputEquipoTransporteDeleteDTO input = new InputEquipoTransporteDeleteDTO();
+			input.setCodigoEquipo(codigoEquipo);
+			datos.setDatos(input);
+			deleteEquipoTransporteService.deleteEquipoTransporte(datos);
+		} catch(Exception e) {
+			this.logger.error("({}-{}) ERROR - {} {}","EquipoTransporteRestful(GESADUAN)","eliminarEquipoTransporte",e.getClass().getSimpleName(),e.getMessage());	
+			return Response.status(Status.BAD_REQUEST).entity(ResponseUtil.getError(e, EnumGesaduanException.ERROR_GENERICO.getCodigo(), e.getMessage())).build();
+		}
+		return Response.status(Status.NO_CONTENT).build();
+	}
+	*/
+	
 	@PUT
 	@Path("equipo-transporte")
 	@Consumes(MediaType.WILDCARD)
@@ -224,27 +245,6 @@ public class EquipoTransporteRestful {
 		}
 		return Response.status(Status.NO_CONTENT).build();
 	}
-	
-	/*
-	@POST
-	@Path("equipo-transporte/{codigoEquipo}")
-	@Consumes(MediaType.WILDCARD)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response eliminarEquipoTransporte(@NotNull @PathParam("codigoEquipo") Long codigoEquipo,
-			InputDatosBorrarEquipoTransporteDTO datos) {		
-		try {
-			if (datos.getMetadatos() == null || datos.getMetadatos().getCodigoUsuario() == null) throw new GesaduanException(EnumGesaduanException.PARAMETROS_OBLIGATORIOS);
-			InputEquipoTransporteDeleteDTO input = new InputEquipoTransporteDeleteDTO();
-			input.setCodigoEquipo(codigoEquipo);
-			datos.setDatos(input);
-			deleteEquipoTransporteService.deleteEquipoTransporte(datos);
-		} catch(Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}","EquipoTransporteRestful(GESADUAN)","eliminarEquipoTransporte",e.getClass().getSimpleName(),e.getMessage());	
-			return Response.status(Status.BAD_REQUEST).entity(ResponseUtil.getError(e, EnumGesaduanException.ERROR_GENERICO.getCodigo(), e.getMessage())).build();
-		}
-		return Response.status(Status.NO_CONTENT).build();
-	}
-	*/	
 	
 	@PUT
 	@Path("equipo-transporte/{codigoEquipo}/relaciones")
