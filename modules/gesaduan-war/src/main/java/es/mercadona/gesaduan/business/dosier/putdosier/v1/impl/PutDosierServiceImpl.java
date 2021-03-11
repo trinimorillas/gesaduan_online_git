@@ -35,9 +35,10 @@ public class PutDosierServiceImpl implements PutDosierService {
 		String codigoUsario = input.getMetadatos().getCodigoUsuario();	
 		Long nuevoNumDosier = null;
 		
+		DosierPkJPA dosierPk = putDosierDao.getNewDosierPk();		
+		
 		for (InputDosierDTO dosier: dosieres) {
 			
-			DosierPkJPA dosierPk = putDosierDao.getNewDosierPk();
 			nuevoNumDosier = dosierPk.getNumDosier();
 			DosierJPA dosierJPA = new DosierJPA();
 			dosierJPA.setId(dosierPk);
@@ -59,6 +60,8 @@ public class PutDosierServiceImpl implements PutDosierService {
 			dosierOutPut.setAnyoDosier(dosierPk.getAnyoDosier());			
 			
 			listaDosieres.add(dosierOutPut);
+			
+			dosierPk.setNumDosier(dosierPk.getNumDosier() + 1);
 			
 		}
 		
@@ -84,7 +87,7 @@ public class PutDosierServiceImpl implements PutDosierService {
 			
 			dosierEquipoJPA.setNumDosier(dosierJPA.getId().getNumDosier());
 			dosierEquipoJPA.setAnyoDosier(dosierJPA.getId().getAnyoDosier());
-			dosierEquipoJPA.setCodigoEquipo(equipo.getCodigEquipo());
+			dosierEquipoJPA.setCodigoEquipo(equipo.getCodigoEquipo());
 			dosierEquipoJPA.setMatricula(equipo.getMatricula());
 			dosierEquipoJPA.setUsuarioCreacion(dosierJPA.getUsuarioCreacion());
 			
@@ -125,6 +128,7 @@ public class PutDosierServiceImpl implements PutDosierService {
 			
 			dosierContenedorJPA.setNumDosier(dosierEquipoJPA.getNumDosier());
 			dosierContenedorJPA.setAnyoDosier(dosierEquipoJPA.getAnyoDosier());
+			dosierContenedorJPA.setCodigoEquipo(dosierEquipoJPA.getCodigoEquipo());			
 			dosierContenedorJPA.setCodigoAlmacen(contenedor.getCodigoAlmacen());
 			dosierContenedorJPA.setNumContenedor(contenedor.getNumContenedor());
 			dosierContenedorJPA.setFechaExpedicion(contenedor.getFechaExpedicion());			

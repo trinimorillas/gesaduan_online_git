@@ -28,28 +28,28 @@ public class DosierContenedorJPA implements Serializable {
 	private Long numDosier;
 	private Integer anyoDosier;
 	/**
-	 * @return the contenedor
+	 * @return the numContenedor
 	 */
 	public Long getNumContenedor() {
 		return numContenedor;
 	}
 	/**
-	 * @param contenedor the contenedor to set
+	 * @param numContenedor the numContenedor to set
 	 */
 	public void setNumContenedor(Long numContenedor) {
-		numContenedor = numContenedor;
+		this.numContenedor = numContenedor;
 	}
 	/**
-	 * @return the codigoAlmance
+	 * @return the codigoAlmacen
 	 */
 	public String getCodigoAlmacen() {
 		return codigoAlmacen;
 	}
 	/**
-	 * @param codigoAlmance the codigoAlmance to set
+	 * @param codigoAlmacen the codigoAlmacen to set
 	 */
 	public void setCodigoAlmacen(String codigoAlmacen) {
-		codigoAlmacen = codigoAlmacen;
+		this.codigoAlmacen = codigoAlmacen;
 	}
 	/**
 	 * @return the fechaExpedicion
@@ -63,7 +63,6 @@ public class DosierContenedorJPA implements Serializable {
 	public void setFechaExpedicion(String fechaExpedicion) {
 		this.fechaExpedicion = fechaExpedicion;
 	}
-	
 	/**
 	 * @return the usuarioCreacion
 	 */
@@ -76,7 +75,6 @@ public class DosierContenedorJPA implements Serializable {
 	public void setUsuarioCreacion(String usuarioCreacion) {
 		this.usuarioCreacion = usuarioCreacion;
 	}
-	
 	/**
 	 * @return the codigoEquipo
 	 */
@@ -113,7 +111,6 @@ public class DosierContenedorJPA implements Serializable {
 	public void setAnyoDosier(Integer anyoDosier) {
 		this.anyoDosier = anyoDosier;
 	}
-	
 	
 	
 }

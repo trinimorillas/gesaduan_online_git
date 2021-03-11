@@ -8,21 +8,21 @@ public class InputDosierEquipoDTO extends AbstractDTO {
 
 	private static final long serialVersionUID = 1L;
 	
-  	private Long codigEquipo;
+  	private Long codigoEquipo;
 	private String matricula;
 	private List<InputDosierEquipoContenedorDTO> contenedor;
 	
 	/**
 	 * @return the codigEquipo
 	 */
-	public Long getCodigEquipo() {
-		return codigEquipo;
+	public Long getCodigoEquipo() {
+		return codigoEquipo;
 	}
 	/**
 	 * @param codigEquipo the codigEquipo to set
 	 */
-	public void setCodigEquipo(Long codigEquipo) {
-		this.codigEquipo = codigEquipo;
+	public void setCodigoEquipo(Long codigoEquipo) {
+		this.codigoEquipo = codigoEquipo;
 	}
 	/**
 	 * @return the matricula
