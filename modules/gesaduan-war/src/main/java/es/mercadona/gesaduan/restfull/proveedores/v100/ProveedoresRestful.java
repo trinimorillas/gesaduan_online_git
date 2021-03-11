@@ -1,7 +1,5 @@
 package es.mercadona.gesaduan.restfull.proveedores.v100;
 
-import java.util.List;
-
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
@@ -394,9 +392,9 @@ public class ProveedoresRestful {
 		try {
 			if (datos.getMetadatos() == null || datos.getMetadatos().getCodigoUsuario() == null) throw new GesaduanException(EnumGesaduanException.PARAMETROS_OBLIGATORIOS);
 			if (datos.getDatos().getOperacion() == null) throw new GesaduanException(EnumGesaduanException.PARAMETROS_OBLIGATORIOS);
-			if (datos.getDatos().getPuertos().size() == 0) throw new GesaduanException(EnumGesaduanException.PARAMETROS_OBLIGATORIOS);
+			if (datos.getDatos().getPuerto().size() == 0) throw new GesaduanException(EnumGesaduanException.PARAMETROS_OBLIGATORIOS);
 			else {
-				for (PuertoDTO puerto : datos.getDatos().getPuertos()) {
+				for (PuertoDTO puerto : datos.getDatos().getPuerto()) {
 					if (puerto.getCodigoPuerto() == null) throw new GesaduanException(EnumGesaduanException.PARAMETROS_OBLIGATORIOS);
 				}
 			}
