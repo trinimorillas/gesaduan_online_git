@@ -251,7 +251,7 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 			String count  = "SELECT COUNT(*) FROM (";
 			String select = "SELECT ";
 			String campos = "CA.COD_V_CARGA, CE.NUM_CONTENEDOR, TS.COD_N_TIPO_SUMINISTRO, TS.TXT_NOMBRE_TIPO_SUMINISTRO, PP.COD_N_PROVEEDOR, PP.TXT_RAZON_SOCIAL, CA.COD_V_ALMACEN_ORIGEN, " +
-							"CA.COD_V_CENTRO_DESTINO, TO_CHAR(CE.FEC_DT_EXPEDICION, 'DD/MM/YYYY HH24:MI:SS'), TO_CHAR(CA.FEC_DT_SERVICIO, 'DD/MM/YYYY'), CC.COD_N_CATEGORIA, CC.TXT_NOMBRE_CATEGORIA, " +
+							"CA.COD_V_CENTRO_DESTINO, TO_CHAR(CE.FEC_DT_EXPEDICION, 'DD/MM/YYYY HH24:MI:SS'), TO_CHAR(CA.FEC_D_ENTREGA, 'DD/MM/YYYY'), TO_CHAR(CA.FEC_DT_SERVICIO, 'DD/MM/YYYY'), CC.COD_N_CATEGORIA, CC.TXT_NOMBRE_CATEGORIA, " +
 							"CA.MCA_CONTIENE_LPC, CE.NUM_DOSIER, CE.NUM_ANYO ";
 			String from   = "FROM D_EQUIPO_TRANSPORTE ET " +
 							"INNER JOIN S_EQUIPO_CARGA EC ON (EC.COD_N_EQUIPO = ET.COD_N_EQUIPO) " +
@@ -345,11 +345,12 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 					if (tmp[7] != null) contenedor.setCodigoCentroDestino(String.valueOf(tmp[7]));
 					if (tmp[8] != null) contenedor.setFechaExpedicion(String.valueOf(tmp[8]));
 					if (tmp[9] != null) contenedor.setFechaEntrega(String.valueOf(tmp[9]));
-					if (tmp[10] != null) contenedor.setCodigoCategoria(Integer.parseInt(String.valueOf(tmp[10])));
-					if (tmp[11] != null) contenedor.setNombreCategoria(String.valueOf(tmp[11]));
-					if (tmp[12] != null) contenedor.setMarcaLpC(String.valueOf(tmp[12]));
-					if (tmp[13] != null) contenedor.setNumDosier(Integer.parseInt(String.valueOf(tmp[13])));
-					if (tmp[14] != null) contenedor.setAnyoDosier(Integer.parseInt(String.valueOf(tmp[14])));
+					if (tmp[10] != null) contenedor.setFechaServicio(String.valueOf(tmp[10]));					
+					if (tmp[11] != null) contenedor.setCodigoCategoria(Integer.parseInt(String.valueOf(tmp[11])));
+					if (tmp[12] != null) contenedor.setNombreCategoria(String.valueOf(tmp[12]));
+					if (tmp[13] != null) contenedor.setMarcaLpC(String.valueOf(tmp[13]));
+					if (tmp[14] != null) contenedor.setNumDosier(Integer.parseInt(String.valueOf(tmp[14])));
+					if (tmp[15] != null) contenedor.setAnyoDosier(Integer.parseInt(String.valueOf(tmp[15])));
 					listaContenedor.add(contenedor);
 				}
 			}		
