@@ -22,6 +22,7 @@ public class DatosProveedoresDetalleDTO extends AbstractDTO implements Serializa
 	DireccionFiscalDTO direccionFiscal;
 	
 	List<PersonasContactoDTO> personasContacto;
+	private List<PuertoDTO> puerto;
 	
 
 	public String getCodigoPublico() {
@@ -79,8 +80,19 @@ public class DatosProveedoresDetalleDTO extends AbstractDTO implements Serializa
 	public void setPersonasContacto(List<PersonasContactoDTO> personasContacto) {
 		this.personasContacto = personasContacto;
 	}
-	
-	
-	
+
+	/**
+	 * @return the puerto
+	 */
+	public List<PuertoDTO> getPuerto() {
+		return puerto;
+	}
+
+	/**
+	 * @param puerto the puerto to set
+	 */
+	public void setPuerto(List<PuertoDTO> puerto) {
+		this.puerto = puerto;
+	}	
 	
 }
