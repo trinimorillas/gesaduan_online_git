@@ -28,9 +28,6 @@ public enum EnumStringException {
 		return descripcion;
 	}
 	
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}	
 	
 
 }

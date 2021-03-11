@@ -28,7 +28,6 @@ public class DeclaracionesDeValorJPA implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
-	
 	@Id
 	@Column(name="COD_N_DECLARACION_VALOR")  
 	private Integer codDeclaracionValor;

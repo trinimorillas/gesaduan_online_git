@@ -24,6 +24,9 @@ public class PutPlanEmbarqueServiceImpl implements PutPlanEmbarqueService {
 	@Inject
 	private CambiarEstadoDAO cambiarEstadoDao;
 	
+	@Inject
+	private org.slf4j.Logger logger;		
+	
 	@Override
 	public OutputPlanEmbarquePutDTO crearPlanEmbarque(InputDatosPutDTO input) {
 		
@@ -35,7 +38,7 @@ public class PutPlanEmbarqueServiceImpl implements PutPlanEmbarqueService {
 				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 				fechaEmbarque = dateFormat.parse(input.getDatos().getFechaEmbarque());
 			} catch (ParseException e) {
-				e.printStackTrace();
+				this.logger.error("({}-{}) ERROR - {} {}","PutPlanEmbarqueServiceImpl(GESADUAN)","crearPlanEmbarque",e.getClass().getSimpleName(),e.getMessage());
 			}
 		}
 		
@@ -47,9 +50,7 @@ public class PutPlanEmbarqueServiceImpl implements PutPlanEmbarqueService {
 		datos.setEstado(input.getDatos().getCodigoEstado());
 		datos.setUsuarioCreacion(input.getMetadatos().getCodigoUsuario().toUpperCase());
 		
-		OutputPlanEmbarquePutDTO result = putPlanEmbarqueDao.crearPlanEmbarque(datos);
-
-		return result;		
+		return putPlanEmbarqueDao.crearPlanEmbarque(datos);		
 	}
 	
 	@Override
@@ -67,7 +68,7 @@ public class PutPlanEmbarqueServiceImpl implements PutPlanEmbarqueService {
 				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 				fechaEmbarque = dateFormat.parse(input.getDatos().getFechaEmbarque());
 			} catch (ParseException e) {
-				e.printStackTrace();
+				this.logger.error("({}-{}) ERROR - {} {}","PutPlanEmbarqueServiceImpl(GESADUAN)","modificarPlanEmbarque",e.getClass().getSimpleName(),e.getMessage());
 			}
 		}
 		
@@ -78,9 +79,7 @@ public class PutPlanEmbarqueServiceImpl implements PutPlanEmbarqueService {
 		if (input.getDatos().getCodigoNaviera() != null) datos.setNaviera(input.getDatos().getCodigoNaviera());
 		datos.setUsuarioModificacion(input.getMetadatos().getCodigoUsuario().toUpperCase());
 		
-		OutputPlanEmbarquePutDTO result = putPlanEmbarqueDao.modificarPlanEmbarque(datos);
-
-		return result;
+		return putPlanEmbarqueDao.modificarPlanEmbarque(datos);
 		
 	}
 

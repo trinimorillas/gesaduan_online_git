@@ -18,6 +18,7 @@ public class ContenedorDTO extends AbstractDTO {
 	private String mcaFacturado;
 	private String fechaExpedicion;
 	private String fechaEntrega;
+	private String fechaServicio;
 	private String codigoAlmacen;
 	private Integer codigoCategoria;
 	private String nombreCategoria;
@@ -110,6 +111,20 @@ public class ContenedorDTO extends AbstractDTO {
 
 	public void setFechaEntrega(String fechaEntrega) {
 		this.fechaEntrega = fechaEntrega;
+	}
+
+	/**
+	 * @return the fechaServicio
+	 */
+	public String getFechaServicio() {
+		return fechaServicio;
+	}
+
+	/**
+	 * @param fechaServicio the fechaServicio to set
+	 */
+	public void setFechaServicio(String fechaServicio) {
+		this.fechaServicio = fechaServicio;
 	}
 
 	public String getCodigoAlmacen() {

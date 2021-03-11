@@ -18,11 +18,14 @@ import javax.ws.rs.core.Response.Status;
 import es.mercadona.fwk.restful.service.annotate.RESTful;
 import es.mercadona.gesaduan.business.dosier.cambiarestado.v1.CambiarEstadoService;
 import es.mercadona.gesaduan.business.dosier.getdosierdetalle.v1.GetDosierDetalleService;
+import es.mercadona.gesaduan.business.dosier.putdosier.v1.PutDosierService;
 import es.mercadona.gesaduan.dto.dosier.cambiarestado.v1.InputDatosCambiarEstadoDTO;
 import es.mercadona.gesaduan.dto.dosier.cambiarestado.v1.resfull.OutputCambiarEstadoDTO;
 import es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.InputDatosDetalleDTO;
 import es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.InputDosierDetalleDTO;
 import es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.resfull.OutputDosierDetalleDTO;
+import es.mercadona.gesaduan.dto.dosier.putdosier.v1.InputDatosPutDTO;
+import es.mercadona.gesaduan.dto.dosier.putdosier.v1.restfull.OutputDosierPutDTO;
 import es.mercadona.gesaduan.exception.EnumGesaduanException;
 import es.mercadona.gesaduan.exception.GesaduanException;
 import es.mercadona.gesaduan.util.ResponseUtil;
@@ -37,6 +40,9 @@ public class DosierResful {
 	
 	@Inject
 	private CambiarEstadoService cambiarEstadoService;
+	
+	@Inject
+	private PutDosierService putDosierService;	
 	
 	@Inject
 	private org.slf4j.Logger logger;		
@@ -73,6 +79,32 @@ public class DosierResful {
 		
 		return Response.ok(response, MediaType.APPLICATION_JSON).build();
 	}
+	
+	@PUT
+	@Path("dosier")
+	@Consumes(MediaType.WILDCARD)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response putDosier (InputDatosPutDTO datos) {
+		 
+		OutputDosierPutDTO response = null;
+		
+		try {			
+			
+			if (datos.getDatos() == null || datos.getDatos().getDosier() == null || datos.getDatos().getDosier().isEmpty())
+				throw new GesaduanException(EnumGesaduanException.PARAMETROS_OBLIGATORIOS);
+			
+			response = putDosierService.putDosier(datos);	
+			
+		} catch(GesaduanException ex) {
+			this.logger.error("({}-{}) ERROR - {} {}","DosierResful(GESADUAN)","putDosier",ex.getClass().getSimpleName(),ex.getMessage());	
+			return Response.status(Status.BAD_REQUEST).entity(ResponseUtil.getError(ex, ex.getEnumGesaduan().getCodigo(), ex.getEnumGesaduan().getDescripcion())).build();
+		} catch(Exception e) {
+			this.logger.error("({}-{}) ERROR - {} {}","DosierResful(GESADUAN)","putDosier",e.getClass().getSimpleName(),e.getMessage());	
+			return Response.status(Status.BAD_REQUEST).entity(ResponseUtil.getError(e, EnumGesaduanException.ERROR_GENERICO.getCodigo(), e.getMessage())).build();
+		}		
+		
+		return Response.ok(response, MediaType.APPLICATION_JSON).build();
+	}		
 	
 
 	@PUT

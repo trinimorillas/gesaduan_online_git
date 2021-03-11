@@ -121,7 +121,7 @@ public class DeleteCargaDAOImpl extends DaoBaseImpl<Long, CargasJPA> implements 
 		
 		try {
 		
-			String delete = "UPDATE D_CARGA C " +
+			String update = "UPDATE D_CARGA C " +
 					"SET C.COD_N_ESTADO = 5, " +
 					"C.MCA_PEDIDOS_SIN_VALIDAR = 'S', " +				
 					"C.FEC_DT_MODIFICACION = SYSDATE, " +
@@ -132,7 +132,7 @@ public class DeleteCargaDAOImpl extends DaoBaseImpl<Long, CargasJPA> implements 
 					"AND C.NUM_DIVISIONES = 0 " +
 					"AND C.COD_V_APLICACION_ORIGEN <> 'GESADUAN'";
 					
-			final Query query = getEntityManager().createNativeQuery(delete);
+			final Query query = getEntityManager().createNativeQuery(update);
 			query.setParameter("codigoCarga", carga.getCodigoCarga());
 			query.setParameter("codigoAlmacenOrigen", carga.getCodigoAlmacenOrigen());
 			query.setParameter("codigoUsuario", datos.getMetadatos().getCodigoUsuario());

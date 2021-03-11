@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,18 +14,16 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import es.mercadona.gesaduan.jpa.cargas.v1.CargasPkJPA;
+
 @Entity
 @Table(name = "D_DOSIER")
 public class DosierJPA implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	@Id
-	@Column(name="NUM_DOSIER")
-	private Long numDosier;
-		
-	@Column(name = "NUM_ANYO")
-	private Integer anyoDosier;
+	@EmbeddedId
+	private DosierPkJPA id;
 	
 	@Column(name = "COD_N_EMBARQUE")
 	private Long codigoEmbarque;
@@ -60,33 +59,18 @@ public class DosierJPA implements Serializable {
 	private String usuarioModificacion;	
 
 
-
 	/**
-	 * @return the numDosier
+	 * @return the id
 	 */
-	public Long getNumDosier() {
-		return numDosier;
+	public DosierPkJPA getId() {
+		return id;
 	}
 
 	/**
-	 * @param numDosier the numDosier to set
+	 * @param id the id to set
 	 */
-	public void setNumDosier(Long numDosier) {
-		this.numDosier = numDosier;
-	}
-
-	/**
-	 * @return the anyDosier
-	 */
-	public Integer getAnyoDosier() {
-		return anyoDosier;
-	}
-
-	/**
-	 * @param anyDosier the anyDosier to set
-	 */
-	public void setAnyoDosier(Integer anyoDosier) {
-		this.anyoDosier = anyoDosier;
+	public void setId(DosierPkJPA id) {
+		this.id = id;
 	}
 
 	/**
@@ -233,8 +217,7 @@ public class DosierJPA implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((numDosier == null) ? 0 : numDosier.hashCode());
-		result = prime * result + ((anyoDosier == null) ? 0 : anyoDosier.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((codigoEmbarque == null) ? 0 : codigoEmbarque.hashCode());
 		result = prime * result + ((agenciaExportacion == null) ? 0 : agenciaExportacion.hashCode());
 		result = prime * result + ((agenciaImportacion == null) ? 0 : agenciaImportacion.hashCode());
@@ -257,15 +240,10 @@ public class DosierJPA implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		DosierJPA other = (DosierJPA) obj;
-		if (numDosier == null) {
-			if (other.numDosier != null)
+		if (id == null) {
+			if (other.id != null)
 				return false;
-		} else if (!numDosier.equals(other.numDosier))
-			return false;
-		if (anyoDosier == null) {
-			if (other.anyoDosier != null)
-				return false;
-		} else if (!anyoDosier.equals(other.anyoDosier))
+		} else if (!id.equals(other.id))
 			return false;
 		if (codigoEmbarque == null) {
 			if (other.codigoEmbarque != null)

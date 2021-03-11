@@ -16,9 +16,7 @@ public class GetPlanEmbarquesServiceImpl implements GetPlanEmbarquesService {
 	@Override
 	public OutputPlanEmbarquesDTO listarPlanEmbarques(InputDatosGetPlanEmbarqueDTO input, BoPage pagination) {
 		
-		OutputPlanEmbarquesDTO result = getPlanEmbarquesDao.listarPlanEmbarques(input, pagination);
-
-		return result;
+		return getPlanEmbarquesDao.listarPlanEmbarques(input, pagination);
 		
 	}
 
