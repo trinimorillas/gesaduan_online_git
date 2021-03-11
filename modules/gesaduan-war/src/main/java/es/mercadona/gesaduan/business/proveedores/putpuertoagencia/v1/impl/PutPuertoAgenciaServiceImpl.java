@@ -22,7 +22,7 @@ public class PutPuertoAgenciaServiceImpl implements PutPuertoAgenciaService {
 	public void putPuertoAgencia(InputDatosPuertoAgenciaDTO datos) throws GesaduanException {
 		String operacion = datos.getDatos().getOperacion();
 		
-		List<PuertoDTO> puertos = datos.getDatos().getPuertos();
+		List<PuertoDTO> puertos = datos.getDatos().getPuerto();
 		for (PuertoDTO puerto : puertos) {
 			if (operacion.equals("M") && puerto.getMcaPreferente() == null)
 				throw new GesaduanException(EnumGesaduanException.PUERTO_MCA_PREFERENTE_NULO);

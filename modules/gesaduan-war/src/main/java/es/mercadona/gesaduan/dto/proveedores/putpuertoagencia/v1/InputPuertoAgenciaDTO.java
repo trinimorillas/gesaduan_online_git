@@ -14,7 +14,7 @@ public class InputPuertoAgenciaDTO extends AbstractDTO implements Serializable {
 
 	private String codigoAgencia;
 	private String operacion;
-	private List<PuertoDTO> puertos;
+	private List<PuertoDTO> puerto;
 
 	/**
 	 * @return the codigoAgencia
@@ -47,15 +47,15 @@ public class InputPuertoAgenciaDTO extends AbstractDTO implements Serializable {
 	/**
 	 * @return the puertos
 	 */
-	public List<PuertoDTO> getPuertos() {
-		return puertos;
+	public List<PuertoDTO> getPuerto() {
+		return puerto;
 	}
 
 	/**
 	 * @param puertos the puertos to set
 	 */
-	public void setPuertos(List<PuertoDTO> puertos) {
-		this.puertos = puertos;
+	public void setPuerto(List<PuertoDTO> puerto) {
+		this.puerto = puerto;
 	}
 
 }

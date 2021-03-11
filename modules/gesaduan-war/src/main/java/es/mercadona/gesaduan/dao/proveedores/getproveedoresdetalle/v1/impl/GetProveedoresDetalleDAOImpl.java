@@ -19,7 +19,6 @@ import es.mercadona.gesaduan.dto.proveedores.getproveedoresdetalle.v1.restfull.D
 import es.mercadona.gesaduan.dto.proveedores.getproveedoresdetalle.v1.restfull.OutputProveedoresDetalleDTO;
 import es.mercadona.gesaduan.dto.proveedores.getproveedoresdetalle.v1.restfull.PersonasContactoDTO;
 import es.mercadona.gesaduan.dto.proveedores.getproveedoresdetalle.v1.restfull.PuertoDTO;
-import es.mercadona.gesaduan.dto.puertos.getpuertoagencia.v1.restfull.AgenciaDTO;
 import es.mercadona.gesaduan.jpa.proveedores.getproveedores.v1.ProveedoresJPA;
 
 @SuppressWarnings("unchecked")
@@ -87,6 +86,7 @@ public class GetProveedoresDetalleDAOImpl extends BaseDAO<ProveedoresJPA> implem
 				for (Object[] tmp : listado) {
 					
 						DireccionFiscalDTO datosDireccion = new DireccionFiscalDTO();
+						List<PuertoDTO> listaPuerto = new ArrayList<>();
 						
 						String patternOutputDateTime = "yyyy-MM-dd'T'HH:mm:ss.SSSz";
 						SimpleDateFormat formatDateTime = new SimpleDateFormat(patternOutputDateTime);
@@ -127,8 +127,7 @@ public class GetProveedoresDetalleDAOImpl extends BaseDAO<ProveedoresJPA> implem
 							
 							List<Object[]> listadoPuerto = queryPuerto.getResultList();
 							
-							if (listadoPuerto != null && !listadoPuerto.isEmpty()) {
-								List<PuertoDTO> listaPuerto = new ArrayList<>();
+							if (listadoPuerto != null && !listadoPuerto.isEmpty()) {								
 								for (Object[] tmpPuerto : listadoPuerto) {
 									PuertoDTO puerto = new PuertoDTO();
 									if (tmpPuerto[0] != null) puerto.setCodigoPuerto(Long.parseLong(String.valueOf(tmpPuerto[0])));
@@ -136,9 +135,10 @@ public class GetProveedoresDetalleDAOImpl extends BaseDAO<ProveedoresJPA> implem
 									if (tmpPuerto[2] != null) puerto.setMcaPreferente(String.valueOf(tmpPuerto[2]));
 									listaPuerto.add(puerto);
 								}
-								result.setPuerto(listaPuerto);
+								
 							}
-						}						
+						}
+						result.setPuerto(listaPuerto);
 					}
 				}
 	
