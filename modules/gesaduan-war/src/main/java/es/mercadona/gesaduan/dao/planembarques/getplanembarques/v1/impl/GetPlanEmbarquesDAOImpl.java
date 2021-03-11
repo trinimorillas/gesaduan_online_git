@@ -79,10 +79,7 @@ public class GetPlanEmbarquesDAOImpl extends BaseDAO<PlanEmbarquesJPA> implement
 			String select = "SELECT ";
 			String campos = "PE.COD_N_EMBARQUE, TO_CHAR(PE.FEC_DT_EMBARQUE,'DD/MM/YYYY'), BL.COD_N_BLOQUE_LOGISTICO, BL.TXT_NOMBRE, PUE.COD_N_PUERTO, PUE.TXT_NOMBRE_PUERTO, PUD.COD_N_PUERTO, " + 
 					"PUD.TXT_NOMBRE_PUERTO, PR.COD_N_PROVEEDOR, PR.TXT_RAZON_SOCIAL, NVL(PE.NUM_EQUIPOS, 0), EPE.COD_N_ESTADO, EPE.TXT_NOMBRE_ESTADO, PE.COD_V_USUARIO_VALIDACION, " +
-					"(CASE WHEN (SELECT COUNT(*) FROM D_EQUIPO_TRANSPORTE ET WHERE ET.COD_N_EMBARQUE = PE.COD_N_EMBARQUE) = " +
-					"(SELECT COUNT(*) FROM D_EQUIPO_TRANSPORTE ET WHERE ET.COD_N_EMBARQUE = PE.COD_N_EMBARQUE AND ET.COD_N_ESTADO_DOCUMENTACION = 3) THEN 'Completada' " +
-					"ELSE (SELECT COUNT(*) FROM D_EQUIPO_TRANSPORTE ET WHERE ET.COD_N_EMBARQUE = PE.COD_N_EMBARQUE AND ET.COD_N_ESTADO_DOCUMENTACION = 3)||' / '|| " +
-					"(SELECT COUNT(*) FROM D_EQUIPO_TRANSPORTE ET WHERE ET.COD_N_EMBARQUE = PE.COD_N_EMBARQUE) END)";
+					"(SELECT COUNT(*) FROM D_EQUIPO_TRANSPORTE ET WHERE ET.COD_N_EMBARQUE = PE.COD_N_EMBARQUE AND ET.COD_N_ESTADO_DOCUMENTACION = 3) ";
 			String from = "FROM D_PLAN_EMBARQUE PE " +
 					"INNER JOIN D_PUERTO PUE ON PE.COD_N_PUERTO_EMBARQUE = PUE.COD_N_PUERTO " +
 					"INNER JOIN D_PUERTO PUD ON PE.COD_N_PUERTO_DESEMBARQUE = PUD.COD_N_PUERTO " +
@@ -107,9 +104,9 @@ public class GetPlanEmbarquesDAOImpl extends BaseDAO<PlanEmbarquesJPA> implement
 			
 			if (codigoEstadoDocumentacion != null) {
 				if(codigoEstadoDocumentacion == 3) where += "AND (SELECT COUNT(*) FROM D_EQUIPO_TRANSPORTE ET WHERE ET.COD_N_EMBARQUE = PE.COD_N_EMBARQUE) = " +
-					"(SELECT COUNT(*) FROM D_EQUIPO_TRANSPORTE ET WHERE ET.COD_N_EMBARQUE = PE.COD_N_EMBARQUE AND ET.COD_N_ESTADO_DOCUMENTACION = 3)";
-				else if (codigoEstadoDocumentacion == 0) where += " AND (SELECT COUNT(*) FROM D_EQUIPO_TRANSPORTE ET WHERE ET.COD_N_EMBARQUE = PE.COD_N_EMBARQUE) <> " +
-					"(SELECT COUNT(*) FROM D_EQUIPO_TRANSPORTE ET WHERE ET.COD_N_EMBARQUE = PE.COD_N_EMBARQUE AND ET.COD_N_ESTADO_DOCUMENTACION = 3)";
+					"(SELECT COUNT(*) FROM D_EQUIPO_TRANSPORTE ET WHERE ET.COD_N_EMBARQUE = PE.COD_N_EMBARQUE AND ET.COD_N_ESTADO_DOCUMENTACION = 3) ";				
+				else if (codigoEstadoDocumentacion == 0) where += "AND (SELECT COUNT(*) FROM D_EQUIPO_TRANSPORTE ET WHERE ET.COD_N_EMBARQUE = PE.COD_N_EMBARQUE) <> " +
+					"(SELECT COUNT(*) FROM D_EQUIPO_TRANSPORTE ET WHERE ET.COD_N_EMBARQUE = PE.COD_N_EMBARQUE AND ET.COD_N_ESTADO_DOCUMENTACION = 3) ";
 			}	
 			
 			String countFin = ")";
@@ -202,7 +199,7 @@ public class GetPlanEmbarquesDAOImpl extends BaseDAO<PlanEmbarquesJPA> implement
 					datos.setCodigoEstado(Integer.parseInt(String.valueOf(tmp[11])));
 					datos.setNombreEstado(String.valueOf(tmp[12]));
 					if (tmp[13] != null) datos.setCodigoUsuarioValidacion(String.valueOf(tmp[13]));
-					datos.setEstadoDocumentacion(String.valueOf(tmp[14]));
+					datos.setNumEquipEstadoDocuCompleta(Integer.parseInt(String.valueOf(tmp[14])));
 					
 					resultList.add(datos);
 				}
