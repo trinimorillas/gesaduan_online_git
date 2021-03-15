@@ -1,7 +1,5 @@
 package es.mercadona.gesaduan.dao.dosier.cambiarestado.v1.impl;
 
-import java.util.Date;
-
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
