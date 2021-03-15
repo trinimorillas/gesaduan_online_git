@@ -16,7 +16,8 @@ public class GetPuertoAgenciaServiceImpl implements GetPuertoAgenciaService {
 		OutputPuertoAgenciaDTO result = null;
 		
 		if (datos.getCodigoAgencia() != null) result = getPuertoAgenciaDao.listarPuertos(datos);
-		else result = getPuertoAgenciaDao.listarAgencias(datos);
+		else if (datos.getCodigoPuerto() != null) result = getPuertoAgenciaDao.listarAgencias(datos);
+		else result = getPuertoAgenciaDao.listarPuertosAgencias(datos);	
 		
 		return result;
 	}
