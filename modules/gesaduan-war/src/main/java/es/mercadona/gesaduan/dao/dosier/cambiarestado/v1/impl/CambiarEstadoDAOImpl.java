@@ -1,7 +1,5 @@
 package es.mercadona.gesaduan.dao.dosier.cambiarestado.v1.impl;
 
-import java.util.Date;
-
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -101,7 +99,7 @@ public class CambiarEstadoDAOImpl extends DaoBaseImpl<Long, DosierJPA> implement
 				
 			query.executeUpdate();
 			
-			// Si se invalida el único dosier del equipo, el estado de documentación del equipo pasará a "Pendiente"
+			// Si alguno de los contenedores del equipo se encontraba asociado a otro dosier, el estado de documentación del equipo pasará a "En curso"
 			update2.append("UPDATE D_EQUIPO_TRANSPORTE ET SET "); 
 			update2.append("COD_N_ESTADO_DOCUMENTACION = 2, ");				
 			update2.append("FEC_DT_MODIFICACION = SYSDATE, ");
@@ -114,11 +112,10 @@ public class CambiarEstadoDAOImpl extends DaoBaseImpl<Long, DosierJPA> implement
 			update2.append(" NUM_ANYO = ?anyoDosier");
 			update2.append(")");
 			update2.append("AND EXISTS ("); 
-			update2.append(" SELECT 1 "); 
-			update2.append(" FROM S_DOSIER_EQUIPO ");
-			update2.append(" WHERE COD_N_EQUIPO = ET.COD_N_EQUIPO AND ");
-			update2.append(" (NUM_DOSIER <> ?numDosier OR NUM_ANYO <> ?anyoDosier) ");				
-			update2.append(")");						
+			update2.append("SELECT 1 "); 
+			update2.append("FROM O_CONTENEDOR_EXPEDIDO ");
+			update2.append("WHERE COD_N_EQUIPO = ET.COD_N_EQUIPO ");
+			update2.append("AND NUM_DOSIER IS NOT NULL)");
 					
 			final Query query2 = getEntityManager().createNativeQuery(update2.toString());
 			
