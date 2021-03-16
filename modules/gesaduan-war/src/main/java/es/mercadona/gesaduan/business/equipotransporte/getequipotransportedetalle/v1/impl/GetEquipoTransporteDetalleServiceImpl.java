@@ -15,9 +15,7 @@ public class GetEquipoTransporteDetalleServiceImpl implements GetEquipoTransport
 	@Override
 	public OutputEquipoTransporteDetalleDTO getEquipoTransporteDetalle(InputEquipoTransporteDetalleDTO input) {
 		
-		OutputEquipoTransporteDetalleDTO result = getEquipoTransporteDetalleDao.consultarEquipoTransporte(input);
-
-		return result;
+		return getEquipoTransporteDetalleDao.consultarEquipoTransporte(input);
 		
 	}
 

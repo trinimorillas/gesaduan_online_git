@@ -15,6 +15,7 @@ public class InputPlanEmbarqueDetalleDTO extends AbstractDTO implements Serializ
 	private String mcaOcultaLlenos;
 	private String mcaIncluyeCargas;	
 	private String mcaIncluyePedidos;	
+	private String mcaIncluyeDosieres;	
 	private String orden;
 	private List<SuministroDTO> suministro;
 	private List<TipoCargaDTO> tipoCarga;	
@@ -57,6 +58,20 @@ public class InputPlanEmbarqueDetalleDTO extends AbstractDTO implements Serializ
 
 	public void setMcaIncluyePedidos(String mcaIncluyePedidos) {
 		this.mcaIncluyePedidos = mcaIncluyePedidos;
+	}
+	
+	/**
+	 * @return the mcaIncluyeDosieres
+	 */
+	public String getMcaIncluyeDosieres() {
+		return mcaIncluyeDosieres;
+	}
+
+	/**
+	 * @param mcaIncluyeDosieres the mcaIncluyeDosieres to set
+	 */
+	public void setMcaIncluyeDosieres(String mcaIncluyeDosieres) {
+		this.mcaIncluyeDosieres = mcaIncluyeDosieres;
 	}
 
 	public String getOrden() {

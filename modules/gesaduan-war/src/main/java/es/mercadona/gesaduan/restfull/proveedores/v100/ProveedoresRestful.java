@@ -1,7 +1,5 @@
 package es.mercadona.gesaduan.restfull.proveedores.v100;
 
-import java.util.Arrays;
-import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
@@ -26,9 +24,8 @@ import es.mercadona.gesaduan.business.proveedores.getproveedores.v1.GetProveedor
 import es.mercadona.gesaduan.business.proveedores.getproveedoresdetalle.v1.GetProveedoresDetalleService;
 import es.mercadona.gesaduan.business.proveedores.getrelacionesproveedores.v1.GetRelacionesProveedoresService;
 import es.mercadona.gesaduan.business.proveedores.putproveedores.v1.PutProveedoresService;
+import es.mercadona.gesaduan.business.proveedores.putpuertoagencia.v1.PutPuertoAgenciaService;
 import es.mercadona.gesaduan.business.proveedores.putrelacionesproveedor.v1.PutRelacionesProveedorService;
-import es.mercadona.gesaduan.dto.common.error.ErrorDTO;
-import es.mercadona.gesaduan.dto.common.error.OutputResponseErrorDTO;
 import es.mercadona.gesaduan.dto.proveedores.getproveedores.v1.InputGetProveedoresDTO;
 import es.mercadona.gesaduan.dto.proveedores.getproveedores.v1.restfull.OutputGetProveedoresDTO;
 import es.mercadona.gesaduan.dto.proveedores.getproveedoresdetalle.v1.InputProveedoresDetalleDTO;
@@ -40,8 +37,11 @@ import es.mercadona.gesaduan.dto.proveedores.putproveedores.v1.restfull.InputPut
 import es.mercadona.gesaduan.dto.proveedores.putproveedores.v1.restfull.OutputProveedoresContactos;
 import es.mercadona.gesaduan.dto.proveedores.putproveedores.v1.restfull.OutputProveedoresPut;
 import es.mercadona.gesaduan.dto.proveedores.putproveedores.v1.restfull.PutProveedorContacto;
+import es.mercadona.gesaduan.dto.proveedores.putpuertoagencia.v1.InputDatosPuertoAgenciaDTO;
+import es.mercadona.gesaduan.dto.proveedores.putpuertoagencia.v1.PuertoDTO;
 import es.mercadona.gesaduan.dto.proveedores.putrelacionesproveedores.v1.InputRelacionesProveedorDTO;
 import es.mercadona.gesaduan.exception.EnumGesaduanException;
+import es.mercadona.gesaduan.exception.GesaduanException;
 import es.mercadona.gesaduan.jpa.proveedores.putproveedorescontacto.v1.ProveedorContactoJPA;
 import es.mercadona.gesaduan.util.ResponseUtil;
 
@@ -70,6 +70,9 @@ public class ProveedoresRestful {
 	
 	@Inject
 	private ContactosProvService contactosProvService;
+	
+	@Inject
+	private PutPuertoAgenciaService putPuertoAgenciaService;
 
 	/*
 	 * ProveedoresRestful
@@ -380,8 +383,28 @@ public class ProveedoresRestful {
 		return Response.status(Status.CREATED).type("text/plain").entity("Ejecución correcta.").build();
 	}
 	
-	
-
-	
+	@PUT
+	@Path("proveedores/{codigoAgencia}/puerto")
+	@Consumes(MediaType.WILDCARD)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response putPuertoAgencia(@NotNull @PathParam("codigoAgencia") String codigoAgencia,
+			InputDatosPuertoAgenciaDTO datos) {
+		try {
+			if (datos.getMetadatos() == null || datos.getMetadatos().getCodigoUsuario() == null) throw new GesaduanException(EnumGesaduanException.PARAMETROS_OBLIGATORIOS);
+			if (datos.getDatos().getOperacion() == null) throw new GesaduanException(EnumGesaduanException.PARAMETROS_OBLIGATORIOS);
+			if (datos.getDatos().getPuerto().size() == 0) throw new GesaduanException(EnumGesaduanException.PARAMETROS_OBLIGATORIOS);
+			else {
+				for (PuertoDTO puerto : datos.getDatos().getPuerto()) {
+					if (puerto.getCodigoPuerto() == null) throw new GesaduanException(EnumGesaduanException.PARAMETROS_OBLIGATORIOS);
+				}
+			}
+			datos.getDatos().setCodigoAgencia(codigoAgencia);
+			putPuertoAgenciaService.putPuertoAgencia(datos);
+		} catch(Exception e) {
+			this.logger.error("({}-{}) ERROR - {} {}","ProveedoresRestful(GESADUAN)","putPuertoAgencia",e.getClass().getSimpleName(),e.getMessage());	
+			return Response.status(Status.BAD_REQUEST).entity(ResponseUtil.getError(e, EnumGesaduanException.ERROR_GENERICO.getCodigo(), e.getMessage())).build();
+		}
+		return Response.status(Status.NO_CONTENT).build();
+	}	
 
 }

@@ -18,6 +18,7 @@ import es.mercadona.gesaduan.dto.proveedores.getproveedoresdetalle.v1.restfull.D
 import es.mercadona.gesaduan.dto.proveedores.getproveedoresdetalle.v1.restfull.DireccionFiscalDTO;
 import es.mercadona.gesaduan.dto.proveedores.getproveedoresdetalle.v1.restfull.OutputProveedoresDetalleDTO;
 import es.mercadona.gesaduan.dto.proveedores.getproveedoresdetalle.v1.restfull.PersonasContactoDTO;
+import es.mercadona.gesaduan.dto.proveedores.getproveedoresdetalle.v1.restfull.PuertoDTO;
 import es.mercadona.gesaduan.jpa.proveedores.getproveedores.v1.ProveedoresJPA;
 
 @SuppressWarnings("unchecked")
@@ -59,7 +60,7 @@ public class GetProveedoresDetalleDAOImpl extends BaseDAO<ProveedoresJPA> implem
 		DatosProveedoresDetalleDTO result = new DatosProveedoresDetalleDTO();
 		
 		try {	
-		
+			String esAgencia;
 			final StringBuilder sql = new StringBuilder();
 			
 			sql.append(" SELECT PROV.COD_N_LEGACY_PROVEEDOR,");
@@ -70,7 +71,8 @@ public class GetProveedoresDetalleDAOImpl extends BaseDAO<ProveedoresJPA> implem
 			sql.append(" PROV.TXT_NOMBRE_CALLE,");
 			sql.append(" PROV.TXT_NUMERO_CALLE,");
 			sql.append(" PROV.TXT_CODIGO_POSTAL,");
-			sql.append(" PROV.TXT_LOCALIDAD");
+			sql.append(" PROV.TXT_LOCALIDAD,");
+			sql.append(" PROV.MCA_AGENTE_ADUANA");
 			sql.append(" FROM D_PROVEEDOR_R PROV");
 			sql.append(" WHERE PROV.COD_N_PROVEEDOR = ?codigoProveedor");
 			
@@ -84,6 +86,7 @@ public class GetProveedoresDetalleDAOImpl extends BaseDAO<ProveedoresJPA> implem
 				for (Object[] tmp : listado) {
 					
 						DireccionFiscalDTO datosDireccion = new DireccionFiscalDTO();
+						List<PuertoDTO> listaPuerto = new ArrayList<>();
 						
 						String patternOutputDateTime = "yyyy-MM-dd'T'HH:mm:ss.SSSz";
 						SimpleDateFormat formatDateTime = new SimpleDateFormat(patternOutputDateTime);
@@ -107,10 +110,35 @@ public class GetProveedoresDetalleDAOImpl extends BaseDAO<ProveedoresJPA> implem
 						datosDireccion.setCodigoPostal(String.valueOf(tmp[7]));
 						datosDireccion.setLocalidad(String.valueOf(tmp[8]));
 						datosDireccion.setProvincia(String.valueOf(tmp[2]));
+						esAgencia = String.valueOf(tmp[9]);
 						
 						result.setDireccionFiscal(datosDireccion);
 						
-						
+						if (esAgencia.equals("S")) {
+							final StringBuilder sqlPuerto = new StringBuilder();
+							String select = "SELECT PA.COD_N_PUERTO, PU.TXT_NOMBRE_PUERTO, PA.MCA_AGENCIA_PREFERENTE ";
+							String from =   "FROM S_PUERTO_AGENCIA PA " +
+										    "INNER JOIN D_PUERTO PU ON (PU.COD_N_PUERTO = PA.COD_N_PUERTO)";
+							String where =  "WHERE PA.COD_V_AGENCIA_ADUANA = ?codigoProveedor";
+							
+							sqlPuerto.append(select).append(from).append(where);
+							final Query queryPuerto = getEntityManager().createNativeQuery(sqlPuerto.toString());							
+							queryPuerto.setParameter("codigoProveedor", codigoProveedor);
+							
+							List<Object[]> listadoPuerto = queryPuerto.getResultList();
+							
+							if (listadoPuerto != null && !listadoPuerto.isEmpty()) {								
+								for (Object[] tmpPuerto : listadoPuerto) {
+									PuertoDTO puerto = new PuertoDTO();
+									if (tmpPuerto[0] != null) puerto.setCodigoPuerto(Long.parseLong(String.valueOf(tmpPuerto[0])));
+									if (tmpPuerto[1] != null) puerto.setNombrePuerto(String.valueOf(tmpPuerto[1]));
+									if (tmpPuerto[2] != null) puerto.setMcaPreferente(String.valueOf(tmpPuerto[2]));
+									listaPuerto.add(puerto);
+								}
+								
+							}
+						}
+						result.setPuerto(listaPuerto);
 					}
 				}
 	

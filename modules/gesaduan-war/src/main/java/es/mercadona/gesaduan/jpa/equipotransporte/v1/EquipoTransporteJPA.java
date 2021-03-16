@@ -68,6 +68,9 @@ public class EquipoTransporteJPA implements Serializable {
 	
 	@Column(name = "COD_V_USUARIO_MODIFICACION")
 	private String usuarioModificacion;
+	
+	@Column(name = "COD_N_ESTADO_DOCUMENTACION")
+	private Integer codigoEstadoDocumentacion;	
 
 	public Long getCodigoEquipo() {
 		return codigoEquipo;
@@ -188,6 +191,20 @@ public class EquipoTransporteJPA implements Serializable {
 	public void setUsuarioModificacion(String usuarioModificacion) {
 		this.usuarioModificacion = usuarioModificacion;
 	}
+	
+	/**
+	 * @return the codigoEstadoDocumentacion
+	 */
+	public Integer getCodigoEstadoDocumentacion() {
+		return codigoEstadoDocumentacion;
+	}
+
+	/**
+	 * @param codigoEstadoDocumentacion the codigoEstadoDocumentacion to set
+	 */
+	public void setCodigoEstadoDocumentacion(Integer codigoEstadoDocumentacion) {
+		this.codigoEstadoDocumentacion = codigoEstadoDocumentacion;
+	}
 
 	@Override
 	public int hashCode() {
@@ -208,6 +225,7 @@ public class EquipoTransporteJPA implements Serializable {
 		result = prime * result + ((temperatura == null) ? 0 : temperatura.hashCode());
 		result = prime * result + ((usuarioCreacion == null) ? 0 : usuarioCreacion.hashCode());
 		result = prime * result + ((usuarioModificacion == null) ? 0 : usuarioModificacion.hashCode());
+		result = prime * result + ((codigoEstadoDocumentacion == null) ? 0 : codigoEstadoDocumentacion.hashCode());		
 		return result;
 	}
 
@@ -295,6 +313,11 @@ public class EquipoTransporteJPA implements Serializable {
 				return false;
 		} else if (!usuarioModificacion.equals(other.usuarioModificacion))
 			return false;
+		if (codigoEstadoDocumentacion == null) {
+			if (other.codigoEstadoDocumentacion != null)
+				return false;
+		} else if (!codigoEstadoDocumentacion.equals(other.codigoEstadoDocumentacion))
+			return false;		
 		return true;
 	}
 }

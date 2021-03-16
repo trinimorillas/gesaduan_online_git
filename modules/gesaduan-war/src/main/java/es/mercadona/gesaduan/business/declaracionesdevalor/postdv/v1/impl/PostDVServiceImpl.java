@@ -1,6 +1,5 @@
 package es.mercadona.gesaduan.business.declaracionesdevalor.postdv.v1.impl;
 
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,7 +12,6 @@ import javax.transaction.Transactional;
 
 import es.mercadona.fwk.auth.SecurityService;
 import es.mercadona.fwk.core.exceptions.ApplicationException;
-import es.mercadona.fwk.core.exceptions.ExceptionUtils;
 import es.mercadona.gesaduan.business.common.v1.FilesService;
 import es.mercadona.gesaduan.business.declaracionesdevalor.postdv.v1.PostDVService;
 import es.mercadona.gesaduan.business.proveedores.getproveedoresdetalle.v1.GetProveedoresDetalleService;
@@ -46,6 +44,10 @@ public class PostDVServiceImpl implements PostDVService {
 
 	@Inject
 	private SecurityService securityService;
+	
+	private static final String LOG_FILE = "PostDVServiceImpl(GESADUAN)"; 
+	private static final String LOG_METHOD_OUTPUTPOSTDECLARACIONES = "OutputPostDeclaracionesDeValorDTO"; 	
+	private static final String DATE_FORMAT = "yyyy-MM-dd";	
 
 	@Transactional
 	@Override
@@ -54,7 +56,7 @@ public class PostDVServiceImpl implements PostDVService {
 		DeclaracionesDeValorPostJPA declaracionJPA = new DeclaracionesDeValorPostJPA();
 		OutputPostDeclaracionesDeValorDTO result = new OutputPostDeclaracionesDeValorDTO();
 		DVInsertPKDTO pkResult = new DVInsertPKDTO();
-		List<LineaDeclaracionJPA> listaLineas = new ArrayList();
+		List<LineaDeclaracionJPA> listaLineas = new ArrayList<LineaDeclaracionJPA>();
 
 		try {
 			/* PARAMETROS CABECERA */
@@ -74,7 +76,7 @@ public class PostDVServiceImpl implements PostDVService {
 			if (cabecera.getDatosDeclaracion().getVersion() != null) {
 				declaracionJPA.setVersion(cabecera.getDatosDeclaracion().getVersion());
 			} else {
-				declaracionJPA.setVersion(new Integer(01));
+				declaracionJPA.setVersion(1);
 			}
 
 			declaracionJPA.setApp("GESADUAN");
@@ -121,9 +123,10 @@ public class PostDVServiceImpl implements PostDVService {
 			if (fechaAlbaran != null) {
 				Date fecha;
 				try {
-					fecha = new SimpleDateFormat("yyyy-MM-dd").parse(fechaAlbaran);
+					fecha = new SimpleDateFormat(DATE_FORMAT).parse(fechaAlbaran);
 					declaracionJPA.setFechaAlbaran(fecha);
 				} catch (ParseException e) {
+					this.logger.error("({}-{}) ERROR - {} {}",LOG_FILE,LOG_METHOD_OUTPUTPOSTDECLARACIONES,e.getClass().getSimpleName(),e.getMessage());	  
 				}
 
 			}
@@ -134,9 +137,10 @@ public class PostDVServiceImpl implements PostDVService {
 			if (fechaEnvio != null) {
 				Date fecha;
 				try {
-					fecha = new SimpleDateFormat("yyyy-MM-dd").parse(fechaEnvio);
+					fecha = new SimpleDateFormat(DATE_FORMAT).parse(fechaEnvio);
 					declaracionJPA.setFechaEnvio(fecha);
 				} catch (ParseException e) {
+					this.logger.error("({}-{}) ERROR - {} {}",LOG_FILE,LOG_METHOD_OUTPUTPOSTDECLARACIONES,e.getClass().getSimpleName(),e.getMessage());					
 				}
 
 			}
@@ -179,6 +183,7 @@ public class PostDVServiceImpl implements PostDVService {
 					declaracionJPA.setMcaFactura("D");
 				}
 			} catch (Exception e1) {
+				this.logger.error("({}-{}) ERROR - {} {}",LOG_FILE,LOG_METHOD_OUTPUTPOSTDECLARACIONES,e1.getClass().getSimpleName(),e1.getMessage());				
 			}
 
 			declaracionJPA.setMcaUltimaVigente("S");
@@ -223,10 +228,12 @@ public class PostDVServiceImpl implements PostDVService {
 
 					Date fechaAlb;
 					try {
-						fechaAlb = new SimpleDateFormat("yyyy-MM-dd").parse(fechaAlbaran);
+						fechaAlb = new SimpleDateFormat(DATE_FORMAT).parse(fechaAlbaran);
 						linea.setFechaAlbaran(fechaAlb);
 					} catch (ParseException pe) {
+						this.logger.error("({}-{}) ERROR - {} {}",LOG_FILE,LOG_METHOD_OUTPUTPOSTDECLARACIONES,pe.getClass().getSimpleName(),pe.getMessage());						
 					} catch (NullPointerException npe) {
+						this.logger.error("({}-{}) ERROR - {} {}",LOG_FILE,LOG_METHOD_OUTPUTPOSTDECLARACIONES,npe.getClass().getSimpleName(),npe.getMessage());						
 					}
 
 					if (codigoMerca != null) {
@@ -321,7 +328,7 @@ public class PostDVServiceImpl implements PostDVService {
 
 				String nameFile = "generaPdfOnline-".concat(DateToStr).concat(".txt");
 
-				List<String> lineas = new ArrayList();
+				List<String> lineas = new ArrayList<String> ();
 
 				lineas.add(dvpk.getCodDeclaracionValor().toString());
 				lineas.add(dvpk.getAnyo().toString());
@@ -339,7 +346,7 @@ public class PostDVServiceImpl implements PostDVService {
 
 				String nameFile = "generaPdfOnline-".concat(DateToStr).concat(".txt");
 
-				List<String> lineas = new ArrayList();
+				List<String> lineas = new ArrayList<String> ();
 
 				lineas.add(dvpk.getCodDeclaracionValor().toString());
 				lineas.add(dvpk.getAnyo().toString());
@@ -356,26 +363,23 @@ public class PostDVServiceImpl implements PostDVService {
 			result.setNumeroDeclaracion(pkResult);
 
 		} catch (NumberFormatException nfe) {
-			this.logger.error("({}-{}) ERROR - {} {}", "PostDVServiceImpl(GESADUAN)", "createDeclaracionesDeValor",
-					nfe.getClass().getSimpleName(), nfe.getMessage());
-			establecerSalidaError(nfe, "createDeclaracionesDeValor", "error.NumberFormatException");
+			this.logger.error("({}-{}) ERROR - {} {}", LOG_FILE,LOG_METHOD_OUTPUTPOSTDECLARACIONES,nfe.getClass().getSimpleName(), nfe.getMessage());
+			establecerSalidaError(nfe, "createDeclaracionesDeValor");
 			throw new ApplicationException(nfe.getMessage());
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}", "PostDVServiceImpl(GESADUAN)", "createDeclaracionesDeValor",
-					e.getClass().getSimpleName(), e.getMessage());
-			establecerSalidaError(e, "createDeclaracionesDeValor", "error.Exception");
+			this.logger.error("({}-{}) ERROR - {} {}", LOG_FILE, LOG_METHOD_OUTPUTPOSTDECLARACIONES,e.getClass().getSimpleName(), e.getMessage());
+			establecerSalidaError(e, "createDeclaracionesDeValor");
 			throw new ApplicationException(e.getMessage());
 		}
 
 		return result;
 	}
 
-	private void establecerSalidaError(Exception exception, String metodo, String codError) {
+	private void establecerSalidaError(Exception exception, String metodo) {
 
 		String login = this.securityService.getPrincipal().getLogin();
-
-		this.logger.error("Error ejecutando la clase: PostDVServiceImpl",
-				new Object[] { metodo, login, ExceptionUtils.getStackTrace(exception) });
+		
+		this.logger.error("({}-{}) ERROR - {}{} {} {}",LOG_FILE,"establecerSalidaError",metodo,login,exception.getClass().getSimpleName(),exception.getMessage());
 	}
 
 }

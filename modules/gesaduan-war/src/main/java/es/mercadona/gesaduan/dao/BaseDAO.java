@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -16,6 +17,9 @@ public abstract class BaseDAO<T> extends DaoBaseImpl<Long, T>{
 	 */
 	@PersistenceContext(unitName="gesaduan-model")
 	private EntityManager entityManager;
+	
+	@Inject
+	private org.slf4j.Logger logger;		
 	
 	/**
 	 * Obtienen el EntityManager.
@@ -42,7 +46,7 @@ public abstract class BaseDAO<T> extends DaoBaseImpl<Long, T>{
 				result = ((BigDecimal) item).doubleValue();
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			this.logger.error("({}-{}) ERROR - {} {}","BaseDAO(GESADUAN)","getDoubleField",ex.getClass().getSimpleName(),ex.getMessage());
 		}
 
 		return result;
@@ -64,7 +68,7 @@ public abstract class BaseDAO<T> extends DaoBaseImpl<Long, T>{
 				result = ((BigDecimal) item).longValue();
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			this.logger.error("({}-{}) ERROR - {} {}","BaseDAO(GESADUAN)","getLongField",ex.getClass().getSimpleName(),ex.getMessage());
 		}
 
 		return result;
@@ -86,7 +90,7 @@ public abstract class BaseDAO<T> extends DaoBaseImpl<Long, T>{
 		try {
 			result = df.parse(fecha);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			this.logger.error("({}-{}) ERROR - {} {}","BaseDAO(GESADUAN)","getFechaDate",ex.getClass().getSimpleName(),ex.getMessage());
 		}
 
 		return result;
@@ -107,7 +111,7 @@ public abstract class BaseDAO<T> extends DaoBaseImpl<Long, T>{
 		try {
 			result = df.format(fecha);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			this.logger.error("({}-{}) ERROR - {} {}","BaseDAO(GESADUAN)","getFechaString",ex.getClass().getSimpleName(),ex.getMessage());
 		}
 		
 		return result;

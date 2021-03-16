@@ -12,7 +12,8 @@ import es.mercadona.fwk.core.exceptions.ApplicationException;
 import es.mercadona.fwk.core.web.BoPage;
 import es.mercadona.gesaduan.dao.BaseDAO;
 import es.mercadona.gesaduan.dao.planembarques.getplanembarques.v1.GetPlanEmbarquesDAO;
-import es.mercadona.gesaduan.dto.planembarques.getplanembarques.v1.InputPlanEmbarquesDTO;
+import es.mercadona.gesaduan.dto.planembarques.getplanembarques.v1.EstadoDTO;
+import es.mercadona.gesaduan.dto.planembarques.getplanembarques.v1.InputDatosGetPlanEmbarqueDTO;
 import es.mercadona.gesaduan.dto.planembarques.getplanembarques.v1.restfull.DatosPlanEmbarquesDTO;
 import es.mercadona.gesaduan.dto.planembarques.getplanembarques.v1.restfull.OutputPlanEmbarquesDTO;
 import es.mercadona.gesaduan.jpa.planembarques.v1.PlanEmbarquesJPA;
@@ -28,7 +29,7 @@ public class GetPlanEmbarquesDAOImpl extends BaseDAO<PlanEmbarquesJPA> implement
 	}
 	
 	@Override
-	public OutputPlanEmbarquesDTO listarPlanEmbarques(InputPlanEmbarquesDTO input, BoPage pagination) {
+	public OutputPlanEmbarquesDTO listarPlanEmbarques(InputDatosGetPlanEmbarqueDTO input, BoPage pagination) {
 		
 		List<DatosPlanEmbarquesDTO> resultList = new ArrayList<>();
 		OutputPlanEmbarquesDTO result = new OutputPlanEmbarquesDTO();
@@ -36,24 +37,28 @@ public class GetPlanEmbarquesDAOImpl extends BaseDAO<PlanEmbarquesJPA> implement
 		try {		
 
 			String fechaEmbarque = null;
-			if (input.getFechaEmbarque() != null)
-				fechaEmbarque = input.getFechaEmbarque();
+			if (input.getDatos().getFechaEmbarque() != null)
+				fechaEmbarque = input.getDatos().getFechaEmbarque();
 	
 			Integer codigoBloqueOrigen = null;
-			if (input.getCodigoBloqueOrigen() != null)
-				codigoBloqueOrigen = input.getCodigoBloqueOrigen();
+			if (input.getDatos().getCodigoBloqueOrigen() != null)
+				codigoBloqueOrigen = input.getDatos().getCodigoBloqueOrigen();
 			
 			Integer codigoPuertoEmbarque = null;
-			if (input.getCodigoPuertoEmbarque() != null)
-				codigoPuertoEmbarque = input.getCodigoPuertoEmbarque();
+			if (input.getDatos().getCodigoPuertoEmbarque() != null)
+				codigoPuertoEmbarque = input.getDatos().getCodigoPuertoEmbarque();
 			
 			Integer codigoPuertoDesembarque = null;
-			if (input.getCodigoPuertoDesembarque() != null)
-				codigoPuertoDesembarque = input.getCodigoPuertoDesembarque();
+			if (input.getDatos().getCodigoPuertoDesembarque() != null)
+				codigoPuertoDesembarque = input.getDatos().getCodigoPuertoDesembarque();
 			
-			Integer codigoEstado = null;
-			if (input.getCodigoEstado() != null)
-				codigoEstado = input.getCodigoEstado();
+			List<EstadoDTO> estado = null;
+			if (input.getDatos().getEstado() != null)
+				estado = input.getDatos().getEstado();
+			
+			Integer codigoEstadoDocumentacion = null;
+			if (input.getDatos().getCodigoEstadoDocumentacion() != null)
+				codigoEstadoDocumentacion = input.getDatos().getCodigoEstadoDocumentacion();
 			
 			Integer paginaInicio = null;
 			if (pagination.getPage() != null)
@@ -64,8 +69,8 @@ public class GetPlanEmbarquesDAOImpl extends BaseDAO<PlanEmbarquesJPA> implement
 				paginaTamanyo = pagination.getLimit().intValue();
 			
 			String orden = null;
-			if (input.getOrden() != null)
-				orden = input.getOrden();
+			if (input.getDatos().getOrden() != null)
+				orden = input.getDatos().getOrden();
 			
 			final StringBuilder sql = new StringBuilder();
 			final StringBuilder sqlCount = new StringBuilder();
@@ -73,7 +78,8 @@ public class GetPlanEmbarquesDAOImpl extends BaseDAO<PlanEmbarquesJPA> implement
 			String count = "SELECT COUNT(*) FROM (";
 			String select = "SELECT ";
 			String campos = "PE.COD_N_EMBARQUE, TO_CHAR(PE.FEC_DT_EMBARQUE,'DD/MM/YYYY'), BL.COD_N_BLOQUE_LOGISTICO, BL.TXT_NOMBRE, PUE.COD_N_PUERTO, PUE.TXT_NOMBRE_PUERTO, PUD.COD_N_PUERTO, " + 
-					"PUD.TXT_NOMBRE_PUERTO, PR.COD_N_PROVEEDOR, PR.TXT_RAZON_SOCIAL, NVL(PE.NUM_EQUIPOS, 0), EPE.COD_N_ESTADO, EPE.TXT_NOMBRE_ESTADO, PE.COD_V_USUARIO_VALIDACION ";
+					"PUD.TXT_NOMBRE_PUERTO, PR.COD_N_PROVEEDOR, PR.TXT_RAZON_SOCIAL, NVL(PE.NUM_EQUIPOS, 0), EPE.COD_N_ESTADO, EPE.TXT_NOMBRE_ESTADO, PE.COD_V_USUARIO_VALIDACION, " +
+					"(SELECT COUNT(*) FROM D_EQUIPO_TRANSPORTE ET WHERE ET.COD_N_EMBARQUE = PE.COD_N_EMBARQUE AND ET.COD_N_ESTADO_DOCUMENTACION = 3) ";
 			String from = "FROM D_PLAN_EMBARQUE PE " +
 					"INNER JOIN D_PUERTO PUE ON PE.COD_N_PUERTO_EMBARQUE = PUE.COD_N_PUERTO " +
 					"INNER JOIN D_PUERTO PUD ON PE.COD_N_PUERTO_DESEMBARQUE = PUD.COD_N_PUERTO " +
@@ -86,9 +92,24 @@ public class GetPlanEmbarquesDAOImpl extends BaseDAO<PlanEmbarquesJPA> implement
 			if (fechaEmbarque != null) where += "AND TO_CHAR(PE.FEC_DT_EMBARQUE,'DD/MM/YYYY') = ?fechaEmbarque ";		
 			if (codigoPuertoEmbarque != null) where += "AND PE.COD_N_PUERTO_EMBARQUE = ?codigoPuertoEmbarque ";		
 			if (codigoPuertoDesembarque != null) where += "AND PE.COD_N_PUERTO_DESEMBARQUE = ?codigoPuertoDesembarque ";		
-			if (codigoBloqueOrigen != null) where += "AND PE.COD_N_BLOQUE_ORIGEN = ?codigoBloqueOrigen ";		
-			if (codigoEstado != null) where += "AND PE.COD_N_ESTADO = ?codigoEstado ";
-				
+			if (codigoBloqueOrigen != null) where += "AND PE.COD_N_BLOQUE_ORIGEN = ?codigoBloqueOrigen ";
+			
+			if (estado != null) {
+				where += "AND PE.COD_N_ESTADO IN (";
+				for (int i = 0; i < estado.size(); i++) {
+					if (estado.size()-1 == i) where += ""+estado.get(i).getCodigoEstado()+") ";
+					else where += ""+estado.get(i).getCodigoEstado()+", ";
+				}
+			}
+			
+			if (codigoEstadoDocumentacion != null) {
+				if(codigoEstadoDocumentacion == 3) where += "AND (SELECT COUNT(*) FROM D_EQUIPO_TRANSPORTE ET WHERE ET.COD_N_EMBARQUE = PE.COD_N_EMBARQUE) = " +
+					"(SELECT COUNT(*) FROM D_EQUIPO_TRANSPORTE ET WHERE ET.COD_N_EMBARQUE = PE.COD_N_EMBARQUE AND ET.COD_N_ESTADO_DOCUMENTACION = 3) ";				
+				else if (codigoEstadoDocumentacion == 0) where += "AND (SELECT COUNT(*) FROM D_EQUIPO_TRANSPORTE ET WHERE ET.COD_N_EMBARQUE = PE.COD_N_EMBARQUE) <> " +
+					"(SELECT COUNT(*) FROM D_EQUIPO_TRANSPORTE ET WHERE ET.COD_N_EMBARQUE = PE.COD_N_EMBARQUE AND ET.COD_N_ESTADO_DOCUMENTACION = 3) ";
+
+			}	
+			
 			String countFin = ")";
 			
 			if (orden.equals("-fechaEmbarque"))
@@ -146,11 +167,6 @@ public class GetPlanEmbarquesDAOImpl extends BaseDAO<PlanEmbarquesJPA> implement
 				queryCount.setParameter("codigoBloqueOrigen", codigoBloqueOrigen);
 			}
 			
-			if (codigoEstado != null) {
-				query.setParameter("codigoEstado", codigoEstado);
-				queryCount.setParameter("codigoEstado", codigoEstado);
-			}
-			
 			if (paginaInicio != null) {
 				if (paginaTamanyo != null) {
 					paginaInicio = (paginaInicio * paginaTamanyo) - paginaTamanyo;
@@ -184,6 +200,7 @@ public class GetPlanEmbarquesDAOImpl extends BaseDAO<PlanEmbarquesJPA> implement
 					datos.setCodigoEstado(Integer.parseInt(String.valueOf(tmp[11])));
 					datos.setNombreEstado(String.valueOf(tmp[12]));
 					if (tmp[13] != null) datos.setCodigoUsuarioValidacion(String.valueOf(tmp[13]));
+					datos.setNumEquipEstadoDocuCompleta(Integer.parseInt(String.valueOf(tmp[14])));
 					
 					resultList.add(datos);
 				}

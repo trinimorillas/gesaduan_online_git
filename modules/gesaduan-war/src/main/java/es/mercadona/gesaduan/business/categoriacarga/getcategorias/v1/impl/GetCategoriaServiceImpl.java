@@ -12,11 +12,7 @@ public class GetCategoriaServiceImpl implements GetCategoriaService {
 	private GetCategoriaDAO getCategoriaDao;
 	
 	public OutputCategoriaDTO listarCategoria() {
-		
-		OutputCategoriaDTO result = getCategoriaDao.listarCategoria();
-
-		return result;
-		
+		return getCategoriaDao.listarCategoria();
 	}
 
 }
