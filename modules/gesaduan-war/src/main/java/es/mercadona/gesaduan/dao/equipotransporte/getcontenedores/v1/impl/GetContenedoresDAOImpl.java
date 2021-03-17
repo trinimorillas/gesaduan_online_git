@@ -12,10 +12,11 @@ import es.mercadona.fwk.core.exceptions.ApplicationException;
 import es.mercadona.gesaduan.dao.BaseDAO;
 import es.mercadona.gesaduan.dao.equipotransporte.getcontenedores.v1.GetContenedoresDAO;
 import es.mercadona.gesaduan.dto.equipotransporte.getcontenedores.v1.InputDatosGetContenedorDTO;
+import es.mercadona.gesaduan.dto.equipotransporte.getcontenedores.v1.restfull.CargaDTO;
 import es.mercadona.gesaduan.dto.equipotransporte.getcontenedores.v1.restfull.DatosGetCargasContenedoresDTO;
 import es.mercadona.gesaduan.dto.equipotransporte.getcontenedores.v1.restfull.OutputGetContenedoresDTO;
-import es.mercadona.gesaduan.dto.equipotransporte.getequipotransportedetalle.v1.restfull.CargaDTO;
-import es.mercadona.gesaduan.dto.equipotransporte.getequipotransportedetalle.v1.restfull.ContenedorDTO;
+import es.mercadona.gesaduan.dto.equipotransporte.getcontenedores.v1.restfull.PedidoDTO;
+import es.mercadona.gesaduan.dto.equipotransporte.getcontenedores.v1.restfull.ContenedorDTO;
 import es.mercadona.gesaduan.jpa.equipotransporte.v1.EquipoTransporteJPA;
 
 public class GetContenedoresDAOImpl extends BaseDAO<EquipoTransporteJPA> implements GetContenedoresDAO {
@@ -117,7 +118,31 @@ public class GetContenedoresDAOImpl extends BaseDAO<EquipoTransporteJPA> impleme
 					if (tmp[6] != null) carga.setNumeroPesoOcupado(Double.parseDouble(String.valueOf(tmp[6])));
 					if (tmp[7] != null) carga.setNumeroDivision(Integer.parseInt(String.valueOf(tmp[7])));
 					if (tmp[8] != null) carga.setPedidosSinValidar(String.valueOf(tmp[8]));
-					carga.setContenedor(getContenedor(carga, codigoEquipo, mcaFacturado));					
+					carga.setContenedor(getContenedor(carga, codigoEquipo, mcaFacturado));
+					
+					final StringBuilder sqlPedido = new StringBuilder();
+					String selectPedido = "SELECT CP.COD_V_PEDIDO ";
+					String fromPedido   = "FROM S_CARGA_PEDIDO CP ";
+					String wherePedido =  "WHERE CP.COD_V_CARGA = ?codCarga AND CP.COD_V_ALMACEN_ORIGEN = ?codigoAlmacenOrigen";
+
+					sqlPedido.append(selectPedido).append(fromPedido).append(wherePedido);
+
+					final Query queryPedido = getEntityManager().createNativeQuery(sqlPedido.toString());
+					queryPedido.setParameter("codCarga", String.valueOf(tmp[0]));
+					queryPedido.setParameter("codigoAlmacenOrigen", String.valueOf(tmp[3]));
+
+					@SuppressWarnings("unchecked")
+					List<String> listadoPedido = queryPedido.getResultList();
+
+					if (listadoPedido != null && !listadoPedido.isEmpty()) {
+						List<PedidoDTO> listaPedidos = new ArrayList<>();
+						for (Object tmpPedido : listadoPedido) {
+							PedidoDTO pedido = new PedidoDTO();
+							if (tmpPedido != null) pedido.setCodigoPedido(String.valueOf(tmpPedido));
+							listaPedidos.add(pedido);
+						}
+						carga.setPedido(listaPedidos);
+					}
 					cargas.add(carga);
 				}
 				

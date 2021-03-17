@@ -1,4 +1,4 @@
-package es.mercadona.gesaduan.dto.equipotransporte.getequipotransportedetalle.v1.restfull;
+package es.mercadona.gesaduan.dto.equipotransporte.getcontenedores.v1.restfull;
 
 import es.mercadona.gesaduan.dto.common.AbstractDTO;
 

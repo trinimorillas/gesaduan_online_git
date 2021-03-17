@@ -16,6 +16,7 @@ import es.mercadona.gesaduan.dto.equipotransporte.getequipotransportedetalle.v1.
 import es.mercadona.gesaduan.dto.equipotransporte.getequipotransportedetalle.v1.restfull.ContenedorDTO;
 import es.mercadona.gesaduan.dto.equipotransporte.getequipotransportedetalle.v1.restfull.DatosEquipoTransporteDetalleDTO;
 import es.mercadona.gesaduan.dto.equipotransporte.getequipotransportedetalle.v1.restfull.OutputEquipoTransporteDetalleDTO;
+import es.mercadona.gesaduan.dto.equipotransporte.getequipotransportedetalle.v1.restfull.PedidoDTO;
 import es.mercadona.gesaduan.jpa.equipotransporte.v1.EquipoTransporteJPA;
 
 public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJPA> implements GetEquipoTransporteDetalleDAO {
@@ -230,6 +231,7 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 					carga.setNumeroDivision(Integer.parseInt(String.valueOf(tmp[17])));
 					carga.setMarcaLpC(String.valueOf(tmp[18]));
 					carga.setPedidosSinValidar(String.valueOf(tmp[19]));
+					carga.setPedido(getPedidos(String.valueOf(tmp[0]), String.valueOf(tmp[9])));
 					listaCarga.add(carga);
 				}
 			}
@@ -351,6 +353,7 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 					if (tmp[13] != null) contenedor.setMarcaLpC(String.valueOf(tmp[13]));
 					if (tmp[14] != null) contenedor.setNumDosier(Integer.parseInt(String.valueOf(tmp[14])));
 					if (tmp[15] != null) contenedor.setAnyoDosier(Integer.parseInt(String.valueOf(tmp[15])));
+					contenedor.setPedido(getPedidos(String.valueOf(tmp[0]), String.valueOf(tmp[6])));
 					listaContenedor.add(contenedor);
 				}
 			}		
@@ -360,6 +363,35 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 		}			
 		
 		return listaContenedor;
+	}
+	
+	private List<PedidoDTO> getPedidos(String codigoCarga, String codigoAlmacenOrigen) {
+		final StringBuilder sqlPedido = new StringBuilder();
+		List<PedidoDTO> listaPedidos = null;
+		
+		String selectPedido = "SELECT CP.COD_V_PEDIDO ";
+		String fromPedido   = "FROM S_CARGA_PEDIDO CP ";
+		String wherePedido =  "WHERE CP.COD_V_CARGA = ?codigoCarga AND CP.COD_V_ALMACEN_ORIGEN = ?codigoAlmacenOrigen";
+
+		sqlPedido.append(selectPedido).append(fromPedido).append(wherePedido);
+
+		final Query queryPedido = getEntityManager().createNativeQuery(sqlPedido.toString());
+		queryPedido.setParameter("codigoCarga", codigoCarga);
+		queryPedido.setParameter("codigoAlmacenOrigen", codigoAlmacenOrigen);
+
+		@SuppressWarnings("unchecked")
+		List<String> listadoPedido = queryPedido.getResultList();
+
+		if (listadoPedido != null && !listadoPedido.isEmpty()) {
+			listaPedidos = new ArrayList<>();
+			for (Object tmpPedido : listadoPedido) {
+				PedidoDTO pedido = new PedidoDTO();
+				if (tmpPedido != null) pedido.setCodigoPedido(String.valueOf(tmpPedido));
+				listaPedidos.add(pedido);
+			}
+		}
+		
+		return listaPedidos;
 	}
 
 }
