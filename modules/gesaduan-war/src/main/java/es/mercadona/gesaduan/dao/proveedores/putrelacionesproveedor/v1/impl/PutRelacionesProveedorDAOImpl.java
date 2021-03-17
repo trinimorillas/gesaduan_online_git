@@ -87,7 +87,6 @@ public class PutRelacionesProveedorDAOImpl extends
 						fechaTransform = format.parse(tmp.getFechaInicio());
 					} catch (ParseException e1) {
 						this.logger.error("({}-{}) ERROR - {} {}","PutRelacionesProveedorDAOImpl(GESADUAN)","editarAgenciaProveedor",e1.getClass().getSimpleName(),e1.getMessage());
-						e1.printStackTrace();
 					}
 					id.setFechaInicio(fechaTransform);
 	
@@ -100,7 +99,7 @@ public class PutRelacionesProveedorDAOImpl extends
 							try {
 								fechaTransform = format.parse(tmp.getFechaFin().substring(0, 10));
 							} catch (ParseException e) {
-								e.printStackTrace();
+								this.logger.error("({}-{}) ERROR - {} {}","PutRelacionesProveedorDAOImpl(GESADUAN)","editarAgenciaProveedor",e.getClass().getSimpleName(),e.getMessage());	
 							}
 							actualizarAgenciaProveedor.setFechaFin(fechaTransform);
 						}else {
@@ -119,7 +118,7 @@ public class PutRelacionesProveedorDAOImpl extends
 							try {
 								fechaTransform = format.parse(tmp.getFechaFin().substring(0, 10));
 							} catch (ParseException e) {
-								e.printStackTrace();
+								this.logger.error("({}-{}) ERROR - {} {}","PutRelacionesProveedorDAOImpl(GESADUAN)","editarAgenciaProveedor",e.getClass().getSimpleName(),e.getMessage());
 							}
 							crearAgenciaProveedor.setFechaFin(fechaTransform);
 						}
