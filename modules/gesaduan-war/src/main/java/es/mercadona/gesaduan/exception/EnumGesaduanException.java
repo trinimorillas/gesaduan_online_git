@@ -53,11 +53,6 @@ public enum EnumGesaduanException {
 	public String getDescripcion() {
 		return descripcion;
 	}
-
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}	
-
     public String descripcionSingular() {
         return descripcionSingular;
     }
