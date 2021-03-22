@@ -1,5 +1,7 @@
 package es.mercadona.gesaduan.dto.equipotransporte.getequipotransportedetalle.v1.restfull;
 
+import java.util.List;
+
 import es.mercadona.gesaduan.dto.common.AbstractDTO;
 
 public class ContenedorDTO extends AbstractDTO {
@@ -24,6 +26,7 @@ public class ContenedorDTO extends AbstractDTO {
 	private String nombreCategoria;
 	private Integer numDosier;
 	private Integer anyoDosier;
+	private List<PedidoDTO> pedido;
 
 	public Long getNumContenedor() {
 		return numContenedor;
@@ -173,5 +176,19 @@ public class ContenedorDTO extends AbstractDTO {
 
 	public void setMcaFacturado(String mcaFacturado) {
 		this.mcaFacturado = mcaFacturado;
+	}
+
+	/**
+	 * @return the pedido
+	 */
+	public List<PedidoDTO> getPedido() {
+		return pedido;
+	}
+
+	/**
+	 * @param pedido the pedido to set
+	 */
+	public void setPedido(List<PedidoDTO> pedido) {
+		this.pedido = pedido;
 	}
 }
