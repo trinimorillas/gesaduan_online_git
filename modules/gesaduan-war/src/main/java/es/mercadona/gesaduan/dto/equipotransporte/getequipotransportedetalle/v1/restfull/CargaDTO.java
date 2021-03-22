@@ -3,7 +3,6 @@ package es.mercadona.gesaduan.dto.equipotransporte.getequipotransportedetalle.v1
 import java.util.List;
 
 import es.mercadona.gesaduan.dto.common.AbstractDTO;
-import es.mercadona.gesaduan.dto.planembarques.getplanembarquedetalle.v1.restfull.PedidoDTO;
 
 public class CargaDTO extends AbstractDTO {
 

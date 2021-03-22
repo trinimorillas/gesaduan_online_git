@@ -45,8 +45,6 @@ import es.mercadona.gesaduan.dto.cargas.putrelacioncargapedido.v1.InputDatosCrea
 import es.mercadona.gesaduan.dto.cargas.putrelacioncargapedido.v1.PedidoDTO;
 import es.mercadona.gesaduan.dto.cargas.validapedido.v1.InputDatosValidarPedidoDTO;
 import es.mercadona.gesaduan.dto.cargas.validapedido.v1.ValidarPedidoDTO;
-import es.mercadona.gesaduan.dto.common.error.ErrorDTO;
-import es.mercadona.gesaduan.dto.common.error.OutputResponseErrorDTO;
 import es.mercadona.gesaduan.exception.EnumGesaduanException;
 import es.mercadona.gesaduan.exception.GesaduanException;
 import es.mercadona.gesaduan.util.ResponseUtil;

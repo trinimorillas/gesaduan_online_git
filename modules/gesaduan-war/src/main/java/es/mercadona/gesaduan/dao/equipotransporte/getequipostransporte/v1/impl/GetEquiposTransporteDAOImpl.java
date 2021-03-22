@@ -20,7 +20,7 @@ import es.mercadona.gesaduan.dto.equipotransporte.getequipostransporte.v1.restfu
 import es.mercadona.gesaduan.dto.equipotransporte.getequipostransporte.v1.restfull.OutputEquiposTransporteDTO;
 import es.mercadona.gesaduan.dto.equipotransporte.getequipotransportedetalle.v1.restfull.CargaDTO;
 import es.mercadona.gesaduan.dto.equipotransporte.getequipotransportedetalle.v1.restfull.EquipoInputDTO;
-import es.mercadona.gesaduan.dto.planembarques.getplanembarquedetalle.v1.restfull.PedidoDTO;
+import es.mercadona.gesaduan.dto.equipotransporte.getequipotransportedetalle.v1.restfull.PedidoDTO;
 import es.mercadona.gesaduan.dto.planembarques.getplanembarquedetalle.v1.restfull.SuministroDTO;
 import es.mercadona.gesaduan.jpa.equipotransporte.v1.EquipoTransporteJPA;
 
@@ -527,10 +527,10 @@ public class GetEquiposTransporteDAOImpl extends BaseDAO<EquipoTransporteJPA> im
 			final StringBuilder sql = new StringBuilder();
 
 			String select = "SELECT ";
-			String campos = "SCP.COD_V_PEDIDO, SCP.COD_V_DIVISION_PEDIDO ";
-			String from = "FROM S_CARGA_PEDIDO SCP " ;
-			String where = "WHERE SCP.COD_V_ALMACEN_ORIGEN = ?codigoAlmacenOrigen " +
-			                " AND SCP.COD_V_CARGA = ?codigoCarga ";
+			String campos = "SCP.COD_V_PEDIDO ";
+			String from   = "FROM S_CARGA_PEDIDO SCP " ;
+			String where  = "WHERE SCP.COD_V_ALMACEN_ORIGEN = ?codigoAlmacenOrigen " +
+			                "AND SCP.COD_V_CARGA = ?codigoCarga ";
 
 			String order = "ORDER BY SCP.COD_V_PEDIDO ASC";
 
@@ -542,13 +542,12 @@ public class GetEquiposTransporteDAOImpl extends BaseDAO<EquipoTransporteJPA> im
 			query.setParameter("codigoCarga", codigoCarga);
 
 			@SuppressWarnings("unchecked")
-			List<Object[]> listado = query.getResultList();
+			List<String> listado = query.getResultList();
 
 			if (listado != null && !listado.isEmpty()) {
-				for (Object[] tmp : listado) {
+				for (String tmp : listado) {
 					PedidoDTO pedido = new PedidoDTO();
-					pedido.setCodigoPedido(String.valueOf(tmp[0]));
-					pedido.setCodigoDivision(String.valueOf(tmp[1]));
+					pedido.setCodigoPedido(String.valueOf(tmp));
 					listaPedidos.add(pedido);
 				}
 			}
