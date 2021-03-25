@@ -116,19 +116,15 @@ public class GetProveedoresDAOImpl extends BaseDAO<ProveedoresJPA> implements Ge
 			if ("S".equals(mcaTransportista)) where += " AND MCA_TRANSPORTISTA = 'S' ";
 			if ("S".equals(mcaProducto)) where += " AND NVL(MCA_NAVIERA,'N') = 'N' AND NVL(MCA_TRANSPORTISTA,'N') = 'N'	AND NVL(MCA_AGENTE_ADUANA,'N') = 'N'  ";		
 			
-			if(orden != null) {
-				if(orden.equals("+codigoProveedor")) {
-					order+=" ORDER BY cod_n_legacy_proveedor asc";
-				}
-				if(orden.equals("-codigoProveedor")) {
-					order+=" ORDER BY cod_n_legacy_proveedor desc";
-				}
-				if(orden.equals("+nombreProveedor")) {
-					order+=" ORDER BY txt_razon_social asc";
-				}
-				if(orden.equals("-nombreProveedor")) {
-					order+=" ORDER BY txt_razon_social desc";
-				}
+			if (orden != null) {
+				if (orden.equals("+codigoProveedor"))
+					order += " ORDER BY CASE WHEN REPLACE(TRANSLATE(TRIM(PR.COD_N_LEGACY_PROVEEDOR), '0123456789', '0'), '0', '') IS NULL THEN TO_NUMBER(PR.COD_N_LEGACY_PROVEEDOR) END, PR.COD_N_LEGACY_PROVEEDOR";
+				else if(orden.equals("-codigoProveedor"))
+					order += " ORDER BY CASE WHEN REPLACE(TRANSLATE(TRIM(PR.COD_N_LEGACY_PROVEEDOR), '0123456789', '0'), '0', '') IS NULL THEN TO_NUMBER(PR.COD_N_LEGACY_PROVEEDOR) END DESC, PR.COD_N_LEGACY_PROVEEDOR DESC";
+				else if(orden.equals("+nombreProveedor"))
+					order += " ORDER BY txt_razon_social asc";
+				else if (orden.equals("-nombreProveedor"))
+					order += " ORDER BY txt_razon_social desc";
 			}
 			
 			sqlCount.append(select).append(count).append(from).append(where);

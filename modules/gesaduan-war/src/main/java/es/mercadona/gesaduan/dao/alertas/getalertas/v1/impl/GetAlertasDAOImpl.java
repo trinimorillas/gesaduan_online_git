@@ -188,11 +188,51 @@ public class GetAlertasDAOImpl extends BaseDAO<AlertasJPA> implements GetAlertas
 				where += " AND UPPER(MCA_RESUELTA) LIKE UPPER(?estado) ";
 			}
 			
-			if(orden.equals("-fecha")) {
+			if (orden.equals("-fecha"))
 				order += " ORDER BY FEC_D_CREACION DESC ";
-			}else {
-				order += " ORDER BY FEC_D_CREACION ASC ";
-			}
+			else if (orden.equals("+fecha"))
+				order += " ORDER BY FEC_D_CREACION ASC ";			
+			else if (orden.equals("-estaResuelta"))
+				order += " ORDER BY MCA_RESUELTA DESC ";
+			else if (orden.equals("+estaResuelta"))
+				order += " ORDER BY MCA_RESUELTA ASC ";			
+			else if (orden.equals("-elemento"))
+				order += " ORDER BY TXT_NOMBRE DESC ";
+			else if (orden.equals("+elemento"))
+				order += " ORDER BY TXT_NOMBRE ASC ";			
+			else if (orden.equals("-codigoElemento"))
+				order += " ORDER BY COD_V_ELEMENTO DESC ";
+			else if (orden.equals("+codigoElemento"))
+				order += " ORDER BY COD_V_ELEMENTO ASC ";			
+			else if (orden.equals("-descripcion"))
+				order += " ORDER BY TXT_DESCRIPCION DESC ";
+			else if (orden.equals("+descripcion"))
+				order += " ORDER BY TXT_DESCRIPCION ASC ";
+			else if (orden.equals("-declaracionDeValor"))
+				order += " ORDER BY COD_N_DECLARACION_VALOR DESC ";
+			else if (orden.equals("+declaracionDeValor"))
+				order += " ORDER BY COD_N_DECLARACION_VALOR ASC ";			
+			else if (orden.equals("-codigoProveedorLegacy"))
+				order += " ORDER BY CASE WHEN REPLACE(TRANSLATE(TRIM(COD_N_PROVEEDOR_LEGACY), '0123456789', '0'), '0', '') IS NULL THEN TO_NUMBER(COD_N_PROVEEDOR_LEGACY) END DESC, COD_N_PROVEEDOR_LEGACY DESC";
+			else if (orden.equals("+codigoProveedorLegacy"))
+				order += " ORDER BY CASE WHEN REPLACE(TRANSLATE(TRIM(COD_N_PROVEEDOR_LEGACY), '0123456789', '0'), '0', '') IS NULL THEN TO_NUMBER(COD_N_PROVEEDOR_LEGACY) END, COD_N_PROVEEDOR_LEGACY";
+			else if (orden.equals("-nombreProveedor"))
+				order += " ORDER BY TXT_RAZON_SOCIAL DESC ";
+			else if (orden.equals("+nombreProveedor"))
+				order += " ORDER BY TXT_RAZON_SOCIAL ASC ";			
+			else if (orden.equals("-envioEmail"))
+				order += " ORDER BY MCA_CORREO_ENVIADO DESC ";
+			else if (orden.equals("+envioEmail"))
+				order += " ORDER BY MCA_CORREO_ENVIADO ASC ";
+			else if (orden.equals("-envioSMS"))
+				order += " ORDER BY MCA_SMS_ENVIADO DESC ";
+			else if (orden.equals("+envioSMS"))
+				order += " ORDER BY MCA_SMS_ENVIADO ASC ";
+			else if (orden.equals("-resolucion"))
+				order += " ORDER BY TXT_PROPUESTA_RESOLUCION DESC ";
+			else if (orden.equals("+resolucion"))
+				order += " ORDER BY TXT_PROPUESTA_RESOLUCION ASC ";
+			
 			
 			sqlCount.append(count).append(subQuery).append(where);
 			sqlService.append(select).append(subQuery).append(where).append(order);
