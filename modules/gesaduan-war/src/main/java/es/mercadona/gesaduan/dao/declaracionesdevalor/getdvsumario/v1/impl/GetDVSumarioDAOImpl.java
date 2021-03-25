@@ -296,60 +296,42 @@ public class GetDVSumarioDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> implem
 		
 		String orden = input.getOrden();
 		if(orden != null) {
-			if(orden.equals("+anyo")) {
+			if(orden.equals("+anyo"))
 				sql.append(" ORDER BY NUM_ANYO ASC ");
-			}
-			if(orden.equals("-anyo")) {
+			else if(orden.equals("-anyo"))
 				sql.append(" ORDER BY NUM_ANYO DESC ");
-			}
-			if(orden.equals("+numeroDeclaracion")) {
+			else if(orden.equals("+numeroDeclaracion"))
 				sql.append(" ORDER BY COD_N_DECLARACION_VALOR ASC");
-			}
-			if(orden.equals("-numeroDeclaracion")) {
+			else if(orden.equals("-numeroDeclaracion"))
 				sql.append(" ORDER BY COD_N_DECLARACION_VALOR DESC");
-			}
-			if(orden.equals("+tipoDeclaracion")) {
+			else if(orden.equals("+tipoDeclaracion"))
 				sql.append(" ORDER BY MCA_FACTURA_DV ASC");
-			}
-			if(orden.equals("-tipoDeclaracion")) {
+			else if(orden.equals("-tipoDeclaracion"))
 				sql.append(" ORDER BY MCA_FACTURA_DV DESC");
-			}
-			if(orden.equals("+fechaExpedicion")) {
+			else if(orden.equals("+fechaExpedicion"))
 				sql.append(" ORDER BY FEC_D_ALBARAN ASC");
-			}
-			if(orden.equals("-fechaExpedicion")) {
+			else if(orden.equals("-fechaExpedicion"))
 				sql.append(" ORDER BY FEC_D_ALBARAN DESC");
-			}
-			if(orden.equals("+fechaDeclaracion")) {
+			else if(orden.equals("+fechaDeclaracion"))
 				sql.append(" ORDER BY FEC_DT_CREACION ASC");
-			}
-			if(orden.equals("-fechaDeclaracion")) {
+			else if(orden.equals("-fechaDeclaracion"))
 				sql.append(" ORDER BY FEC_DT_CREACION DESC");
-			}
-			if(orden.equals("+fechaDescarga")) {
+			else if(orden.equals("+fechaDescarga"))
 				sql.append(" ORDER BY FEC_DT_DESCARGA ASC");
-			}
-			if(orden.equals("-fechaDescarga")) {
+			else if(orden.equals("-fechaDescarga"))
 				sql.append(" ORDER BY FEC_DT_DESCARGA DESC");
-			}
-			if(orden.equals("+codigoProveedor")) {
-				sql.append(" ORDER BY COD_N_PROVEEDOR ASC");
-			}
-			if(orden.equals("-codigoProveedor")) {
-				sql.append(" ORDER BY COD_N_PROVEEDOR DESC");
-			}
-			if(orden.equals("+nombreProveedor")) {
+			else if(orden.equals("+codigoProveedor"))
+				sql.append(" ORDER BY CASE WHEN REPLACE(TRANSLATE(TRIM(P.COD_N_LEGACY_PROVEEDOR), '0123456789', '0'), '0', '') IS NULL THEN TO_NUMBER(P.COD_N_LEGACY_PROVEEDOR) END, P.COD_N_LEGACY_PROVEEDOR");
+			else if(orden.equals("-codigoProveedor"))
+				sql.append(" ORDER BY CASE WHEN REPLACE(TRANSLATE(TRIM(P.COD_N_LEGACY_PROVEEDOR), '0123456789', '0'), '0', '') IS NULL THEN TO_NUMBER(P.COD_N_LEGACY_PROVEEDOR) END DESC, P.COD_N_LEGACY_PROVEEDOR DESC");
+			else if(orden.equals("+nombreProveedor"))
 				sql.append(" ORDER BY TXT_RAZON_SOCIAL ASC");
-			}
-			if(orden.equals("-nombreProveedor")) {
+			else if(orden.equals("-nombreProveedor"))
 				sql.append(" ORDER BY TXT_RAZON_SOCIAL DESC");
-			}
-			if(orden.equals("+numeroPedido")) {
+			else if(orden.equals("+numeroPedido"))
 				sql.append(" ORDER BY COD_V_PEDIDO ASC");
-			}
-			if(orden.equals("-numeroPedido")) {
+			else if(orden.equals("-numeroPedido"))
 				sql.append(" ORDER BY COD_V_PEDIDO DESC");
-			}
 		}
 		
 		

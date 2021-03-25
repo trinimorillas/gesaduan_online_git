@@ -527,7 +527,7 @@ public class GetEquiposTransporteDAOImpl extends BaseDAO<EquipoTransporteJPA> im
 			final StringBuilder sql = new StringBuilder();
 
 			String select = "SELECT ";
-			String campos = "SCP.COD_V_PEDIDO ";
+			String campos = "SCP.COD_V_PEDIDO, SCP.COD_V_DIVISION_PEDIDO ";
 			String from   = "FROM S_CARGA_PEDIDO SCP " ;
 			String where  = "WHERE SCP.COD_V_ALMACEN_ORIGEN = ?codigoAlmacenOrigen " +
 			                "AND SCP.COD_V_CARGA = ?codigoCarga ";
@@ -542,12 +542,13 @@ public class GetEquiposTransporteDAOImpl extends BaseDAO<EquipoTransporteJPA> im
 			query.setParameter("codigoCarga", codigoCarga);
 
 			@SuppressWarnings("unchecked")
-			List<String> listado = query.getResultList();
+			List<Object[]> listado = query.getResultList();
 
 			if (listado != null && !listado.isEmpty()) {
-				for (String tmp : listado) {
+				for (Object[] tmp : listado) {
 					PedidoDTO pedido = new PedidoDTO();
-					pedido.setCodigoPedido(String.valueOf(tmp));
+					pedido.setCodigoPedido(String.valueOf(tmp[0]));
+					pedido.setCodigoDivision(String.valueOf(tmp[1]));
 					listaPedidos.add(pedido);
 				}
 			}
