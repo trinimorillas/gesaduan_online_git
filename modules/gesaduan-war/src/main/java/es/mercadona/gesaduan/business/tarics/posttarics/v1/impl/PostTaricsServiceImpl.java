@@ -2,8 +2,6 @@ package es.mercadona.gesaduan.business.tarics.posttarics.v1.impl;
 
 import javax.inject.Inject;
 
-import es.mercadona.gesaduan.business.alertas.crearalertas.v1.CrearAlertasService;
-import es.mercadona.gesaduan.business.tarics.gettarics.v1.GetTaricsSumarioService;
 import es.mercadona.gesaduan.business.tarics.posttarics.v1.PostTaricsService;
 import es.mercadona.gesaduan.dao.tarics.posttarics.v1.PostTaricsDAO;
 import es.mercadona.gesaduan.dto.tarics.common.v1.restfull.OutputTaricsDTO;
@@ -14,12 +12,6 @@ public class PostTaricsServiceImpl implements PostTaricsService{
 	
 	@Inject 
 	private PostTaricsDAO postTaricsDao;
-	
-	@Inject
-	private GetTaricsSumarioService getTaricsSumarioService;
-	
-	@Inject
-	private CrearAlertasService crearAlertasService;
 
 	@Override
 	public OutputTaricsDTO createTarics(InputDatosPostDTO input) {
@@ -38,13 +30,6 @@ public class PostTaricsServiceImpl implements PostTaricsService{
 		datosToInsert.setUsuarioModificacion(input.getMetadatos().getCodigoUsuario().toUpperCase());
 		
 		OutputTaricsDTO result = postTaricsDao.crearTarics(datosToInsert);
-		
-		boolean crearAlerta = getTaricsSumarioService.checkExistTaricAlerta(codigoTaric);
-		if(crearAlerta) {
-			Integer codigoAlerta = 7;
-			String codigoUsuario = input.getMetadatos().getCodigoUsuario().toUpperCase();
-			crearAlertasService.crearAlerta(codigoAlerta, String.valueOf(codigoTaric), codigoUsuario);
-		}
 		
 		return result;
 	}

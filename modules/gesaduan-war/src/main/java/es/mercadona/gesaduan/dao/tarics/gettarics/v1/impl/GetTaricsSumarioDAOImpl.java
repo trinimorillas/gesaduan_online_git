@@ -168,39 +168,6 @@ public class GetTaricsSumarioDAOImpl extends BaseDAO<TaricsJPA> implements GetTa
 
 
 	@Override
-	public boolean checkExistTaricAlerta(Long codigoTaric) {
-		
-		
-		if(codigoTaric != null) {
-		
-		final StringBuilder sql = new StringBuilder();
-		
-		String select = " SELECT CASE WHEN MAX(COD_N_COMIENZO_TARIC) IS NULL THEN 'FALSE' ELSE 'TRUE' END TARIC_EXIST ";
-		String from = " FROM c_codigo_taric_alerta ";
-		String where = " where lpad(cod_n_comienzo_taric, 4, 0) = SUBSTR(lpad(?codigotaric, 10, 0), 0, 4) ";
-		
-		sql.append(select).append(from).append(where);
-		
-		final Query query = getEntityManager().createNativeQuery(sql.toString());
-				
-		query.setParameter("codigotaric", codigoTaric);
-		
-		String restultadoQuery = (String) query.getSingleResult();
-		
-		if(restultadoQuery.equals("TRUE"))
-			return true;
-		else
-			return false;		
-		
-		}else {
-			
-			return false;
-		}
-		
-	}
-
-
-	@Override
 	public boolean checkExisteRelacionTaricProd(Long codigoTaric) {
 
 		if(codigoTaric != null) {

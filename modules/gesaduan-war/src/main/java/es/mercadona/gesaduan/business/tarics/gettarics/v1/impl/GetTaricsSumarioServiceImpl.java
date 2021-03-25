@@ -22,13 +22,6 @@ public class GetTaricsSumarioServiceImpl implements GetTaricsSumarioService{
 	}
 
 	@Override
-	public boolean checkExistTaricAlerta(Long codigoTaric) {
-		
-		return getTaricsSumarioDao.checkExistTaricAlerta(codigoTaric);
-		
-	}
-
-	@Override
 	public boolean checkExisteRelacionTaricProd(Long codigoTaric) {
 		
 		return getTaricsSumarioDao.checkExisteRelacionTaricProd(codigoTaric);
