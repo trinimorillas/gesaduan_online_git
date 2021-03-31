@@ -13,11 +13,8 @@ public class GetProductosDetalleServiceImpl implements GetProductosDetalleServic
 	private GetProductosDetalleDAO getProductosDetalleDao;
 	
 	@Override
-	public OutputProductosDetalleDTO getProductosDetalle(InputProductosDetalleDTO input) {
-		
-		OutputProductosDetalleDTO result = getProductosDetalleDao.getProductosDetalle(input);
-		
-		return result;
+	public OutputProductosDetalleDTO getProductosDetalle(InputProductosDetalleDTO input) {		
+		return getProductosDetalleDao.getProductosDetalle(input);
 	}
 	
 	
