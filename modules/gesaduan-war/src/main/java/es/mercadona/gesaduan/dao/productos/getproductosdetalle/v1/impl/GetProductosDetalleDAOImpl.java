@@ -35,6 +35,7 @@ public class GetProductosDetalleDAOImpl extends BaseDAO<ProductosJPA> implements
 		
 		
 		Long codigoProducto = Long.parseLong(input.getCodigoProducto());
+		String orden = input.getOrden();
 		
 		producto = getProductos(codigoProducto);
 		
@@ -47,7 +48,7 @@ public class GetProductosDetalleDAOImpl extends BaseDAO<ProductosJPA> implements
 		}
 		*/		
 		
-		producto.setProveedores(getProveedores(codigoProducto));
+		producto.setProveedores(getProveedores(codigoProducto, orden));
 		datos.setProducto(producto);
 		resultOutput.setDatos(datos);
 
@@ -199,7 +200,7 @@ public class GetProductosDetalleDAOImpl extends BaseDAO<ProductosJPA> implements
 	}
 	
 	
-	private List<ProveedoresProductoDTO> getProveedores(Long codigoProducto){
+	private List<ProveedoresProductoDTO> getProveedores(Long codigoProducto, String orden) {
 		
 		final StringBuilder sql = new StringBuilder();
 		
@@ -213,6 +214,15 @@ public class GetProductosDetalleDAOImpl extends BaseDAO<ProductosJPA> implements
 		sql.append(" LEFT JOIN S_EAN_PRODUCTO_PROVEEDOR_R PPR ON PPR.COD_N_PRODUCTO = PROD.COD_N_PRODUCTO ");
 		sql.append(" INNER JOIN D_PROVEEDOR_R PROV ON PROV.COD_N_LEGACY_PROVEEDOR = PPR.COD_N_LEGACY_PROVEEDOR ");
 		sql.append(" WHERE PROD.COD_N_PRODUCTO = ?codigoProducto ");
+		
+		if (orden.equals("+codigoPublico"))
+			sql.append(" ORDER BY CASE WHEN REPLACE(TRANSLATE(TRIM(PPR.COD_N_LEGACY_PROVEEDOR), '0123456789', '0'), '0', '') IS NULL THEN TO_NUMBER(PPR.COD_N_LEGACY_PROVEEDOR) END, PPR.COD_N_LEGACY_PROVEEDOR ");
+		else if (orden.equals("-codigoPublico"))
+			sql.append(" ORDER BY CASE WHEN REPLACE(TRANSLATE(TRIM(PPR.COD_N_LEGACY_PROVEEDOR), '0123456789', '0'), '0', '') IS NULL THEN TO_NUMBER(PPR.COD_N_LEGACY_PROVEEDOR) END DESC, PPR.COD_N_LEGACY_PROVEEDOR DESC ");
+		else if (orden.equals("+nombre"))
+			sql.append(" ORDER BY PROV.TXT_RAZON_SOCIAL ASC ");
+		else if (orden.equals("-nombre"))
+			sql.append(" ORDER BY PROV.TXT_RAZON_SOCIAL DESC ");
 		
 		final Query query = getEntityManager().createNativeQuery(sql.toString());
 		

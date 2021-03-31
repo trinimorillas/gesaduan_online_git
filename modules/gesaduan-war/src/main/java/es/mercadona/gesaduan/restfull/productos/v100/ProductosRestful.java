@@ -141,21 +141,19 @@ public class ProductosRestful {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getProductoDetalle(
 			@NotNull @DefaultValue("es-ES") @QueryParam("locale") String locale,
-			@NotNull @PathParam("codigoProducto") String codigoProducto
-			) {
-		
+			@NotNull @PathParam("codigoProducto") String codigoProducto,
+			@DefaultValue("+codigoPublico") @QueryParam("orden") String orden) {		
 		OutputProductosDetalleDTO response = null;
 		
-		try {
-			
+		try {			
 			InputProductosDetalleDTO input = new InputProductosDetalleDTO();
 			
 			input.setCodigoProducto(codigoProducto);
 			input.setLocale(locale);
+			input.setOrden(orden);
 			
-			response = getProductosDetalleService.getProductosDetalle(input);
-			
-		}catch(Exception e) {
+			response = getProductosDetalleService.getProductosDetalle(input);			
+		} catch (Exception e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
 		}
 		
