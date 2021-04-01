@@ -29,9 +29,7 @@ public class PostTaricsServiceImpl implements PostTaricsService{
 		datosToInsert.setUsuarioCreacion(input.getMetadatos().getCodigoUsuario().toUpperCase());
 		datosToInsert.setUsuarioModificacion(input.getMetadatos().getCodigoUsuario().toUpperCase());
 		
-		OutputTaricsDTO result = postTaricsDao.crearTarics(datosToInsert);
-		
-		return result;
+		return postTaricsDao.crearTarics(datosToInsert);
 	}
 
 }

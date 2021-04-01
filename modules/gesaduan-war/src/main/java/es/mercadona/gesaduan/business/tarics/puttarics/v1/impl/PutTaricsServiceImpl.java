@@ -14,8 +14,7 @@ public class PutTaricsServiceImpl implements PutTaricsService{
 	private PutTaricsDAO putTaricsDao;
 	
 	@Override
-	public OutputTaricsDTO updateTarics(InputDatosPutDTO input) {
-		
+	public OutputTaricsDTO updateTarics(InputDatosPutDTO input) {		
 		Long codigoTaric = Long.parseLong(input.getDatos().getCodigo());
 		
 		TaricsJPA datosToUpdate = new TaricsJPA();
@@ -29,9 +28,6 @@ public class PutTaricsServiceImpl implements PutTaricsService{
 		datosToUpdate.setUsuarioCreacion(input.getMetadatos().getCodigoUsuario().toUpperCase());
 		datosToUpdate.setUsuarioModificacion(input.getMetadatos().getCodigoUsuario().toUpperCase());
 		
-		OutputTaricsDTO result = putTaricsDao.updateTarics(datosToUpdate);
-
-		return result;
+		return putTaricsDao.updateTarics(datosToUpdate);
 	}
-
 }
