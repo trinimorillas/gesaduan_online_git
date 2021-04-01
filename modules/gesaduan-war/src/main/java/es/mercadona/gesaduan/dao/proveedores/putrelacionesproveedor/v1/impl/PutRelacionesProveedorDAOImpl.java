@@ -11,8 +11,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
-import es.mercadona.fwk.auth.SecurityService;
-import es.mercadona.fwk.core.exceptions.ExceptionUtils;
 import es.mercadona.fwk.core.exceptions.ApplicationException;
 import es.mercadona.fwk.data.DaoBaseImpl;
 import es.mercadona.gesaduan.dao.proveedores.putrelacionesproveedor.v1.PutRelacionesProveedorDAO;
@@ -20,15 +18,13 @@ import es.mercadona.gesaduan.dto.proveedores.putrelacionesproveedores.v1.InputRe
 import es.mercadona.gesaduan.dto.proveedores.putrelacionesproveedores.v1.RelacionesProveedorDTO;
 import es.mercadona.gesaduan.jpa.proveedores.putrelacionesproveedor.v1.RelacionAgenciaProveedorJPA;
 import es.mercadona.gesaduan.jpa.proveedores.putrelacionesproveedor.v1.RelacionAgenciaProveedorPkJPA;
+import es.mercadona.gesaduan.common.Constantes;
 
 public class PutRelacionesProveedorDAOImpl extends
 		DaoBaseImpl<RelacionAgenciaProveedorPkJPA, RelacionAgenciaProveedorJPA> implements PutRelacionesProveedorDAO {
 
 	@Inject
 	private org.slf4j.Logger logger;
-	
-	@Inject
-	private SecurityService securityService;
 	
 	@Override
 	protected EntityManager getEntityManager() {
@@ -38,16 +34,17 @@ public class PutRelacionesProveedorDAOImpl extends
 	@Override
 	public void setEntityClass() {
 		entityClass = RelacionAgenciaProveedorJPA.class;
-
 	}
 
 	@PersistenceContext
 	private EntityManager entityM;
+	
+	private final String editarRelacionesProveedor = "editarRelacionesProveedor";
+	private final String nombreClase = "PutRelacionesProveedorDAOImpl(GESADUAN)";
 
 	@Transactional
 	@Override
-	public void editarRelacionesProveedor(InputRelacionesProveedorDTO input) {
-		
+	public void editarRelacionesProveedor(InputRelacionesProveedorDTO input) {		
 		try {
 			boolean esAgencia = (input.getDatos().getEsAgencia()) ? true : false;
 
@@ -57,22 +54,22 @@ public class PutRelacionesProveedorDAOImpl extends
 				editarProveedorAgencia(input);
 			}
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}","PutRelacionesProveedorDAOImpl(GESADUAN)","editarRelacionesProveedor",e.getClass().getSimpleName(),e.getMessage());	
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, nombreClase, "editarRelacionesProveedor", e.getClass().getSimpleName(),e.getMessage());	
 			throw new ApplicationException(e.getMessage());
 		}
 	}
 
 	private void editarAgenciaProveedor(InputRelacionesProveedorDTO input) {
-		
-		try {		
-
+		String editarAgenciaProveedor = "editarAgenciaProveedor";
+		try {
 			List<RelacionesProveedorDTO> relacionesList = input.getDatos().getRelacionProveedor();
 	
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			Date fechaTransform = null;
 			Date fechaActual = new Date();
 	
-			String aplicacion = "GESADUAN", usuario = input.getMetadatos().getCodigoUsuario().toUpperCase();
+			String aplicacion = "GESADUAN";
+			String usuario = input.getMetadatos().getCodigoUsuario().toUpperCase();
 	
 			if (relacionesList != null && !relacionesList.isEmpty()) {
 				for (RelacionesProveedorDTO tmp : relacionesList) {
@@ -86,7 +83,7 @@ public class PutRelacionesProveedorDAOImpl extends
 					try {
 						fechaTransform = format.parse(tmp.getFechaInicio());
 					} catch (ParseException e1) {
-						this.logger.error("({}-{}) ERROR - {} {}","PutRelacionesProveedorDAOImpl(GESADUAN)","editarAgenciaProveedor",e1.getClass().getSimpleName(),e1.getMessage());
+						this.logger.error(Constantes.FORMATO_ERROR_LOG, nombreClase, editarAgenciaProveedor, e1.getClass().getSimpleName(),e1.getMessage());
 					}
 					id.setFechaInicio(fechaTransform);
 	
@@ -99,7 +96,7 @@ public class PutRelacionesProveedorDAOImpl extends
 							try {
 								fechaTransform = format.parse(tmp.getFechaFin().substring(0, 10));
 							} catch (ParseException e) {
-								this.logger.error("({}-{}) ERROR - {} {}","PutRelacionesProveedorDAOImpl(GESADUAN)","editarAgenciaProveedor",e.getClass().getSimpleName(),e.getMessage());	
+								this.logger.error(Constantes.FORMATO_ERROR_LOG, nombreClase, editarAgenciaProveedor, e.getClass().getSimpleName(),e.getMessage());	
 							}
 							actualizarAgenciaProveedor.setFechaFin(fechaTransform);
 						}else {
@@ -118,7 +115,7 @@ public class PutRelacionesProveedorDAOImpl extends
 							try {
 								fechaTransform = format.parse(tmp.getFechaFin().substring(0, 10));
 							} catch (ParseException e) {
-								this.logger.error("({}-{}) ERROR - {} {}","PutRelacionesProveedorDAOImpl(GESADUAN)","editarAgenciaProveedor",e.getClass().getSimpleName(),e.getMessage());
+								this.logger.error(Constantes.FORMATO_ERROR_LOG, nombreClase, editarAgenciaProveedor, e.getClass().getSimpleName(),e.getMessage());
 							}
 							crearAgenciaProveedor.setFechaFin(fechaTransform);
 						}
@@ -128,23 +125,23 @@ public class PutRelacionesProveedorDAOImpl extends
 			}
 			
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}","PutRelacionesProveedorDAOImpl(GESADUAN)","editarAgenciaProveedor",e.getClass().getSimpleName(),e.getMessage());	
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, nombreClase, editarRelacionesProveedor, e.getClass().getSimpleName(),e.getMessage());	
 			throw new ApplicationException(e.getMessage());
 		}			
 
 	}
 
 	private void editarProveedorAgencia(InputRelacionesProveedorDTO input) {
-
+		String editarProveedorAgencia = "editarProveedorAgencia";
 		try {		
-		
 			List<RelacionesProveedorDTO> relacionesList = input.getDatos().getRelacionProveedor();
 	
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			Date fechaTransform = null;
 			Date fechaActual = new Date();
 	
-			String aplicacion = "GESADUAN", usuario = input.getMetadatos().getCodigoUsuario().toUpperCase();
+			String aplicacion = "GESADUAN";
+			String usuario = input.getMetadatos().getCodigoUsuario().toUpperCase();
 	
 			if (relacionesList != null && !relacionesList.isEmpty()) {
 				for (RelacionesProveedorDTO tmp : relacionesList) {
@@ -158,7 +155,7 @@ public class PutRelacionesProveedorDAOImpl extends
 					try {
 						fechaTransform = format.parse(tmp.getFechaInicio().substring(0, 10));
 					} catch (ParseException e1) {
-						this.logger.error("({}-{}) ERROR - {} {}","PutRelacionesProveedorDAOImpl(GESADUAN)","editarProveedorAgencia",e1.getClass().getSimpleName(),e1.getMessage());	
+						this.logger.error(Constantes.FORMATO_ERROR_LOG, nombreClase, editarProveedorAgencia, e1.getClass().getSimpleName(),e1.getMessage());	
 					}
 					id.setFechaInicio(fechaTransform);
 	
@@ -169,7 +166,7 @@ public class PutRelacionesProveedorDAOImpl extends
 							try {
 								fechaTransform = format.parse(tmp.getFechaFin().substring(0, 10));
 							} catch (ParseException e) {
-								this.logger.error("({}-{}) ERROR - {} {}","PutRelacionesProveedorDAOImpl(GESADUAN)","editarProveedorAgencia",e.getClass().getSimpleName(),e.getMessage());	
+								this.logger.error(Constantes.FORMATO_ERROR_LOG, nombreClase, editarProveedorAgencia, e.getClass().getSimpleName(),e.getMessage());	
 							}
 							actualizarProveedorAgencia.setFechaFin(fechaTransform);
 						}else {
@@ -191,7 +188,7 @@ public class PutRelacionesProveedorDAOImpl extends
 							try {
 								fechaTransform = format.parse(tmp.getFechaFin().substring(0, 10));
 							} catch (ParseException e) {
-								this.logger.error("({}-{}) ERROR - {} {}","PutRelacionesProveedorDAOImpl(GESADUAN)","editarProveedorAgencia",e.getClass().getSimpleName(),e.getMessage());
+								this.logger.error(Constantes.FORMATO_ERROR_LOG, nombreClase, editarProveedorAgencia, e.getClass().getSimpleName(),e.getMessage());
 							}
 							crearProveedorAgencia.setFechaFin(fechaTransform);
 						}
@@ -203,15 +200,13 @@ public class PutRelacionesProveedorDAOImpl extends
 			}
 			
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}","PutRelacionesProveedorDAOImpl(GESADUAN)","editarProveedorAgencia",e.getClass().getSimpleName(),e.getMessage());	
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, nombreClase, editarProveedorAgencia, e.getClass().getSimpleName(), e.getMessage());	
 			throw new ApplicationException(e.getMessage());
 		}				
 	}
 
 	private void darDeBajaExistentes(String codigoAgencia, String codigoProveedor, String codigoUsuario) {
-
-		try {
-		
+		try {		
 			Date fechaActual = new Date();
 			Long result = (Long) entityM.createQuery("SELECT COUNT(rel) " + "FROM RelacionAgenciaProveedorJPA rel "
 					+ "WHERE rel.id.codigoAgencia = :codigoAgencia AND rel.id.codigoProveedor = :codigoProveedor AND rel.fechaFin IS NULL OR rel.fechaFin >= :fechaActual")
@@ -220,14 +215,6 @@ public class PutRelacionesProveedorDAOImpl extends
 	
 			if (result > 0) {
 				Calendar yesterday = Calendar.getInstance();
-				
-				/* 
-				 * CORREO: Sent: miércoles, 8 de abril de 2020 19:31
-				 * USUARIO :La idea es que al día siguiente de la fecha que pongamos, ya no exista intercambio de documentos entre P y Agencia
-				 * 
-				 * yesterday.add(Calendar.DATE, -1);
-				 * 
-				 * */
 							 
 				Date fecha = yesterday.getTime();
 				entityM.createQuery(
@@ -238,19 +225,9 @@ public class PutRelacionesProveedorDAOImpl extends
 			}
 			
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}","PutRelacionesProveedorDAOImpl(GESADUAN)","darDeBajaExistentes",e.getClass().getSimpleName(),e.getMessage());	
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, nombreClase, "darDeBajaExistentes", e.getClass().getSimpleName(), e.getMessage());	
 			throw new ApplicationException(e.getMessage());
 		}				
 
 	}
-	
-	/*
-	  private void establecerSalidaError(Exception exception, String metodo, String codError) {
-
-		    String login = this.securityService.getPrincipal().getLogin();
-		    
-		    this.logger.error("Error ejecutando la clase: PutRelacionesProveedorDAOImpl",
-		        new Object[] { metodo, login, ExceptionUtils.getStackTrace(exception) });
-	  }
-	*/
 }

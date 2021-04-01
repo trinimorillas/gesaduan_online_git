@@ -17,7 +17,6 @@ import es.mercadona.gesaduan.dto.cargas.getcargas.v1.InputDatosCargasDTO;
 import es.mercadona.gesaduan.dto.cargas.getcargas.v1.restfull.DatosCargasDTO;
 import es.mercadona.gesaduan.dto.cargas.getcargas.v1.restfull.OutputCargasDTO;
 import es.mercadona.gesaduan.dto.cargas.getcargas.v1.restfull.PedidoDTO;
-import es.mercadona.gesaduan.dto.puertos.getpuertoagencia.v1.restfull.AgenciaDTO;
 import es.mercadona.gesaduan.jpa.cargas.v1.CargasJPA;
 
 public class GetCargasDAOImpl extends BaseDAO<CargasJPA> implements GetCargasDAO {
