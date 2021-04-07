@@ -90,8 +90,9 @@ public class GetProveedoresDAOImpl extends BaseDAO<ProveedoresJPA> implements Ge
 			
 			String select = "SELECT ";
 			String count = "COUNT(*) ";
-			String campos = "PR.COD_N_PROVEEDOR, PR.COD_N_LEGACY_PROVEEDOR, PR.TXT_RAZON_SOCIAL, PR.MCA_AGENTE_ADUANA, PR.MCA_ACTIVO_CSM, PR.TXT_DISTRITO, PR.FEC_D_ACTIVACION ";
+			String campos = "PR.COD_N_PROVEEDOR, PR.COD_N_LEGACY_PROVEEDOR, PR.TXT_RAZON_SOCIAL, PR.MCA_AGENTE_ADUANA, PR.MCA_ACTIVO_CSM, PROV.TXT_NOMBRE, PR.FEC_D_ACTIVACION ";
 			String from = "FROM D_PROVEEDOR_R PR ";
+			from += "INNER JOIN D_PROVINCIA_R PROV ON (PROV.COD_V_ALTERNATIVO = PR.COD_V_PROVINCIA) "; 
 			String where = "WHERE 1 = 1 ";
 			String order = "";		
 			
