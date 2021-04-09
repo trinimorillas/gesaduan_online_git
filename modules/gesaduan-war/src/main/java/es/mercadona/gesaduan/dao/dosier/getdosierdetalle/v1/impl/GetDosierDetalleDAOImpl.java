@@ -16,8 +16,11 @@ import es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.InputDosierDetalleDT
 import es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.resfull.ContenedorDTO;
 import es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.resfull.DatosDosierDetalleDTO;
 import es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.resfull.EquipoDTO;
+import es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.resfull.FacturaDTO;
 import es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.resfull.OutputDosierDetalleDTO;
+import es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.resfull.PedidoDTO;
 import es.mercadona.gesaduan.jpa.dosier.DosierJPA;
+import es.mercadona.gesaduan.common.Constantes;
 
 public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDosierDetalleDAO {
 
@@ -28,6 +31,8 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 	public void setEntityClass() {
 		this.entityClass = DosierJPA.class;
 	}
+	
+	private static final String NOMBRE_CLASE = "GetDosierDetalleDAOImpl(GESADUAN)";
 
 	
 	/*
@@ -55,7 +60,8 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 			campos.append("D.COD_V_USUARIO_CREACION, "); 
 			campos.append("D.COD_N_ESTADO, "); 
 			campos.append("ED.TXT_NOMBRE_ESTADO, "); 
-			campos.append("TO_CHAR(D.FEC_DT_DESCARGA,'DD/MM/YYYY') ");
+			campos.append("TO_CHAR(D.FEC_DT_DESCARGA,'DD/MM/YYYY'), ");
+			campos.append("D.MCA_ERROR ");
 			StringBuilder from = new StringBuilder();	 
 			from.append("FROM D_DOSIER D "); 
 			from.append("JOIN D_ESTADO_DOSIER ED ON (ED.COD_N_ESTADO = D.COD_N_ESTADO) "); 
@@ -76,7 +82,8 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 			if (listado != null && !listado.isEmpty()) {
 				
 				List<EquipoDTO> listaEquipo = new ArrayList<>();				
-				List<ContenedorDTO> listaContenedor = new ArrayList<>();				
+				List<ContenedorDTO> listaContenedor = new ArrayList<>();
+				List<FacturaDTO> listaFactura = new ArrayList<>();
 				
 				for (Object[] tmp : listado) {			
 					dosier = new DatosDosierDetalleDTO();
@@ -89,12 +96,13 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 					dosier.setNombreEstado(String.valueOf(tmp[5]));
 					if (tmp[6] != null) dosier.setFechaDescarga(String.valueOf(tmp[6]));
 		
-					listaEquipo = consultarEquiposDoiser(datos);	
-					
+					listaEquipo = consultarEquiposDoiser(datos);
+					listaFactura = consultarFacturasDosier(datos);
 					listaContenedor = consultarContenedoresDosier(datos);					
 										
 					dosier.setEquipo(listaEquipo);
-					dosier.setContenedor(listaContenedor);					
+					dosier.setFactura(listaFactura);
+					dosier.setContenedor(listaContenedor);
 				}						
 			}		
 		
@@ -104,7 +112,7 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 			result.setDatos(dosier);
 
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}","GetDosierDetalleDAOImpl(GESADUAN)","consultarDosier",e.getClass().getSimpleName(),e.getMessage());	
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "consultarDosier", e.getClass().getSimpleName(), e.getMessage());	
 			throw new ApplicationException(e.getMessage());
 		}
 		
@@ -164,11 +172,91 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 			}
 		
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}","GetDosierDetalleDAOImpl(GESADUAN)","consultarEquiposDoiser",e.getClass().getSimpleName(),e.getMessage());	
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "consultarEquiposDoiser", e.getClass().getSimpleName(), e.getMessage());	
 			throw new ApplicationException(e.getMessage());
 		}		
 				
 		return listaEquipo;
+	}
+	
+	/*
+	 * Procedimiento de consulta de facturas de dosiseres
+	 * */	
+	private List<FacturaDTO> consultarFacturasDosier(InputDatosDetalleDTO datos) {		
+		List<FacturaDTO> listaFactura = null;		
+		
+		try {		
+			Long numDosier = datos.getDatos().getNumDosier();		
+			Integer anyoDosier = datos.getDatos().getAnyoDosier();	
+
+			final StringBuilder sql = new StringBuilder();
+			
+			StringBuilder select = new StringBuilder();	
+			select.append("SELECT ");		
+			StringBuilder campos = new StringBuilder();	 
+			campos.append("F.COD_N_DECLARACION_VALOR, "); 
+			campos.append("F.NUM_ANYO ");			
+			StringBuilder from = new StringBuilder();	 
+			from.append("FROM O_DECLARACION_VALOR_CAB F ");
+			StringBuilder where = new StringBuilder();	 
+			where.append("WHERE ");
+			where.append("F.NUM_DOSIER = ?numDosier AND "); 
+			where.append("F.NUM_ANYO_DOSIER = ?anyoDosier");
+			
+			sql.append(select).append(campos).append(from).append(where);
+	
+			final Query query = getEntityManager().createNativeQuery(sql.toString());
+			
+			query.setParameter("numDosier", numDosier);
+			query.setParameter("anyoDosier", anyoDosier);	
+			
+			@SuppressWarnings("unchecked")
+			List<Object[]> listado = query.getResultList();
+			
+			listaFactura = new ArrayList<>() ;					
+	
+			if (listado != null && !listado.isEmpty()) {
+				for (Object[] tmp : listado) {			
+					FacturaDTO factura = null;
+									
+					factura = new FacturaDTO();
+					if (tmp[0] != null) factura.setAnyoFactura(Integer.parseInt(String.valueOf(tmp[0])));
+					if (tmp[1] != null) factura.setCodigoFactura(Long.parseLong(String.valueOf(tmp[1])));
+					listaFactura.add(factura);
+					
+					final StringBuilder sqlPedido = new StringBuilder();
+					String selectPedido = "SELECT FP.COD_V_PEDIDO ";
+					String fromPedido   = "FROM O_DECLARACION_VALOR_CAB F " +
+										  "INNER JOIN S_FACTURA_PEDIDO FP ON (FP.COD_N_FACTURA = F.COD_N_DECLARACION_VALOR AND FP.NUM_ANYO_FACTURA = F.NUM_ANYO) ";
+					String wherePedido  = "WHERE F.NUM_DOSIER = ?numDosier AND F.NUM_ANYO_DOSIER = ?anyoDosier";
+
+					sqlPedido.append(selectPedido).append(fromPedido).append(wherePedido);
+
+					final Query queryPedido = getEntityManager().createNativeQuery(sqlPedido.toString());
+					queryPedido.setParameter("numDosier", datos.getDatos().getNumDosier());
+					queryPedido.setParameter("anyoDosier", datos.getDatos().getAnyoDosier());
+
+					@SuppressWarnings("unchecked")
+					List<String> listadoPedido = queryPedido.getResultList();
+
+					if (listadoPedido != null && !listadoPedido.isEmpty()) {
+						List<PedidoDTO> listaPedidos = new ArrayList<>();
+						for (Object tmpPedido : listadoPedido) {
+							PedidoDTO pedido = new PedidoDTO();
+							if (tmpPedido != null) pedido.setCodigoPedido(String.valueOf(tmpPedido));
+							listaPedidos.add(pedido);
+						}
+						factura.setPedido(listaPedidos);
+					}
+				}			
+			}
+		
+		} catch (Exception e) {
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "consultarFacturasDosier", e.getClass().getSimpleName(), e.getMessage());	
+			throw new ApplicationException(e.getMessage());
+		}		
+				
+		return listaFactura;
 	}
 	
 	/*
@@ -206,12 +294,16 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 			campos.append("TO_CHAR(C.FEC_D_ENTREGA,'DD/MM/YYYY') FEC_D_ENTREGA, ");
 			campos.append("CC.COD_N_CATEGORIA, ");
 			campos.append("CC.TXT_NOMBRE_CATEGORIA, ");
-			campos.append("C.MCA_CONTIENE_LPC ");			
+			campos.append("C.MCA_CONTIENE_LPC, ");
+			campos.append("FP.COD_N_FACTURA, ");
+			campos.append("FP.NUM_ANYO_FACTURA ");
 			StringBuilder from = new StringBuilder();	 
 			from.append("FROM D_DOSIER D "); 	
 			from.append("JOIN S_DOSIER_EQUIPO DE ON (DE.NUM_DOSIER = D.NUM_DOSIER AND DE.NUM_ANYO = D.NUM_ANYO) "); 
 			from.append("JOIN O_CONTENEDOR_EXPEDIDO CE ON (CE.NUM_DOSIER = D.NUM_DOSIER AND CE.NUM_ANYO = D.NUM_ANYO AND CE.COD_N_EQUIPO = DE.COD_N_EQUIPO) "); 
-			from.append("JOIN D_CARGA C ON (C.COD_V_CARGA = CE.COD_V_CARGA AND C.COD_V_ALMACEN_ORIGEN = CE.COD_V_ALMACEN) "); 
+			from.append("JOIN D_CARGA C ON (C.COD_V_CARGA = CE.COD_V_CARGA AND C.COD_V_ALMACEN_ORIGEN = CE.COD_V_ALMACEN) ");
+			from.append("JOIN S_CARGA_PEDIDO CP ON (CP.COD_V_CARGA = C.COD_V_CARGA) "); 
+			from.append("JOIN S_FACTURA_PEDIDO FP ON (FP.COD_V_PEDIDO = CP.COD_V_PEDIDO) ");
 			from.append("JOIN D_TIPO_SUMINISTRO TS ON (TS.COD_N_TIPO_SUMINISTRO = C.COD_N_TIPO_SUMINISTRO) "); 
 			from.append("LEFT JOIN D_PROVEEDOR_R P ON (P.COD_N_PROVEEDOR = C.COD_N_PROVEEDOR) "); 
 			from.append("LEFT JOIN D_CATEGORIA_CARGA CC ON (CC.COD_N_CATEGORIA= C .COD_N_CATEGORIA) ");			  
@@ -293,14 +385,16 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 					contenedor.setFechaEntrega(String.valueOf(tmp[9]));
 					if (tmp[10] != null) contenedor.setCodigoCategoria(Long.parseLong(String.valueOf(tmp[10])));					
 					if (tmp[11] != null) contenedor.setNombreCategoria(String.valueOf(tmp[11]));
-					if (tmp[12] != null) contenedor.setMarcaLpC(String.valueOf(tmp[12]));					
+					if (tmp[12] != null) contenedor.setMarcaLpC(String.valueOf(tmp[12]));
+					if (tmp[13] != null) contenedor.setCodigoFactura(Long.parseLong(String.valueOf(tmp[13])));
+					if (tmp[14] != null) contenedor.setAnyofactura(Integer.parseInt(String.valueOf(tmp[14])));
 					
 					listaContenedor.add(contenedor);				
 				}			
 			}
 		
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}","GetDosierDetalleDAOImpl(GESADUAN)","consultarContenedoresDosier",e.getClass().getSimpleName(),e.getMessage());	
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "consultarContenedoresDosier", e.getClass().getSimpleName(), e.getMessage());	
 			throw new ApplicationException(e.getMessage());
 		}		
 				
