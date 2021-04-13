@@ -76,7 +76,7 @@ public class DeclaracionesDeValorRestful {
 
 	private static final String MIMETYPE_PDF = "application/pdf";
 	private static final String MIMETYPE_CSV = "text/csv";
-	private static final String FILE_BASE_NAME_PDF = "factura_";
+	private static final String FILE_BASE_NAME_PDF = "dv_";
 	private static final String FILE_BASE_NAME_CSV = "csv_";
 
 	private static final String LOG_FILE = "DeclaracionesDeValorRestful(GESADUAN)"; 	
