@@ -63,7 +63,7 @@ public class GetContenedoresDAOImpl extends BaseDAO<EquipoTransporteJPA> impleme
 	
 			String count = "SELECT COUNT(*) FROM (";
 			String select = "SELECT ";		
-			String campos = "  EC.COD_V_CARGA, " + 
+			String campos = "  EC.COD_V_CARGA, " +
 			                "  CA.COD_N_TIPO_SUMINISTRO, " + 
 			                "  TS.TXT_NOMBRE_TIPO_SUMINISTRO, " + 
 			                "  EC.COD_V_ALMACEN_ORIGEN, " +
@@ -71,7 +71,8 @@ public class GetContenedoresDAOImpl extends BaseDAO<EquipoTransporteJPA> impleme
 			                "  EC.NUM_HUECO_OCUPADO, " + 
 				      		"  EC.NUM_PESO_OCUPADO, " + 
 			                "  EC.NUM_DIVISION, " + 
-				      		"  CA.MCA_PEDIDOS_SIN_VALIDAR ";			
+				      		"  CA.MCA_PEDIDOS_SIN_VALIDAR, " +
+							"  CA.COD_N_TIPO_CARGA ";			
 			String from = 	"FROM S_EQUIPO_CARGA EC " +
 							"INNER JOIN D_CARGA CA ON (CA.COD_V_CARGA = EC.COD_V_CARGA AND CA.COD_V_ALMACEN_ORIGEN = EC.COD_V_ALMACEN_ORIGEN) " +
 							"LEFT JOIN D_TIPO_SUMINISTRO TS ON (TS.COD_N_TIPO_SUMINISTRO = CA.COD_N_TIPO_SUMINISTRO) ";
@@ -118,6 +119,7 @@ public class GetContenedoresDAOImpl extends BaseDAO<EquipoTransporteJPA> impleme
 					if (tmp[6] != null) carga.setNumeroPesoOcupado(Double.parseDouble(String.valueOf(tmp[6])));
 					if (tmp[7] != null) carga.setNumeroDivision(Integer.parseInt(String.valueOf(tmp[7])));
 					if (tmp[8] != null) carga.setPedidosSinValidar(String.valueOf(tmp[8]));
+					if (tmp[9] != null) carga.setCodigoTipoCarga(Integer.parseInt(String.valueOf(tmp[9])));
 					carga.setContenedor(getContenedor(carga, codigoEquipo, mcaFacturado));
 					
 					final StringBuilder sqlPedido = new StringBuilder();
