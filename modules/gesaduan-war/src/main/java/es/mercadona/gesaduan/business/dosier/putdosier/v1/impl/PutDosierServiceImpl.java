@@ -51,7 +51,7 @@ public class PutDosierServiceImpl implements PutDosierService {
 			// Crea el dosier
 			putDosierDao.crearDosier(dosierJPA);
 			
-			// Crea la realacion con equipo
+			// Crea la relacion con equipo
 			putRelacionEquipoDosier(dosierJPA ,dosier.getEquipo());
 			
 			DosierPutDTO dosierOutPut = new DosierPutDTO();
@@ -61,11 +61,13 @@ public class PutDosierServiceImpl implements PutDosierService {
 			
 			listaDosieres.add(dosierOutPut);
 			
+			putDosierDao.validarFacturas(dosierPk, input.getMetadatos().getCodigoUsuario());
+			
 			dosierPk.setNumDosier(dosierPk.getNumDosier() + 1);
 			
 		}
 		
-		// actualiza C_VARIABLE con el último numero de dosier
+		// Actualiza C_VARIABLE con el último numero de dosier
 		if (nuevoNumDosier != null) {
 			putDosierDao.updateNumDosier(nuevoNumDosier);
 		}
@@ -98,8 +100,34 @@ public class PutDosierServiceImpl implements PutDosierService {
 			if (equipo.getContenedor().isEmpty()) {				
 				putRelacionDosierContenedorDeEquipo(dosierEquipoJPA);
 			} else {
-				putRelacionDosierContenedor(dosierEquipoJPA ,equipo.getContenedor());
+				putRelacionDosierContenedor(dosierEquipoJPA, equipo.getContenedor());
 			}
+			
+			// Obtener numero de categorias
+			int numCategorias = putDosierDao.getNumCategorias(dosierEquipoJPA);
+			
+			// Crear tantas facturas como número de categorías distintas haya
+			for (int i = 0; i < numCategorias; i++) {
+				putDosierDao.crearFacturas(dosierEquipoJPA);
+			}
+			
+			// Insertar pedidos asociados a cada una de las facturas creadas
+			putDosierDao.actualizarContenedores(dosierEquipoJPA);
+			
+			// Insertar lineas facturas
+			putDosierDao.insertarLineasFacturas(dosierEquipoJPA);
+			
+			// Modificar facturas existentes incluidas en el dosier
+			putDosierDao.updateFacturas(dosierEquipoJPA);
+			
+			// Modificar los contenedores ficticios de las cargas de Grupaje o Directo, para indicar su factura
+			putDosierDao.updateContenedoresFicticios(dosierEquipoJPA, dosierJPA.getUsuarioCreacion());
+			
+			// Insertar la relación de las facturas con sus pedidos asociados para cargas de Tienda o Traspaso
+			putDosierDao.relFacturaPedidoCargaTT(dosierEquipoJPA, dosierJPA.getUsuarioCreacion());
+			
+			// Insertar la relación de las facturas con sus pedidos asociados para cargas de Directo o Grupaje
+			putDosierDao.relFacturaPedidoCargaDG(dosierEquipoJPA, dosierJPA.getUsuarioCreacion());
 			
 			// actualiza estado de la documentacion del equipo 
 			putDosierDao.actualizaEstadoDocumentacionEquipo(dosierEquipoJPA);			
