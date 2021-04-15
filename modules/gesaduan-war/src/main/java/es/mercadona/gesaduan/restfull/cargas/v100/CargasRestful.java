@@ -45,8 +45,6 @@ import es.mercadona.gesaduan.dto.cargas.putrelacioncargapedido.v1.InputDatosCrea
 import es.mercadona.gesaduan.dto.cargas.putrelacioncargapedido.v1.PedidoDTO;
 import es.mercadona.gesaduan.dto.cargas.validapedido.v1.InputDatosValidarPedidoDTO;
 import es.mercadona.gesaduan.dto.cargas.validapedido.v1.ValidarPedidoDTO;
-import es.mercadona.gesaduan.dto.common.error.ErrorDTO;
-import es.mercadona.gesaduan.dto.common.error.OutputResponseErrorDTO;
 import es.mercadona.gesaduan.exception.EnumGesaduanException;
 import es.mercadona.gesaduan.exception.GesaduanException;
 import es.mercadona.gesaduan.util.ResponseUtil;
@@ -332,7 +330,7 @@ public class CargasRestful {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response validarPedidosCargas(InputDatosValidarPedidoDTO datos) {	
 		try {
-			if (datos.getDatos().getCarga().size() == 0) throw new GesaduanException(EnumGesaduanException.PARAMETROS_OBLIGATORIOS);
+			if (datos.getDatos().getCarga().isEmpty()) throw new GesaduanException(EnumGesaduanException.PARAMETROS_OBLIGATORIOS);
 			else {
 				for (ValidarPedidoDTO carga : datos.getDatos().getCarga()) {
 					if (carga.getCodigoAlmacenOrigen() == null || carga.getCodigoCarga() == null)
@@ -342,7 +340,7 @@ public class CargasRestful {
 			validarPedidoService.validarPedido(datos);
 		} catch(GesaduanException ex) {
 			this.logger.error("({}-{}) ERROR - {} {}","CargasRestful(GESADUAN)","validarPedidosCargas",ex.getClass().getSimpleName(),ex.getMessage());	
-			return Response.status(Status.BAD_REQUEST).entity(ResponseUtil.getError(ex, ex.getEnumGesaduan().getCodigo(), ex.getEnumGesaduan().getDescripcion())).build();
+			return Response.status(Status.BAD_REQUEST).entity(ResponseUtil.getError(ex, ex.getEnumGesaduan().getCodigo(), ex.getDescripcionAlt())).build();
 		} catch(Exception e) {
 			this.logger.error("({}-{}) ERROR - {} {}","CargasRestful(GESADUAN)","validarPedidosCargas",e.getClass().getSimpleName(),e.getMessage());	
 			return Response.status(Status.BAD_REQUEST).entity(ResponseUtil.getError(e, EnumGesaduanException.ERROR_GENERICO.getCodigo(), e.toString())).build();

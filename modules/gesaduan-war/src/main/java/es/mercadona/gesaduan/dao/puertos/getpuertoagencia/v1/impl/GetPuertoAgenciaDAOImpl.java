@@ -15,6 +15,7 @@ import es.mercadona.gesaduan.dto.puertos.getpuertoagencia.v1.restfull.DatosPuert
 import es.mercadona.gesaduan.dto.puertos.getpuertoagencia.v1.restfull.OutputPuertoAgenciaDTO;
 import es.mercadona.gesaduan.dto.puertos.getpuertoagencia.v1.restfull.PuertoDTO;
 import es.mercadona.gesaduan.jpa.puertos.v1.PuertosJPA;
+import es.mercadona.gesaduan.common.Constantes;
 
 public class GetPuertoAgenciaDAOImpl extends BaseDAO<PuertosJPA> implements GetPuertoAgenciaDAO {
 
@@ -25,10 +26,11 @@ public class GetPuertoAgenciaDAOImpl extends BaseDAO<PuertosJPA> implements GetP
 	public void setEntityClass() {
 		this.entityClass = PuertosJPA.class;
 	}
+	
+	private final String nombreClase = "GetPuertosDAOImpl(GESADUAN)";
 
 	@Override
 	public OutputPuertoAgenciaDTO listarPuertos(InputPuertoAgenciaDTO datos) {
-
 		OutputPuertoAgenciaDTO result = new OutputPuertoAgenciaDTO();
 		DatosPuertoAgenciaDTO listaPuertoAgencia = new DatosPuertoAgenciaDTO();
 		List<PuertoDTO> listaPuertos = null;
@@ -37,28 +39,19 @@ public class GetPuertoAgenciaDAOImpl extends BaseDAO<PuertosJPA> implements GetP
 			String orden = datos.getOrden();
 			final StringBuilder sql = new StringBuilder();
 
-			String select = "SELECT ";
-			String campos = "PU.COD_N_PUERTO, PU.TXT_NOMBRE_PUERTO, PR.COD_N_PROVEEDOR, PR.TXT_RAZON_SOCIAL ";
-			String from   = "FROM D_PUERTO PU " +
-							"LEFT JOIN S_PUERTO_AGENCIA PA ON (PA.COD_N_PUERTO = PU.COD_N_PUERTO AND PA.MCA_AGENCIA_PREFERENTE = 'S') " +
-							"LEFT JOIN D_PROVEEDOR_R PR ON (PR.COD_N_PROVEEDOR = PA.COD_V_AGENCIA_ADUANA) ";
-			String where =  "WHERE NOT EXISTS (" +
-							"SELECT 1 " +
-							"FROM S_PUERTO_AGENCIA TMP " +
-							"WHERE TMP.COD_N_PUERTO = PU.COD_N_PUERTO " +
-							"AND TMP.COD_V_AGENCIA_ADUANA = ?codigoAgencia) ";
+			sql.append("SELECT ");
+			sql.append("PU.COD_N_PUERTO, PU.TXT_NOMBRE_PUERTO, PR.COD_N_PROVEEDOR, PR.TXT_RAZON_SOCIAL ");
+			sql.append("FROM D_PUERTO PU ");
+			sql.append("LEFT JOIN S_PUERTO_AGENCIA PA ON (PA.COD_N_PUERTO = PU.COD_N_PUERTO AND PA.MCA_AGENCIA_PREFERENTE = 'S') ");
+			sql.append("LEFT JOIN D_PROVEEDOR_R PR ON (PR.COD_N_PROVEEDOR = PA.COD_V_AGENCIA_ADUANA) ");
+			sql.append("WHERE NOT EXISTS (");
+			sql.append("SELECT 1 ");
+			sql.append("FROM S_PUERTO_AGENCIA TMP ");
+			sql.append("WHERE TMP.COD_N_PUERTO = PU.COD_N_PUERTO ");
+			sql.append("AND TMP.COD_V_AGENCIA_ADUANA = ?codigoAgencia) ");
 
-			String order = "";
-			if (orden.equals("-nombrePuerto"))
-				order += "ORDER BY PU.TXT_NOMBRE_PUERTO DESC";
-			else if (orden.equals("+nombrePuerto"))
-				order += "ORDER BY PU.TXT_NOMBRE_PUERTO ASC";
-			else if (orden.equals("-nombreAgenciaPreferente"))
-				order += "ORDER BY PR.TXT_RAZON_SOCIAL DESC";
-			else if (orden.equals("+nombreAgenciaPreferente"))
-				order += "ORDER BY PR.TXT_RAZON_SOCIAL ASC";
-
-			sql.append(select).append(campos).append(from).append(where).append(order);
+			String order = getOrden(orden);
+			sql.append(order);
 
 
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
@@ -81,7 +74,7 @@ public class GetPuertoAgenciaDAOImpl extends BaseDAO<PuertosJPA> implements GetP
 			}
 			result.setDatos(listaPuertoAgencia);
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}","GetPuertosDAOImpl(GESADUAN)","listarPuertos",e.getClass().getSimpleName(),e.getMessage());
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, nombreClase, "listarPuertos", e.getClass().getSimpleName(), e.getMessage());
 			throw new ApplicationException(e.getMessage());
 		}
 
@@ -90,7 +83,6 @@ public class GetPuertoAgenciaDAOImpl extends BaseDAO<PuertosJPA> implements GetP
 
 	@Override
 	public OutputPuertoAgenciaDTO listarAgencias(InputPuertoAgenciaDTO datos) {
-
 		OutputPuertoAgenciaDTO result = new OutputPuertoAgenciaDTO();
 		DatosPuertoAgenciaDTO listaPuertoAgencia = new DatosPuertoAgenciaDTO();
 		List<PuertoDTO> listaPuertos = null;
@@ -103,26 +95,15 @@ public class GetPuertoAgenciaDAOImpl extends BaseDAO<PuertosJPA> implements GetP
 			String orden = datos.getOrden();
 			final StringBuilder sql = new StringBuilder();
 
-			String select = "SELECT ";
-			String campos = "PA.COD_N_PUERTO, PU.TXT_NOMBRE_PUERTO, PA.COD_V_AGENCIA_ADUANA, PR.TXT_RAZON_SOCIAL ";
-			String from   = "FROM S_PUERTO_AGENCIA PA " +
-							"INNER JOIN D_PUERTO PU ON (PU.COD_N_PUERTO = PA.COD_N_PUERTO) " +
-							"INNER JOIN D_PROVEEDOR_R PR ON (PR.COD_N_PROVEEDOR = PA.COD_V_AGENCIA_ADUANA) ";
-			String where =  "WHERE PA.MCA_AGENCIA_PREFERENTE = 'S' ";
+			sql.append("SELECT ");
+			sql.append("PA.COD_N_PUERTO, PU.TXT_NOMBRE_PUERTO, PA.COD_V_AGENCIA_ADUANA, PR.TXT_RAZON_SOCIAL ");
+			sql.append("FROM S_PUERTO_AGENCIA PA ");
+			sql.append("INNER JOIN D_PUERTO PU ON (PU.COD_N_PUERTO = PA.COD_N_PUERTO) ");
+			sql.append("INNER JOIN D_PROVEEDOR_R PR ON (PR.COD_N_PROVEEDOR = PA.COD_V_AGENCIA_ADUANA) ");
+			sql.append("WHERE PA.MCA_AGENCIA_PREFERENTE = 'S' AND PA.COD_N_PUERTO = ?codigoPuerto ");
 
-			if (codigoPuerto != null) where += "AND PA.COD_N_PUERTO = ?codigoPuerto ";
-
-			String order = "";
-			if (orden.equals("-nombrePuerto"))
-				order += "ORDER BY PU.TXT_NOMBRE_PUERTO DESC";
-			else if (orden.equals("+nombrePuerto"))
-				order += "ORDER BY PU.TXT_NOMBRE_PUERTO ASC";
-			else if (orden.equals("-nombreAgenciaPreferente"))
-				order += "ORDER BY PR.TXT_RAZON_SOCIAL DESC";
-			else if (orden.equals("+nombreAgenciaPreferente"))
-				order += "ORDER BY PR.TXT_RAZON_SOCIAL ASC";
-
-			sql.append(select).append(campos).append(from).append(where).append(order);
+			String order = getOrden(orden);
+			sql.append(order);
 
 
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
@@ -142,14 +123,12 @@ public class GetPuertoAgenciaDAOImpl extends BaseDAO<PuertosJPA> implements GetP
 					listaPuertos.add(puerto);
 
 					final StringBuilder sqlAgencia = new StringBuilder();
-					String selectAgencia = "SELECT ";
-					String camposAgencia = "PA.COD_V_AGENCIA_ADUANA, PR.TXT_RAZON_SOCIAL ";
-					String fromAgencia   = "FROM S_PUERTO_AGENCIA PA " +
-								    	   "INNER JOIN D_PUERTO PU ON (PU.COD_N_PUERTO = PA.COD_N_PUERTO) " +
-							               "INNER JOIN D_PROVEEDOR_R PR ON (PR.COD_N_PROVEEDOR = PA.COD_V_AGENCIA_ADUANA) ";
-					String whereAgencia  = "WHERE PA.COD_N_PUERTO = ?codigoPuertoAgencia AND PA.MCA_AGENCIA_PREFERENTE = 'N'";
-
-					sqlAgencia.append(selectAgencia).append(camposAgencia).append(fromAgencia).append(whereAgencia);
+					sqlAgencia.append("SELECT ");
+					sqlAgencia.append("PA.COD_V_AGENCIA_ADUANA, PR.TXT_RAZON_SOCIAL ");
+					sqlAgencia.append("FROM S_PUERTO_AGENCIA PA ");
+					sqlAgencia.append("INNER JOIN D_PUERTO PU ON (PU.COD_N_PUERTO = PA.COD_N_PUERTO) ");
+					sqlAgencia.append("INNER JOIN D_PROVEEDOR_R PR ON (PR.COD_N_PROVEEDOR = PA.COD_V_AGENCIA_ADUANA) ");
+					sqlAgencia.append("WHERE PA.COD_N_PUERTO = ?codigoPuertoAgencia AND PA.MCA_AGENCIA_PREFERENTE = 'N'");
 
 					final Query queryAgencia = getEntityManager().createNativeQuery(sqlAgencia.toString());
 					queryAgencia.setParameter("codigoPuertoAgencia", Long.parseLong(String.valueOf(tmp[0])));
@@ -174,11 +153,97 @@ public class GetPuertoAgenciaDAOImpl extends BaseDAO<PuertosJPA> implements GetP
 
 			result.setDatos(listaPuertoAgencia);
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}","GetPuertosDAOImpl(GESADUAN)","listarPuertos",e.getClass().getSimpleName(),e.getMessage());
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, nombreClase, "listarAgencias", e.getClass().getSimpleName(), e.getMessage());
 			throw new ApplicationException(e.getMessage());
 		}
 
 		return result;
+	}
+	
+	@Override
+	public OutputPuertoAgenciaDTO listarPuertosAgencias(InputPuertoAgenciaDTO datos) {
+		OutputPuertoAgenciaDTO result = new OutputPuertoAgenciaDTO();
+		DatosPuertoAgenciaDTO listaPuertoAgencia = new DatosPuertoAgenciaDTO();
+		List<PuertoDTO> listaPuertos = null;
+
+		try {
+			Long codigoPuerto = null;
+			if (datos.getCodigoPuerto() != null)
+				codigoPuerto = datos.getCodigoPuerto();
+
+			String orden = datos.getOrden();
+			final StringBuilder sql = new StringBuilder();
+
+			sql.append("SELECT ");
+			sql.append("PU.COD_N_PUERTO, PU.TXT_NOMBRE_PUERTO, PA.COD_V_AGENCIA_ADUANA, PR.TXT_RAZON_SOCIAL ");
+			sql.append("FROM D_PUERTO PU ");
+			sql.append("LEFT JOIN S_PUERTO_AGENCIA PA ON (PA.COD_N_PUERTO = PU.COD_N_PUERTO AND PA.MCA_AGENCIA_PREFERENTE = 'S') ");
+			sql.append("LEFT JOIN D_PROVEEDOR_R PR ON (PR.COD_N_PROVEEDOR = PA.COD_V_AGENCIA_ADUANA) ");
+
+			String order = getOrden(orden);
+			sql.append(order);
+
+
+			final Query query = getEntityManager().createNativeQuery(sql.toString());
+			query.setParameter("codigoPuerto", codigoPuerto);
+
+			@SuppressWarnings("unchecked")
+			List<Object[]> listado = query.getResultList();
+
+			if (listado != null && !listado.isEmpty()) {
+				listaPuertos = new ArrayList<>();
+				for (Object[] tmp : listado) {
+					PuertoDTO puerto = new PuertoDTO();
+					if (tmp[0] != null) puerto.setCodigoPuerto(Long.parseLong(String.valueOf(tmp[0])));
+					if (tmp[1] != null) puerto.setNombrePuerto(String.valueOf(tmp[1]));
+					if (tmp[2] != null) puerto.setCodigoAgenciaPreferente(String.valueOf(tmp[2]));
+					if (tmp[3] != null) puerto.setNombreAgenciaPreferente(String.valueOf(tmp[3]));
+					listaPuertos.add(puerto);
+
+					final StringBuilder sqlAgencia = new StringBuilder();
+					sqlAgencia.append("SELECT ");
+					sqlAgencia.append("PA.COD_V_AGENCIA_ADUANA, PR.TXT_RAZON_SOCIAL ");
+					sqlAgencia.append("FROM S_PUERTO_AGENCIA PA ");
+					sqlAgencia.append("INNER JOIN D_PUERTO PU ON (PU.COD_N_PUERTO = PA.COD_N_PUERTO) ");
+					sqlAgencia.append("INNER JOIN D_PROVEEDOR_R PR ON (PR.COD_N_PROVEEDOR = PA.COD_V_AGENCIA_ADUANA) ");
+					sqlAgencia.append("WHERE PA.COD_N_PUERTO = ?codigoPuertoAgencia AND PA.MCA_AGENCIA_PREFERENTE = 'N'");
+
+					final Query queryAgencia = getEntityManager().createNativeQuery(sqlAgencia.toString());
+					queryAgencia.setParameter("codigoPuertoAgencia", Long.parseLong(String.valueOf(tmp[0])));
+
+					@SuppressWarnings("unchecked")
+					List<Object[]> listadoAgencia = queryAgencia.getResultList();
+
+					if (listadoAgencia != null && !listadoAgencia.isEmpty()) {
+						List<AgenciaDTO> listaAgencias = new ArrayList<>();
+						for (Object[] tmpAgencia : listadoAgencia) {
+							AgenciaDTO agencia = new AgenciaDTO();
+							if (tmpAgencia[0] != null) agencia.setCodigoAgencia(String.valueOf(tmpAgencia[0]));
+							if (tmpAgencia[1] != null) agencia.setNombreAgencia(String.valueOf(tmpAgencia[1]));
+							listaAgencias.add(agencia);
+						}
+						puerto.setAgencia(listaAgencias);
+					}
+				}
+				listaPuertoAgencia.setPuerto(listaPuertos);
+			}
+			result.setDatos(listaPuertoAgencia);
+		} catch (Exception e) {
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, nombreClase, "listarPuertosAgencias", e.getClass().getSimpleName(), e.getMessage());
+			throw new ApplicationException(e.getMessage());
+		}
+
+		return result;
+	}
+	
+	private String getOrden(String orden) {
+		String order = "";
+		if (orden.equals("-nombrePuerto")) order += "ORDER BY PU.TXT_NOMBRE_PUERTO DESC";
+		else if (orden.equals("+nombrePuerto")) order += "ORDER BY PU.TXT_NOMBRE_PUERTO ASC";
+		else if (orden.equals("-nombreAgenciaPreferente")) order += "ORDER BY PR.TXT_RAZON_SOCIAL DESC";
+		else if (orden.equals("+nombreAgenciaPreferente")) order += "ORDER BY PR.TXT_RAZON_SOCIAL ASC";
+		
+		return order;
 	}
 
 }

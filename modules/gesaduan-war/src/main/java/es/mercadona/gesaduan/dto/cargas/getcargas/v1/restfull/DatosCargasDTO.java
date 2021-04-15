@@ -1,6 +1,7 @@
 package es.mercadona.gesaduan.dto.cargas.getcargas.v1.restfull;
 
 import java.io.Serializable;
+import java.util.List;
 
 import es.mercadona.gesaduan.dto.common.AbstractDTO;
 
@@ -36,7 +37,8 @@ public class DatosCargasDTO extends AbstractDTO implements Serializable {
 	private String aplicacionOrigen;
 	private String codigoUsuarioCreacion;
 	private String fechaValidacion;	
-	private String codigoUsuarioValidacion;	
+	private String codigoUsuarioValidacion;
+	private List<PedidoDTO> pedido;
 	
 	public String getCodigoCarga() {
 		return codigoCarga;
@@ -268,6 +270,20 @@ public class DatosCargasDTO extends AbstractDTO implements Serializable {
 
 	public void setCodigoUsuarioValidacion(String codigoUsuarioValidacion) {
 		this.codigoUsuarioValidacion = codigoUsuarioValidacion;
+	}
+
+	/**
+	 * @return the pedido
+	 */
+	public List<PedidoDTO> getPedido() {
+		return pedido;
+	}
+
+	/**
+	 * @param pedido the pedido to set
+	 */
+	public void setPedido(List<PedidoDTO> pedido) {
+		this.pedido = pedido;
 	}
 	
 }

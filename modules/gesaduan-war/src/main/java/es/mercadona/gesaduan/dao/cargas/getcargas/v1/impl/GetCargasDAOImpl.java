@@ -16,6 +16,7 @@ import es.mercadona.gesaduan.dto.cargas.getcargas.v1.EstadoDTO;
 import es.mercadona.gesaduan.dto.cargas.getcargas.v1.InputDatosCargasDTO;
 import es.mercadona.gesaduan.dto.cargas.getcargas.v1.restfull.DatosCargasDTO;
 import es.mercadona.gesaduan.dto.cargas.getcargas.v1.restfull.OutputCargasDTO;
+import es.mercadona.gesaduan.dto.cargas.getcargas.v1.restfull.PedidoDTO;
 import es.mercadona.gesaduan.jpa.cargas.v1.CargasJPA;
 
 public class GetCargasDAOImpl extends BaseDAO<CargasJPA> implements GetCargasDAO {
@@ -394,6 +395,30 @@ public class GetCargasDAOImpl extends BaseDAO<CargasJPA> implements GetCargasDAO
 					if (tmp[27] != null) cargas.setFechaValidacion(String.valueOf(tmp[27]));
 					if (tmp[28] != null) cargas.setCodigoUsuarioValidacion(String.valueOf(tmp[28]));					
 					listaCargas.add(cargas);
+					
+					final StringBuilder sqlPedido = new StringBuilder();
+					String selectPedido = "SELECT CP.COD_V_PEDIDO ";
+					String fromPedido   = "FROM S_CARGA_PEDIDO CP ";
+					String wherePedido =  "WHERE CP.COD_V_CARGA = ?codCarga AND CP.COD_V_ALMACEN_ORIGEN = ?codigoAlmacenOrigen";
+
+					sqlPedido.append(selectPedido).append(fromPedido).append(wherePedido);
+
+					final Query queryPedido = getEntityManager().createNativeQuery(sqlPedido.toString());
+					queryPedido.setParameter("codCarga", String.valueOf(tmp[0]));
+					queryPedido.setParameter("codigoAlmacenOrigen", String.valueOf(tmp[7]));
+
+					@SuppressWarnings("unchecked")
+					List<String> listadoPedido = queryPedido.getResultList();
+
+					if (listadoPedido != null && !listadoPedido.isEmpty()) {
+						List<PedidoDTO> listaPedidos = new ArrayList<>();
+						for (Object tmpPedido : listadoPedido) {
+							PedidoDTO pedido = new PedidoDTO();
+							if (tmpPedido != null) pedido.setCodigoPedido(String.valueOf(tmpPedido));
+							listaPedidos.add(pedido);
+						}
+						cargas.setPedido(listaPedidos);
+					}
 				}
 			}
 

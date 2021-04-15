@@ -34,9 +34,8 @@ public class ValidarPedidoServiceImpl implements ValidarPedidoService {
 		if (error) {
 			EnumGesaduanException errorText = EnumGesaduanException.CARGA_NO_VALIDADA_NO_TIENE_PEDIDOS;
 			String descripcion = errorText.getDescripcion();
-			String descripcionTemp = descripcion.replace("$CARGAS", errorStr.substring(0,errorStr.length()-2));
-			errorText.setDescripcion(descripcionTemp);
-			throw new GesaduanException(errorText);
+			String descripcionAlt = descripcion.replace("$CARGAS", errorStr.substring(0,errorStr.length()-2));
+			throw new GesaduanException(EnumGesaduanException.CARGA_NO_VALIDADA_NO_TIENE_PEDIDOS,descripcionAlt);
 		}
 	}
 }

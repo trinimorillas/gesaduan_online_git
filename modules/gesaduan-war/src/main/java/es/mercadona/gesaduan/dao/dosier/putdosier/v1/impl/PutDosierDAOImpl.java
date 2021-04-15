@@ -206,8 +206,6 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 					dosierPk = new DosierPkJPA();
 					dosierPk.setNumDosier(Long.parseLong(String.valueOf(tmp[0])));
 					dosierPk.setAnyoDosier(Integer.parseInt(String.valueOf(tmp[1])));
-					
-					break;
 				}			
 			}
 			

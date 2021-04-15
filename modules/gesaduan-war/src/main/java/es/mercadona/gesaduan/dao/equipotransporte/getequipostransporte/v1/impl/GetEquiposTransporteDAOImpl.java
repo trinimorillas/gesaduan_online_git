@@ -20,7 +20,7 @@ import es.mercadona.gesaduan.dto.equipotransporte.getequipostransporte.v1.restfu
 import es.mercadona.gesaduan.dto.equipotransporte.getequipostransporte.v1.restfull.OutputEquiposTransporteDTO;
 import es.mercadona.gesaduan.dto.equipotransporte.getequipotransportedetalle.v1.restfull.CargaDTO;
 import es.mercadona.gesaduan.dto.equipotransporte.getequipotransportedetalle.v1.restfull.EquipoInputDTO;
-import es.mercadona.gesaduan.dto.planembarques.getplanembarquedetalle.v1.restfull.PedidoDTO;
+import es.mercadona.gesaduan.dto.equipotransporte.getequipotransportedetalle.v1.restfull.PedidoDTO;
 import es.mercadona.gesaduan.dto.planembarques.getplanembarquedetalle.v1.restfull.SuministroDTO;
 import es.mercadona.gesaduan.jpa.equipotransporte.v1.EquipoTransporteJPA;
 
@@ -528,9 +528,9 @@ public class GetEquiposTransporteDAOImpl extends BaseDAO<EquipoTransporteJPA> im
 
 			String select = "SELECT ";
 			String campos = "SCP.COD_V_PEDIDO, SCP.COD_V_DIVISION_PEDIDO ";
-			String from = "FROM S_CARGA_PEDIDO SCP " ;
-			String where = "WHERE SCP.COD_V_ALMACEN_ORIGEN = ?codigoAlmacenOrigen " +
-			                " AND SCP.COD_V_CARGA = ?codigoCarga ";
+			String from   = "FROM S_CARGA_PEDIDO SCP " ;
+			String where  = "WHERE SCP.COD_V_ALMACEN_ORIGEN = ?codigoAlmacenOrigen " +
+			                "AND SCP.COD_V_CARGA = ?codigoCarga ";
 
 			String order = "ORDER BY SCP.COD_V_PEDIDO ASC";
 
