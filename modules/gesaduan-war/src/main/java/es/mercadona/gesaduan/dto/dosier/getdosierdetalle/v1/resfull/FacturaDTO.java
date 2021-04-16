@@ -9,10 +9,11 @@ public class FacturaDTO extends AbstractDTO {
 	private static final long serialVersionUID = 1L;
 	private Long codigoFactura;
 	private Integer anyoFactura;
-	private String fechaEmbarque;
+	private String fechaExpedicion;
 	private String codigoOrigen;
 	private String nombreOrigen;
 	private List<PedidoDTO> pedido;
+	private List<OrigenDTO> origen;
 
 	/**
 	 * @return the codigoFactura
@@ -43,17 +44,31 @@ public class FacturaDTO extends AbstractDTO {
 	}
 
 	/**
-	 * @return the fechaEmbarque
+	 * @return the fechaExpedicion
 	 */
-	public String getFechaEmbarque() {
-		return fechaEmbarque;
+	public String getFechaExpedicion() {
+		return fechaExpedicion;
 	}
 
 	/**
-	 * @param fechaEmbarque the fechaEmbarque to set
+	 * @param fechaExpedicion the fechaExpedicion to set
 	 */
-	public void setFechaEmbarque(String fechaEmbarque) {
-		this.fechaEmbarque = fechaEmbarque;
+	public void setFechaExpedicion(String fechaExpedicion) {
+		this.fechaExpedicion = fechaExpedicion;
+	}
+
+	/**
+	 * @return the origen
+	 */
+	public List<OrigenDTO> getOrigen() {
+		return origen;
+	}
+
+	/**
+	 * @param origen the origen to set
+	 */
+	public void setOrigen(List<OrigenDTO> origen) {
+		this.origen = origen;
 	}
 
 	/**
