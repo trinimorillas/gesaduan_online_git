@@ -30,11 +30,11 @@ public class CambiarEstadoServiceImpl implements CambiarEstadoService {
 		if (codigoEstado == 2) {
 			if (numEquipos == 0) throw new GesaduanException(EnumGesaduanException.PLAN_EMBARQUE_SIN_EQUIPOS);
 			if (numEquiposCargas != 0) throw new GesaduanException(EnumGesaduanException.EQUIPO_SIN_CARGAS);
-		}
 		
-		if (codigoEstado == 2) {
 			if (cambiarEstadoDao.getEquiposNoCargados(input.getDatos().getCodigoEmbarque()) == 0) codigoEstado = 3;
 			datos.setUsuarioValidacion(input.getMetadatos().getCodigoUsuario());
+			
+			cambiarEstadoDao.crearContenedoresFicticios(input.getDatos().getCodigoEmbarque(), input.getMetadatos().getCodigoUsuario());
 		}		
 		
 		datos.setCodigoEmbarque(input.getDatos().getCodigoEmbarque());
