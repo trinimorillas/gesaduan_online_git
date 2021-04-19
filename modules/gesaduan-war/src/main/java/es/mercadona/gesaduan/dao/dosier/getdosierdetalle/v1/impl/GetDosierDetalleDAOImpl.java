@@ -221,7 +221,7 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 					factura = new FacturaDTO();
 					if (tmp[0] != null) factura.setCodigoFactura(Long.parseLong(String.valueOf(tmp[0])));
 					if (tmp[1] != null) factura.setAnyoFactura(Integer.parseInt(String.valueOf(tmp[1])));					
-					if (tmp[2] != null) factura.setFechaEmbarque(String.valueOf(tmp[2]));
+					if (tmp[2] != null) factura.setFechaExpedicion(String.valueOf(tmp[2]));
 					if (tmp[3] != null) factura.setCodigoOrigen(String.valueOf(tmp[3]));
 					if (tmp[4] != null) factura.setNombreOrigen(String.valueOf(tmp[4]));
 					listaFactura.add(factura);
