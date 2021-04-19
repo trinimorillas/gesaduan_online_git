@@ -13,7 +13,7 @@ public class FacturaDTO extends AbstractDTO {
 	private String codigoOrigen;
 	private String nombreOrigen;
 	private List<PedidoDTO> pedido;
-	private List<OrigenDTO> origen;
+	private OrigenDTO origen;
 
 	/**
 	 * @return the codigoFactura
@@ -60,14 +60,14 @@ public class FacturaDTO extends AbstractDTO {
 	/**
 	 * @return the origen
 	 */
-	public List<OrigenDTO> getOrigen() {
+	public OrigenDTO getOrigen() {
 		return origen;
 	}
 
 	/**
 	 * @param origen the origen to set
 	 */
-	public void setOrigen(List<OrigenDTO> origen) {
+	public void setOrigen(OrigenDTO origen) {
 		this.origen = origen;
 	}
 
