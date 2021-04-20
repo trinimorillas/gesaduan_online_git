@@ -17,6 +17,7 @@ import es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.resfull.ContenedorDT
 import es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.resfull.DatosDosierDetalleDTO;
 import es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.resfull.EquipoDTO;
 import es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.resfull.FacturaDTO;
+import es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.resfull.OrigenDTO;
 import es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.resfull.OutputDosierDetalleDTO;
 import es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.resfull.PedidoDTO;
 import es.mercadona.gesaduan.jpa.dosier.DosierJPA;
@@ -192,8 +193,12 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 
 			final StringBuilder sql = new StringBuilder();
 			
-			sql.append("SELECT DISTINCT F.COD_N_DECLARACION_VALOR, F.NUM_ANYO, PE.FEC_DT_EMBARQUE, DECODE(F.COD_N_PROVEEDOR, NULL, F.COD_N_BLOQUE_LOGISTICO, F.COD_N_PROVEEDOR) AS ORIGEN, ");
-			sql.append("DECODE(P.TXT_RAZON_SOCIAL, NULL, BL.TXT_NOMBRE, P.TXT_RAZON_SOCIAL) AS DESCRIPCION_ORIGEN ");
+			sql.append("SELECT DISTINCT F.COD_N_DECLARACION_VALOR,F.NUM_ANYO, ");
+			sql.append("DECODE(F.COD_V_EXPEDICION,NULL,F.FEC_DT_EXPEDICION,F.FEC_D_ALBARAN) AS FEC_DT_EXPEDICION, ");
+			sql.append("DECODE(F.COD_N_PROVEEDOR,NULL,NULL,F.COD_N_PROVEEDOR) AS CODIGO_ORIGEN, ");
+			sql.append("DECODE(P.TXT_RAZON_SOCIAL,NULL,BL.TXT_NOMBRE,P.TXT_RAZON_SOCIAL) AS NOMBRE_ORIGEN, ");
+			sql.append("F.COD_N_PROVINCIA_CARGA, ");
+			sql.append("DECODE(F.COD_V_EXPEDICION,NULL,'BLOQUE','PROVEEDOR') AS TIPO_ORIGEN ");
 			sql.append("FROM O_DECLARACION_VALOR_CAB F ");
 			sql.append("INNER JOIN O_CONTENEDOR_EXPEDIDO CE ON (CE.COD_N_FACTURA = F.COD_N_DECLARACION_VALOR AND CE.NUM_ANYO_FACTURA = F.NUM_ANYO ");
 			sql.append("AND CE.COD_N_VERSION_FACTURA = F.COD_N_VERSION) ");
@@ -202,7 +207,7 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 			sql.append("LEFT JOIN D_PROVEEDOR_R P ON (P.COD_N_PROVEEDOR = F.COD_N_PROVEEDOR) ");
 			sql.append("LEFT JOIN D_BLOQUE_LOGISTICO_R BL ON (BL.COD_N_BLOQUE_LOGISTICO = F.COD_N_BLOQUE_LOGISTICO) ");
 			sql.append("WHERE F.NUM_DOSIER = ?numDosier ");
-			sql.append("AND F.NUM_ANYO_DOSIER = ?anyoDosier");
+			sql.append("AND F.NUM_ANYO_DOSIER = ?anyoDosier ");
 	
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
 			
@@ -216,14 +221,17 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 	
 			if (listado != null && !listado.isEmpty()) {
 				for (Object[] tmp : listado) {			
-					FacturaDTO factura = null;
-									
-					factura = new FacturaDTO();
+					FacturaDTO factura = new FacturaDTO();
+					OrigenDTO origen = new OrigenDTO();
+					
 					if (tmp[0] != null) factura.setCodigoFactura(Long.parseLong(String.valueOf(tmp[0])));
 					if (tmp[1] != null) factura.setAnyoFactura(Integer.parseInt(String.valueOf(tmp[1])));					
-					if (tmp[2] != null) factura.setFechaExpedicion(String.valueOf(tmp[2]));
-					if (tmp[3] != null) factura.setCodigoOrigen(String.valueOf(tmp[3]));
-					if (tmp[4] != null) factura.setNombreOrigen(String.valueOf(tmp[4]));
+					if (tmp[2] != null) factura.setFechaExpedicion(String.valueOf(tmp[2]));					
+					if (tmp[3] != null) origen.setCodigoOrigen(String.valueOf(tmp[3]));
+					if (tmp[4] != null) origen.setNombreOrigen(String.valueOf(tmp[4]));
+					if (tmp[5] != null) origen.setProvinciaOrigen(String.valueOf(tmp[5]));
+					if (tmp[6] != null) origen.setTipoOrigen(String.valueOf(tmp[6]));
+					factura.setOrigen(origen);
 					listaFactura.add(factura);
 					
 					final StringBuilder sqlPedido = new StringBuilder();
