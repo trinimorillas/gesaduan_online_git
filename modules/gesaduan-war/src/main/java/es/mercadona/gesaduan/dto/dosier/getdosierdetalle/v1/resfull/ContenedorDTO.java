@@ -20,8 +20,8 @@ public class ContenedorDTO extends AbstractDTO {
 	private Long codigoCategoria;
 	private String nombreCategoria;
 	private String marcaLpC;
-	private Long codigoFactura;
-	private Integer anyofactura;
+	private Long codigoDV;
+	private Integer anyoDV;
 
 	/**
 	 * @return the numContenedor
@@ -220,31 +220,31 @@ public class ContenedorDTO extends AbstractDTO {
 	}
 
 	/**
-	 * @return the codigoFactura
+	 * @return the codigoDV
 	 */
-	public Long getCodigoFactura() {
-		return codigoFactura;
+	public Long getCodigoDV() {
+		return codigoDV;
 	}
 
 	/**
-	 * @param codigoFactura the codigoFactura to set
+	 * @param codigoDV the codigoDV to set
 	 */
-	public void setCodigoFactura(Long codigoFactura) {
-		this.codigoFactura = codigoFactura;
+	public void setCodigoDV(Long codigoDV) {
+		this.codigoDV = codigoDV;
 	}
 
 	/**
-	 * @return the anyofactura
+	 * @return the anyoDV
 	 */
-	public Integer getAnyofactura() {
-		return anyofactura;
+	public Integer getAnyoDV() {
+		return anyoDV;
 	}
 
 	/**
-	 * @param anyofactura the anyofactura to set
+	 * @param anyoDV the anyoDV to set
 	 */
-	public void setAnyofactura(Integer anyofactura) {
-		this.anyofactura = anyofactura;
+	public void setAnyoDV(Integer anyoDV) {
+		this.anyoDV = anyoDV;
 	}
 
 }
