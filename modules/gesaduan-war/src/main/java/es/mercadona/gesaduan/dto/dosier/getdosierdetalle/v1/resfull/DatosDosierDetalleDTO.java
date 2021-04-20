@@ -17,6 +17,8 @@ public class DatosDosierDetalleDTO extends AbstractDTO {
 	private String nombreEstado;
 	private String fechaDescarga;
 	private String mcaError;
+	private String fechaDescargaExportador;
+	private String fechaDescargaImportador;
 
 	private List<EquipoDTO> equipo;
 	private List<ContenedorDTO> contenedor;
@@ -174,6 +176,34 @@ public class DatosDosierDetalleDTO extends AbstractDTO {
 	 */
 	public void setFactura(List<FacturaDTO> factura) {
 		this.factura = factura;
+	}
+
+	/**
+	 * @return the fechaDescargaExportador
+	 */
+	public String getFechaDescargaExportador() {
+		return fechaDescargaExportador;
+	}
+
+	/**
+	 * @param fechaDescargaExportador the fechaDescargaExportador to set
+	 */
+	public void setFechaDescargaExportador(String fechaDescargaExportador) {
+		this.fechaDescargaExportador = fechaDescargaExportador;
+	}
+
+	/**
+	 * @return the fechaDescargaImportador
+	 */
+	public String getFechaDescargaImportador() {
+		return fechaDescargaImportador;
+	}
+
+	/**
+	 * @param fechaDescargaImportador the fechaDescargaImportador to set
+	 */
+	public void setFechaDescargaImportador(String fechaDescargaImportador) {
+		this.fechaDescargaImportador = fechaDescargaImportador;
 	}
 
 }
