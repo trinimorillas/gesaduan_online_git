@@ -9,19 +9,19 @@ import javax.inject.Inject;
 import javax.persistence.Query;
 
 import es.mercadona.fwk.core.exceptions.ApplicationException;
+import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dao.BaseDAO;
 import es.mercadona.gesaduan.dao.dosier.getdosierdetalle.v1.GetDosierDetalleDAO;
 import es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.InputDatosDetalleDTO;
 import es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.InputDosierDetalleDTO;
 import es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.resfull.ContenedorDTO;
 import es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.resfull.DatosDosierDetalleDTO;
+import es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.resfull.DeclaracionValorDTO;
 import es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.resfull.EquipoDTO;
-import es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.resfull.FacturaDTO;
 import es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.resfull.OrigenDTO;
 import es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.resfull.OutputDosierDetalleDTO;
 import es.mercadona.gesaduan.dto.dosier.getdosierdetalle.v1.resfull.PedidoDTO;
 import es.mercadona.gesaduan.jpa.dosier.DosierJPA;
-import es.mercadona.gesaduan.common.Constantes;
 
 public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDosierDetalleDAO {
 
@@ -61,7 +61,6 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 			campos.append("D.COD_V_USUARIO_CREACION, "); 
 			campos.append("D.COD_N_ESTADO, "); 
 			campos.append("ED.TXT_NOMBRE_ESTADO, ");
-			campos.append("TO_CHAR(D.FEC_DT_DESCARGA,'DD/MM/YYYY'), ");
 			campos.append("D.MCA_ERROR, ");
 			campos.append("D.FEC_DT_DESCARGA_EXPORTADOR, ");
 			campos.append("D.FEC_DT_DESCARGA_IMPORTADOR ");
@@ -71,8 +70,8 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 			from.append("JOIN S_DOSIER_EQUIPO DE ON (DE.NUM_DOSIER = D.NUM_DOSIER AND DE.NUM_ANYO = D.NUM_ANYO) "); 
 			StringBuilder where = new StringBuilder();	
 			where.append("WHERE ");			
-			where.append("D.NUM_DOSIER=?numDosier AND ");  
-			where.append("D.NUM_ANYO =?anyoDosier "); 
+			where.append("D.NUM_DOSIER = ?numDosier AND ");  
+			where.append("D.NUM_ANYO = ?anyoDosier "); 
 								
 			sql.append(select).append(campos).append(from).append(where);
 			final Query query = getEntityManager().createNativeQuery(sql.toString());		
@@ -86,7 +85,7 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 				
 				List<EquipoDTO> listaEquipo = new ArrayList<>();				
 				List<ContenedorDTO> listaContenedor = new ArrayList<>();
-				List<FacturaDTO> listaFactura = new ArrayList<>();
+				List<DeclaracionValorDTO> listaDV = new ArrayList<>();
 				
 				for (Object[] tmp : listado) {			
 					dosier = new DatosDosierDetalleDTO();
@@ -97,17 +96,16 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 					dosier.setUsuarioCreacion(String.valueOf(tmp[3]));
 					dosier.setCodigoEstado(Integer.parseInt(String.valueOf(tmp[4])));
 					dosier.setNombreEstado(String.valueOf(tmp[5]));
-					if (tmp[6] != null) dosier.setFechaDescarga(String.valueOf(tmp[6]));
-					if (tmp[7] != null) dosier.setMcaError(String.valueOf(tmp[7]));
-					if (tmp[8] != null) dosier.setFechaDescargaExportador(String.valueOf(tmp[8]));
-					if (tmp[9] != null) dosier.setFechaDescargaImportador(String.valueOf(tmp[9]));
+					if (tmp[6] != null) dosier.setMcaError(String.valueOf(tmp[6]));
+					if (tmp[7] != null) dosier.setFechaDescargaExportador(String.valueOf(tmp[7]));
+					if (tmp[8] != null) dosier.setFechaDescargaImportador(String.valueOf(tmp[8]));
 		
 					listaEquipo = consultarEquiposDoiser(datos);
-					listaFactura = consultarFacturasDosier(datos);
+					listaDV = consultarFacturasDosier(datos);
 					listaContenedor = consultarContenedoresDosier(datos);					
 										
 					dosier.setEquipo(listaEquipo);
-					dosier.setFactura(listaFactura);
+					dosier.setDeclaracionValor(listaDV);
 					dosier.setContenedor(listaContenedor);
 				}						
 			}		
@@ -129,12 +127,10 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 	 * Procedimiento de consulta de equipos de dosiseres
 	 * */	
 	private List<EquipoDTO> consultarEquiposDoiser(InputDatosDetalleDTO datos) {		
-		
 		InputDosierDetalleDTO input = datos.getDatos();
 		List<EquipoDTO> listaEquipo = null;		
 		
-		try {
-		
+		try {		
 			Long numDosier = input.getNumDosier();		
 			Integer anyoDosier = input.getAnyoDosier();	
 
@@ -188,14 +184,14 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 	/*
 	 * Procedimiento de consulta de facturas de dosiseres
 	 * */	
-	private List<FacturaDTO> consultarFacturasDosier(InputDatosDetalleDTO datos) {		
-		List<FacturaDTO> listaFactura = null;		
+	private List<DeclaracionValorDTO> consultarFacturasDosier(InputDatosDetalleDTO datos) {		
+		List<DeclaracionValorDTO> listaDV = null;		
 		
 		try {		
 			Long numDosier = datos.getDatos().getNumDosier();		
 			Integer anyoDosier = datos.getDatos().getAnyoDosier();
-			
 			String orden = null;
+			
 			if (datos.getDatos().getOrden() != null)
 				orden = datos.getDatos().getOrden();
 
@@ -208,39 +204,38 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 			sql.append("F.COD_N_PROVINCIA_CARGA, ");
 			sql.append("DECODE(F.COD_V_EXPEDICION,NULL,'BLOQUE','PROVEEDOR') AS TIPO_ORIGEN ");
 			sql.append("FROM O_DECLARACION_VALOR_CAB F ");
-			sql.append("INNER JOIN O_CONTENEDOR_EXPEDIDO CE ON (CE.COD_N_FACTURA = F.COD_N_DECLARACION_VALOR AND CE.NUM_ANYO_FACTURA = F.NUM_ANYO ");
-			sql.append("AND CE.COD_N_VERSION_FACTURA = F.COD_N_VERSION) ");
+			sql.append("INNER JOIN O_CONTENEDOR_EXPEDIDO CE ON (CE.COD_N_DECLARACION_VALOR = F.COD_N_DECLARACION_VALOR AND CE.NUM_ANYO_DV = F.NUM_ANYO ");
+			sql.append("AND CE.COD_N_VERSION_DV = F.COD_N_VERSION) ");
 			sql.append("LEFT JOIN D_EQUIPO_TRANSPORTE ET ON (ET.COD_N_EQUIPO = CE.COD_N_EQUIPO) ");
 			sql.append("LEFT JOIN D_PLAN_EMBARQUE PE ON (PE.COD_N_EMBARQUE = ET.COD_N_EMBARQUE) ");
 			sql.append("LEFT JOIN D_PROVEEDOR_R P ON (P.COD_N_PROVEEDOR = F.COD_N_PROVEEDOR) ");
 			sql.append("LEFT JOIN D_BLOQUE_LOGISTICO_R BL ON (BL.COD_N_BLOQUE_LOGISTICO = F.COD_N_BLOQUE_LOGISTICO) ");
 			sql.append("WHERE F.NUM_DOSIER = ?numDosier ");
-			sql.append("AND F.NUM_ANYO_DOSIER = ?anyoDosier ");
+			sql.append("AND F.NUM_ANYO_DOSIER = ?anyoDosier");
 			
-			StringBuilder order = new StringBuilder();
+			final StringBuilder order = new StringBuilder();
 			
-			if (orden.equals("-codigoFactura "))
+			if (orden.equals("-codigoDV"))
 				order.append("ORDER BY F.COD_N_DECLARACION_VALOR DESC");
-			else if (orden.equals("+codigoFactura "))
+			else if (orden.equals("+codigoDV"))
 				order.append("ORDER BY F.COD_N_DECLARACION_VALOR ASC");
-			else if (orden.equals("-anyoFactura "))
+			else if (orden.equals("-anyoDV"))
 				order.append("ORDER BY F.NUM_ANYO DESC");
-			else if (orden.equals("+anyoFactura "))
+			else if (orden.equals("+anyoDV"))
 				order.append("ORDER BY F.NUM_ANYO ASC");			
-			else if (orden.equals("-fechaExpedicion "))
+			else if (orden.equals("-fechaExpedicion"))
 				order.append("ORDER BY FEC_DT_EXPEDICION DESC");
-			else if (orden.equals("+fechaExpedicion "))
+			else if (orden.equals("+fechaExpedicion"))
 				order.append("ORDER BY FEC_DT_EXPEDICION ASC");			
-			else if (orden.equals("-codigoOrigen "))
+			else if (orden.equals("-codigoOrigen"))
 				order.append("ORDER BY CODIGO_ORIGEN DESC");
-			else if (orden.equals("+codigoOrigen "))
+			else if (orden.equals("+codigoOrigen"))
 				order.append("ORDER BY CODIGO_ORIGEN ASC");			
-			else if (orden.equals("-nombreOrigen "))
+			else if (orden.equals("-nombreOrigen"))
 				order.append("ORDER BY NOMBRE_ORIGEN DESC");
-			else if (orden.equals("+nombreOrigen "))
+			else if (orden.equals("+nombreOrigen"))
 				order.append("ORDER BY NOMBRE_ORIGEN ASC");
 			
-			sql.append(order);
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
 			
 			query.setParameter("numDosier", numDosier);
@@ -249,34 +244,34 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 			@SuppressWarnings("unchecked")
 			List<Object[]> listado = query.getResultList();
 			
-			listaFactura = new ArrayList<>() ;					
+			listaDV = new ArrayList<>() ;					
 	
 			if (listado != null && !listado.isEmpty()) {
 				for (Object[] tmp : listado) {			
-					FacturaDTO factura = new FacturaDTO();
+					DeclaracionValorDTO dv = new DeclaracionValorDTO();
 					OrigenDTO origen = new OrigenDTO();
 					
-					if (tmp[0] != null) factura.setCodigoFactura(Long.parseLong(String.valueOf(tmp[0])));
-					if (tmp[1] != null) factura.setAnyoFactura(Integer.parseInt(String.valueOf(tmp[1])));					
-					if (tmp[2] != null) factura.setFechaExpedicion(String.valueOf(tmp[2]));					
+					if (tmp[0] != null) dv.setCodigoDV(Long.parseLong(String.valueOf(tmp[0])));
+					if (tmp[1] != null) dv.setAnyoDV(Integer.parseInt(String.valueOf(tmp[1])));					
+					if (tmp[2] != null) dv.setFechaExpedicion(String.valueOf(tmp[2]));					
 					if (tmp[3] != null) origen.setCodigoOrigen(String.valueOf(tmp[3]));
 					if (tmp[4] != null) origen.setNombreOrigen(String.valueOf(tmp[4]));
 					if (tmp[5] != null) origen.setProvinciaOrigen(String.valueOf(tmp[5]));
 					if (tmp[6] != null) origen.setTipoOrigen(String.valueOf(tmp[6]));
-					factura.setOrigen(origen);
-					listaFactura.add(factura);
+					dv.setOrigen(origen);
+					listaDV.add(dv);
 					
 					final StringBuilder sqlPedido = new StringBuilder();
 					
-					String selectPedido = "SELECT FP.COD_V_PEDIDO ";
-					String fromPedido   = "FROM S_FACTURA_PEDIDO FP ";
-					String wherePedido  = "WHERE FP.COD_N_FACTURA = ?codigoFactura AND FP.NUM_ANYO_FACTURA = ?anyoFactura";
+					String selectPedido = "SELECT DVP.COD_V_PEDIDO ";
+					String fromPedido   = "FROM S_DECLARACION_VALOR_PEDIDO DVP ";
+					String wherePedido  = "WHERE DVP.COD_N_DECLARACION_VALOR = ?codigoFactura AND DVP.NUM_ANYO_DV = ?anyoFactura";
 
 					sqlPedido.append(selectPedido).append(fromPedido).append(wherePedido);
 
 					final Query queryPedido = getEntityManager().createNativeQuery(sqlPedido.toString());
-					queryPedido.setParameter("codigoFactura", factura.getCodigoFactura());
-					queryPedido.setParameter("anyoFactura", factura.getAnyoFactura());
+					queryPedido.setParameter("codigoFactura", dv.getCodigoDV());
+					queryPedido.setParameter("anyoFactura", dv.getAnyoDV());
 
 					@SuppressWarnings("unchecked")
 					List<String> listadoPedido = queryPedido.getResultList();
@@ -288,7 +283,7 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 							if (tmpPedido != null) pedido.setCodigoPedido(String.valueOf(tmpPedido));
 							listaPedidos.add(pedido);
 						}
-						factura.setPedido(listaPedidos);
+						dv.setPedido(listaPedidos);
 					}
 				}			
 			}
@@ -298,19 +293,17 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 			throw new ApplicationException(e.getMessage());
 		}		
 				
-		return listaFactura;
+		return listaDV;
 	}
 	
 	/*
 	 * Procedimiento de consulta de contenedores de dosiseres
 	 * */	
 	private List<ContenedorDTO> consultarContenedoresDosier(InputDatosDetalleDTO datos) {		
-		
 		InputDosierDetalleDTO input = datos.getDatos();
-		List<ContenedorDTO> listaContenedor = null;		
+		List<ContenedorDTO> listaContenedor = null;
 		
-		try {
-		
+		try {		
 			Long numDosier = input.getNumDosier();		
 			Integer anyoDosier = input.getAnyoDosier();	
 			
@@ -319,28 +312,26 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 				orden = input.getOrden();			
 
 			final StringBuilder sql = new StringBuilder();
-			
-			StringBuilder select = new StringBuilder();	
-			select.append("SELECT * FROM (");		
-			StringBuilder campos = new StringBuilder();
-			campos.append("SELECT ");			
-			campos.append("DISTINCT CE.NUM_CONTENEDOR, "); 
-			campos.append("DE.TXT_MATRICULA, ");
-			campos.append("CE.COD_V_CARGA, ");
-			campos.append("C.COD_N_TIPO_CARGA, ");
-			campos.append("TS.COD_N_TIPO_SUMINISTRO, ");
-			campos.append("TS.TXT_NOMBRE_TIPO_SUMINISTRO, ");
-			campos.append("P.COD_N_PROVEEDOR, ");
-			campos.append("P.TXT_RAZON_SOCIAL, ");
-			campos.append("C.COD_V_ALMACEN_ORIGEN, ");
-			campos.append("C.COD_V_CENTRO_DESTINO, ");
-			campos.append("TO_CHAR(C.FEC_D_ENTREGA,'DD/MM/YYYY') FEC_D_ENTREGA, ");
-			campos.append("CC.COD_N_CATEGORIA, ");
-			campos.append("CC.TXT_NOMBRE_CATEGORIA, ");
-			campos.append("C.MCA_CONTIENE_LPC, ");
-			campos.append("CE.COD_N_FACTURA, ");
-			campos.append("CE.NUM_ANYO_FACTURA ");
+			StringBuilder select = new StringBuilder();
 			StringBuilder from = new StringBuilder();
+			StringBuilder where = new StringBuilder();
+				
+			select.append("SELECT DISTINCT CE.NUM_CONTENEDOR, ");
+			select.append("DE.TXT_MATRICULA, ");
+			select.append("CE.COD_V_CARGA, ");
+			select.append("C.COD_N_TIPO_CARGA, ");
+			select.append("TS.COD_N_TIPO_SUMINISTRO, ");
+			select.append("TS.TXT_NOMBRE_TIPO_SUMINISTRO, ");
+			select.append("P.COD_N_PROVEEDOR, ");
+			select.append("P.TXT_RAZON_SOCIAL, ");
+			select.append("C.COD_V_ALMACEN_ORIGEN, ");
+			select.append("C.COD_V_CENTRO_DESTINO, ");
+			select.append("TO_CHAR(C.FEC_D_ENTREGA,'DD/MM/YYYY') FEC_D_ENTREGA, ");
+			select.append("CC.COD_N_CATEGORIA, ");
+			select.append("CC.TXT_NOMBRE_CATEGORIA, ");
+			select.append("C.MCA_CONTIENE_LPC, ");
+			select.append("CE.COD_N_DECLARACION_VALOR, ");
+			select.append("CE.NUM_ANYO_DV ");			
 			from.append("FROM D_DOSIER D "); 	
 			from.append("JOIN D_ESTADO_DOSIER ED ON (ED.COD_N_ESTADO = D.COD_N_ESTADO) ");
 			from.append("JOIN S_DOSIER_EQUIPO DE ON (DE.NUM_DOSIER = D.NUM_DOSIER AND DE.NUM_ANYO = D.NUM_ANYO) ");
@@ -348,11 +339,9 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 			from.append("JOIN D_CARGA C ON (C.COD_V_CARGA = CE.COD_V_CARGA AND C.COD_V_ALMACEN_ORIGEN = CE.COD_V_ALMACEN) ");
 			from.append("JOIN D_TIPO_SUMINISTRO TS ON (TS.COD_N_TIPO_SUMINISTRO = C.COD_N_TIPO_SUMINISTRO) ");
 			from.append("LEFT JOIN D_PROVEEDOR_R P ON (P.COD_N_PROVEEDOR = C.COD_N_PROVEEDOR) ");
-			from.append("LEFT JOIN D_CATEGORIA_CARGA CC ON (CC.COD_N_CATEGORIA= C.COD_N_CATEGORIA)");
-			StringBuilder where = new StringBuilder();	 
+			from.append("LEFT JOIN D_CATEGORIA_CARGA CC ON (CC.COD_N_CATEGORIA = C.COD_N_CATEGORIA) ");				 
 			where.append("WHERE "); 
 			where.append("D.NUM_DOSIER = ?numDosier AND D.NUM_ANYO = ?anyoDosier ");
-			where.append(") ");			
 			
 			StringBuilder order = new StringBuilder();	 
 			
@@ -396,14 +385,17 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 				order.append("ORDER BY C.MCA_CONTIENE_LPC DESC");
 			else if (orden.equals("+marcaLpC"))
 				order.append("ORDER BY C.MCA_CONTIENE_LPC ASC");			
-			else if (orden.equals("-codigoFactura"))
-				order.append("ORDER BY CE.COD_N_FACTURA DESC");
-			else if (orden.equals("+codigoFactura"))
-				order.append("ORDER BY CE.COD_N_FACTURA ASC");
+			else if (orden.equals("-codigoDV "))
+				order.append("ORDER BY CE.COD_N_DECLARACION_VALOR DESC");
+			else if (orden.equals("+codigoDV "))
+				order.append("ORDER BY CE.COD_N_DECLARACION_VALOR ASC");
+			else if (orden.equals("-anyoDV"))
+				order.append("ORDER BY CE.NUM_ANYO_DV DESC");
+			else if (orden.equals("+anyoDV"))
+				order.append("ORDER BY CE.NUM_ANYO_DV ASC");
 			
 			
-			sql.append(select).append(campos).append(from).append(where).append(order);
-	
+			sql.append(select).append(from).append(where).append(order);	
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
 			
 			query.setParameter("numDosier", numDosier);
@@ -432,8 +424,8 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 					if (tmp[11] != null) contenedor.setCodigoCategoria(Long.parseLong(String.valueOf(tmp[11])));					
 					if (tmp[12] != null) contenedor.setNombreCategoria(String.valueOf(tmp[12]));
 					if (tmp[13] != null) contenedor.setMarcaLpC(String.valueOf(tmp[13]));
-					if (tmp[14] != null) contenedor.setCodigoFactura(Long.parseLong(String.valueOf(tmp[14])));
-					if (tmp[15] != null) contenedor.setAnyofactura(Integer.parseInt(String.valueOf(tmp[15])));
+					if (tmp[14] != null) contenedor.setCodigoDV(Long.parseLong(String.valueOf(tmp[14])));
+					if (tmp[15] != null) contenedor.setAnyoDV(Integer.parseInt(String.valueOf(tmp[15])));
 					
 					listaContenedor.add(contenedor);				
 				}			

@@ -22,7 +22,7 @@ public class DatosDosierDetalleDTO extends AbstractDTO {
 
 	private List<EquipoDTO> equipo;
 	private List<ContenedorDTO> contenedor;
-	private List<FacturaDTO> factura;
+	private List<DeclaracionValorDTO> declaracionValor;
 
 	/**
 	 * @return the numDosier
@@ -165,20 +165,6 @@ public class DatosDosierDetalleDTO extends AbstractDTO {
 	}
 
 	/**
-	 * @return the factura
-	 */
-	public List<FacturaDTO> getFactura() {
-		return factura;
-	}
-
-	/**
-	 * @param factura the factura to set
-	 */
-	public void setFactura(List<FacturaDTO> factura) {
-		this.factura = factura;
-	}
-
-	/**
 	 * @return the fechaDescargaExportador
 	 */
 	public String getFechaDescargaExportador() {
@@ -204,6 +190,20 @@ public class DatosDosierDetalleDTO extends AbstractDTO {
 	 */
 	public void setFechaDescargaImportador(String fechaDescargaImportador) {
 		this.fechaDescargaImportador = fechaDescargaImportador;
+	}
+
+	/**
+	 * @return the declaracionValor
+	 */
+	public List<DeclaracionValorDTO> getDeclaracionValor() {
+		return declaracionValor;
+	}
+
+	/**
+	 * @param declaracionValor the declaracionValor to set
+	 */
+	public void setDeclaracionValor(List<DeclaracionValorDTO> declaracionValor) {
+		this.declaracionValor = declaracionValor;
 	}
 
 }

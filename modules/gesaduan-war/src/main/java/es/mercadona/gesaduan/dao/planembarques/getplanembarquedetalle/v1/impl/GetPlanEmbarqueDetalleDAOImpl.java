@@ -593,7 +593,9 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 			String campos = "DISTINCT D.NUM_DOSIER, " + "D.NUM_ANYO, "
 					+ "TO_CHAR(D.FEC_DT_CREACION,'DD/MM/YYYY') FEC_DT_CREACION, " + "D.COD_V_USUARIO_CREACION, "
 					+ "D.COD_N_ESTADO," + "ED.TXT_NOMBRE_ESTADO, "
-					+ "TO_CHAR(D.FEC_DT_DESCARGA,'DD/MM/YYYY') FEC_DT_DESCARGA ";
+					+ "D.MCA_ERROR, "
+					+ "TO_CHAR(D.FEC_DT_DESCARGA_EXPORTADOR,'DD/MM/YYYY') FEC_DT_DESCARGA_EXPORTADOR, "
+					+ "TO_CHAR(D.FEC_DT_DESCARGA_IMPORTADOR,'DD/MM/YYYY') FEC_DT_DESCARGA_IMPORTADOR ";
 			String from = "FROM D_DOSIER D " + "JOIN D_ESTADO_DOSIER ED ON (ED.COD_N_ESTADO = D.COD_N_ESTADO) ";
 			String where = "WHERE D.COD_N_EMBARQUE = ?codigoPlanEmbarque ";
 
@@ -611,14 +613,18 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 				order += "ORDER BY COD_V_USUARIO_CREACION DESC";
 			else if (orden.equals("+usuarioCreacion"))
 				order += "ORDER BY COD_V_USUARIO_CREACION ASC";
-			else if (orden.equals("-codigoEstado"))
-				order += "ORDER BY COD_N_ESTADO DESC";
-			else if (orden.equals("+codigoEstado"))
-				order += "ORDER BY COD_N_ESTADO ASC";
-			else if (orden.equals("-fechaDescarga"))
-				order += "ORDER BY TO_DATE(FEC_DT_DESCARGA,'DD/MM/YYYY') DESC";
-			else if (orden.equals("+fechaDescarga"))
-				order += "ORDER BY TO_DATE(FEC_DT_DESCARGA,'DD/MM/YYYY') ASC";
+			else if (orden.equals("-mcaError"))
+				order += "ORDER BY D.MCA_ERROR DESC";
+			else if (orden.equals("+mcaError"))
+				order += "ORDER BY D.MCA_ERROR ASC";
+			else if (orden.equals("-fechaDescargaExportador"))
+				order += "ORDER BY FEC_DT_DESCARGA_EXPORTADOR DESC";
+			else if (orden.equals("+fechaDescargaExportador"))
+				order += "ORDER BY FEC_DT_DESCARGA_EXPORTADOR ASC";
+			else if (orden.equals("-fechaDescargaImportador"))
+				order += "ORDER BY FEC_DT_DESCARGA_IMPORTADOR DESC";
+			else if (orden.equals("+fechaDescargaImportador"))
+				order += "ORDER BY FEC_DT_DESCARGA_EXPORTADOR ASC";
 
 			sql.append(select).append(campos).append(from).append(where).append(order);
 
@@ -639,7 +645,8 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 					dosier.setUsuarioCreacion(String.valueOf(tmp[3]));
 					dosier.setCodigoEstado(Long.parseLong(String.valueOf(tmp[4])));
 					dosier.setNombreEstado(String.valueOf(tmp[5]));
-					dosier.setFechaDescarga(String.valueOf(tmp[6]));
+					dosier.setFechaDescargaExportador(String.valueOf(tmp[6]));
+					dosier.setFechaDescargaImportador(String.valueOf(tmp[7]));
 
 					List<EquipoSimpleDTO> equiposDosier = consultarEquipoDosieresPlanEmbarque(dosier.getNumDosier(),
 							dosier.getAnyoDosier());
@@ -670,10 +677,9 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 
 			String select = "SELECT ";
 			String campos = "DISTINCT DE.COD_N_EQUIPO, " + "DE.TXT_MATRICULA ";
-			String from = "FROM S_DOSIER_EQUIPO DE ";
-			String where = "WHERE DE.NUM_DOSIER = ?numDosiser AND  " + "DE.NUM_ANYO = ?anyoDosier ";
-
-			String order = "ORDER BY DE.TXT_MATRICULA ";
+			String from   = "FROM S_DOSIER_EQUIPO DE ";
+			String where  = "WHERE DE.NUM_DOSIER = ?numDosiser AND  " + "DE.NUM_ANYO = ?anyoDosier ";
+			String order  = "ORDER BY DE.TXT_MATRICULA ";
 
 			sql.append(select).append(campos).append(from).append(where).append(order);
 
