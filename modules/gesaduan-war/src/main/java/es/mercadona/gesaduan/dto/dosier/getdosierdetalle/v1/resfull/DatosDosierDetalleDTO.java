@@ -15,7 +15,6 @@ public class DatosDosierDetalleDTO extends AbstractDTO {
 	private String usuarioCreacion;
 	private Integer codigoEstado;
 	private String nombreEstado;
-	private String fechaDescarga;
 	private String mcaError;
 	private String fechaDescargaExportador;
 	private String fechaDescargaImportador;
@@ -106,20 +105,6 @@ public class DatosDosierDetalleDTO extends AbstractDTO {
 	 */
 	public void setNombreEstado(String nombreEstado) {
 		this.nombreEstado = nombreEstado;
-	}
-
-	/**
-	 * @return the fechaDescarga
-	 */
-	public String getFechaDescarga() {
-		return fechaDescarga;
-	}
-
-	/**
-	 * @param fechaDescarga the fechaDescarga to set
-	 */
-	public void setFechaDescarga(String fechaDescarga) {
-		this.fechaDescarga = fechaDescarga;
 	}
 
 	/**
