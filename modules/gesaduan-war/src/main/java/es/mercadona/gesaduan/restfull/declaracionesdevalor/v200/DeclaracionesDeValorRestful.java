@@ -52,7 +52,7 @@ import es.mercadona.gesaduan.jpa.declaracionesdevalor.getdocumentodv.v1.Document
 import es.mercadona.gesaduan.jpa.declaracionesdevalor.getdocumentodv.v1.DocumentoDVDataPK;
 
 @RESTful
-@Path("logistica/declaracion-valor/v2.0")
+@Path("logistica/gestion-aduanas/v2.0")
 @RequestScoped
 public class DeclaracionesDeValorRestful {
 	
@@ -284,6 +284,7 @@ public class DeclaracionesDeValorRestful {
 			inputDVDocumentoDTO.setCodigoDeclaracion(codigoDeclaracion);
 			inputDVDocumentoDTO.setAnyoDeclaracion(anyo);
 			inputDVDocumentoDTO.setVersionDeclaracion(version);
+			inputDVDocumentoDTO.setTipoDocumento(tipoDocumento);			
 
 			OutputDeclaracionesDeValorDocCabDTO outputDVDocumentoDTO = null;
 

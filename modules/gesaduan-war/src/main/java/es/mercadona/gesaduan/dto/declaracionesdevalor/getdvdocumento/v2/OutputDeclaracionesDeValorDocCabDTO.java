@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import es.mercadona.gesaduan.dto.declaracionesdevalor.AbstractDTO;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 public class OutputDeclaracionesDeValorDocCabDTO extends AbstractDTO implements Serializable{
 
@@ -39,6 +40,7 @@ public class OutputDeclaracionesDeValorDocCabDTO extends AbstractDTO implements 
 	private byte[] ficheroPDF;
 	private byte[] ficheroCSV;	
 	private List<OutputDeclaracionesDeValorDocLinDTO> lineas;	
+	private JRBeanCollectionDataSource lineasDataSource;
 	
 	/**
 	 * @return the codigoDeclaracion
@@ -400,6 +402,19 @@ public class OutputDeclaracionesDeValorDocCabDTO extends AbstractDTO implements 
 	public void setLineas(List<OutputDeclaracionesDeValorDocLinDTO> lineas) {
 		this.lineas = lineas;
 	}
+	/**
+	 * @return the lineasDataSource
+	 */
+	public JRBeanCollectionDataSource getLineasDataSource() {
+		return lineasDataSource;
+	}
+	/**
+	 * @param lineasDataSource the lineasDataSource to set
+	 */
+	public void setLineasDataSource(JRBeanCollectionDataSource lineasDataSource) {
+		this.lineasDataSource = lineasDataSource;
+	}
 
+	
 
 }

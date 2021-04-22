@@ -3,7 +3,7 @@ package es.mercadona.gesaduan.business.declaracionesdevalor.getdvdocumento.v2.im
 import javax.inject.Inject;
 
 import es.mercadona.gesaduan.business.declaracionesdevalor.getdvdocumento.v2.DVDocumentoCSVService;
-import es.mercadona.gesaduan.dao.declaracionesdevalor.getdvdocumento.v2.GetDVDocumentoDAO;
+import es.mercadona.gesaduan.dao.declaracionesdevalor.getdvdocumento.v2.GetDVDocumentoOnlineDAO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvdocumento.v2.InputDeclaracionesDeValorDocumentoDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvdocumento.v2.OutputDeclaracionesDeValorDocCabDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvdocumento.v2.OutputDeclaracionesDeValorDocLinDTO;
@@ -11,13 +11,13 @@ import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvdocumento.v2.OutputDe
 public class DVDocumentoCSVServiceImpl implements DVDocumentoCSVService {
 
 	@Inject
-	private GetDVDocumentoDAO getDVDocumentoDAO;
+	private GetDVDocumentoOnlineDAO getDVDocumentoOnlineDAO;
 
 	@Override
 	public OutputDeclaracionesDeValorDocCabDTO preparaDocumentoCSV(InputDeclaracionesDeValorDocumentoDTO input) {
 
 		// Obtiene los datos del informe (estructura del informe)
-		OutputDeclaracionesDeValorDocCabDTO outDVDocumentoDTO = getDVDocumentoDAO.getDatosDocumento(input);
+		OutputDeclaracionesDeValorDocCabDTO outDVDocumentoDTO = getDVDocumentoOnlineDAO.getDatosDocumento(input);
 				
 		// prepara el informe
 		outDVDocumentoDTO.setFicheroCSV(preparaDocumento(outDVDocumentoDTO));
@@ -119,6 +119,19 @@ public class DVDocumentoCSVServiceImpl implements DVDocumentoCSVService {
 		
 		return lineasStr.toString();
 
+	}	
+	
+	private OutputDeclaracionesDeValorDocCabDTO preparaDatos() {
+		
+		// prepara el informe
+		OutputDeclaracionesDeValorDocCabDTO outputDocumentoCabDTO = new OutputDeclaracionesDeValorDocCabDTO();
+		
+		// prepara la cabecera		
+		
+		// prepara las lineas
+		
+		return outputDocumentoCabDTO;
 	}		
+	
 	
 }

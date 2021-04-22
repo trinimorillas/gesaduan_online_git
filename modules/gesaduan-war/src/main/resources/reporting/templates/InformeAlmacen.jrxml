@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version last-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporteEncargos" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="22" isSummaryWithPageHeaderAndFooter="true" uuid="c0243a9d-9f1a-4382-834e-50258c32c8d7">
+	<property name="ireport.zoom" value="2.3579476910000037"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="ireport.background.image.properties" value="true,true,0.25,227,193,0,0,33,32"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="litMatricula" class="java.lang.String"/>
+	<parameter name="litTransportista" class="java.lang.String"/>
+	<parameter name="litTemp" class="java.lang.String"/>
+	<parameter name="litSuministros" class="java.lang.String"/>
+	<parameter name="litPuerto" class="java.lang.String"/>
+	<parameter name="litFechaCarga" class="java.lang.String"/>
+	<parameter name="litFechaEmbarque" class="java.lang.String"/>
+	<parameter name="litCargado" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DS" class="net.sf.jasperreports.engine.JRDataSource"/>
+	<parameter name="SUBREPORT_TMPL" class="net.sf.jasperreports.engine.JasperReport"/>
+	<parameter name="SUBREPORT_PARAM" class="java.util.HashMap"/>
+	<parameter name="SUBREPORTCARGA_DS" class="net.sf.jasperreports.engine.JRDataSource"/>
+	<parameter name="SUBREPORTCARGA_TMPL" class="net.sf.jasperreports.engine.JasperReport"/>
+	<parameter name="SUBREPORTCARGA_PARAM" class="java.util.HashMap"/>
+	<field name="matricula" class="java.lang.String"/>
+	<field name="nombreTransportista" class="java.lang.String"/>
+	<field name="valorTemperatura" class="java.lang.String"/>
+	<field name="fechaCarga" class="java.lang.String"/>
+	<field name="fechaEmbarque" class="java.lang.String"/>
+	<field name="cargasDataSource" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<field name="observaciones" class="java.lang.String"/>
+	<field name="ocupacion" class="java.lang.Double"/>
+	<field name="capacidad" class="java.lang.Double"/>
+	<field name="nombrePuertoDesembarque" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="69">
+			<staticText>
+				<reportElement x="0" y="0" width="200" height="30" uuid="67726ffb-8a89-4ec9-a183-4261b31349ec"/>
+				<textElement>
+					<font fontName="Arial Black" size="18"/>
+				</textElement>
+				<text><![CDATA[Carga de equipos]]></text>
+			</staticText>
+			<image>
+				<reportElement x="605" y="0" width="195" height="30" uuid="03d32ccd-e2e7-418d-975f-230f233b4fa6">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA["/reporting/templates/mercadona.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="0" y="30" width="200" height="20" uuid="59873e95-3290-4842-b102-435c6f8cd2bd"/>
+				<textElement>
+					<font fontName="Arial Black"/>
+				</textElement>
+				<text><![CDATA[Resumen equipos]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="56" width="50" height="13" forecolor="#FFFFFF" backcolor="#039760" uuid="a17ffd0e-c1c2-4348-ab6c-328af86d15eb">
+					<property name="local_mesure_unitheight" value="pixel"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="3" rightPadding="2">
+					<pen lineColor="#039760"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#039760"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#039760"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#039760"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#039760"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{litMatricula}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="50" y="56" width="124" height="13" forecolor="#FFFFFF" backcolor="#039760" uuid="9d142f28-4583-4ca8-b3ea-70de6f550ed7">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="3" rightPadding="2">
+					<pen lineColor="#039760"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{litTransportista}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="174" y="56" width="56" height="13" forecolor="#FFFFFF" backcolor="#039760" uuid="cdd6f3a9-32ec-4a63-a94b-e8ee30240620">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
+					<leftPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
+					<bottomPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
+					<rightPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{litTemp}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="230" y="56" width="158" height="13" forecolor="#FFFFFF" backcolor="#039760" uuid="44437cf7-c351-458e-b5a2-58bd6c39a722">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="5" rightPadding="2">
+					<pen lineColor="#039760"/>
+					<topPen lineWidth="1.0" lineColor="#039760"/>
+					<leftPen lineWidth="1.0" lineColor="#039760"/>
+					<bottomPen lineWidth="1.0" lineColor="#039760"/>
+					<rightPen lineWidth="1.0" lineColor="#039760"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{litSuministros}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="388" y="56" width="122" height="13" forecolor="#FFFFFF" backcolor="#039760" uuid="c911f966-2938-43fe-a84d-9916a56ca29d">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="2" rightPadding="2">
+					<pen lineColor="#039760"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#039760"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#039760"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#039760"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#039760"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{litPuerto}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="510" y="56" width="120" height="13" forecolor="#FFFFFF" backcolor="#039760" uuid="f79470ef-fd1d-44ca-9f47-854f6ef4782d">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="3" rightPadding="2">
+					<pen lineColor="#039760"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#039760"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#039760"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#039760"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#039760"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{litFechaCarga}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="630" y="56" width="110" height="13" forecolor="#FFFFFF" backcolor="#039760" uuid="2e08b934-01d5-47ea-9295-0fb5aa460d5b">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="3" rightPadding="4">
+					<pen lineColor="#039760"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#039760"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#039760"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#039760"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#039760"/>
+				</box>
+				<textElement textAlignment="Left" markup="html">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{litFechaEmbarque}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="740" y="56" width="60" height="13" forecolor="#FFFFFF" backcolor="#039760" uuid="b105f731-5f80-4300-a278-2937ce9a4870">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="3" rightPadding="4">
+					<pen lineColor="#039760"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#039760"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#039760"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#039760"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#039760"/>
+				</box>
+				<textElement textAlignment="Center" markup="html">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{litCargado}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<subreport>
+				<reportElement positionType="Float" x="0" y="0" width="800" height="20" uuid="24be4ab8-100a-49fe-969d-520ccfa4cca9">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<parametersMapExpression><![CDATA[new HashMap($P{SUBREPORT_PARAM})]]></parametersMapExpression>
+				<subreportParameter name="SUBREPORTCARGA_TMPL">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORTCARGA_TMPL}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="SUBREPORTCARGA_DS">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORTCARGA_DS}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[$P{SUBREPORT_DS}]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_TMPL}]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="95">
+			<subreport>
+				<reportElement x="0" y="75" width="800" height="19" uuid="1c05a64b-0b97-4f67-b063-a7adbb6548aa"/>
+				<dataSourceExpression><![CDATA[$F{cargasDataSource}]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORTCARGA_TMPL}]]></subreportExpression>
+			</subreport>
+			<rectangle>
+				<reportElement x="0" y="5" width="801" height="60" backcolor="#DEFFF4" uuid="8ee70e91-0022-4e54-b2f4-badf82b9851b"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Opaque" x="660" y="20" width="130" height="30" backcolor="#FFE8AD" uuid="df347a03-fb4d-47f6-aee2-b7b998b0a5cb"/>
+				<textFieldExpression><![CDATA[$F{observaciones}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="14" width="70" height="18" uuid="b15d723b-3211-4b26-97d6-fb6fa61bb931">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ae94dc6c-4946-4f8e-8234-3e9c29a74921"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{matricula}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="37" width="40" height="19" uuid="c38932e2-73ff-4b05-afb5-a479db6d745f"/>
+				<text><![CDATA[Transp:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="50" y="37" width="100" height="19" uuid="6f3aa867-fdce-451c-bfd8-d5ef5f707ea5">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="fef383b6-35a1-4be9-ba57-9ccfb14256b5"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombreTransportista}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="160" y="13" width="70" height="19" uuid="16873842-15ba-44db-94c2-2afaa2b0a902"/>
+				<text><![CDATA[Día de carga:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="160" y="36" width="30" height="19" uuid="3fc2b2ef-8e23-4b3a-8a7e-0ad9c5a231a2"/>
+				<text><![CDATA[Hora:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="230" y="13" width="60" height="19" uuid="34088e3c-d204-46e3-a510-2499a46bcf9d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="cd07f8d8-39e2-483c-b038-2ec726ff5366"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fechaCarga}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="190" y="36" width="100" height="19" uuid="2389b9dc-4f43-446b-ba52-48ea718e8bac">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="cd07f8d8-39e2-483c-b038-2ec726ff5366"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fechaCarga}.substring( 10, 16 )]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="330" y="13" width="33" height="19" uuid="23eb369f-3668-4f2a-b081-126b4a2b26b9"/>
+				<text><![CDATA[Temp.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="330" y="36" width="53" height="19" uuid="3e37ad67-5390-4f8d-aabf-337a9ec5b61a"/>
+				<text><![CDATA[Ocupación:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="363" y="13" width="38" height="19" uuid="e32b20f0-62cc-4330-8c21-31e48e383f9c">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0844e85c-37d3-41d9-89e8-5f427d7fcad9"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valorTemperatura}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="450" y="13" width="100" height="19" uuid="0418a902-2da1-4499-91ef-eaf920319d5b"/>
+				<text><![CDATA[Puerto desembarque:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="450" y="36" width="80" height="19" uuid="410a8f7e-8fae-4965-a399-fc420904867b"/>
+				<text><![CDATA[Fecha embarque:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="530" y="36" width="60" height="19" uuid="c67c2b2f-250a-4067-8fc3-19545b9ebde6">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="99e15040-f546-473f-a97f-2123e6796efc"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fechaEmbarque}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="0" y="0" width="801" height="5" backcolor="#039760" uuid="5725d6a1-ab2c-4e2b-983d-76be69a5caae"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="383" y="36" width="57" height="19" uuid="7d7a312f-71f2-4c23-b058-605139682b0d"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ocupacion}.toString().concat( " / " ).concat($F{capacidad}.toString())]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="551" y="13" width="104" height="19" uuid="119418fd-99b4-4232-9528-c83c8ab17cb0">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0844e85c-37d3-41d9-89e8-5f427d7fcad9"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombrePuertoDesembarque}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
