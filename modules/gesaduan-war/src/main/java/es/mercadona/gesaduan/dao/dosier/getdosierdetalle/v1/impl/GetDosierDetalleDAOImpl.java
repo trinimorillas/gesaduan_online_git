@@ -211,30 +211,28 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 			sql.append("LEFT JOIN D_PROVEEDOR_R P ON (P.COD_N_PROVEEDOR = F.COD_N_PROVEEDOR) ");
 			sql.append("LEFT JOIN D_BLOQUE_LOGISTICO_R BL ON (BL.COD_N_BLOQUE_LOGISTICO = F.COD_N_BLOQUE_LOGISTICO) ");
 			sql.append("WHERE F.NUM_DOSIER = ?numDosier ");
-			sql.append("AND F.NUM_ANYO_DOSIER = ?anyoDosier");
-			
-			final StringBuilder order = new StringBuilder();
+			sql.append("AND F.NUM_ANYO_DOSIER = ?anyoDosier ");
 			
 			if (orden.equals("-codigoDV"))
-				order.append("ORDER BY F.COD_N_DECLARACION_VALOR DESC");
+				sql.append("ORDER BY F.COD_N_DECLARACION_VALOR DESC");
 			else if (orden.equals("+codigoDV"))
-				order.append("ORDER BY F.COD_N_DECLARACION_VALOR ASC");
+				sql.append("ORDER BY F.COD_N_DECLARACION_VALOR ASC");
 			else if (orden.equals("-anyoDV"))
-				order.append("ORDER BY F.NUM_ANYO DESC");
+				sql.append("ORDER BY F.NUM_ANYO DESC");
 			else if (orden.equals("+anyoDV"))
-				order.append("ORDER BY F.NUM_ANYO ASC");			
+				sql.append("ORDER BY F.NUM_ANYO ASC");			
 			else if (orden.equals("-fechaExpedicion"))
-				order.append("ORDER BY FEC_DT_EXPEDICION DESC");
+				sql.append("ORDER BY FEC_DT_EXPEDICION DESC");
 			else if (orden.equals("+fechaExpedicion"))
-				order.append("ORDER BY FEC_DT_EXPEDICION ASC");			
+				sql.append("ORDER BY FEC_DT_EXPEDICION ASC");			
 			else if (orden.equals("-codigoOrigen"))
-				order.append("ORDER BY CODIGO_ORIGEN DESC");
+				sql.append("ORDER BY CODIGO_ORIGEN DESC");
 			else if (orden.equals("+codigoOrigen"))
-				order.append("ORDER BY CODIGO_ORIGEN ASC");			
+				sql.append("ORDER BY CODIGO_ORIGEN ASC");			
 			else if (orden.equals("-nombreOrigen"))
-				order.append("ORDER BY NOMBRE_ORIGEN DESC");
+				sql.append("ORDER BY NOMBRE_ORIGEN DESC");
 			else if (orden.equals("+nombreOrigen"))
-				order.append("ORDER BY NOMBRE_ORIGEN ASC");
+				sql.append("ORDER BY NOMBRE_ORIGEN ASC");
 			
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
 			
