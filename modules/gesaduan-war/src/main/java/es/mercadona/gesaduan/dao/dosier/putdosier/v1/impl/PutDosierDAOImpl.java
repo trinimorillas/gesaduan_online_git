@@ -79,7 +79,7 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 	
 	@Transactional
 	@Override
-	public void actualizaEstadoDocumentacionEquipo(DosierEquipoJPA dosierEquipoJPA) {		
+	public void actualizaEstadoDocumentacionEquipo(DosierEquipoJPA dosierEquipoJPA) {
 		try {
 			StringBuilder update = new StringBuilder();
 			
@@ -296,19 +296,21 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 			sql.append("MERGE INTO O_CONTENEDOR_EXPEDIDO OCE USING ( ");
 			sql.append("SELECT DV.COD_N_DECLARACION_VALOR, DV.NUM_ANYO, DV.COD_N_VERSION, CE.COD_V_ALMACEN, CE.NUM_CONTENEDOR, CE.FEC_DT_EXPEDICION ");
 			sql.append("FROM O_CONTENEDOR_EXPEDIDO CE ");
-			sql.append("INNER JOIN D_CARGA C ON (C.COD_V_ALMACEN_ORIGEN = CE.COD_V_ALMACEN AND C.COD_V_CARGA = CE.COD_V_CARGA AND C.COD_N_TIPO_CARGA IN (1,2)) ");
-			sql.append("INNER JOIN O_DECLARACION_VALOR_CAB DV ON (DV.NUM_DOSIER = CE.NUM_DOSIER AND NUM_ANYO_DOSIER = CE.NUM_ANYO AND NVL(DV.COD_N_CATEGORIA,0) = NVL(C.COD_N_CATEGORIA,0)) ");
+			sql.append("INNER JOIN D_CARGA C ON (C.COD_V_ALMACEN_ORIGEN = CE.COD_V_ALMACEN AND C.COD_V_CARGA = CE.COD_V_CARGA  ");
+			sql.append("AND C.COD_N_TIPO_CARGA IN (1,2)) ");
+			sql.append("INNER JOIN O_DECLARACION_VALOR_CAB DV ON (DV.NUM_DOSIER = CE.NUM_DOSIER AND DV.NUM_ANYO_DOSIER = CE.NUM_ANYO ");
+			sql.append("AND NVL(DV.COD_N_CATEGORIA,0) = NVL(C.COD_N_CATEGORIA,0)) ");
 			sql.append("WHERE CE.NUM_DOSIER = ?numDosier ");
 			sql.append("AND CE.NUM_ANYO = ?anyoDosier ");
-			sql.append("GROUP BY COD_N_DECLARACION_VALOR,DV.NUM_ANYO,DV.COD_N_VERSION,CE.COD_V_ALMACEN,CE.NUM_CONTENEDOR,CE.FEC_DT_EXPEDICION ");
+			sql.append("GROUP BY DV.COD_N_DECLARACION_VALOR, DV.NUM_ANYO, DV.COD_N_VERSION, CE.COD_V_ALMACEN, CE.NUM_CONTENEDOR, CE.FEC_DT_EXPEDICION ");
 			sql.append(") TEMP ");
 			sql.append("ON (OCE.COD_V_ALMACEN = TEMP.COD_V_ALMACEN AND OCE.NUM_CONTENEDOR = TEMP.NUM_CONTENEDOR AND OCE.FEC_DT_EXPEDICION = TEMP.FEC_DT_EXPEDICION) ");
 			sql.append("WHEN MATCHED THEN UPDATE SET ");
-			sql.append("OCE.COD_N_FACTURA = TEMP.COD_N_DECLARACION_VALOR, ");
-			sql.append("OCE.NUM_ANYO_FACTURA = TEMP.NUM_ANYO, ");
-			sql.append("OCE.COD_N_VERSION_FACTURA = TEMP.COD_N_VERSION, ");
-			sql.append("OCE.FEC_D_MODIFICACION = SYSDATE,  ");
-			sql.append("OCE.COD_V_USR_MODIFICACION = ?codigoUsuario");
+			sql.append("OCE.COD_N_DECLARACION_VALOR = TEMP.COD_N_DECLARACION_VALOR, ");
+			sql.append("OCE.NUM_ANYO_DV = TEMP.NUM_ANYO, ");
+			sql.append("OCE.COD_N_VERSION_DV = TEMP.COD_N_VERSION, ");
+			sql.append("OCE.FEC_D_MODIFICACION = SYSDATE, ");
+			sql.append("OCE.COD_V_USR_MODIFICACION = ?codigoUsuario ");
 					
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
 			query.setParameter("numDosier", dosierEquipo.getNumDosier());
@@ -361,12 +363,12 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 			sql.append("E.NUM_CANTIDAD_EXPEDIDO_UNIDAD*PCA.NUM_PCA),2) AS NUM_IMPORTE_TOTAL, ");
 			sql.append("DECODE(AP.NUM_GRADO_ALCOHOL, NULL, NULL, AP.NUM_GRADO_ALCOHOL*1000) AS NUM_GRADO_ALCOHOL, ");
 			sql.append("DECODE(AP.NUM_GRADO_PLATO, NULL, NULL, AP.NUM_GRADO_PLATO*100) AS NUM_GRADO_PLATO, ");
-			sql.append("DECODE(RP.COD_V_REA,NULL,NULL,DECODE(P.MCA_ORIGEN_ESPANYA,'S','ES',NULL)) AS COD_V_PAIS, ");
+			sql.append("DECODE(RP.COD_V_REA,NULL,DECODE(TP.MCA_FITO,'S',P.COD_V_PAIS_ISO_ALFA2,NULL),P.COD_V_PAIS_ISO_ALFA2) AS COD_V_PAIS, ");
 			sql.append("DECODE(CPR.COD_V_SECCION, '15', 'S', 'N') AS MCA_PRODUCTO_LPC ");
-			sql.append("FROM O_DECLARACION_VALOR_CAB DV ");
-			sql.append("INNER JOIN O_CONTENEDOR_EXPEDIDO CE ON (CE.COD_N_FACTURA = DV.COD_N_DECLARACION_VALOR ");
-			sql.append("AND CE.NUM_ANYO_FACTURA = DV.NUM_ANYO ");
-			sql.append("AND CE.COD_N_VERSION_FACTURA = DV.COD_N_VERSION) ");
+			sql.append("FROM O_DECLARACION_VALOR_CAB DV ");			
+			sql.append("INNER JOIN O_CONTENEDOR_EXPEDIDO CE ON (CE.COD_N_DECLARACION_VALOR = DV.COD_N_DECLARACION_VALOR ");
+			sql.append("AND CE.NUM_ANYO_DV= DV.NUM_ANYO ");
+			sql.append("AND CE.COD_N_VERSION_DV= DV.COD_N_VERSION) ");			
 			sql.append("INNER JOIN O_EXPEDIDO E ON (E.NUM_CONTENEDOR_BASE = CE.NUM_CONTENEDOR AND E.COD_V_ALMACEN = CE.COD_V_ALMACEN AND E.FEC_DT_EXPEDICION = CE.FEC_DT_EXPEDICION) ");
 			sql.append("INNER JOIN D_PRODUCTO_R P ON (P.COD_N_PRODUCTO = E.COD_N_PRODUCTO) ");
 			sql.append("LEFT JOIN S_TARIC_PRODUCTO TP ON (TP.COD_N_PRODUCTO = E.COD_N_PRODUCTO) ");
@@ -449,9 +451,9 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 		try {			
 			StringBuilder sql = new StringBuilder();
 		
-			sql.append("INSERT INTO S_NOTIF_ALERTA_EXPED_DV (COD_N_ALERTA, COD_V_ELEMENTO, COD_V_EXPEDICION, FEC_D_ALBARAN, COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION, MCA_CORREO_ENVIADO, ");
+			sql.append("INSERT INTO S_NOTIF_ALERTA_EXPED_DV (COD_N_ALERTA, COD_V_ELEMENTO, COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION, MCA_CORREO_ENVIADO, ");
 			sql.append("MCA_SMS_ENVIADO, MCA_RESUELTA, FEC_D_CREACION, COD_V_APLICACION, COD_V_USUARIO_CREACION) ");
-			sql.append("SELECT 27, COD_N_MERCA, '-', SYSDATE, COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION, ");
+			sql.append("SELECT 27, COD_N_MERCA, COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION, ");
 			sql.append("'N', 'N', 'N', SYSDATE, 'GESADUAN', ?codigoUsuario ");
 			sql.append("FROM ( ");
 			sql.append("SELECT DVL.COD_N_MERCA, DV.COD_N_DECLARACION_VALOR, DV.NUM_ANYO, DV.COD_N_VERSION, ");
@@ -497,9 +499,9 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 		try {			
 			StringBuilder sql = new StringBuilder();
 		
-			sql.append("INSERT INTO S_NOTIF_ALERTA_EXPED_DV (COD_N_ALERTA, COD_V_ELEMENTO, COD_V_EXPEDICION, FEC_D_ALBARAN, COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION, MCA_CORREO_ENVIADO, ");
+			sql.append("INSERT INTO S_NOTIF_ALERTA_EXPED_DV (COD_N_ALERTA, COD_V_ELEMENTO, COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION, MCA_CORREO_ENVIADO, ");
 			sql.append("MCA_SMS_ENVIADO, MCA_RESUELTA, FEC_D_CREACION, COD_V_APLICACION, COD_V_USUARIO_CREACION) ");
-			sql.append("SELECT 29, COD_N_MERCA, '-', SYSDATE, COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION, ");
+			sql.append("SELECT 29, COD_N_MERCA, COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION, ");
 			sql.append("'N', 'N', 'N', SYSDATE, 'GESADUAN', ?codigoUsuario ");
 			sql.append("FROM ( ");
 			sql.append("SELECT DVL.COD_N_MERCA, DV.COD_N_DECLARACION_VALOR, DV.NUM_ANYO, DV.COD_N_VERSION, ");
@@ -547,9 +549,10 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 		try {			
 			StringBuilder sql = new StringBuilder();
 		
-			sql.append("INSERT INTO S_NOTIF_ALERTA_EXPED_DV (COD_N_ALERTA, COD_V_ELEMENTO, COD_V_EXPEDICION, FEC_D_ALBARAN, COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION, MCA_CORREO_ENVIADO, ");
+			sql.append("INSERT INTO S_NOTIF_ALERTA_EXPED_DV (COD_N_ALERTA, COD_V_ELEMENTO, ");
+			sql.append("COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION, MCA_CORREO_ENVIADO, ");
 			sql.append("MCA_SMS_ENVIADO, MCA_RESUELTA, FEC_D_CREACION, COD_V_APLICACION, COD_V_USUARIO_CREACION) ");
-			sql.append("SELECT 30, COD_N_MERCA, '-', SYSDATE, COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION, ");
+			sql.append("SELECT 48, COD_N_MERCA, COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION, ");
 			sql.append("'N', 'N', 'N', SYSDATE, 'GESADUAN', ?codigoUsuario ");
 			sql.append("FROM ( ");
 			sql.append("SELECT DVL.COD_N_MERCA, DV.COD_N_DECLARACION_VALOR, DV.NUM_ANYO, DV.COD_N_VERSION, ");
@@ -559,10 +562,13 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 			sql.append("INNER JOIN O_DECLARACION_VALOR_LIN DVL ON (DVL.COD_N_DECLARACION_VALOR = DV.COD_N_DECLARACION_VALOR  ");
 			sql.append("AND DVL.NUM_ANYO = DV.NUM_ANYO AND DVL.COD_N_VERSION = DV.COD_N_VERSION) ");
 			sql.append("INNER JOIN D_PRODUCTO_R P ON (P.COD_N_PRODUCTO = DVL.COD_N_MERCA) ");
-			sql.append("INNER JOIN S_REA_PRODUCTO REA ON (REA.COD_N_PRODUCTO = DVL.COD_N_MERCA) ");
-			sql.append("WHERE DV.COD_V_EXPEDICION IS NULL AND DV.NUM_DOSIER = ?numDosier ");
+			sql.append("INNER JOIN S_TARIC_PRODUCTO TP ON (TP.COD_N_PRODUCTO = DVL.COD_N_MERCA) ");
+			sql.append("LEFT JOIN S_REA_PRODUCTO REA ON (REA.COD_N_PRODUCTO = DVL.COD_N_MERCA) ");
+			sql.append("WHERE DV.COD_V_EXPEDICION IS NULL ");
+			sql.append("AND DV.NUM_DOSIER = ?numDosier ");
 			sql.append("AND DV.NUM_ANYO_DOSIER = ?anyoDosier ");
-			sql.append("AND (P.MCA_ORIGEN_ESPANYA IS NULL OR P.MCA_ORIGEN_ESPANYA = 'N') ");
+			sql.append("AND (REA.COD_V_REA IS NOT NULL OR TP.MCA_FITO = 'S') ");
+			sql.append("AND P.COD_V_PAIS_ISO_ALFA2 IS NULL ");
 			sql.append("AND NOT EXISTS ( ");
 			sql.append("SELECT 1 ");
 			sql.append("FROM S_NOTIF_ALERTA_EXPED_DV NA ");
@@ -570,14 +576,14 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 			sql.append("AND NA.COD_N_DECLARACION_VALOR = DV.COD_N_DECLARACION_VALOR ");
 			sql.append("AND NA.NUM_ANYO = DV.NUM_ANYO ");
 			sql.append("AND NA.COD_N_VERSION = DV.COD_N_VERSION ");
-			sql.append("AND NA.COD_N_ALERTA = 30) ");
+			sql.append("AND NA.COD_N_ALERTA = 48) ");
 			sql.append(") TABLA ");
 			sql.append("WHERE NUMERO = 1 ");
 			sql.append("AND EXISTS ( ");
 			sql.append("SELECT 1 ");
 			sql.append("FROM D_ALERTA ");
 			sql.append("WHERE MCA_ACTIVA = 'S' ");
-			sql.append("AND COD_N_ALERTA = 30 ");
+			sql.append("AND COD_N_ALERTA = 48 ");
 			sql.append(")");
 					
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
@@ -597,27 +603,30 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 		try {			
 			StringBuilder sql = new StringBuilder();
 		
-			sql.append("INSERT INTO S_NOTIF_ALERTA_EXPED_DV (COD_N_ALERTA, COD_V_ELEMENTO, COD_V_EXPEDICION, FEC_D_ALBARAN, COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION, MCA_CORREO_ENVIADO, ");
+			sql.append("INSERT INTO S_NOTIF_ALERTA_EXPED_DV (COD_N_ALERTA, COD_V_ELEMENTO, ");
+			sql.append("COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION, MCA_CORREO_ENVIADO, ");
 			sql.append("MCA_SMS_ENVIADO, MCA_RESUELTA, FEC_D_CREACION, COD_V_APLICACION, COD_V_USUARIO_CREACION) ");
-			sql.append("SELECT 45, COD_N_MERCA, '-', SYSDATE, COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION, ");
+			sql.append("SELECT 45, COD_N_MERCA||'-'||COD_V_ALMACEN, COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION, ");
 			sql.append("'N', 'N', 'N', SYSDATE, 'GESADUAN', ?codigoUsuario ");
 			sql.append("FROM ( ");
-			sql.append("SELECT DVL.COD_N_MERCA, DV.COD_N_DECLARACION_VALOR, DV.NUM_ANYO, DV.COD_N_VERSION, ");
-			sql.append("ROW_NUMBER() OVER(PARTITION BY DVL.COD_N_MERCA,DV.COD_N_DECLARACION_VALOR,DV.NUM_ANYO,DV.COD_N_VERSION  ");
-			sql.append("ORDER BY DVL.COD_N_MERCA) NUMERO ");
+			sql.append("SELECT DVL.COD_N_MERCA, DV.COD_N_DECLARACION_VALOR, DV.NUM_ANYO, DV.COD_N_VERSION,CE.COD_V_ALMACEN, ");
+			sql.append("ROW_NUMBER() OVER( ");
+			sql.append("PARTITION BY DVL.COD_N_MERCA,CE.COD_V_ALMACEN,DV.COD_N_DECLARACION_VALOR,DV.NUM_ANYO,DV.COD_N_VERSION ");
+			sql.append("ORDER BY DVL.COD_N_MERCA,CE.COD_V_ALMACEN) NUMERO ");
 			sql.append("FROM O_DECLARACION_VALOR_CAB DV ");
-			sql.append("INNER JOIN O_DECLARACION_VALOR_LIN DVL ON (DVL.COD_N_DECLARACION_VALOR = DV.COD_N_DECLARACION_VALOR  ");
+			sql.append("INNER JOIN O_DECLARACION_VALOR_LIN DVL ON (DVL.COD_N_DECLARACION_VALOR = DV.COD_N_DECLARACION_VALOR ");
 			sql.append("AND DVL.NUM_ANYO = DV.NUM_ANYO AND DVL.COD_N_VERSION = DV.COD_N_VERSION) ");
-			sql.append("INNER JOIN O_CONTENEDOR_EXPEDIDO CE ON (CE.COD_N_FACTURA = DV.COD_N_DECLARACION_VALOR AND CE.NUM_ANYO_FACTURA = DV.NUM_ANYO  ");
-			sql.append("AND CE.COD_N_VERSION_FACTURA = DV.COD_N_VERSION) ");			
+			sql.append("INNER JOIN O_CONTENEDOR_EXPEDIDO CE ON (CE.COD_N_DECLARACION_VALOR = DV.COD_N_DECLARACION_VALOR ");
+			sql.append("AND CE.NUM_ANYO_DV = DV.NUM_ANYO AND CE.COD_N_VERSION_DV= DV.COD_N_VERSION) ");
 			sql.append("LEFT JOIN S_PCA_PRODUCTO PCA ON (PCA.COD_N_PRODUCTO = DVL.COD_N_MERCA AND PCA.COD_V_CENTRO = CE.COD_V_ALMACEN) ");
-			sql.append("WHERE DV.COD_V_EXPEDICION IS NULL AND PCA.NUM_PCA IS NULL ");
+			sql.append("WHERE DV.COD_V_EXPEDICION IS NULL ");
+			sql.append("AND PCA.NUM_PCA IS NULL ");
 			sql.append("AND DV.NUM_DOSIER = ?numDosier ");
 			sql.append("AND DV.NUM_ANYO_DOSIER = ?anyoDosier ");
 			sql.append("AND NOT EXISTS ( ");
 			sql.append("SELECT 1 ");
 			sql.append("FROM S_NOTIF_ALERTA_EXPED_DV NA ");
-			sql.append("WHERE NA.COD_V_ELEMENTO = DVL.COD_N_MERCA ");
+			sql.append("WHERE NA.COD_V_ELEMENTO = DVL.COD_N_MERCA||'-'||CE.COD_V_ALMACEN ");
 			sql.append("AND NA.COD_N_DECLARACION_VALOR = DV.COD_N_DECLARACION_VALOR ");
 			sql.append("AND NA.NUM_ANYO = DV.NUM_ANYO ");
 			sql.append("AND NA.COD_N_VERSION = DV.COD_N_VERSION ");
@@ -652,7 +661,8 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 			sql.append("WHERE EXISTS ( ");
 			sql.append("SELECT 1 ");
 			sql.append("FROM O_DECLARACION_VALOR_CAB DVC ");
-			sql.append("WHERE DVC.COD_V_EXPEDICION IS NULL AND DVC.NUM_DOSIER = ?numDosier ");
+			sql.append("WHERE DVC.COD_V_EXPEDICION IS NULL ");
+			sql.append("AND DVC.NUM_DOSIER = ?numDosier ");
 			sql.append("AND DVC.NUM_ANYO_DOSIER = ?anyoDosier ");
 			sql.append("AND DVC.COD_N_DECLARACION_VALOR = DVL.COD_N_DECLARACION_VALOR ");
 			sql.append("AND DVC.NUM_ANYO = DVL.NUM_ANYO ");
@@ -661,7 +671,11 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 			sql.append("AND EXISTS ( ");
 			sql.append("SELECT 1 ");
 			sql.append("FROM S_NOTIF_ALERTA_EXPED_DV N ");
-			sql.append("WHERE N.COD_V_ELEMENTO = TO_CHAR(DVL.COD_N_MERCA) ");
+			sql.append("WHERE (N.COD_V_ELEMENTO = TO_CHAR(DVL.COD_N_MERCA) ");
+			sql.append("OR (SUBSTR(N.COD_V_ELEMENTO,1,INSTR(N.COD_V_ELEMENTO,'-')-1) IS NOT NULL ");
+			sql.append("AND N.COD_V_ELEMENTO = TO_CHAR(SUBSTR(N.COD_V_ELEMENTO,1,INSTR(N.COD_V_ELEMENTO,'-')-1)) ");
+			sql.append(") ");
+			sql.append(") ");
 			sql.append("AND N.COD_N_DECLARACION_VALOR = DVL.COD_N_DECLARACION_VALOR ");
 			sql.append("AND N.NUM_ANYO = DVL.NUM_ANYO ");
 			sql.append("AND N.COD_N_VERSION = DVL.COD_N_VERSION ");
@@ -683,9 +697,9 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 		try {			
 			StringBuilder sql = new StringBuilder();
 		
-			sql.append("INSERT INTO S_NOTIF_ALERTA_EXPED_DV (COD_N_ALERTA, COD_V_ELEMENTO, COD_V_EXPEDICION, FEC_D_ALBARAN, COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION, MCA_CORREO_ENVIADO, ");
+			sql.append("INSERT INTO S_NOTIF_ALERTA_EXPED_DV (COD_N_ALERTA, COD_V_ELEMENTO, COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION, MCA_CORREO_ENVIADO, ");
 			sql.append("MCA_SMS_ENVIADO, MCA_RESUELTA, FEC_D_CREACION, COD_V_APLICACION, COD_V_USUARIO_CREACION) ");
-			sql.append("SELECT 1, COD_N_DECLARACION_VALOR, '-', SYSDATE, COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION, ");
+			sql.append("SELECT 1, COD_N_DECLARACION_VALOR, COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION, ");
 			sql.append("'N', 'N', 'N', SYSDATE, 'GESADUAN', ?codigoUsuario ");
 			sql.append("FROM ( ");
 			sql.append("SELECT DV.COD_N_DECLARACION_VALOR, DV.NUM_ANYO, DV.COD_N_VERSION, ");
@@ -698,7 +712,8 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 			sql.append("FROM S_NOTIF_ALERTA_EXPED_DV NA ");
 			sql.append("WHERE NA.COD_N_DECLARACION_VALOR = DV.COD_N_DECLARACION_VALOR ");
 			sql.append("AND NA.NUM_ANYO = DV.NUM_ANYO ");
-			sql.append("AND NA.COD_N_VERSION = DV.COD_N_VERSION) ");
+			sql.append("AND NA.COD_N_VERSION = DV.COD_N_VERSION ");
+			sql.append("AND NA.COD_N_ALERTA <> 46) ");
 			sql.append(") TABLA ");
 			sql.append("WHERE NUMERO = 1 ");
 			sql.append("AND EXISTS ( ");
@@ -782,10 +797,9 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 		try {			
 			StringBuilder sql = new StringBuilder();
 		
-			sql.append("INSERT INTO S_NOTIF_ALERTA_EXPED_DV (COD_N_ALERTA, COD_V_ELEMENTO, COD_V_EXPEDICION, FEC_D_ALBARAN, COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION, MCA_CORREO_ENVIADO, ");
+			sql.append("INSERT INTO S_NOTIFICACION_ALERTA (COD_N_ALERTA, COD_V_ELEMENTO, MCA_CORREO_ENVIADO, ");
 			sql.append("MCA_SMS_ENVIADO, MCA_RESUELTA, FEC_D_CREACION, COD_V_APLICACION, COD_V_USUARIO_CREACION) ");
-			sql.append("SELECT 0, NUM_ANYO_DOSIER||'-'||NUM_DOSIER, '-', SYSDATE, COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION, ");
-			sql.append("'N', 'N', 'N', SYSDATE, 'GESADUAN', ?codigoUsuario ");
+			sql.append("SELECT 0, SUBSTR(NUM_ANYO_DOSIER,3,2)||'-'||LPAD(NUM_DOSIER,5,'0'), 'N', 'N', 'N', SYSDATE, 'GESADUAN', ?codigoUsuario ");
 			sql.append("FROM ( ");
 			sql.append("SELECT F.COD_N_DECLARACION_VALOR, F.NUM_ANYO, F.COD_N_VERSION, F.NUM_ANYO_DOSIER, F.NUM_DOSIER, ");
 			sql.append("ROW_NUMBER() OVER(PARTITION BY F.NUM_ANYO_DOSIER,F.NUM_DOSIER ORDER BY F.NUM_DOSIER) NUMERO ");
@@ -828,25 +842,25 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 			StringBuilder sql = new StringBuilder();
 		
 			sql.append("MERGE INTO O_CONTENEDOR_EXPEDIDO OCE USING ( ");
-			sql.append("SELECT DV.COD_N_DECLARACION_VALOR,DV.NUM_ANYO,DV.COD_N_VERSION,CE.COD_V_ALMACEN,CE.NUM_CONTENEDOR,CE.FEC_DT_EXPEDICION ");
+			sql.append("SELECT DV.COD_N_DECLARACION_VALOR, DV.NUM_ANYO, DV.COD_N_VERSION, CE.COD_V_ALMACEN, CE.NUM_CONTENEDOR, CE.FEC_DT_EXPEDICION ");
 			sql.append("FROM O_CONTENEDOR_EXPEDIDO CE ");
 			sql.append("INNER JOIN D_CARGA C ON (C.COD_V_ALMACEN_ORIGEN = CE.COD_V_ALMACEN AND C.COD_V_CARGA = CE.COD_V_CARGA ");
 			sql.append("AND C.COD_N_TIPO_CARGA IN (3,4)) ");
 			sql.append("INNER JOIN S_CARGA_PEDIDO CP ON (CP.COD_V_CARGA = CE.COD_V_CARGA AND CP.COD_V_ALMACEN_ORIGEN = CE.COD_V_ALMACEN) ");
-			sql.append("INNER JOIN O_DECLARACION_VALOR_CAB DV ON (DV.NUM_DOSIER = CE.NUM_DOSIER AND NUM_ANYO_DOSIER = CE.NUM_ANYO ");
+			sql.append("INNER JOIN O_DECLARACION_VALOR_CAB DV ON (DV.NUM_DOSIER = CE.NUM_DOSIER AND DV.NUM_ANYO_DOSIER = CE.NUM_ANYO  ");
 			sql.append("AND DV.COD_V_PEDIDO = CP.COD_V_PEDIDO) ");
 			sql.append("WHERE CE.NUM_DOSIER = ?numDosier ");
 			sql.append("AND CE.NUM_ANYO = ?anyoDosier ");
-			sql.append("GROUP BY COD_N_DECLARACION_VALOR,DV.NUM_ANYO,DV.COD_N_VERSION,CE.COD_V_ALMACEN,CE.NUM_CONTENEDOR,CE.FEC_DT_EXPEDICION ");
+			sql.append("GROUP BY DV.COD_N_DECLARACION_VALOR, DV.NUM_ANYO, DV.COD_N_VERSION, CE.COD_V_ALMACEN, CE.NUM_CONTENEDOR, CE.FEC_DT_EXPEDICION ");
 			sql.append(") TEMP ");
-			sql.append("ON (OCE.COD_V_ALMACEN = TEMP.COD_V_ALMACEN AND OCE.NUM_CONTENEDOR = TEMP.NUM_CONTENEDOR ");
+			sql.append("ON (OCE.COD_V_ALMACEN = TEMP.COD_V_ALMACEN AND OCE.NUM_CONTENEDOR = TEMP.NUM_CONTENEDOR  ");
 			sql.append("AND OCE.FEC_DT_EXPEDICION = TEMP.FEC_DT_EXPEDICION) ");
 			sql.append("WHEN MATCHED THEN UPDATE SET ");
-			sql.append("OCE.COD_N_FACTURA = TEMP.COD_N_DECLARACION_VALOR, ");
-			sql.append("OCE.NUM_ANYO_FACTURA = TEMP.NUM_ANYO, ");
-			sql.append("OCE.COD_N_VERSION_FACTURA = TEMP.COD_N_VERSION, ");
+			sql.append("OCE.COD_N_DECLARACION_VALOR = TEMP.COD_N_DECLARACION_VALOR, ");
+			sql.append("OCE.NUM_ANYO_DV = TEMP.NUM_ANYO, ");
+			sql.append("OCE.COD_N_VERSION_DV = TEMP.COD_N_VERSION, ");
 			sql.append("OCE.FEC_D_MODIFICACION = SYSDATE, ");
-			sql.append("OCE.COD_V_USR_MODIFICACION = ?codigoUsuario ");
+			sql.append("OCE.COD_V_USR_MODIFICACION = ?codigoUsuario");
 					
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
 			query.setParameter("numDosier", dosier.getNumDosier());
@@ -865,20 +879,20 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 		try {			
 			StringBuilder sql = new StringBuilder();
 		
-			sql.append("INSERT INTO S_FACTURA_PEDIDO (COD_N_FACTURA,NUM_ANYO_FACTURA,COD_N_VERSION_FACTURA,COD_V_PEDIDO, ");
-			sql.append("FEC_D_CREACION,COD_V_APLICACION,COD_V_USUARIO_CREACION) ");
-			sql.append("SELECT DV.COD_N_DECLARACION_VALOR,DV.NUM_ANYO,DV.COD_N_VERSION,E.COD_V_PEDIDO, ");
+			sql.append("INSERT INTO S_DECLARACION_VALOR_PEDIDO (COD_N_DECLARACION_VALOR,NUM_ANYO_DV,COD_N_VERSION_DV,COD_V_PEDIDO, ");
+			sql.append("FEC_DT_CREACION,COD_V_APLICACION,COD_V_USUARIO_CREACION) ");
+			sql.append("SELECT DV.COD_N_DECLARACION_VALOR, DV.NUM_ANYO, DV.COD_N_VERSION, E.COD_V_PEDIDO, ");
 			sql.append("SYSDATE,'GESADUAN', ?codigoUsuario ");
 			sql.append("FROM O_CONTENEDOR_EXPEDIDO CE ");
 			sql.append("INNER JOIN D_CARGA C ON (C.COD_V_ALMACEN_ORIGEN = CE.COD_V_ALMACEN AND C.COD_V_CARGA = CE.COD_V_CARGA  ");
 			sql.append("AND C.COD_N_TIPO_CARGA IN (1,2)) ");
 			sql.append("INNER JOIN O_EXPEDIDO E ON (E.NUM_CONTENEDOR_BASE = CE.NUM_CONTENEDOR AND E.COD_V_ALMACEN = CE.COD_V_ALMACEN  ");
 			sql.append("AND E.FEC_DT_EXPEDICION = CE.FEC_DT_EXPEDICION) ");
-			sql.append("INNER JOIN O_DECLARACION_VALOR_CAB DV ON (DV.NUM_DOSIER = CE.NUM_DOSIER AND NUM_ANYO_DOSIER = CE.NUM_ANYO  ");
+			sql.append("INNER JOIN O_DECLARACION_VALOR_CAB DV ON (DV.NUM_DOSIER = CE.NUM_DOSIER AND DV.NUM_ANYO_DOSIER = CE.NUM_ANYO  ");
 			sql.append("AND NVL(DV.COD_N_CATEGORIA,0) = NVL(C.COD_N_CATEGORIA,0)) ");
 			sql.append("WHERE CE.NUM_DOSIER = ?numDosier ");
 			sql.append("AND CE.NUM_ANYO = ?anyoDosier ");
-			sql.append("GROUP BY COD_N_DECLARACION_VALOR,DV.NUM_ANYO,DV.COD_N_VERSION,E.COD_V_PEDIDO ");
+			sql.append("GROUP BY DV.COD_N_DECLARACION_VALOR,DV.NUM_ANYO,DV.COD_N_VERSION,E.COD_V_PEDIDO ");
 					
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
 			query.setParameter("numDosier", dosier.getNumDosier());
@@ -897,16 +911,16 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 		try {			
 			StringBuilder sql = new StringBuilder();
 		
-			sql.append("INSERT INTO S_FACTURA_PEDIDO (COD_N_FACTURA,NUM_ANYO_FACTURA,COD_N_VERSION_FACTURA,COD_V_PEDIDO, ");
-			sql.append("FEC_D_CREACION,COD_V_APLICACION,COD_V_USUARIO_CREACION) ");
+			sql.append("INSERT INTO S_DECLARACION_VALOR_PEDIDO (COD_N_DECLARACION_VALOR,NUM_ANYO_DV,COD_N_VERSION_DV,COD_V_PEDIDO, ");
+			sql.append("FEC_DT_CREACION,COD_V_APLICACION,COD_V_USUARIO_CREACION) ");
 			sql.append("SELECT DV.COD_N_DECLARACION_VALOR,DV.NUM_ANYO,DV.COD_N_VERSION,DV.COD_V_PEDIDO, ");
 			sql.append("SYSDATE,'GESADUAN', ?codigoUsuario ");
 			sql.append("FROM O_CONTENEDOR_EXPEDIDO CE ");
 			sql.append("INNER JOIN D_CARGA C ON (C.COD_V_ALMACEN_ORIGEN = CE.COD_V_ALMACEN AND C.COD_V_CARGA = CE.COD_V_CARGA AND C.COD_N_TIPO_CARGA IN (3,4)) ");
-			sql.append("INNER JOIN O_DECLARACION_VALOR_CAB DV ON (DV.COD_N_DECLARACION_VALOR = CE.COD_N_FACTURA AND DV.NUM_ANYO = CE.NUM_ANYO_FACTURA AND DV.COD_N_VERSION = CE.COD_N_VERSION_FACTURA) ");
+			sql.append("INNER JOIN O_DECLARACION_VALOR_CAB DV ON (DV.COD_N_DECLARACION_VALOR = CE.COD_N_DECLARACION_VALOR AND DV.NUM_ANYO = CE.NUM_ANYO_DV AND DV.COD_N_VERSION = CE.COD_N_VERSION_DV) ");
 			sql.append("WHERE CE.NUM_DOSIER = ?numDosier ");
 			sql.append("AND CE.NUM_ANYO = ?anyoDosier ");
-			sql.append("GROUP BY COD_N_DECLARACION_VALOR,DV.NUM_ANYO,DV.COD_N_VERSION,DV.COD_V_PEDIDO ");
+			sql.append("GROUP BY DV.COD_N_DECLARACION_VALOR,DV.NUM_ANYO,DV.COD_N_VERSION,DV.COD_V_PEDIDO ");
 					
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
 			query.setParameter("numDosier", dosier.getNumDosier());
