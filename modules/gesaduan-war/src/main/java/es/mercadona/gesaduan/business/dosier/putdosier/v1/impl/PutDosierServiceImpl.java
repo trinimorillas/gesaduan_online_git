@@ -118,16 +118,16 @@ public class PutDosierServiceImpl implements PutDosierService {
 			putDosierDao.insertarLineasFacturas(dosierEquipoJPA);
 			
 			// Modificar facturas existentes incluidas en el dosier
-			putDosierDao.updateFacturas(dosierEquipoJPA);
+			// putDosierDao.updateFacturas(dosierEquipoJPA);
 			
 			// Modificar los contenedores ficticios de las cargas de Grupaje o Directo, para indicar su factura
-			putDosierDao.updateContenedoresFicticios(dosierEquipoJPA, dosierJPA.getUsuarioCreacion());
+			// putDosierDao.updateContenedoresFicticios(dosierEquipoJPA, dosierJPA.getUsuarioCreacion());
 			
 			// Insertar la relación de las facturas con sus pedidos asociados para cargas de Tienda o Traspaso
 			putDosierDao.relFacturaPedidoCargaTT(dosierEquipoJPA, dosierJPA.getUsuarioCreacion());
 			
 			// Insertar la relación de las facturas con sus pedidos asociados para cargas de Directo o Grupaje
-			putDosierDao.relFacturaPedidoCargaDG(dosierEquipoJPA, dosierJPA.getUsuarioCreacion());
+			// putDosierDao.relFacturaPedidoCargaDG(dosierEquipoJPA, dosierJPA.getUsuarioCreacion());
 			
 			// actualiza estado de la documentacion del equipo 
 			putDosierDao.actualizaEstadoDocumentacionEquipo(dosierEquipoJPA);			
