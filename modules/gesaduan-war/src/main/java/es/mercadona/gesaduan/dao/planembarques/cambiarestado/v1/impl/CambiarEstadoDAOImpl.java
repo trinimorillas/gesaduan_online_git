@@ -171,7 +171,7 @@ public class CambiarEstadoDAOImpl extends DaoBaseImpl<Long, PlanEmbarquesJPA> im
 			sql.append("INNER JOIN D_CARGA CA ON (CA.COD_V_CARGA = EC.COD_V_CARGA AND CA.COD_V_ALMACEN_ORIGEN = EC.COD_V_ALMACEN_ORIGEN AND CA.COD_N_TIPO_CARGA IN (3,4)) ");
 			sql.append("LEFT JOIN O_CONTENEDOR_EXPEDIDO CE ON (CE.COD_V_ALMACEN = EC.COD_V_ALMACEN_ORIGEN AND CE.COD_V_CARGA = EC.COD_V_CARGA) ");
 			sql.append("WHERE E.COD_N_EMBARQUE = ?codigoEmbarque ");
-			sql.append("AND CE.COD_N_EQUIPO IS NULL");
+			sql.append("AND CE.COD_V_CARGA IS NULL");
 			
 			final Query query = getEntityManager().createNativeQuery(sql.toString());				
 			query.setParameter("codigoEmbarque", codigoEmbarque);
