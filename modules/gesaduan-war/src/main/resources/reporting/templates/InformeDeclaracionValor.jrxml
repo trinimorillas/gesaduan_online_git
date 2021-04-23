@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version last-->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DeclaracionValor" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" resourceBundle="i18n" whenResourceMissingType="Empty" uuid="938b2d26-8a95-48d5-8909-ae63ed221526">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporteEncargos" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="22" isSummaryWithPageHeaderAndFooter="true" uuid="c0243a9d-9f1a-4382-834e-50258c32c8d7">
 	<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -12,95 +11,52 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<style name="StyleDetalle">
-		<conditionalStyle>
-			<conditionExpression><![CDATA[new Boolean($F{CODIGO}.trim().compareToIgnoreCase("TOTAL")==0)]]></conditionExpression>
-			<style mode="Opaque" backcolor="#E5F7EF" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
-		</conditionalStyle>
-		<conditionalStyle>
-			<conditionExpression><![CDATA[new Boolean($F{CODIGO}.trim().compareToIgnoreCase("TARIC")==0)]]></conditionExpression>
-			<style mode="Opaque" backcolor="#F5F5F5" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
-		</conditionalStyle>
-	</style>
+	<!-- parametros de textos -->
+	<parameter name="report.title" class="java.lang.String"/>	
+	<parameter name="report.subtitle" class="java.lang.String"/>	
 	<parameter name="header.factura" class="java.lang.String"/>	
-	<parameter name="FACTURA" class="java.lang.String"/>
-	<parameter name="ANYO" class="java.lang.String"/>
-	<parameter name="FECHA_DECLARACION" class="java.lang.String"/>
-	<parameter name="NUMERO_PEDIDO" class="java.lang.String"/>
-	<parameter name="PROVEEDOR" class="java.lang.String"/>
-	<parameter name="PROVINCIA_ORIGEN" class="java.lang.String"/>
-	<parameter name="CONDICIONES_ENTREGA" class="java.lang.String"/>
-	<parameter name="EXP_NOMBRE" class="java.lang.String"/>
-	<parameter name="EXP_DIRECCION" class="java.lang.String"/>
-	<parameter name="EXP_CP" class="java.lang.String"/>
-	<parameter name="EXP_POBLACION" class="java.lang.String"/>
-	<parameter name="EXP_PROVINCIA" class="java.lang.String"/>
-	<parameter name="EXP_NIF" class="java.lang.String"/>
-	<parameter name="IMP_NOMBRE" class="java.lang.String"/>
-	<parameter name="IMP_DIRECCION" class="java.lang.String"/>
-	<parameter name="IMP_CP" class="java.lang.String"/>
-	<parameter name="IMP_POBLACION" class="java.lang.String"/>
-	<parameter name="IMP_PROVINCIA" class="java.lang.String"/>
-	<parameter name="IMP_NIF" class="java.lang.String"/>
-	<parameter name="ES_FACTURA" class="java.lang.String"/>
-	<parameter name="TXT_INFO_REA" class="java.lang.String"/>
-	<parameter name="TXT_INFO_LPC" class="java.lang.String"/>
-	<parameter name="TIPO_INFORME" class="java.lang.String"/>
-	<parameter name="TXT_INFO_GENERAL" class="java.lang.String"/>
-	<queryString language="SQL">
-		<![CDATA[Select * from DelcaracionValor where CODIGO = $P{FACTURA}]]>
-	</queryString>
-	<field name="CODIGO" class="java.lang.String">
-		<fieldDescription><![CDATA[codigo]]></fieldDescription>
-	</field>
-	<field name="PRODUCTO" class="java.lang.String">
-		<fieldDescription><![CDATA[producto]]></fieldDescription>
-	</field>
-	<field name="MARCA" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="LPC" class="java.lang.String">
-		<fieldDescription><![CDATA[lpc]]></fieldDescription>
-	</field>
-	<field name="BULTOS" class="java.lang.String">
-		<fieldDescription><![CDATA[bultos]]></fieldDescription>
-	</field>
-	<field name="PESO_BRUTO" class="java.lang.String">
-		<fieldDescription><![CDATA[peso bruto]]></fieldDescription>
-	</field>
-	<field name="PESO_NETO" class="java.lang.String">
-		<fieldDescription><![CDATA[peso neto]]></fieldDescription>
-	</field>
-	<field name="CANTIDAD" class="java.lang.String">
-		<fieldDescription><![CDATA[cantidad]]></fieldDescription>
-	</field>
-	<field name="VOLUMEN" class="java.lang.String">
-		<fieldDescription><![CDATA[volumen]]></fieldDescription>
-	</field>
-	<field name="TIPO" class="java.lang.String">
-		<fieldDescription><![CDATA[tipo]]></fieldDescription>
-	</field>
-	<field name="ALCOHOL" class="java.lang.String">
-		<fieldDescription><![CDATA[alcohol]]></fieldDescription>
-	</field>
-	<field name="PLATO" class="java.lang.String">
-		<fieldDescription><![CDATA[plato]]></fieldDescription>
-	</field>
-	<field name="PRECIO" class="java.lang.String">
-		<fieldDescription><![CDATA[precio]]></fieldDescription>
-	</field>
-	<field name="IMPORTE" class="java.lang.String">
-		<fieldDescription><![CDATA[importe]]></fieldDescription>
-	</field>
-	<field name="CODIGO_REA" class="java.lang.String">
-		<fieldDescription><![CDATA[codigo REA]]></fieldDescription>
-	</field>
-	<field name="PAIS_ORIGEN" class="java.lang.String">
-		<fieldDescription><![CDATA[pais origen]]></fieldDescription>
-	</field>
+	<parameter name="header.declaracionValor" class="java.lang.String"/>	
+	<parameter name="header.fechaDV" class="java.lang.String"/>	
+	<parameter name="header.fechaFactura" class="java.lang.String"/>	
+	<parameter name="header.proveedor" class="java.lang.String"/>	
+	<parameter name="header.provinciaCarga" class="java.lang.String"/>	
+	<parameter name="header.condicionesEntrega" class="java.lang.String"/>	
+	<parameter name="header.exportador" class="java.lang.String"/>	
+	<parameter name="header.destinatario" class="java.lang.String"/>	
+	<parameter name="header.nif" class="java.lang.String"/>	
+	<parameter name="label.capacidad" class="java.lang.String"/>	
+	<parameter name="label.nombre" class="java.lang.String"/>	
+	<parameter name="label.planta" class="java.lang.String"/>	
+	<parameter name="report.footer.page" class="java.lang.String"/>	
+	<!-- parametros de cabecera -->	
+	<parameter name="factura" class="java.lang.String"/>	
+	<parameter name="anyo" class="java.lang.String"/>	
+	<parameter name="fechaDeclaracion" class="java.lang.String"/>	
+	<parameter name="proveedor" class="java.lang.String"/>	
+	<parameter name="provinciaOrigen" class="java.lang.String"/>	
+	<parameter name="condicionesEntrega" class="java.lang.String"/>	
+	<parameter name="exportadorNombre" class="java.lang.String"/>	
+	<parameter name="exportadorDireccion" class="java.lang.String"/>	
+	<parameter name="exportadorCP" class="java.lang.String"/>	
+	<parameter name="exportadorPoblacion" class="java.lang.String"/>	
+	<parameter name="exportadorProvincia" class="java.lang.String"/>	
+	<parameter name="exportadorNIF" class="java.lang.String"/>	
+	<parameter name="importadorNombre" class="java.lang.String"/>	
+	<parameter name="importadorDireccion" class="java.lang.String"/>	
+	<parameter name="importadorCP" class="java.lang.String"/>	
+	<parameter name="importadorPoblacion" class="java.lang.String"/>	
+	<parameter name="importadorProvincia" class="java.lang.String"/>	
+	<parameter name="importadorNIF" class="java.lang.String"/>	
+	<parameter name="txtInfoREA" class="java.lang.String"/>	
+	<parameter name="txtInfoLPC" class="java.lang.String"/>	
+	<parameter name="txtInfoGeneral" class="java.lang.String"/>		
+	<!-- parametros subreport -->	
+	<parameter name="SUBREPORT_DS" class="net.sf.jasperreports.engine.JRDataSource"/>
+	<parameter name="SUBREPORT_TMPL" class="net.sf.jasperreports.engine.JasperReport"/>
+	<parameter name="SUBREPORT_PARAM" class="java.util.HashMap"/>
 	<variable name="V_CURRENT_PAGE_NUMBER" class="java.lang.Integer" resetType="Page">
 		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
-	</variable>
+	</variable>	
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -128,18 +84,7 @@
 				<textElement>
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{header.proveedor} + ":"]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement positionType="FixRelativeToBottom" x="560" y="7" width="220" height="12" uuid="b71f5fbf-3511-482d-918e-d69cc9d63e70">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="local_mesure_unity" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<textElement>
-					<font fontName="SansSerif" size="9"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{NUMERO_PEDIDO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{header.proveedor} + ":"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="FixRelativeToBottom" x="630" y="33" width="150" height="12" uuid="6580f936-9db6-4ab2-8d4f-482dbbac63b2">
@@ -149,7 +94,7 @@
 				<textElement>
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{PROVINCIA_ORIGEN}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{provinciaOrigen}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="FixRelativeToBottom" x="510" y="33" width="120" height="12" forecolor="#039760" uuid="1d2e4d6e-d230-4751-8c97-3c79faf15f85">
@@ -161,19 +106,7 @@
 				<textElement>
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{header.provinciaCarga} + ":"]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement positionType="FixRelativeToBottom" x="510" y="7" width="50" height="12" forecolor="#039760" uuid="597387a0-e029-4d83-9248-d27750372b2c">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<box leftPadding="3"/>
-				<textElement>
-					<font fontName="SansSerif" size="9"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{header.numeroPedido} + ":"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{header.provinciaCarga} + ":"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="FixRelativeToBottom" x="560" y="20" width="220" height="12" uuid="3855f02f-9df1-4a23-9f72-96bb4041407d">
@@ -183,7 +116,7 @@
 				<textElement>
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{PROVEEDOR}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{proveedor}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="FixRelativeToBottom" x="615" y="46" width="165" height="12" uuid="64a66f53-0446-4fb9-b736-c4713847c54f">
@@ -195,7 +128,7 @@
 				<textElement>
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{CONDICIONES_ENTREGA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{condicionesEntrega}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="FixRelativeToBottom" x="510" y="46" width="105" height="12" forecolor="#039760" uuid="c3640785-241c-45e8-bbc5-c4bc14e72f3d">
@@ -209,254 +142,14 @@
 				<textElement>
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{header.condicionesEntrega} + ":"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{header.condicionesEntrega} + ":"]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="144" splitType="Stretch">
+		<band height="120" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="120" width="40" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="b94b37e4-8b01-4b24-b0d5-6c5548c30706">
-					<property name="local_mesure_unitheight" value="pixel"/>
-				</reportElement>
-				<box topPadding="1" leftPadding="3" rightPadding="2">
-					<topPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
-					<leftPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
-					<bottomPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
-					<rightPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
-				</box>
-				<textElement>
-					<font fontName="SansSerif" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{column.codigo}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
-				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="215" y="120" width="30" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="db515830-8937-45e6-ba39-1da1d2b4102f">
-					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="local_mesure_unitwidth" value="pixel"/>
-				</reportElement>
-				<box topPadding="1" leftPadding="5" rightPadding="2">
-					<topPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
-					<leftPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
-					<bottomPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
-					<rightPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
-				</box>
-				<textElement textAlignment="Left">
-					<font fontName="SansSerif" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{column.lpc}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="245" y="120" width="45" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="b19ce459-4fcc-4192-bcc8-d14a0ea1417a">
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box topPadding="1" leftPadding="2" rightPadding="2">
-					<topPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
-					<leftPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
-					<bottomPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
-					<rightPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
-				</box>
-				<textElement textAlignment="Center">
-					<font fontName="SansSerif" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{column.bultos}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="360" y="120" width="60" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="1a4adee5-ba93-41cf-a17e-d67ac4cf47c4">
-					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<box topPadding="1" leftPadding="3" rightPadding="4">
-					<topPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
-					<leftPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
-					<bottomPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
-					<rightPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
-				</box>
-				<textElement textAlignment="Right" markup="html">
-					<font fontName="SansSerif" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{column.pesoNeto} + "<br/>" + $R{column.kg}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="480" y="120" width="60" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="2a6d9f66-aac8-4ca7-8e35-0391e762ee47">
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="local_mesure_unitx" value="pixel"/>
-				</reportElement>
-				<box topPadding="1" leftPadding="3" rightPadding="4">
-					<topPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
-					<leftPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
-					<bottomPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
-					<rightPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
-				</box>
-				<textElement textAlignment="Right">
-					<font fontName="SansSerif" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{column.cantidad}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="420" y="120" width="60" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="4f0f1e66-563b-443d-90b3-fcd81332d383">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-				</reportElement>
-				<box topPadding="1" leftPadding="3" rightPadding="4">
-					<topPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
-					<leftPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
-					<bottomPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
-					<rightPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
-				</box>
-				<textElement textAlignment="Right" markup="html">
-					<font fontName="SansSerif" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{column.pesoBruto} + "<br/>" + $R{column.kg}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="290" y="120" width="70" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="1a30f911-989c-4fbd-9734-0697f4a1622e">
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="local_mesure_unitx" value="pixel"/>
-				</reportElement>
-				<box topPadding="1" leftPadding="3" rightPadding="2">
-					<topPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
-					<leftPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
-					<bottomPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
-					<rightPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
-				</box>
-				<textElement>
-					<font fontName="SansSerif" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{column.tipo}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="40" y="120" width="110" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="cd42ae37-ff5b-431f-a585-cb383efc04db">
-					<property name="local_mesure_unitwidth" value="pixel"/>
-				</reportElement>
-				<box topPadding="1" leftPadding="3" rightPadding="2">
-					<topPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
-					<leftPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
-					<bottomPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
-					<rightPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
-				</box>
-				<textElement>
-					<font fontName="SansSerif" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{column.productos}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="540" y="120" width="40" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="99327d7f-7de2-4446-adaf-ea631aa9c769">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="local_mesure_unitx" value="pixel"/>
-				</reportElement>
-				<box topPadding="1" leftPadding="3" rightPadding="4">
-					<topPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
-					<leftPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
-					<bottomPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
-					<rightPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
-				</box>
-				<textElement textAlignment="Right" markup="html">
-					<font fontName="SansSerif" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{column.volumen} + "<br/>" + $R{column.l}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="620" y="120" width="40" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="7d5407ce-4d07-4a89-9949-064e75658682">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="local_mesure_unitx" value="pixel"/>
-				</reportElement>
-				<box topPadding="1" leftPadding="2" rightPadding="3">
-					<topPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
-					<leftPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
-					<bottomPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
-					<rightPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
-				</box>
-				<textElement textAlignment="Right" markup="html">
-					<font fontName="SansSerif" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{column.plato} +  "<br/>" + $R{column.g}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="580" y="120" width="40" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="6c923860-12d4-4488-b680-dab12c0b31e9">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="local_mesure_unitx" value="pixel"/>
-				</reportElement>
-				<box topPadding="1" leftPadding="3" rightPadding="4">
-					<topPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
-					<leftPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
-					<bottomPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
-					<rightPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
-				</box>
-				<textElement textAlignment="Right" markup="html">
-					<font fontName="SansSerif" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{column.alcohol} + "<br/>" + $R{column.g}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="660" y="120" width="60" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="061e35b8-6fe8-44c9-a286-54e8e208c7eb">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-				</reportElement>
-				<box topPadding="1" leftPadding="3" rightPadding="4">
-					<topPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
-					<leftPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
-					<bottomPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
-					<rightPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
-				</box>
-				<textElement textAlignment="Right" markup="html">
-					<font fontName="SansSerif" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{column.precio} + "<br/>(€)"]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="720" y="120" width="60" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="d5630123-0df9-42da-872b-415ddee356df">
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<box topPadding="1" leftPadding="3" rightPadding="4">
-					<topPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
-					<leftPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
-					<bottomPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
-					<rightPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
-				</box>
-				<textElement textAlignment="Right" markup="html">
-					<font fontName="SansSerif" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{column.importe} + "<br/>(€)"]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="150" y="120" width="65" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="519075c6-4769-4b39-8d58-438483a974ed">
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box topPadding="1" leftPadding="2" rightPadding="2">
-					<topPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
-					<leftPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
-					<bottomPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
-					<rightPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
-				</box>
-				<textElement textAlignment="Center">
-					<font fontName="SansSerif" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{column.marca}]]></textFieldExpression>
-			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="Float" x="1" y="72" width="40" height="12" uuid="85eb17a1-5eb8-4c39-b8ab-29c2d69cc16a">
 					<property name="local_mesure_unitheight" value="pixel"/>
@@ -465,7 +158,7 @@
 				<textElement>
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{EXP_CP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{exportadorCP}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="Float" x="1" y="48" width="230" height="12" uuid="4931f645-49fc-43fc-922c-8cca43133b31">
@@ -475,7 +168,7 @@
 				<textElement>
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{EXP_NOMBRE}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{exportadorNombre}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="Float" x="510" y="84" width="220" height="12" uuid="03bbf481-1982-4fe7-8bf7-bc8d0be445d9">
@@ -485,7 +178,7 @@
 				<textElement>
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{IMP_PROVINCIA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{importadorProvincia}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement positionType="Float" x="1" y="31" width="230" height="12" forecolor="#039760" uuid="c02ef5bc-c141-4202-a10f-56cb273cf8b6">
@@ -495,7 +188,7 @@
 				<textElement>
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{header.exportador}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{header.exportador}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="Float" x="260" y="3" width="80" height="20" forecolor="#039760" uuid="34a8ca5f-43c9-4388-8a22-cb4dc9815b1b">
@@ -507,17 +200,17 @@
 				<textElement>
 					<font fontName="SansSerif" size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{header.fechaFactura} + ":"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{header.fechaFactura} + ":"]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="3" width="260" height="20" uuid="3776188c-80f4-4f5b-bcfc-8d38e1d61eb4">
-					<property name="local_mesure_unity" value="pixel"/>
+					<property name="local_mesure_unity" value="pixel"/> 
 				</reportElement>
 				<box leftPadding="3"/>
 				<textElement markup="html">
 					<font fontName="SansSerif" size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{header.factura} + " " + $P{ANYO} + " - " + $P{FACTURA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{header.factura} + " " + $P{anyo} + " - " + $P{factura}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="Float" x="41" y="72" width="190" height="12" uuid="600377c9-aff9-41be-81e5-a6eecb25dd68">
@@ -527,7 +220,7 @@
 				<textElement>
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{EXP_POBLACION}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{exportadorPoblacion}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="Float" x="510" y="72" width="40" height="12" uuid="61244da3-57f3-472e-bd1f-65cedb606b29">
@@ -537,7 +230,7 @@
 				<textElement>
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{IMP_CP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{importadorCP}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="Float" x="1" y="60" width="230" height="12" uuid="c4a4a9d7-5a52-41a7-a38c-35eb8a063aad">
@@ -547,7 +240,7 @@
 				<textElement>
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{EXP_DIRECCION}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{exportadorDireccion}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="Float" x="550" y="72" width="180" height="12" uuid="b2aa2f9e-8101-4cac-9a34-f3ab3f226470">
@@ -557,7 +250,7 @@
 				<textElement>
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{IMP_POBLACION}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{importadorPoblacion}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="Float" x="510" y="48" width="220" height="12" uuid="8565ac67-6f99-4ba6-b41f-3213b56f8044">
@@ -567,7 +260,7 @@
 				<textElement>
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{IMP_NOMBRE}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{importadorNombre}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="Float" x="510" y="96" width="220" height="12" uuid="dbafcac6-5ae8-4993-abb2-c9e426ee7c90">
@@ -577,7 +270,7 @@
 				<textElement>
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{header.nif} + ": " + $P{IMP_NIF}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{header.nif} + ": " + $P{importadorNIF}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement positionType="Float" x="510" y="31" width="220" height="12" forecolor="#039760" uuid="f2b7cb4b-7316-4578-81a6-08d70fc74b62">
@@ -587,7 +280,7 @@
 				<textElement>
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{header.destinatario}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{header.destinatario}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="Float" x="340" y="3" width="90" height="20" uuid="39883d8c-1dc7-4cac-aaa7-ec16304af470">
@@ -599,7 +292,7 @@
 				<textElement>
 					<font fontName="SansSerif" size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{FECHA_DECLARACION}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{fechaDeclaracion}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="Float" x="510" y="60" width="220" height="12" uuid="c1783917-524b-4074-8140-e0c368a43e3b">
@@ -609,7 +302,7 @@
 				<textElement>
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{IMP_DIRECCION}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{importadorDireccion}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="Float" x="1" y="84" width="230" height="12" uuid="24738a92-3ecd-4614-a825-90cb890d3014">
@@ -620,7 +313,7 @@
 				<textElement>
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{EXP_PROVINCIA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{exportadorProvincia}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="Float" x="1" y="96" width="230" height="12" uuid="f6bdb66d-be66-4559-a4a2-077839cbc780">
@@ -631,240 +324,21 @@
 				<textElement>
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{header.nif} + ": " + $P{EXP_NIF}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{header.nif} + ": " + $P{exportadorNIF}]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="20" splitType="Prevent">
-			<property name="local_mesure_unitheight" value="pixel"/>
-			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<textField isStretchWithOverflow="true">
-				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="0" y="0" width="40" height="20" uuid="55148a93-4218-431a-9160-34c0fe2f0332">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		<band height="20" splitType="Stretch">
+			<subreport>
+				<reportElement positionType="Float" x="0" y="0" width="800" height="20" uuid="24be4ab8-100a-49fe-969d-520ccfa4cca9">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<box topPadding="4" leftPadding="2" bottomPadding="4" rightPadding="2">
-					<topPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<leftPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<bottomPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<rightPen lineWidth="0.5" lineColor="#C0C0C0"/>
-				</box>
-				<textElement>
-					<font fontName="SansSerif" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{CODIGO}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="40" y="0" width="110" height="20" uuid="01b545d9-504e-4f23-bea7-262cb28ab3a5">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="local_mesure_unitwidth" value="pixel"/>
-				</reportElement>
-				<box topPadding="4" leftPadding="2" bottomPadding="4" rightPadding="2">
-					<topPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<leftPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<bottomPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<rightPen lineWidth="0.5" lineColor="#C0C0C0"/>
-				</box>
-				<textElement markup="html">
-					<font fontName="SansSerif" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{PRODUCTO} +  
-(!$F{CODIGO_REA}.isEmpty()? "<br/><br/>" +$R{column.codigoREA} + ": " + $F{CODIGO_REA}  : "") + 
-(!$F{PAIS_ORIGEN}.isEmpty()? "<br/><br/>" +$R{column.paisOrigen} + ": " + $F{PAIS_ORIGEN}  : "")]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="215" y="0" width="30" height="20" uuid="2ce86d30-8950-46d9-bd3e-53d5ac900916">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<box topPadding="4" leftPadding="5" bottomPadding="4" rightPadding="2">
-					<topPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<leftPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<bottomPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<rightPen lineWidth="0.5" lineColor="#C0C0C0"/>
-				</box>
-				<textElement>
-					<font fontName="SansSerif" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{LPC}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="245" y="0" width="45" height="20" uuid="2e13f8b1-622c-4a28-81ff-143a7b3049e4">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box topPadding="4" leftPadding="2" bottomPadding="4" rightPadding="4">
-					<topPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<leftPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<bottomPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<rightPen lineWidth="0.5" lineColor="#C0C0C0"/>
-				</box>
-				<textElement textAlignment="Right">
-					<font fontName="SansSerif" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{BULTOS}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="290" y="0" width="70" height="20" uuid="cf25f62c-0c62-4e8b-9e0d-46ca7660081f">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<box topPadding="4" leftPadding="2" bottomPadding="4" rightPadding="2">
-					<topPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<leftPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<bottomPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<rightPen lineWidth="0.5" lineColor="#C0C0C0"/>
-				</box>
-				<textElement>
-					<font fontName="SansSerif" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{TIPO}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="360" y="0" width="60" height="20" uuid="f6c10953-e957-4702-9a6f-56f894735c39">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="local_mesure_unitwidth" value="pixel"/>
-				</reportElement>
-				<box topPadding="4" leftPadding="2" bottomPadding="4" rightPadding="4">
-					<topPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<leftPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<bottomPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<rightPen lineWidth="0.5" lineColor="#C0C0C0"/>
-				</box>
-				<textElement textAlignment="Right">
-					<font fontName="SansSerif" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{PESO_NETO}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="420" y="0" width="60" height="20" uuid="ada1faf0-696c-4b71-b8b0-21b7e3efc556">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-				</reportElement>
-				<box topPadding="4" leftPadding="2" bottomPadding="4" rightPadding="4">
-					<topPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<leftPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<bottomPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<rightPen lineWidth="0.5" lineColor="#C0C0C0"/>
-				</box>
-				<textElement textAlignment="Right">
-					<font fontName="SansSerif" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{PESO_BRUTO}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="480" y="0" width="60" height="20" uuid="2e13f8b1-622c-4a28-81ff-143a7b3049e4">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box topPadding="4" leftPadding="2" bottomPadding="4" rightPadding="4">
-					<topPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<leftPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<bottomPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<rightPen lineWidth="0.5" lineColor="#C0C0C0"/>
-				</box>
-				<textElement textAlignment="Right">
-					<font fontName="SansSerif" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{CANTIDAD}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="540" y="0" width="40" height="20" uuid="36746d59-db09-4779-954b-3bad1bd78358">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box topPadding="4" leftPadding="2" bottomPadding="4" rightPadding="4">
-					<topPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<leftPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<bottomPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<rightPen lineWidth="0.5" lineColor="#C0C0C0"/>
-				</box>
-				<textElement textAlignment="Right">
-					<font fontName="SansSerif" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{VOLUMEN}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="580" y="0" width="40" height="20" uuid="9dd68b4c-f961-41bc-956d-a7b49f822ac7">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box topPadding="4" leftPadding="2" bottomPadding="4" rightPadding="4">
-					<topPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<leftPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<bottomPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<rightPen lineWidth="0.5" lineColor="#C0C0C0"/>
-				</box>
-				<textElement textAlignment="Right">
-					<font fontName="SansSerif" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{ALCOHOL}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="620" y="0" width="40" height="20" uuid="1174fea5-6a26-4c0b-99b2-b1afc2dab649">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box topPadding="4" leftPadding="2" bottomPadding="4" rightPadding="4">
-					<topPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<leftPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<bottomPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<rightPen lineWidth="0.5" lineColor="#C0C0C0"/>
-				</box>
-				<textElement textAlignment="Right">
-					<font fontName="SansSerif" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{PLATO}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="660" y="0" width="60" height="20" uuid="1d2930bf-16b5-4f99-a974-177427169272">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-				</reportElement>
-				<box topPadding="4" leftPadding="2" bottomPadding="4" rightPadding="4">
-					<topPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<leftPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<bottomPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<rightPen lineWidth="0.5" lineColor="#C0C0C0"/>
-				</box>
-				<textElement textAlignment="Right">
-					<font fontName="SansSerif" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{PRECIO}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="720" y="0" width="60" height="20" uuid="54cc2556-4fed-4bd5-a094-8c09b794bb25">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<box topPadding="4" leftPadding="2" bottomPadding="4" rightPadding="4">
-					<topPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<leftPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<bottomPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<rightPen lineWidth="0.5" lineColor="#C0C0C0"/>
-				</box>
-				<textElement textAlignment="Right">
-					<font fontName="SansSerif" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{IMPORTE}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="150" y="0" width="65" height="20" uuid="008a946a-4cf8-4a1d-9f82-6935cebe8632">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<box topPadding="4" leftPadding="5" bottomPadding="4" rightPadding="2">
-					<topPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<leftPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<bottomPen lineWidth="0.5" lineColor="#C0C0C0"/>
-					<rightPen lineWidth="0.5" lineColor="#C0C0C0"/>
-				</box>
-				<textElement>
-					<font fontName="SansSerif" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{MARCA}]]></textFieldExpression>
-			</textField>
+				<parametersMapExpression><![CDATA[$P{SUBREPORT_PARAM}]]></parametersMapExpression>
+				<dataSourceExpression><![CDATA[$P{SUBREPORT_DS}]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_TMPL}]]></subreportExpression>
+			</subreport>
 		</band>
 	</detail>
 	<columnFooter>
@@ -882,9 +356,9 @@
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean($V{PAGE_NUMBER}.intValue() == $V{V_CURRENT_PAGE_NUMBER}.intValue())?
-$P{TXT_INFO_GENERAL} +
-(!$P{TXT_INFO_REA}.isEmpty()? "<br/>"  + $P{TXT_INFO_REA}  : "") + 
-(!$P{TXT_INFO_LPC}.isEmpty()? "<br/>"  + $P{TXT_INFO_LPC}  : "") 
+$P{txtInfoGeneral} +
+(!$P{txtInfoREA}.isEmpty()? "<br/>"  + $P{txtInfoREA}  : "") + 
+(!$P{txtInfoLPC}.isEmpty()? "<br/>"  + $P{txtInfoLPC}  : "") 
 : ""]]></textFieldExpression>
 			</textField>
 		</band>
@@ -896,7 +370,7 @@ $P{TXT_INFO_GENERAL} +
 				<textElement textAlignment="Right">
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[msg($R{report.footer.page}, $V{PAGE_NUMBER})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[msg($P{report.footer.page}, $V{PAGE_NUMBER})]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
 				<reportElement x="740" y="0" width="33" height="20" uuid="93575406-9258-4678-a714-c7184aa505df"/>
@@ -906,5 +380,5 @@ $P{TXT_INFO_GENERAL} +
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 		</band>
-	</pageFooter>
+	</pageFooter>	
 </jasperReport>
