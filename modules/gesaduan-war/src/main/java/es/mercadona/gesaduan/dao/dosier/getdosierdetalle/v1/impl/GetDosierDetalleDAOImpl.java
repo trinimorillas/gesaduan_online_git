@@ -383,14 +383,10 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 				order.append("ORDER BY C.MCA_CONTIENE_LPC DESC");
 			else if (orden.equals("+marcaLpC"))
 				order.append("ORDER BY C.MCA_CONTIENE_LPC ASC");			
-			else if (orden.equals("-codigoDV "))
+			else if (orden.equals("-facturaContenedor"))
 				order.append("ORDER BY CE.COD_N_DECLARACION_VALOR DESC");
-			else if (orden.equals("+codigoDV "))
+			else if (orden.equals("+facturaContenedor"))
 				order.append("ORDER BY CE.COD_N_DECLARACION_VALOR ASC");
-			else if (orden.equals("-anyoDV"))
-				order.append("ORDER BY CE.NUM_ANYO_DV DESC");
-			else if (orden.equals("+anyoDV"))
-				order.append("ORDER BY CE.NUM_ANYO_DV ASC");
 			
 			
 			sql.append(select).append(from).append(where).append(order);	
