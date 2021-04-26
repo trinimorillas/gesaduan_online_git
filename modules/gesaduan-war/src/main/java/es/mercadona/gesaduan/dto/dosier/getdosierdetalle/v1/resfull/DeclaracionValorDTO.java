@@ -11,6 +11,7 @@ public class DeclaracionValorDTO extends AbstractDTO {
 	private Integer anyoDV;
 	private String fechaExpedicion;
 	private OrigenDTO origen;
+	private String esDVCorrecta;
 	private List<PedidoDTO> pedido;
 
 	/**
@@ -67,6 +68,20 @@ public class DeclaracionValorDTO extends AbstractDTO {
 	 */
 	public void setOrigen(OrigenDTO origen) {
 		this.origen = origen;
+	}
+
+	/**
+	 * @return the esDVCorrecta
+	 */
+	public String getEsDVCorrecta() {
+		return esDVCorrecta;
+	}
+
+	/**
+	 * @param esDVCorrecta the esDVCorrecta to set
+	 */
+	public void setEsDVCorrecta(String esDVCorrecta) {
+		this.esDVCorrecta = esDVCorrecta;
 	}
 
 	/**
