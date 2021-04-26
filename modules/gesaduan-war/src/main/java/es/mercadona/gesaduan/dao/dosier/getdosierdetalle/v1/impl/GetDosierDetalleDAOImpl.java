@@ -197,12 +197,12 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 
 			final StringBuilder sql = new StringBuilder();
 			
-			sql.append("SELECT DISTINCT F.COD_N_DECLARACION_VALOR,F.NUM_ANYO, ");
-			sql.append("DECODE(F.COD_V_EXPEDICION,NULL,F.FEC_DT_EXPEDICION,F.FEC_D_ALBARAN) AS FEC_DT_EXPEDICION, ");
-			sql.append("DECODE(F.COD_N_PROVEEDOR,NULL,NULL,F.COD_N_PROVEEDOR) AS CODIGO_ORIGEN, ");
-			sql.append("DECODE(P.TXT_RAZON_SOCIAL,NULL,BL.TXT_NOMBRE,P.TXT_RAZON_SOCIAL) AS NOMBRE_ORIGEN, ");
+			sql.append("SELECT DISTINCT F.COD_N_DECLARACION_VALOR, F.NUM_ANYO, F.MCA_DV_CORRECTA, ");
+			sql.append("DECODE(F.COD_V_EXPEDICION, NULL, F.FEC_DT_EXPEDICION, F.FEC_D_ALBARAN) AS FEC_DT_EXPEDICION, ");
+			sql.append("DECODE(F.COD_N_PROVEEDOR, NULL, NULL, F.COD_N_PROVEEDOR) AS CODIGO_ORIGEN, ");
+			sql.append("DECODE(P.TXT_RAZON_SOCIAL, NULL, BL.TXT_NOMBRE, P.TXT_RAZON_SOCIAL) AS NOMBRE_ORIGEN, ");
 			sql.append("F.COD_N_PROVINCIA_CARGA, ");
-			sql.append("DECODE(F.COD_V_EXPEDICION,NULL,'BLOQUE','PROVEEDOR') AS TIPO_ORIGEN ");
+			sql.append("DECODE(F.COD_V_EXPEDICION, NULL, 'BLOQUE', 'PROVEEDOR') AS TIPO_ORIGEN ");
 			sql.append("FROM O_DECLARACION_VALOR_CAB F ");
 			sql.append("INNER JOIN O_CONTENEDOR_EXPEDIDO CE ON (CE.COD_N_DECLARACION_VALOR = F.COD_N_DECLARACION_VALOR AND CE.NUM_ANYO_DV = F.NUM_ANYO ");
 			sql.append("AND CE.COD_N_VERSION_DV = F.COD_N_VERSION) ");
@@ -250,12 +250,13 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 					OrigenDTO origen = new OrigenDTO();
 					
 					if (tmp[0] != null) dv.setCodigoDV(Long.parseLong(String.valueOf(tmp[0])));
-					if (tmp[1] != null) dv.setAnyoDV(Integer.parseInt(String.valueOf(tmp[1])));					
-					if (tmp[2] != null) dv.setFechaExpedicion(String.valueOf(tmp[2]));					
-					if (tmp[3] != null) origen.setCodigoOrigen(String.valueOf(tmp[3]));
-					if (tmp[4] != null) origen.setNombreOrigen(String.valueOf(tmp[4]));
-					if (tmp[5] != null) origen.setProvinciaOrigen(String.valueOf(tmp[5]));
-					if (tmp[6] != null) origen.setTipoOrigen(String.valueOf(tmp[6]));
+					if (tmp[1] != null) dv.setAnyoDV(Integer.parseInt(String.valueOf(tmp[1])));
+					if (tmp[2] != null) dv.setEsDVCorrecta(String.valueOf(tmp[2]));
+					if (tmp[3] != null) dv.setFechaExpedicion(String.valueOf(tmp[3]));					
+					if (tmp[4] != null) origen.setCodigoOrigen(String.valueOf(tmp[4]));
+					if (tmp[5] != null) origen.setNombreOrigen(String.valueOf(tmp[5]));
+					if (tmp[6] != null) origen.setProvinciaOrigen(String.valueOf(tmp[6]));
+					if (tmp[7] != null) origen.setTipoOrigen(String.valueOf(tmp[7]));
 					dv.setOrigen(origen);
 					listaDV.add(dv);
 					
