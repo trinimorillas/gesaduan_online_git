@@ -1,4 +1,4 @@
-package es.mercadona.gesaduan.business.declaracionesdevalor.getdvdocumento.v2.impl;
+package es.mercadona.gesaduan.business.declaracionesdevalorapi.getdvdocumento.v1.impl;
 
 
 import java.io.File;
@@ -23,17 +23,17 @@ import es.mercadona.fwk.reporting.DataRecordType;
 import es.mercadona.fwk.reporting.Report;
 import es.mercadona.fwk.reporting.ReportTemplate;
 import es.mercadona.fwk.reporting.ReportingService;
-import es.mercadona.gesaduan.business.declaracionesdevalor.getdvdocumento.v2.DVDocumentoPDFService;
-import es.mercadona.gesaduan.dao.declaracionesdevalor.getdvdocumento.v2.GetDVDocumentoOnlineDAO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvdocumento.v2.InputDeclaracionesDeValorDocumentoDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvdocumento.v2.OutputDeclaracionesDeValorDocCabDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvdocumento.v2.OutputDeclaracionesDeValorDocLinDTO;
+import es.mercadona.gesaduan.business.declaracionesdevalorapi.getdvdocumento.v1.DVDocumentoPDFService;
+import es.mercadona.gesaduan.dao.declaracionesdevalorapi.getdvdocumento.v1.GetDVDocumentoApiDAO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.InputDeclaracionesDeValorDocumentoDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocCabDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocLinDTO;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 public class DVDocumentoPDFServiceImpl implements DVDocumentoPDFService {
 
 	@Inject
-	private GetDVDocumentoOnlineDAO getDVDocumentoOnlineDAO;
+	private GetDVDocumentoApiDAO getDVDocumentoOnlineDAO;
 	
 	@Inject
 	private FileSystemService fileSystemService;
@@ -48,8 +48,8 @@ public class DVDocumentoPDFServiceImpl implements DVDocumentoPDFService {
 	public OutputDeclaracionesDeValorDocCabDTO preparaDocumentoPDF(InputDeclaracionesDeValorDocumentoDTO input) {
 
 		// Obtiene los datos del informe (estructura del informe)
-		// OutputDeclaracionesDeValorDocCabDTO outDVDocumentoDTO = getDVDocumentoOnlineDAO.getDatosDocumento(input);
-		OutputDeclaracionesDeValorDocCabDTO outDVDocumentoDTO = preparaDatosPrueba();		
+		OutputDeclaracionesDeValorDocCabDTO outDVDocumentoDTO = getDVDocumentoOnlineDAO.getDatosDocumento(input);
+		//OutputDeclaracionesDeValorDocCabDTO outDVDocumentoDTO = preparaDatosPrueba();		
 				
 		// prepara el informe
 		outDVDocumentoDTO.setFicheroPDF(preparaDocumento(outDVDocumentoDTO));
@@ -210,7 +210,7 @@ public class DVDocumentoPDFServiceImpl implements DVDocumentoPDFService {
 		
 	}			
 
-	
+	/*
 	private OutputDeclaracionesDeValorDocCabDTO preparaDatosPrueba() {
 		
 		// prepara el informe
@@ -331,5 +331,6 @@ public class DVDocumentoPDFServiceImpl implements DVDocumentoPDFService {
 		outputDocumentoCabDTO.setLineas(lineas);
 		
 		return outputDocumentoCabDTO;
-	}		
+	}
+	*/		
 }

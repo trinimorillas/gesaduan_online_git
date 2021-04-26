@@ -1,10 +1,10 @@
-package es.mercadona.gesaduan.dto.declaracionesdevalor.getdvdocumento.v2;
+package es.mercadona.gesaduan.dto.dosierapi.getdocumento.v1;
 
 import java.io.Serializable;
 
 import es.mercadona.gesaduan.dto.declaracionesdevalor.AbstractDTO;
 
-public class OutputDeclaracionesDeValorDocLinDTO extends AbstractDTO implements Serializable{
+public class OutputDosierDocLinDTO extends AbstractDTO implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	

@@ -1,4 +1,4 @@
-package es.mercadona.gesaduan.dto.declaracionesdevalor.getdvdocumento.v2;
+package es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1;
 
 import java.io.Serializable;
 import java.util.List;
