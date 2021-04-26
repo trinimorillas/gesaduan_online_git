@@ -33,7 +33,16 @@ public class PutCambiarEstadoServiceImpl implements PutCambiarEstadoService {
 				datos.setEquipo(equipos);
 				realizarCambio = false;
 			}
-		} 
+		} else if (input.getDatos().getCodigoEstado() == 1) {
+			List<EquipoDTO> equipos = putCambiarEstadoDao.comprobarEquiposDosierGenerado(input.getDatos().getEquipo());
+			if (equipos != null) {
+				String resultadoValidacion = "No se puede cambiar a pendiente Equipos asociados a un Dosier.";
+				datos.setResultadoValidacion(resultadoValidacion);
+				datos.setCambioEstado("N");
+				datos.setEquipo(equipos);
+				realizarCambio = false;
+			}
+		}
 
 		if (realizarCambio) {
 			putCambiarEstadoDao.actualizarEstados(input);
