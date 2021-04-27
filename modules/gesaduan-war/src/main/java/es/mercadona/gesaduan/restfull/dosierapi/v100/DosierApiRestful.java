@@ -33,6 +33,8 @@ import es.mercadona.fwk.core.io.exceptions.ResourceNotFoundException;
 import es.mercadona.fwk.restful.service.annotate.RESTful;
 import es.mercadona.gesaduan.business.declaracionesdevalor.putdvestadodescarga.v1.PutDVEstadoDescargaService;
 import es.mercadona.gesaduan.business.dosierapi.getdocumento.v1.GetDocumentoService;
+import es.mercadona.gesaduan.business.dosierapi.putdosierconfirmadescarga.v1.PutDosierConfirmaDescargaService;
+import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dto.common.error.ErrorDTO;
 import es.mercadona.gesaduan.dto.common.error.OutputResponseErrorDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.putdvinddescarga.v1.DeclaracionesDeValorEstadoDescargaServiceDTO;
@@ -40,6 +42,10 @@ import es.mercadona.gesaduan.dto.declaracionesdevalor.putdvinddescarga.v1.restfu
 import es.mercadona.gesaduan.dto.declaracionesdevalor.putdvinddescarga.v1.restfull.OutputDeclaracionesDeValorEstadoDescargaDTO;
 import es.mercadona.gesaduan.dto.dosierapi.getdocumento.v1.InputDosierDocumentoDTO;
 import es.mercadona.gesaduan.dto.dosierapi.getdocumento.v1.OutputDosierDocCabDTO;
+import es.mercadona.gesaduan.dto.dosierapi.putdosierconfirmadescarga.v1.InputPutDosierConfirmaDescargaDTO;
+import es.mercadona.gesaduan.dto.dosierapi.putdosierconfirmadescarga.v1.restfull.OutputPutDosierConfirmaDescargaDTO;
+import es.mercadona.gesaduan.exception.EnumGesaduanException;
+import es.mercadona.gesaduan.exception.GesaduanException;
 
 @RESTful
 @Path("logistica/gestion-aduanas/v2.0")
@@ -55,6 +61,8 @@ public class DosierApiRestful {
 	private GetDocumentoService getDocumentoService;
 	@Inject
 	private PutDVEstadoDescargaService putDVEstadoDescargaService;
+	@Inject
+	private PutDosierConfirmaDescargaService putDosierConfirmaDescargaService;
 
 	private static final String MIMETYPE_PDF = "application/pdf";
 	private static final String MIMETYPE_CSV = "text/csv";
@@ -182,54 +190,43 @@ public class DosierApiRestful {
 
 
 	@PUT
-	@Path("dosier/{codigoDeclaracion}-{anyo}-{version}/confirmar-descarga")
+	@Path("dosier/{codigoDosier}/confirmar-descarga")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response putDeclaracionesDeValorConfirmaDescarga(
-			@NotNull @PathParam("codigoDeclaracion") Integer codigoDeclaracion,
-			@NotNull @PathParam("anyo") Integer anyo, 
-			@NotNull @PathParam("version") Integer version,
-			@QueryParam("codigoProveedor") String codigoProveedor, 
-			@NotNull InputDatosComunesDTO inputData)
-
-	{
-
-		OutputDeclaracionesDeValorEstadoDescargaDTO response = null;
+	public Response putDosierConfirmaDescarga(
+			@NotNull @PathParam("codigoDosier") String codigoDosier,
+			@NotNull @QueryParam("codigoAgencia") String codigoAgencia,
+			@NotNull InputPutDosierConfirmaDescargaDTO inputData) {
+		OutputPutDosierConfirmaDescargaDTO response = null;
 
 		try {
-			DeclaracionesDeValorEstadoDescargaServiceDTO estadoDescargaActual = new DeclaracionesDeValorEstadoDescargaServiceDTO();
+			if (inputData.getMetadatos().getCodigoUsuario() == null || inputData.getMetadatos().getLocale() == null
+					|| inputData.getDatos().getEstaDescargado() == null) {
+				throw new GesaduanException(EnumGesaduanException.PARAMETROS_OBLIGATORIOS);
+			}
 
-			estadoDescargaActual.setCodigoDeclaracion(codigoDeclaracion);
-			estadoDescargaActual.setAnyo(anyo);
-			estadoDescargaActual.setVersion(version);
-			estadoDescargaActual.setEstaDescargado(inputData.getDatos().isEstaDescargada());
-			estadoDescargaActual.setUsuario(inputData.getMetadatos().getCodigoUsuario().toUpperCase());
+			inputData.getDatos().setCodigoDosier(codigoDosier);
+			inputData.getDatos().setCodigoAgencia(codigoAgencia);
 
-			response = putDVEstadoDescargaService.updateEstadoDescarga(estadoDescargaActual);
+			response = putDosierConfirmaDescargaService.updateEstadoDescarga(inputData);
 
-			if(response.getDatos().getCodigoDeclaracion() == null) {
-
+			if (response.getDatos() == null) {
 				OutputResponseErrorDTO error = new OutputResponseErrorDTO();
 				ErrorDTO errorDesc = new ErrorDTO();
 				errorDesc.setCodigo("400");
-				errorDesc.setDescripcion("La Declaración de Valor no existe.");
+				errorDesc.setDescripcion("El Dosier no existe.");
 
 				error.setError(errorDesc);
-						
+
 				return Response.status(Status.BAD_REQUEST).entity(error).build();
-			}
-			else {
+			} else {
 				return Response.ok(response, MediaType.APPLICATION_JSON).build();
 			}
-			
+
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}",LOG_FILE,"putDeclaracionesDeValorConfirmaDescarga",e.getClass().getSimpleName(),e.getMessage());	
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, "putDosierConfirmaDescarga", e.getClass().getSimpleName(), e.getMessage());
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
-
 		}
-
-		
-
 	}
 
 	
