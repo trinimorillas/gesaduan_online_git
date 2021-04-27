@@ -11,47 +11,34 @@ public class InputDosierDocumentoDTO extends AbstractDTO implements Serializable
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private Integer codigoDeclaracion;
-	private Integer anyoDeclaracion;
-	private Integer versionDeclaracion;	
+	private Integer codigoDosier;
+	private Integer anyoDosier;	
 	private String locale;
 	private String tipoDocumento;
 	private String codigoUsuario;
 	/**
-	 * @return the codigoDeclaracion
+	 * @return the codigoDosier
 	 */
-	public Integer getCodigoDeclaracion() {
-		return codigoDeclaracion;
+	public Integer getCodigoDosier() {
+		return codigoDosier;
 	}
 	/**
-	 * @param codigoDeclaracion the codigoDeclaracion to set
+	 * @param codigoDosier the codigoDosier to set
 	 */
-	public void setCodigoDeclaracion(Integer codigoDeclaracion) {
-		this.codigoDeclaracion = codigoDeclaracion;
+	public void setCodigoDosier(Integer codigoDosier) {
+		this.codigoDosier = codigoDosier;
 	}
 	/**
-	 * @return the anyoDeclaracion
+	 * @return the anyoDosier
 	 */
-	public Integer getAnyoDeclaracion() {
-		return anyoDeclaracion;
+	public Integer getAnyoDosier() {
+		return anyoDosier;
 	}
 	/**
-	 * @param anyoDeclaracion the anyoDeclaracion to set
+	 * @param anyoDosier the anyoDosier to set
 	 */
-	public void setAnyoDeclaracion(Integer anyoDeclaracion) {
-		this.anyoDeclaracion = anyoDeclaracion;
-	}
-	/**
-	 * @return the versionDeclaracion
-	 */
-	public Integer getVersionDeclaracion() {
-		return versionDeclaracion;
-	}
-	/**
-	 * @param versionDeclaracion the versionDeclaracion to set
-	 */
-	public void setVersionDeclaracion(Integer versionDeclaracion) {
-		this.versionDeclaracion = versionDeclaracion;
+	public void setAnyoDosier(Integer anyoDosier) {
+		this.anyoDosier = anyoDosier;
 	}
 	/**
 	 * @return the locale
@@ -90,9 +77,6 @@ public class InputDosierDocumentoDTO extends AbstractDTO implements Serializable
 		this.codigoUsuario = codigoUsuario;
 	}
 
-	
-	
-	
 	
 
 }

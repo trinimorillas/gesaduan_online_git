@@ -30,24 +30,16 @@ import es.mercadona.fwk.core.io.Resource;
 import es.mercadona.fwk.core.io.ResourceService;
 import es.mercadona.fwk.core.io.exceptions.IllegalResourceNameException;
 import es.mercadona.fwk.core.io.exceptions.ResourceNotFoundException;
-import es.mercadona.fwk.core.web.BoPage;
 import es.mercadona.fwk.restful.service.annotate.RESTful;
-import es.mercadona.gesaduan.business.declaracionesdevalor.getdvdetalle.v1.GetDVDetalleService;
-import es.mercadona.gesaduan.business.declaracionesdevalor.getdvsumario.v1.GetDVSumarioService;
-import es.mercadona.gesaduan.business.declaracionesdevalor.postdv.v1.PostDVService;
 import es.mercadona.gesaduan.business.declaracionesdevalor.putdvestadodescarga.v1.PutDVEstadoDescargaService;
-import es.mercadona.gesaduan.business.declaracionesdevalorapi.getdvdocumento.v1.GetDVDocumentoService;
+import es.mercadona.gesaduan.business.dosierapi.v1.GetDocumentoService;
 import es.mercadona.gesaduan.dto.common.error.ErrorDTO;
 import es.mercadona.gesaduan.dto.common.error.OutputResponseErrorDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvdetalle.v1.InputDeclaracionesDeValorDetalleDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvdetalle.v1.restfull.OutputDeclaracionesDeValorDetalleDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvsumario.v1.InputDeclaracionesDeValorDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvsumario.v1.restfull.OutputDeclaracionesDeValorDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.putdvinddescarga.v1.DeclaracionesDeValorEstadoDescargaServiceDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.putdvinddescarga.v1.restfull.InputDatosComunesDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.putdvinddescarga.v1.restfull.OutputDeclaracionesDeValorEstadoDescargaDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.InputDeclaracionesDeValorDocumentoDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocCabDTO;
+import es.mercadona.gesaduan.dto.dosierapi.getdocumento.v1.InputDosierDocumentoDTO;
+import es.mercadona.gesaduan.dto.dosierapi.getdocumento.v1.OutputDosierDocCabDTO;
 
 @RESTful
 @Path("logistica/gestion-aduanas/v2.0")
@@ -58,17 +50,11 @@ public class DosierApiRestful {
 	private org.slf4j.Logger logger;		
 
 	@Inject
-	private GetDVDetalleService getDVDetalleService;
-	@Inject
 	private ResourceService resourceService;
 	@Inject
-	private GetDVDocumentoService getDocumentoDVService;
-	@Inject
-	private GetDVSumarioService getDVSumarioService;
+	private GetDocumentoService getDocumentoService;
 	@Inject
 	private PutDVEstadoDescargaService putDVEstadoDescargaService;
-	@Inject
-	private PostDVService postDVService;
 
 	private static final String MIMETYPE_PDF = "application/pdf";
 	private static final String MIMETYPE_CSV = "text/csv";
@@ -80,13 +66,12 @@ public class DosierApiRestful {
 	
 
 	@GET
-	@Path("dosier/{codigoDeclaracion}-{anyo}-{version}/documento")
+	@Path("dosier/{codigoDosier}-{anyo}/documento")
 	@Consumes(MediaType.WILDCARD)
 	@Produces({ MIMETYPE_PDF, MIMETYPE_CSV, MediaType.APPLICATION_JSON })
 	public Response getDeclaracionesDeValorDocumento(
-			@NotNull @PathParam("codigoDeclaracion") Integer codigoDeclaracion,
-			@NotNull @PathParam("anyo") Integer anyo, 
-			@NotNull @PathParam("version") Integer version, 
+			@NotNull @PathParam("codigoDosier") Integer codigoDosier,
+			@NotNull @PathParam("anyo") Integer anyo,  
 			@Context HttpServletRequest request,
 			@DefaultValue("es-ES") @QueryParam("locale") String locale,
 			@NotNull @QueryParam("codigoUsuario") String codigoUsuario,
@@ -106,38 +91,35 @@ public class DosierApiRestful {
 			if (tipoDocumento.equalsIgnoreCase("pdf")) {
 				fileExtension += tipoDocumento.toLowerCase();
 				mimeType = MIMETYPE_PDF;
-				fileBaseName = FILE_BASE_NAME_PDF.concat(codigoDeclaracion.toString()).concat("_")
-						.concat(anyo.toString()).concat("_").concat(version.toString()).concat("_")
-						.concat(formatter.format(date));
+				fileBaseName = FILE_BASE_NAME_PDF.concat(codigoDosier.toString()).concat("_")
+						.concat(anyo.toString()).concat("_").concat(formatter.format(date));
 			} else if (tipoDocumento.equalsIgnoreCase("csv")) {
 				fileExtension += tipoDocumento.toLowerCase();
 				mimeType = MIMETYPE_CSV;
-				fileBaseName = FILE_BASE_NAME_CSV.concat(codigoDeclaracion.toString()).concat("_")
-						.concat(anyo.toString()).concat("_").concat(version.toString()).concat("_")
-						.concat(formatter.format(date));
+				fileBaseName = FILE_BASE_NAME_CSV.concat(codigoDosier.toString()).concat("_")
+						.concat(anyo.toString()).concat("_").concat(formatter.format(date));
 			}
 
 			// Prepara llamada al servicio que va a montar el fichero			
-			InputDeclaracionesDeValorDocumentoDTO inputDVDocumentoDTO = new InputDeclaracionesDeValorDocumentoDTO();
+			InputDosierDocumentoDTO inputDocumentoDTO = new InputDosierDocumentoDTO();
 			
-			inputDVDocumentoDTO.setCodigoDeclaracion(codigoDeclaracion);
-			inputDVDocumentoDTO.setAnyoDeclaracion(anyo);
-			inputDVDocumentoDTO.setVersionDeclaracion(version);
-			inputDVDocumentoDTO.setTipoDocumento(tipoDocumento);			
+			inputDocumentoDTO.setCodigoDosier(codigoDosier);
+			inputDocumentoDTO.setAnyoDosier(anyo);
+			inputDocumentoDTO.setTipoDocumento(tipoDocumento);			
 
-			OutputDeclaracionesDeValorDocCabDTO outputDVDocumentoDTO = null;
+			OutputDosierDocCabDTO outputDocumentoDTO = null;
 
-			outputDVDocumentoDTO = getDocumentoDVService.preparaDocumento(inputDVDocumentoDTO);
+			outputDocumentoDTO = getDocumentoService.preparaDocumento(inputDocumentoDTO);
 
 			// devuelve el fichero y controla los posibles errores			
-			if(outputDVDocumentoDTO != null) {
+			if(outputDocumentoDTO != null) {
 			
 				byte[] file = null;
 	
 				if (tipoDocumento.equalsIgnoreCase("pdf")) { 
-					file = outputDVDocumentoDTO.getFicheroPDF();
+					file = outputDocumentoDTO.getFicheroPDF();
 				} else if (tipoDocumento.equalsIgnoreCase("csv")) {
-					file = outputDVDocumentoDTO.getFicheroCSV();
+					file = outputDocumentoDTO.getFicheroCSV();
 				} else {
 					throw new WebApplicationException(Status.BAD_REQUEST);
 				}

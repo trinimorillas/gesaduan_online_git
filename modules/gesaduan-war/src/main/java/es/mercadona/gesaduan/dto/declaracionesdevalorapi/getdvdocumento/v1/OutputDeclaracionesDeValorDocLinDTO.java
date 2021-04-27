@@ -29,6 +29,8 @@ public class OutputDeclaracionesDeValorDocLinDTO extends AbstractDTO implements 
 	private String plato;
 	private String precio;
 	private String importe;
+	private boolean procesada;
+	
 	/**
 	 * @return the codigoDeclaracion
 	 */
@@ -280,6 +282,18 @@ public class OutputDeclaracionesDeValorDocLinDTO extends AbstractDTO implements 
 	 */
 	public void setImporte(String importe) {
 		this.importe = importe;
+	}
+	/**
+	 * @return the procesada
+	 */
+	public boolean isProcesada() {
+		return procesada;
+	}
+	/**
+	 * @param procesada the procesada to set
+	 */
+	public void setProcesada(boolean procesada) {
+		this.procesada = procesada;
 	}
 
 	
