@@ -7,6 +7,7 @@ import es.mercadona.gesaduan.dto.equipotransporte.cambiarestado.v1.InputDatosCam
 
 public interface PutCambiarEstadoDAO {
 	public List<EquipoDTO> comprobarPedidosSinValidar(List<EquipoDTO> input);
+	public List<EquipoDTO> comprobarEquiposDosierGenerado(List<EquipoDTO> input);
 	public List<EquipoDTO> comprobarEstadoPlanEmbarqueConfirmado(List<EquipoDTO> input);
 	public List<EquipoDTO> comprobarEstadoPlanEmbarqueFacturado(List<EquipoDTO> input);
 	public void actualizarEstados(InputDatosCambiarEstadoDTO input);
