@@ -33,10 +33,10 @@
 	<parameter name="SUBREPORT_TMPL" class="net.sf.jasperreports.engine.JasperReport"/>
 	<parameter name="SUBREPORT_PARAM" class="java.util.HashMap"/>	
 	<!-- parametros de cabecera -->	
-	<field name="factura" class="java.lang.String"/>	
-	<field name="anyo" class="java.lang.String"/>	
+	<field name="codigoDeclaracion" class="java.lang.String"/>	
+	<field name="anyoDeclaracion" class="java.lang.String"/>	
 	<field name="fechaDeclaracion" class="java.lang.String"/>	
-	<field name="proveedor" class="java.lang.String"/>	
+	<field name="nombreOrigen" class="java.lang.String"/>	
 	<field name="provinciaOrigen" class="java.lang.String"/>	
 	<field name="condicionesEntrega" class="java.lang.String"/>	
 	<field name="exportadorNombre" class="java.lang.String"/>	
@@ -67,15 +67,10 @@
 	<columnHeader>
 	</columnHeader>
 	<detail>
+
 		<band height="65" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<printWhenExpression><![CDATA[new Boolean($V{PAGE_NUMBER}.intValue() == 1)]]></printWhenExpression>			
-			<subreport>
-				<reportElement x="0" y="75" width="800" height="120" uuid="1c05a64b-0b97-4f67-b063-a7adbb6548aa"/>
-				<dataSourceExpression><![CDATA[$F{lineasDataSource}]]></dataSourceExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_TMPL}]]></subreportExpression>
-			</subreport>				
 			<image>
 				<reportElement x="0" y="15" width="180" height="45" uuid="38cb79a1-fe18-4904-a1c2-caf4b2973969">
 					<property name="local_mesure_unitheight" value="pixel"/>
@@ -127,7 +122,7 @@
 				<textElement>
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{proveedor}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nombreOrigen}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="FixRelativeToBottom" x="615" y="46" width="165" height="12" uuid="64a66f53-0446-4fb9-b736-c4713847c54f">
@@ -156,14 +151,10 @@
 				<textFieldExpression><![CDATA[$P{header.condicionesEntrega} + ":"]]></textFieldExpression>
 			</textField>
 		</band>
+
 		<band height="120" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>		
-			<subreport>
-				<reportElement x="0" y="75" width="800" height="120" uuid="1c05a64b-0b97-4f67-b063-a7adbb6548aa"/>
-				<dataSourceExpression><![CDATA[$F{lineasDataSource}]]></dataSourceExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_TMPL}]]></subreportExpression>
-			</subreport>		
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="Float" x="1" y="72" width="40" height="12" uuid="85eb17a1-5eb8-4c39-b8ab-29c2d69cc16a">
 					<property name="local_mesure_unitheight" value="pixel"/>
@@ -224,7 +215,7 @@
 				<textElement markup="html">
 					<font fontName="SansSerif" size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{header.factura} + " " + $F{anyo} + " - " + $F{factura}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{header.factura} + " " + $F{anyoDeclaracion} + " - " + $F{codigoDeclaracion}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="Float" x="41" y="72" width="190" height="12" uuid="600377c9-aff9-41be-81e5-a6eecb25dd68">
@@ -340,7 +331,8 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{header.nif} + ": " + $F{exportadorNIF}]]></textFieldExpression>
 			</textField>
-		</band>	
+		</band>
+
 		<band height="20" splitType="Stretch">
 			<subreport>
 				<reportElement positionType="Float" x="0" y="0" width="800" height="20" uuid="24be4ab8-100a-49fe-969d-520ccfa4cca9">
@@ -348,18 +340,14 @@
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<parametersMapExpression><![CDATA[$P{SUBREPORT_PARAM}]]></parametersMapExpression>
-				<dataSourceExpression><![CDATA[$F{SUBREPORT_DS}]]></dataSourceExpression>
+				<dataSourceExpression><![CDATA[$F{lineasDataSource}]]></dataSourceExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_TMPL}]]></subreportExpression>
 			</subreport>
 		</band>
+
 		<band height="45" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<subreport>
-				<reportElement x="0" y="75" width="800" height="120" uuid="1c05a64b-0b97-4f67-b063-a7adbb6548aa"/>
-				<dataSourceExpression><![CDATA[$F{lineasDataSource}]]></dataSourceExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_TMPL}]]></subreportExpression>
-			</subreport>				
 			<textField isStretchWithOverflow="true" evaluationTime="Auto">
 				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" x="0" y="10" width="420" height="35" uuid="b8a1beb0-6303-4e27-b838-b86e8a3062bf">
 					<property name="local_mesure_unitheight" value="pixel"/>
@@ -370,16 +358,17 @@
 				<textElement markup="html">
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[new Boolean($V{PAGE_NUMBER}.intValue() == $V{V_CURRENT_PAGE_NUMBER}.intValue())?
-$F{txtInfoGeneral} +
-(!$F{txtInfoREA}.isEmpty()? "<br/>"  + $F{txtInfoREA}  : "") + 
-(!$F{txtInfoLPC}.isEmpty()? "<br/>"  + $F{txtInfoLPC}  : "") 
-: ""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{txtInfoGeneral} + (!$F{txtInfoREA}.isEmpty()? "<br/>"  + $F{txtInfoREA}  : "") + (!$F{txtInfoLPC}.isEmpty()? "<br/>"  + $F{txtInfoLPC}  : "")]]></textFieldExpression>
 			</textField>
-		</band>		
+		</band>
+
+		<band height="2" splitType="Stretch">
+			<break>
+				<reportElement x="0" y="1" width="100" height="1" uuid="755a0af8-0baf-476f-875e-7887d1ae607b"/>
+			</break>
+		</band>
+		
 	</detail>
-	<columnFooter>
-	</columnFooter>
 	<pageFooter>
 		<band height="20" splitType="Stretch">
 			<textField>
@@ -397,5 +386,6 @@ $F{txtInfoGeneral} +
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 		</band>
-	</pageFooter>	
+	</pageFooter>
+
 </jasperReport>
