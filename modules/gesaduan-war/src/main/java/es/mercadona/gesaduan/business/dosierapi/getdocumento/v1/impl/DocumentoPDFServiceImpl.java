@@ -1,4 +1,4 @@
-package es.mercadona.gesaduan.business.dosierapi.v1.impl;
+package es.mercadona.gesaduan.business.dosierapi.getdocumento.v1.impl;
 
 
 import java.io.File;
@@ -23,7 +23,7 @@ import es.mercadona.fwk.reporting.DataRecordType;
 import es.mercadona.fwk.reporting.Report;
 import es.mercadona.fwk.reporting.ReportTemplate;
 import es.mercadona.fwk.reporting.ReportingService;
-import es.mercadona.gesaduan.business.dosierapi.v1.DocumentoPDFService;
+import es.mercadona.gesaduan.business.dosierapi.getdocumento.v1.DocumentoPDFService;
 import es.mercadona.gesaduan.dao.dosierapi.getdocumento.v1.GetDocumentoApiDAO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocCabDTO;
 import es.mercadona.gesaduan.dto.dosierapi.getdocumento.v1.InputDosierDocumentoDTO;
