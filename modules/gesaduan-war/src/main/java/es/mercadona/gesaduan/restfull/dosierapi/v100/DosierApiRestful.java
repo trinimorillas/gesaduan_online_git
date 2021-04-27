@@ -32,7 +32,7 @@ import es.mercadona.fwk.core.io.exceptions.IllegalResourceNameException;
 import es.mercadona.fwk.core.io.exceptions.ResourceNotFoundException;
 import es.mercadona.fwk.restful.service.annotate.RESTful;
 import es.mercadona.gesaduan.business.declaracionesdevalor.putdvestadodescarga.v1.PutDVEstadoDescargaService;
-import es.mercadona.gesaduan.business.dosierapi.v1.GetDocumentoService;
+import es.mercadona.gesaduan.business.dosierapi.getdocumento.v1.GetDocumentoService;
 import es.mercadona.gesaduan.dto.common.error.ErrorDTO;
 import es.mercadona.gesaduan.dto.common.error.OutputResponseErrorDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.putdvinddescarga.v1.DeclaracionesDeValorEstadoDescargaServiceDTO;

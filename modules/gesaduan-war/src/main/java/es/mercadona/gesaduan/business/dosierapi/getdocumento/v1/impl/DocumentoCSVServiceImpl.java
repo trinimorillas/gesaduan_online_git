@@ -1,10 +1,10 @@
-package es.mercadona.gesaduan.business.dosierapi.v1.impl;
+package es.mercadona.gesaduan.business.dosierapi.getdocumento.v1.impl;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import es.mercadona.gesaduan.business.dosierapi.v1.DocumentoCSVService;
+import es.mercadona.gesaduan.business.dosierapi.getdocumento.v1.DocumentoCSVService;
 import es.mercadona.gesaduan.dao.dosierapi.getdocumento.v1.GetDocumentoApiDAO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocCabDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocLinDTO;
