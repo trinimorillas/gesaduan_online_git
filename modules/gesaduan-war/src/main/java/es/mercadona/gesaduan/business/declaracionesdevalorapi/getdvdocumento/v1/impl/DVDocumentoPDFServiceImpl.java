@@ -2,9 +2,7 @@ package es.mercadona.gesaduan.business.declaracionesdevalorapi.getdvdocumento.v1
 
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
@@ -28,8 +26,6 @@ import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dao.declaracionesdevalorapi.getdvdocumento.v1.GetDVDocumentoApiDAO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.InputDeclaracionesDeValorDocumentoDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocCabDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocLinDTO;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 public class DVDocumentoPDFServiceImpl implements DVDocumentoPDFService {
 

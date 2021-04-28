@@ -1,6 +1,5 @@
 package es.mercadona.gesaduan.restfull.declaracionesdevalorapi.v100;
 
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,26 +36,28 @@ import es.mercadona.gesaduan.business.declaracionesdevalor.getdvsumario.v1.GetDV
 import es.mercadona.gesaduan.business.declaracionesdevalor.postdv.v1.PostDVService;
 import es.mercadona.gesaduan.business.declaracionesdevalor.putdvestadodescarga.v1.PutDVEstadoDescargaService;
 import es.mercadona.gesaduan.business.declaracionesdevalorapi.getdvdocumento.v1.GetDVDocumentoService;
-import es.mercadona.gesaduan.common.Constantes;
+import es.mercadona.gesaduan.business.declaracionesdevalorapi.putfacturaconfirmadescarga.v1.PutFacturaConfirmaDescargaService;
 import es.mercadona.gesaduan.dto.common.error.ErrorDTO;
 import es.mercadona.gesaduan.dto.common.error.OutputResponseErrorDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvdetalle.v1.InputDeclaracionesDeValorDetalleDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvdetalle.v1.restfull.OutputDeclaracionesDeValorDetalleDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvsumario.v1.InputDeclaracionesDeValorDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvsumario.v1.restfull.OutputDeclaracionesDeValorDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.putdvinddescarga.v1.DeclaracionesDeValorEstadoDescargaServiceDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.putdvinddescarga.v1.restfull.InputDatosComunesDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.putdvinddescarga.v1.restfull.OutputDeclaracionesDeValorEstadoDescargaDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.InputDeclaracionesDeValorDocumentoDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocCabDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.putfacturaconfirmadescarga.v1.InputPutFacturaConfirmaDescargaDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.putfacturaconfirmadescarga.v1.restfull.OutputPutFacturaConfirmaDescargaDTO;
+import es.mercadona.gesaduan.exception.EnumGesaduanException;
+import es.mercadona.gesaduan.exception.GesaduanException;
+import es.mercadona.gesaduan.common.Constantes;
 
 @RESTful
 @Path("logistica/gestion-aduanas/v2.0")
 @RequestScoped
 public class DeclaracionesDeValorApiRestful {
-	
+
 	@Inject
-	private org.slf4j.Logger logger;		
+	private org.slf4j.Logger logger;
 
 	@Inject
 	private GetDVDetalleService getDVDetalleService;
@@ -68,6 +69,8 @@ public class DeclaracionesDeValorApiRestful {
 	private GetDVSumarioService getDVSumarioService;
 	@Inject
 	private PutDVEstadoDescargaService putDVEstadoDescargaService;
+	@Inject
+	private PutFacturaConfirmaDescargaService putFacturaConfirmaDescargaService;
 	@Inject
 	private PostDVService postDVService;
 
@@ -82,16 +85,12 @@ public class DeclaracionesDeValorApiRestful {
 	@Path("declaraciones-valor/sumario")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getDeclaracionesDeValorSumario(
-			@NotNull @DefaultValue("es-ES") @QueryParam("locale") String locale,
+	public Response getDeclaracionesDeValorSumario(@NotNull @DefaultValue("es-ES") @QueryParam("locale") String locale,
 			@NotNull @QueryParam("codigoUsuario") String codigoUsuario,
 			@QueryParam("codigoAgencia") String codigoAgencia,
-			@DefaultValue("1") @QueryParam("paginaInicio") Integer paginaInicio, 
-			@QueryParam("anyo") Integer anyo,
-			@QueryParam("numeroDeclaracion") Integer numeroDeclaracion, 
-			@QueryParam("codigoPedido") String codigoPedido,
-			@QueryParam("codigoAlmacen") String codigoAlmacen, 
-			@QueryParam("nombreAlmacen") String nombreAlmacen,
+			@DefaultValue("1") @QueryParam("paginaInicio") Integer paginaInicio, @QueryParam("anyo") Integer anyo,
+			@QueryParam("numeroDeclaracion") Integer numeroDeclaracion, @QueryParam("codigoPedido") String codigoPedido,
+			@QueryParam("codigoAlmacen") String codigoAlmacen, @QueryParam("nombreAlmacen") String nombreAlmacen,
 			@DefaultValue("10") @QueryParam("paginaTamanyo") Integer paginaTamanyo,
 			@DefaultValue("-numeroDeclaracion") @QueryParam("orden") String orden,
 			@QueryParam("codigoProveedor") Integer codigoProveedor,
@@ -99,8 +98,7 @@ public class DeclaracionesDeValorApiRestful {
 			@DefaultValue("T") @QueryParam("tipoDeclaracion") String tipoDeclaracion,
 			@DefaultValue("TD") @QueryParam("estadoDeclaracion") String estadoDeclaracion,
 			@DefaultValue("T") @QueryParam("estadoDescarga") String estadoDescarga,
-			@QueryParam("tipoFechaFiltro") String tipoFechaFiltro,
-			@QueryParam("fechaDesde") String fechaDesde,
+			@QueryParam("tipoFechaFiltro") String tipoFechaFiltro, @QueryParam("fechaDesde") String fechaDesde,
 			@QueryParam("fechaHasta") String fechaHasta) {
 
 		OutputDeclaracionesDeValorDTO response = null;
@@ -152,11 +150,11 @@ public class DeclaracionesDeValorApiRestful {
 
 			if (tipoFechaFiltro != null) {
 
-				inputParams.setTipoFechaFiltro(tipoFechaFiltro);			
+				inputParams.setTipoFechaFiltro(tipoFechaFiltro);
 				SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-				
+
 				if (fechaDesde != null) {
-					
+
 					Date fDesde = inFormat.parse(fechaDesde);
 					inputParams.setFechaDesde(fDesde);
 				}
@@ -164,7 +162,7 @@ public class DeclaracionesDeValorApiRestful {
 				if (fechaHasta != null) {
 					Date fHasta = inFormat.parse(fechaHasta);
 					inputParams.setFechaHasta(fHasta);
-					
+
 				}
 
 			}
@@ -188,21 +186,17 @@ public class DeclaracionesDeValorApiRestful {
 
 		return Response.ok(response, MediaType.APPLICATION_JSON).build();
 	}
-	
-	
+
 	@GET
 	@Path("declaraciones-valor/{codigoDeclaracion}-{anyo}-{version}")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getDeclaracionDeValorDetalle(
-			@NotNull @PathParam("codigoDeclaracion") Integer codigoDeclaracion,
-			@NotNull @PathParam("anyo") Integer anyo,
-			@NotNull @PathParam("version") Integer version, 
-			@NotNull @DefaultValue("es_ES") @QueryParam("locale") String locale
-			) {
+	public Response getDeclaracionDeValorDetalle(@NotNull @PathParam("codigoDeclaracion") Integer codigoDeclaracion,
+			@NotNull @PathParam("anyo") Integer anyo, @NotNull @PathParam("version") Integer version,
+			@NotNull @DefaultValue("es_ES") @QueryParam("locale") String locale) {
 
 		OutputDeclaracionesDeValorDetalleDTO declaracionesPorCodigo;
-		
+
 		try {
 			InputDeclaracionesDeValorDetalleDTO input = new InputDeclaracionesDeValorDetalleDTO();
 
@@ -210,48 +204,39 @@ public class DeclaracionesDeValorApiRestful {
 			input.setAnyo(anyo);
 			input.setVersion(version);
 
-			declaracionesPorCodigo = getDVDetalleService
-					.getDeclaracionesDeValorPorCodigoList(input, null);
-			
-			if(declaracionesPorCodigo == null) {
-				
+			declaracionesPorCodigo = getDVDetalleService.getDeclaracionesDeValorPorCodigoList(input, null);
+
+			if (declaracionesPorCodigo == null) {
+
 				OutputResponseErrorDTO error = new OutputResponseErrorDTO();
 				ErrorDTO errorDesc = new ErrorDTO();
 				errorDesc.setCodigo("400");
 				errorDesc.setDescripcion("La Declaración de Valor no existe.");
 
 				error.setError(errorDesc);
-				
+
 				return Response.status(Status.BAD_REQUEST).entity(error).build();
-			}
-			else {
+			} else {
 				return Response.ok(declaracionesPorCodigo, MediaType.APPLICATION_JSON).build();
 			}
-			
-			
+
 		} catch (Exception e) {
 			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE,"getDeclaracionDeValorDetalle",e.getClass().getSimpleName(),e.getMessage());
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
 		}
 
 	}
-	
-	
-	
 
 	@GET
 	@Path("declaraciones-valor/{codigoDeclaracion}-{anyo}-{version}/documento")
 	@Consumes(MediaType.WILDCARD)
 	@Produces({ MIMETYPE_PDF, MIMETYPE_CSV, MediaType.APPLICATION_JSON })
-	public Response getDeclaracionesDeValorDocumento(
-			@NotNull @PathParam("codigoDeclaracion") Integer codigoDeclaracion,
-			@NotNull @PathParam("anyo") Integer anyo, 
-			@NotNull @PathParam("version") Integer version, 
-			@Context HttpServletRequest request,
-			@DefaultValue("es-ES") @QueryParam("locale") String locale,
+	public Response getDeclaracionesDeValorDocumento(@NotNull @PathParam("codigoDeclaracion") Integer codigoDeclaracion,
+			@NotNull @PathParam("anyo") Integer anyo, @NotNull @PathParam("version") Integer version,
+			@Context HttpServletRequest request, @DefaultValue("es-ES") @QueryParam("locale") String locale,
 			@NotNull @QueryParam("codigoUsuario") String codigoUsuario,
 			@NotNull @DefaultValue("pdf") @QueryParam("tipoDocumento") String tipoDocumento) {
-		
+
 		ResponseBuilder rb = null;
 
 		try {
@@ -277,70 +262,71 @@ public class DeclaracionesDeValorApiRestful {
 						.concat(formatter.format(date));
 			}
 
-			// Prepara llamada al servicio que va a montar el fichero			
+			// Prepara llamada al servicio que va a montar el fichero
 			InputDeclaracionesDeValorDocumentoDTO inputDVDocumentoDTO = new InputDeclaracionesDeValorDocumentoDTO();
-			
+
 			inputDVDocumentoDTO.setCodigoDeclaracion(codigoDeclaracion);
 			inputDVDocumentoDTO.setAnyoDeclaracion(anyo);
 			inputDVDocumentoDTO.setVersionDeclaracion(version);
-			inputDVDocumentoDTO.setTipoDocumento(tipoDocumento);			
+			inputDVDocumentoDTO.setTipoDocumento(tipoDocumento);
 
 			OutputDeclaracionesDeValorDocCabDTO outputDVDocumentoDTO = null;
 
 			outputDVDocumentoDTO = getDocumentoDVService.preparaDocumento(inputDVDocumentoDTO);
 
-			// devuelve el fichero y controla los posibles errores			
-			if(outputDVDocumentoDTO != null) {
-			
+			// devuelve el fichero y controla los posibles errores
+			if (outputDVDocumentoDTO != null) {
+
 				byte[] file = null;
-	
-				if (tipoDocumento.equalsIgnoreCase("pdf")) { 
+
+				if (tipoDocumento.equalsIgnoreCase("pdf")) {
 					file = outputDVDocumentoDTO.getFicheroPDF();
 				} else if (tipoDocumento.equalsIgnoreCase("csv")) {
 					file = outputDVDocumentoDTO.getFicheroCSV();
 				} else {
 					throw new WebApplicationException(Status.BAD_REQUEST);
 				}
-				
-				if(file != null) {
-						
+
+				if (file != null) {
+
 					Resource resource = resourceService.createResource(file, fileBaseName, fileExtension);
-		
-					rb = Response.ok(resource.getInputStream(), mimeType);		
+
+					rb = Response.ok(resource.getInputStream(), mimeType);
 					rb.header("Content-Disposition", "attachment; filename=" + fileBaseName + fileExtension);
 					rb.header("file-md5", resource.getMd5());
-					
+
 				} else {
 					OutputResponseErrorDTO error = new OutputResponseErrorDTO();
 					ErrorDTO errorDesc = new ErrorDTO();
 					List<String> partsError = new ArrayList<>();
-					
+
 					partsError.add("Recurso no encontrado");
-					
+
 					errorDesc.setCodigo("400");
-					errorDesc.setDescripcion("Formato de envío inválido o error funcional en: ".concat(this.getClass().getSimpleName()));
+					errorDesc.setDescripcion(
+							"Formato de envío inválido o error funcional en: ".concat(this.getClass().getSimpleName()));
 					errorDesc.setDetalles(partsError);
 
 					error.setError(errorDesc);
-									
+
 					return Response.status(Status.BAD_REQUEST).entity(error).build();
 				}
-			
-			}
-			else {
-				
+
+			} else {
+
 				OutputResponseErrorDTO error = new OutputResponseErrorDTO();
 				ErrorDTO errorDesc = new ErrorDTO();
 				List<String> partsError = new ArrayList<>();
-				
+
 				partsError.add("Recurso no encontrado");
-				
+
 				errorDesc.setCodigo("400");
-				errorDesc.setDescripcion("Formato de envío inválido o error funcional en: ".concat(this.getClass().getSimpleName()));
+				errorDesc.setDescripcion(
+						"Formato de envío inválido o error funcional en: ".concat(this.getClass().getSimpleName()));
 				errorDesc.setDetalles(partsError);
 
 				error.setError(errorDesc);
-								
+
 				return Response.status(Status.BAD_REQUEST).entity(error).build();
 			}
 
@@ -358,64 +344,50 @@ public class DeclaracionesDeValorApiRestful {
 		return rb.build();
 	}
 
-
 	@PUT
-	@Path("declaraciones-valor/{codigoDeclaracion}-{anyo}-{version}/confirmar-descarga")
+	@Path("factura/{codigoFactura}/confirmar-descarga")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response putDeclaracionesDeValorConfirmaDescarga(
-			@NotNull @PathParam("codigoDeclaracion") Integer codigoDeclaracion,
-			@NotNull @PathParam("anyo") Integer anyo, 
-			@NotNull @PathParam("version") Integer version,
-			@QueryParam("codigoProveedor") String codigoProveedor, 
-			@NotNull InputDatosComunesDTO inputData)
-
-	{
-
-		OutputDeclaracionesDeValorEstadoDescargaDTO response = null;
+	public Response putFacturaConfirmaDescarga(@NotNull @PathParam("codigoFactura") String codigoFactura,
+			@NotNull @QueryParam("codigoProveedor") String codigoProveedor,
+			@NotNull InputPutFacturaConfirmaDescargaDTO inputData) {
+		OutputPutFacturaConfirmaDescargaDTO response = null;
 
 		try {
-			DeclaracionesDeValorEstadoDescargaServiceDTO estadoDescargaActual = new DeclaracionesDeValorEstadoDescargaServiceDTO();
+			if (inputData.getMetadatos().getCodigoUsuario() == null || inputData.getMetadatos().getLocale() == null
+					|| inputData.getDatos().getEstaDescargado() == null) {
+				throw new GesaduanException(EnumGesaduanException.PARAMETROS_OBLIGATORIOS);
+			}
 
-			estadoDescargaActual.setCodigoDeclaracion(codigoDeclaracion);
-			estadoDescargaActual.setAnyo(anyo);
-			estadoDescargaActual.setVersion(version);
-			estadoDescargaActual.setEstaDescargado(inputData.getDatos().isEstaDescargada());
-			estadoDescargaActual.setUsuario(inputData.getMetadatos().getCodigoUsuario().toUpperCase());
+			inputData.getDatos().setCodigoFactura(codigoFactura);
+			inputData.getDatos().setCodigoProveedor(codigoProveedor);
 
-			response = putDVEstadoDescargaService.updateEstadoDescarga(estadoDescargaActual);
+			response = putFacturaConfirmaDescargaService.updateEstadoDescarga(inputData);
 
-			if(response.getDatos().getCodigoDeclaracion() == null) {
-
+			if (response.getDatos() == null) {
 				OutputResponseErrorDTO error = new OutputResponseErrorDTO();
 				ErrorDTO errorDesc = new ErrorDTO();
 				errorDesc.setCodigo("400");
 				errorDesc.setDescripcion("La Declaración de Valor no existe.");
 
 				error.setError(errorDesc);
-						
+
 				return Response.status(Status.BAD_REQUEST).entity(error).build();
-			}
-			else {
+			} else {
 				return Response.ok(response, MediaType.APPLICATION_JSON).build();
 			}
-			
+
 		} catch (Exception e) {
 			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE,"putDeclaracionesDeValorConfirmaDescarga",e.getClass().getSimpleName(),e.getMessage());	
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
-
 		}
-
-		
-
 	}
 
-	
 	private OutputResponseErrorDTO getError(Exception ex) {
 
 		OutputResponseErrorDTO error = new OutputResponseErrorDTO();
 		ErrorDTO errorDesc = new ErrorDTO();
-		
+
 		List<String> partsError = Arrays.asList(ex.getMessage().replace("\\t", "").replace("\\r", "").split("\\n"));
 
 		errorDesc.setCodigo("500");
