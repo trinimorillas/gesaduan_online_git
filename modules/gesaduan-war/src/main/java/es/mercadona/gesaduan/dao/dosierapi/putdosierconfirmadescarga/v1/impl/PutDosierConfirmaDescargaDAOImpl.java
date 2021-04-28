@@ -45,42 +45,52 @@ public class PutDosierConfirmaDescargaDAOImpl extends DaoBaseImpl<Long, DosierJP
 			String anyoDosier = dosier[1];
 			String codigoAgencia = input.getDatos().getCodigoAgencia();
 			String codigoUsuario = input.getMetadatos().getCodigoUsuario();
-			Boolean estaDescargado = input.getDatos().getEstaDescargado();			
+			Boolean estaDescargado = input.getDatos().getEstaDescargado();
+			
+			String descargado;
+			if (estaDescargado) {
+				descargado = "S";
+			} else {
+				descargado = "N";
+			}
 			
 			// Agencia exportadora
 			final StringBuilder sqlAgenciaExportadora = new StringBuilder();
 			sqlAgenciaExportadora.append("UPDATE D_DOSIER SET ");
-			sqlAgenciaExportadora.append("FEC_DT_DESCARGA_EXPORTADOR = DECODE(?estaDescargado, true, SYSDATE, NULL) ");
+			sqlAgenciaExportadora.append("FEC_DT_DESCARGA_EXPORTADOR = DECODE(?estaDescargado, 'S', SYSDATE, NULL), ");
 			sqlAgenciaExportadora.append("COD_V_USUARIO_MODIFICACION = ?codigoUsuario, ");
 			sqlAgenciaExportadora.append("FEC_DT_MODIFICACION = SYSDATE ");
 			sqlAgenciaExportadora.append("WHERE NUM_DOSIER = ?numDosier ");
 			sqlAgenciaExportadora.append("AND NUM_ANYO = ?anyoDosier ");
-			sqlAgenciaExportadora.append("COD_V_AGENCIA_EXPORTACION = ?codigoAgencia");
+			sqlAgenciaExportadora.append("AND COD_V_AGENCIA_EXPORTACION = ?codigoAgencia");
 
 			final Query queryAgenciaExportadora = getEntityManager().createNativeQuery(sqlAgenciaExportadora.toString());
 			
-			queryAgenciaExportadora.setParameter("estaDescargado", estaDescargado);
+			queryAgenciaExportadora.setParameter("estaDescargado", descargado);
 			queryAgenciaExportadora.setParameter("numDosier", numDosier);
 			queryAgenciaExportadora.setParameter("anyoDosier", anyoDosier);
 			queryAgenciaExportadora.setParameter("codigoAgencia", codigoAgencia);
+			queryAgenciaExportadora.setParameter("codigoUsuario", codigoUsuario);
 			queryAgenciaExportadora.executeUpdate();
 			
 			
 			// Agencia importadora
 			final StringBuilder sqlAgenciaImportadora = new StringBuilder();
 			sqlAgenciaImportadora.append("UPDATE D_DOSIER SET ");
-			sqlAgenciaImportadora.append("FEC_DT_DESCARGA_IMPORTADOR = DECODE(?estaDescargado, true, SYSDATE, NULL), ");
+			sqlAgenciaImportadora.append("FEC_DT_DESCARGA_IMPORTADOR = DECODE(?estaDescargado, 'S', SYSDATE, NULL), ");
 			sqlAgenciaImportadora.append("COD_V_USUARIO_MODIFICACION = ?codigoUsuario, ");
 			sqlAgenciaImportadora.append("FEC_DT_MODIFICACION = SYSDATE ");
 			sqlAgenciaImportadora.append("WHERE NUM_DOSIER = ?numDosier ");
 			sqlAgenciaImportadora.append("AND NUM_ANYO = ?anyoDosier ");
-			sqlAgenciaImportadora.append("COD_V_AGENCIA_IMPORTACION = ?codigoAgencia");
+			sqlAgenciaImportadora.append("AND COD_V_AGENCIA_IMPORTACION = ?codigoAgencia");
 
 			final Query queryAgenciaImportadora = getEntityManager().createNativeQuery(sqlAgenciaImportadora.toString());
 
+			queryAgenciaImportadora.setParameter("estaDescargado", descargado);
 			queryAgenciaImportadora.setParameter("numDosier", numDosier);
 			queryAgenciaImportadora.setParameter("anyoDosier", anyoDosier);
 			queryAgenciaImportadora.setParameter("codigoAgencia", codigoAgencia);
+			queryAgenciaExportadora.setParameter("codigoUsuario", codigoUsuario);
 			queryAgenciaImportadora.executeUpdate();			
 			
 			result = new OutputPutDosierConfirmaDescargaDTO();

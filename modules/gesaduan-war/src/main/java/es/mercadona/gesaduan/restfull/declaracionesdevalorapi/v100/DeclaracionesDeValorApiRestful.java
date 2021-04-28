@@ -353,7 +353,7 @@ public class DeclaracionesDeValorApiRestful {
 	@Path("factura/{codigoFactura}/confirmar-descarga")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response putFacturaConfirmaDescarga(@NotNull @PathParam("codigoDeclaracion") String codigoFactura,
+	public Response putFacturaConfirmaDescarga(@NotNull @PathParam("codigoFactura") String codigoFactura,
 			@NotNull @QueryParam("codigoProveedor") String codigoProveedor,
 			@NotNull InputPutFacturaConfirmaDescargaDTO inputData) {
 		OutputPutFacturaConfirmaDescargaDTO response = null;

@@ -50,6 +50,13 @@ public class PutFacturaConfirmaDescargaDAOImpl extends DaoBaseImpl<Declaraciones
 			String codigoProveedor = input.getDatos().getCodigoProveedor();
 			String codigoUsuario = input.getMetadatos().getCodigoUsuario();
 			Boolean estaDescargado = input.getDatos().getEstaDescargado();
+			
+			String descargado;
+			if (estaDescargado) {
+				descargado = "S";
+			} else {
+				descargado = "N";
+			}
 
 			sqlFactura.append("SELECT COD_N_PROVEEDOR ");
 			sqlFactura.append("FROM O_DECLARACION_VALOR_CAB DV ");
@@ -76,7 +83,7 @@ public class PutFacturaConfirmaDescargaDAOImpl extends DaoBaseImpl<Declaraciones
 				     
 				final Query queryExisteProveedor = getEntityManager().createNativeQuery(sqlExisteProveedor.toString());
 
-				queryExisteProveedor.setParameter("estaDescargado", estaDescargado);
+				queryExisteProveedor.setParameter("estaDescargado", descargado);
 				queryExisteProveedor.setParameter("codigoUsuario", codigoUsuario);
 				queryExisteProveedor.setParameter("numFactura", numFactura);
 				queryExisteProveedor.setParameter("anyoFactura", anyoFactura);
@@ -85,20 +92,20 @@ public class PutFacturaConfirmaDescargaDAOImpl extends DaoBaseImpl<Declaraciones
 			} else {
 				// PROVEEDOR EXPORTADOR
 				final StringBuilder sqlProveedorExportador = new StringBuilder();
-				sqlProveedorExportador.append("MERGE O_DECLARACION_VALOR_CAB DV USING (");
+				sqlProveedorExportador.append("MERGE INTO O_DECLARACION_VALOR_CAB DV USING (");
 				sqlProveedorExportador.append("SELECT NUM_DOSIER, NUM_ANYO ");
 				sqlProveedorExportador.append("FROM D_DOSIER ");
 				sqlProveedorExportador.append("WHERE COD_V_AGENCIA_EXPORTACION = ?codProveedor) DD ");
 				sqlProveedorExportador.append("ON (DV.NUM_DOSIER = DD.NUM_DOSIER AND DV.NUM_ANYO = DD.NUM_ANYO) ");
 				sqlProveedorExportador.append("WHEN MATCHED THEN UPDATE SET ");
-				sqlProveedorExportador.append("FEC_DT_DESCARGA_EXPORTADOR = DECODE(?estaDescargado, true, SYSDATE, NULL), ");
+				sqlProveedorExportador.append("FEC_DT_DESCARGA_EXPORTADOR = DECODE(?estaDescargado, 'S', SYSDATE, NULL), ");
 				sqlProveedorExportador.append("COD_V_USR_MODIFICACION = ?codigoUsuario ");
 				sqlProveedorExportador.append("WHERE COD_N_DECLARACION_VALOR = ?numFactura AND NUM_ANYO = ?anyoFactura AND COD_N_VERSION = ?version");
 				     
 				final Query queryProveedorExportador = getEntityManager().createNativeQuery(sqlProveedorExportador.toString());
 				
 				queryProveedorExportador.setParameter("codProveedor", codigoProveedor);
-				queryProveedorExportador.setParameter("estaDescargado", estaDescargado);
+				queryProveedorExportador.setParameter("estaDescargado", descargado);
 				queryProveedorExportador.setParameter("codigoUsuario", codigoUsuario);
 				queryProveedorExportador.setParameter("numFactura", numFactura);
 				queryProveedorExportador.setParameter("anyoFactura", anyoFactura);
@@ -108,20 +115,20 @@ public class PutFacturaConfirmaDescargaDAOImpl extends DaoBaseImpl<Declaraciones
 				
 				// PROVEEDOR IMPORTADOR
 				final StringBuilder sqlProveedorImportador = new StringBuilder();
-				sqlProveedorImportador.append("MERGE O_DECLARACION_VALOR_CAB DV USING (");
+				sqlProveedorImportador.append("MERGE INTO O_DECLARACION_VALOR_CAB DV USING (");
 				sqlProveedorImportador.append("SELECT NUM_DOSIER, NUM_ANYO ");
 				sqlProveedorImportador.append("FROM D_DOSIER ");
 				sqlProveedorImportador.append("WHERE COD_V_AGENCIA_IMPORTACION = ?codProveedor) DD ");
 				sqlProveedorImportador.append("ON (DV.NUM_DOSIER = DD.NUM_DOSIER AND DV.NUM_ANYO = DD.NUM_ANYO) ");
 				sqlProveedorImportador.append("WHEN MATCHED THEN UPDATE SET ");
-				sqlProveedorImportador.append("FEC_DT_DESCARGA_IMPORTADOR = DECODE(?estaDescargado, true, SYSDATE, NULL), ");
+				sqlProveedorImportador.append("FEC_DT_DESCARGA_IMPORTADOR = DECODE(?estaDescargado, 'S', SYSDATE, NULL), ");
 				sqlProveedorImportador.append("COD_V_USR_MODIFICACION = ?codigoUsuario ");
 				sqlProveedorImportador.append("WHERE COD_N_DECLARACION_VALOR = ?numFactura AND NUM_ANYO = ?anyoFactura AND COD_N_VERSION = ?version");
 				     
 				final Query queryProveedorImportador = getEntityManager().createNativeQuery(sqlProveedorImportador.toString());
 				
 				queryProveedorImportador.setParameter("codProveedor", codigoProveedor);
-				queryProveedorImportador.setParameter("estaDescargado", estaDescargado);
+				queryProveedorImportador.setParameter("estaDescargado", descargado);
 				queryProveedorImportador.setParameter("codigoUsuario", codigoUsuario);
 				queryProveedorImportador.setParameter("numFactura", numFactura);
 				queryProveedorImportador.setParameter("anyoFactura", anyoFactura);
