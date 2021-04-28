@@ -66,8 +66,8 @@ public class DosierApiRestful {
 
 	private static final String MIMETYPE_PDF = "application/pdf";
 	private static final String MIMETYPE_CSV = "text/csv";
-	private static final String FILE_BASE_NAME_PDF = "dv_";
-	private static final String FILE_BASE_NAME_CSV = "csv_";
+	private static final String FILE_BASE_NAME_PDF = "dosier_";
+	private static final String FILE_BASE_NAME_CSV = "dosier_";
 
 	private static final String LOG_FILE = "DeclaracionesDeValorRestful(GESADUAN)"; 	
 	
@@ -175,13 +175,13 @@ public class DosierApiRestful {
 			}
 
 		} catch (ResourceNotFoundException e) {
-			this.logger.error("({}-{}) ERROR - {} {}",LOG_FILE,"getDeclaracionesDeValorDocumento-1",e.getClass().getSimpleName(),e.getMessage());			
+			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE,"getDeclaracionesDeValorDocumento-1",e.getClass().getSimpleName(),e.getMessage());			
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
 		} catch (IllegalResourceNameException e) {
-			this.logger.error("({}-{}) ERROR - {} {}",LOG_FILE,"getDeclaracionesDeValorDocumento-2",e.getClass().getSimpleName(),e.getMessage());			
+			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE,"getDeclaracionesDeValorDocumento-2",e.getClass().getSimpleName(),e.getMessage());			
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}",LOG_FILE,"getDeclaracionesDeValorDocumento-3",e.getClass().getSimpleName(),e.getMessage());			
+			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE,"getDeclaracionesDeValorDocumento-3",e.getClass().getSimpleName(),e.getMessage());			
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
 		}
 

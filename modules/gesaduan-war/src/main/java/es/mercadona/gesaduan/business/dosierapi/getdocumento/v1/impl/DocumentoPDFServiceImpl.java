@@ -24,6 +24,7 @@ import es.mercadona.fwk.reporting.Report;
 import es.mercadona.fwk.reporting.ReportTemplate;
 import es.mercadona.fwk.reporting.ReportingService;
 import es.mercadona.gesaduan.business.dosierapi.getdocumento.v1.DocumentoPDFService;
+import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dao.dosierapi.getdocumento.v1.GetDocumentoApiDAO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocCabDTO;
 import es.mercadona.gesaduan.dto.dosierapi.getdocumento.v1.InputDosierDocumentoDTO;
@@ -42,16 +43,27 @@ public class DocumentoPDFServiceImpl implements DocumentoPDFService {
 	private ReportingService reportingService;	
 	
 	@Inject
-	private org.slf4j.Logger logger;		
+	private org.slf4j.Logger logger;
+	
+	private static final String LOG_FILE = "DocumentoPDFServiceImpl(GESADUAN)"; 
 
 	@Override
 	public OutputDosierDocCabDTO preparaDocumentoPDF(InputDosierDocumentoDTO input) {
 
+		OutputDosierDocCabDTO outDVDocumentoDTO = null;
+		
 		// Obtiene los datos del informe (estructura del informe)
-		OutputDosierDocCabDTO outDVDocumentoDTO = getDocumentoOnlineDAO.getDatosDocumento(input);		
+		if (!getDocumentoOnlineDAO.isDosierInvalidado(input)) {
+			
+			outDVDocumentoDTO = getDocumentoOnlineDAO.getDatosDocumento(input);		
 				
-		// prepara el informe
-		outDVDocumentoDTO.setFicheroPDF(preparaDocumento(outDVDocumentoDTO));
+			// prepara el informe
+			outDVDocumentoDTO.setFicheroPDF(preparaDocumento(outDVDocumentoDTO));
+		} else {
+			
+			outDVDocumentoDTO = getDocumentoOnlineDAO.getDocumentoInvalidado(input);
+			
+		}
 		
 		// devuelve el objeto con el fichero del informe en bytes 		
 		return outDVDocumentoDTO;
@@ -61,7 +73,6 @@ public class DocumentoPDFServiceImpl implements DocumentoPDFService {
 	private byte[] preparaDocumento(OutputDosierDocCabDTO outDVDocumentoDTO) {
 		
 		// prepara el informe
-		String documentoStr = "";
 		byte[] ficheroByte =  null;
 		
 		try {
@@ -132,37 +143,11 @@ public class DocumentoPDFServiceImpl implements DocumentoPDFService {
 		    ficheroByte = FileUtils.readFileToByteArray(file);
 	    
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}","DVDocumentoPDFServiceImpl(GESADUAN)","preparaDocumento",e.getClass().getSimpleName(),e.getMessage());	
+			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE,"preparaDocumento",e.getClass().getSimpleName(),e.getMessage());	
 			throw new ApplicationException(e.getMessage());			
 		}
 		
 		return ficheroByte;
-
-	}
-
-	private void preparaParametrosReport(OutputDeclaracionesDeValorDocCabDTO outDVDocumentoDTO,final Map<String, Object> mapParams) {
-		
-		mapParams.put("factura", outDVDocumentoDTO.getCodigoDeclaracion());
-		mapParams.put("anyo", outDVDocumentoDTO.getAnyoDeclaracion());
-		mapParams.put("fechaDeclaracion", outDVDocumentoDTO.getFechaDeclaracion());
-		mapParams.put("proveedor", outDVDocumentoDTO.getNombreOrigen());
-		mapParams.put("provinciaOrigen", outDVDocumentoDTO.getProvinciaOrigen());
-		mapParams.put("condicionesEntrega", outDVDocumentoDTO.getCondicionesEntrega());
-		mapParams.put("exportadorNombre", outDVDocumentoDTO.getExportadorNombre());
-		mapParams.put("exportadorDireccion", outDVDocumentoDTO.getExportadorDireccion());
-		mapParams.put("exportadorCP", outDVDocumentoDTO.getExportadorCP());
-		mapParams.put("exportadorPoblacion", outDVDocumentoDTO.getExportadorPoblacion());
-		mapParams.put("exportadorProvincia", outDVDocumentoDTO.getExportadorProvincia());
-		mapParams.put("exportadorNIF", outDVDocumentoDTO.getExportadorNIF());
-		mapParams.put("importadorNombre", outDVDocumentoDTO.getImportadorNombre());
-		mapParams.put("importadorDireccion", outDVDocumentoDTO.getImportadorDireccion());
-		mapParams.put("importadorCP", outDVDocumentoDTO.getImportadorCP());
-		mapParams.put("importadorPoblacion", outDVDocumentoDTO.getImportadorPoblacion());
-		mapParams.put("importadorProvincia", outDVDocumentoDTO.getImportadorProvincia());
-		mapParams.put("importadorNIF", outDVDocumentoDTO.getImportadorNIF());
-		mapParams.put("txtInfoREA", outDVDocumentoDTO.getTxtInfoREA());
-		mapParams.put("txtInfoLPC", outDVDocumentoDTO.getTxtInfoLPC());
-		mapParams.put("txtInfoGeneral", outDVDocumentoDTO.getTxtInfoGeneral());				
 
 	}
 
@@ -171,11 +156,14 @@ public class DocumentoPDFServiceImpl implements DocumentoPDFService {
 		mapParams.put("report.title","Titulo Reporte");
 		mapParams.put("report.subtitle","Informe.");
 
-		mapParams.put("header.factura","FACTURA - Nº");
-		mapParams.put("header.declaracionValor","DECLARACIÓN VALOR - Nº");
+		mapParams.put("header.declaracionValor","FACTURA - Nº");
+		mapParams.put("header.declaracionValor2","DECLARACIÓN VALOR - Nº");
 		mapParams.put("header.fechaDV","Fecha DV");
-		mapParams.put("header.fechaFactura","Fecha factura");
+		mapParams.put("header.fechaDeclaracion","FECHA FACTURA");
+		mapParams.put("header.dosier","DOSIER - Nº");
+		mapParams.put("header.fechaDosier","FECHA DOSIER");		
 		mapParams.put("header.proveedor","Proveedor");
+		mapParams.put("header.bloqueLogistico","Bloque Logístico");		
 		mapParams.put("header.provinciaCarga","Provincia de carga (Origen)");
 		mapParams.put("header.condicionesEntrega","Condiciones de entrega");
 		mapParams.put("header.exportador","EXPEDIDOR / EXPORTADOR");

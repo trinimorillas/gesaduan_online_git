@@ -122,18 +122,6 @@ public class DVDocumentoCSVServiceImpl implements DVDocumentoCSVService {
 
 	}	
 	
-	/*
-	private OutputDeclaracionesDeValorDocCabDTO preparaDatos() {
-		
-		// prepara el informe
-		OutputDeclaracionesDeValorDocCabDTO outputDocumentoCabDTO = new OutputDeclaracionesDeValorDocCabDTO();
-		
-		// prepara la cabecera		
-		
-		// prepara las lineas
-		
-		return outputDocumentoCabDTO;
-	}		
-	*/
+
 	
 }

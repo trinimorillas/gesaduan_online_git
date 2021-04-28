@@ -6,5 +6,7 @@ import es.mercadona.gesaduan.dto.dosierapi.getdocumento.v1.OutputDosierDocCabDTO
 public interface GetDocumentoApiDAO {
 
 	public OutputDosierDocCabDTO getDatosDocumento(InputDosierDocumentoDTO input);
+	public boolean isDosierInvalidado(InputDosierDocumentoDTO input);	
+	public OutputDosierDocCabDTO getDocumentoInvalidado(InputDosierDocumentoDTO input);	
 	
 }

@@ -11,6 +11,7 @@ import javax.persistence.Query;
 
 import es.mercadona.fwk.core.exceptions.ApplicationException;
 import es.mercadona.fwk.data.DaoBaseImpl;
+import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dao.declaracionesdevalorapi.getdvdocumento.v1.GetDVDocumentoApiDAO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.InputDeclaracionesDeValorDocumentoDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocCabDTO;
@@ -26,6 +27,8 @@ public class GetDVDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, Doc
 	
 	@Inject
 	private org.slf4j.Logger logger;	
+	
+	private static final String LOG_FILE = "GetDVDocumentoApiDAOImpl(GESADUAN)"; 	
 	
 	@Override
 	protected EntityManager getEntityManager() {
@@ -142,21 +145,9 @@ public class GetDVDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, Doc
 					outDVDocumentoDTO.setImportadorPoblacion(String.valueOf(tmp[20]));
 					outDVDocumentoDTO.setImportadorProvincia(String.valueOf(tmp[21]));
 					outDVDocumentoDTO.setImportadorNIF(String.valueOf(tmp[22]));		
-					if (tmp[23] != null) {
-						outDVDocumentoDTO.setTxtInfoREA(String.valueOf(tmp[23]));	
-					} else {
-						outDVDocumentoDTO.setTxtInfoREA("");
-					}
-					if (tmp[24] != null) {
-						outDVDocumentoDTO.setTxtInfoLPC(String.valueOf(tmp[24]));
-					} else {
-						outDVDocumentoDTO.setTxtInfoLPC("");
-					}
-					if (tmp[25] != null) {
-						outDVDocumentoDTO.setTxtInfoGeneral(String.valueOf(tmp[25]));
-					} else {
-						outDVDocumentoDTO.setTxtInfoGeneral("");
-					}
+					outDVDocumentoDTO.setTxtInfoREA(emptyStringOrValue(tmp[23]));
+					outDVDocumentoDTO.setTxtInfoLPC(emptyStringOrValue(tmp[24]));
+					outDVDocumentoDTO.setTxtInfoGeneral(emptyStringOrValue(tmp[25]));	
 					outDVDocumentoDTO.setTipoInforme(String.valueOf(tmp[26]));				
 					
 				}
@@ -167,7 +158,7 @@ public class GetDVDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, Doc
 			outDVDocumentoDTO.setLineas(lineas);
 			
 		} catch(Exception ex) {
-			this.logger.error("({}-{}) ERROR - {} {}","GetDVDocumentoApiDAOImpl(GESADUAN)","getDatosCabecera",ex.getClass().getSimpleName(),ex.getMessage());	
+			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE,"getDatosCabecera",ex.getClass().getSimpleName(),ex.getMessage());	
 			throw new ApplicationException(ex.getMessage());			
 		}	
 		
@@ -181,6 +172,7 @@ public class GetDVDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, Doc
 		
 		// Obtiene los datos de cabecera del documento	
 		lineas = new ArrayList<>();	
+		String tipoDocumento = input.getTipoDocumento();
 		
 		try {	
 			
@@ -315,72 +307,24 @@ public class GetDVDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, Doc
 					outputDVDocLinDTO.setCodigoDeclaracion(String.valueOf(tmp[0]));
 					outputDVDocLinDTO.setAnyoDeclaracion(String.valueOf(tmp[1]));
 					outputDVDocLinDTO.setVersionDeclaracion(String.valueOf(tmp[2]));
-					if (tmp[3] != null) {
-						outputDVDocLinDTO.setCodigoProducto(String.valueOf(tmp[3]));
-					} else {
-						outputDVDocLinDTO.setCodigoProducto("");
-					}
-					if (tmp[4] != null) {
-						outputDVDocLinDTO.setNombreProducto(replaceSpecialChars(String.valueOf(tmp[4])));
-					} else {
-						outputDVDocLinDTO.setNombreProducto("");
-					}
-					if (tmp[5] != null) {
-						outputDVDocLinDTO.setMarca(replaceSpecialChars(String.valueOf(tmp[5])));
-					} else {
-						outputDVDocLinDTO.setMarca("");
-					}
-					if (tmp[6] != null) {
-						outputDVDocLinDTO.setCodigoTaric(String.valueOf(tmp[6]));
-					} else {
-						outputDVDocLinDTO.setCodigoTaric("");
-					}
+					outputDVDocLinDTO.setCodigoProducto(emptyStringOrValue(tmp[3]));					
+					outputDVDocLinDTO.setNombreProducto(emptyStringOrValue(tmp[4]));
+					outputDVDocLinDTO.setMarca(emptyStringOrValue(tmp[5]));
+					outputDVDocLinDTO.setCodigoTaric(emptyStringOrValue(tmp[6]));
 					outputDVDocLinDTO.setTipoLinea(String.valueOf(tmp[7]));
-					if (tmp[8] != null) {
-						outputDVDocLinDTO.setCodigoRea(String.valueOf(tmp[8]));
-					} else {
-						outputDVDocLinDTO.setCodigoRea("");
-					}
-					if (tmp[9] != null) {
-						outputDVDocLinDTO.setPaisOrigen(String.valueOf(tmp[9]));
-					} else {
-						outputDVDocLinDTO.setPaisOrigen("");
-					}
-					if (tmp[10] != null) {
-						outputDVDocLinDTO.setLpc(String.valueOf(tmp[10]));
-					} else {
-						outputDVDocLinDTO.setLpc("");
-					}
-					outputDVDocLinDTO.setNumeroBultos(formatNumber(input.getTipoDocumento(),String.valueOf(tmp[11])));
-					if (tmp[12] != null) {
-						outputDVDocLinDTO.setTipoBultos(String.valueOf(tmp[12]));
-					} else {
-						outputDVDocLinDTO.setTipoBultos("");
-					}
-					outputDVDocLinDTO.setPesoBruto(formatNumber(input.getTipoDocumento(),String.valueOf(tmp[13])));
-					outputDVDocLinDTO.setPesoNeto(formatNumber(input.getTipoDocumento(),String.valueOf(tmp[14])));
-					outputDVDocLinDTO.setCantidad(formatNumber(input.getTipoDocumento(),String.valueOf(tmp[15])));
-					if (tmp[16] != null) {
-						outputDVDocLinDTO.setVolumen(formatNumber(input.getTipoDocumento(),String.valueOf(tmp[16])));
-					} else {
-						outputDVDocLinDTO.setVolumen("");
-					}
-					if (tmp[17] != null) {
-						outputDVDocLinDTO.setAlcohol(formatNumber(input.getTipoDocumento(),String.valueOf(tmp[17])));
-					} else {
-						outputDVDocLinDTO.setAlcohol("");
-					}
-					if (tmp[18] != null) {
-						outputDVDocLinDTO.setPlato(formatNumber(input.getTipoDocumento(),String.valueOf(tmp[18])));
-					} else {
-						outputDVDocLinDTO.setPlato("");
-					}
-					if (tmp[19] != null) {
-						outputDVDocLinDTO.setPrecio(formatNumber(input.getTipoDocumento(),String.valueOf(tmp[19])));
-					} else {
-						outputDVDocLinDTO.setPrecio("");
-					}
-					outputDVDocLinDTO.setImporte(formatNumber(input.getTipoDocumento(),String.valueOf(tmp[20])));
+					outputDVDocLinDTO.setCodigoRea(emptyStringOrValue(tmp[8]));
+					outputDVDocLinDTO.setPaisOrigen(emptyStringOrValue(tmp[9]));
+					outputDVDocLinDTO.setLpc(emptyStringOrValue(tmp[10]));	
+					outputDVDocLinDTO.setNumeroBultos(formatNumber(tipoDocumento,String.valueOf(tmp[11])));
+					outputDVDocLinDTO.setTipoBultos(emptyStringOrFormatNumber(tipoDocumento,tmp[12]));
+					outputDVDocLinDTO.setPesoBruto(formatNumber(tipoDocumento,String.valueOf(tmp[13])));
+					outputDVDocLinDTO.setPesoNeto(formatNumber(tipoDocumento,String.valueOf(tmp[14])));
+					outputDVDocLinDTO.setCantidad(formatNumber(tipoDocumento,String.valueOf(tmp[15])));
+					outputDVDocLinDTO.setVolumen(emptyStringOrFormatNumber(tipoDocumento,tmp[16]));
+					outputDVDocLinDTO.setAlcohol(emptyStringOrFormatNumber(tipoDocumento,tmp[17]));
+					outputDVDocLinDTO.setPlato(emptyStringOrFormatNumber(tipoDocumento,tmp[18]));
+					outputDVDocLinDTO.setPrecio(emptyStringOrFormatNumber(tipoDocumento,tmp[19]));
+					outputDVDocLinDTO.setImporte(formatNumber(tipoDocumento,String.valueOf(tmp[20])));
 					
 					lineas.add(outputDVDocLinDTO);
 
@@ -388,7 +332,7 @@ public class GetDVDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, Doc
 			}
 			
 		} catch(Exception ex) {
-			this.logger.error("({}-{}) ERROR - {} {}","GetDVDocumentoApiDAOImpl(GESADUAN)","getDatosLineas",ex.getClass().getSimpleName(),ex.getMessage());	
+			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE,"getDatosLineas",ex.getClass().getSimpleName(),ex.getMessage());	
 			throw new ApplicationException(ex.getMessage());			
 		}				
 		
@@ -406,10 +350,8 @@ public class GetDVDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, Doc
 				}
 			}											
 		} else {
-			if (value != null ) {
-				if (",".equals(value.substring(value.length()-1))) {
-					value = value.substring(0,value.length()-1);
-				}
+			if ((value != null ) && (",".equals(value.substring(value.length()-1)))) {
+				value = value.substring(0,value.length()-1);
 			}											
 		}
 		return value;
@@ -423,5 +365,26 @@ public class GetDVDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, Doc
 		}
 		return value;
 	}	
+	
+	private String emptyStringOrFormatNumber(String tipoDocumento,Object value) {
+		String result = "";
+		if (value != null) {
+			result = formatNumber(tipoDocumento,String.valueOf(value));
+		} else {
+			result = "";
+		}
+		return result;
+	}	
+	
+	private String emptyStringOrValue(Object value) {
+		String result = "";
+		if (value != null) {
+			result = String.valueOf(String.valueOf(value));
+		} else {
+			result = "";
+		}
+		return result;
+	}		
+		
 	
 }
