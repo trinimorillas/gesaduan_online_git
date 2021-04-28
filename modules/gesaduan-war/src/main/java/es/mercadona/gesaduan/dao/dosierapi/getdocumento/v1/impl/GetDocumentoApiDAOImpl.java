@@ -1,5 +1,6 @@
 package es.mercadona.gesaduan.dao.dosierapi.getdocumento.v1.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import javax.persistence.Query;
 
 import es.mercadona.fwk.core.exceptions.ApplicationException;
 import es.mercadona.fwk.data.DaoBaseImpl;
+import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dao.dosierapi.getdocumento.v1.GetDocumentoApiDAO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocCabDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocLinDTO;
@@ -18,15 +20,19 @@ import es.mercadona.gesaduan.dto.dosierapi.getdocumento.v1.InputDosierDocumentoD
 import es.mercadona.gesaduan.dto.dosierapi.getdocumento.v1.OutputDosierDocCabDTO;
 import es.mercadona.gesaduan.jpa.declaracionesdevalor.getdocumentodv.v1.DocumentoDVDataJPA;
 import es.mercadona.gesaduan.jpa.declaracionesdevalor.getdocumentodv.v1.DocumentoDVDataPK;
+import es.mercadona.gesaduan.jpa.dosier.getdocumento.v1.DocumentoDataJPA;
+import es.mercadona.gesaduan.jpa.dosier.getdocumento.v1.DocumentoDataPK;
 
 @Stateless
-public class GetDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, DocumentoDVDataJPA> implements GetDocumentoApiDAO{
+public class GetDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDataPK, DocumentoDataJPA> implements GetDocumentoApiDAO{
 
 	@PersistenceContext
 	private EntityManager entityM;
 	
 	@Inject
-	private org.slf4j.Logger logger;	
+	private org.slf4j.Logger logger;
+	
+	private static final String LOG_FILE = "GetDocumentoApiDAOImpl(GESADUAN)"; 	
 	
 	@Override
 	protected EntityManager getEntityManager() {
@@ -36,7 +42,7 @@ public class GetDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, Docum
 
 	@Override
 	public void setEntityClass() {
-		entityClass = DocumentoDVDataJPA.class;
+		entityClass = DocumentoDataJPA.class;
 		
 	}
 
@@ -45,6 +51,85 @@ public class GetDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, Docum
 		
 		return preparaEstructura(getDatosCabecera(input),getDatosLineas(input));
 	}
+	
+	@Override
+	public boolean isDosierInvalidado(InputDosierDocumentoDTO input) {
+
+		boolean isInvalidado = false;
+		
+		try {	
+			
+			// Query
+			final StringBuilder sql = new StringBuilder();
+			
+			StringBuilder select = new StringBuilder();
+			
+			select.append("SELECT ");
+			select.append("COD_N_ESTADO ");
+			select.append("FROM D_DOSIER ");
+			select.append("WHERE ");
+			select.append("NUM_DOSIER = ?codigoDosier AND ");
+			select.append("NUM_ANYO = ?anyoDosier ");
+			
+			sql.append(select);		
+			
+			final Query query = getEntityManager().createNativeQuery(sql.toString());		
+			query.setParameter("codigoDosier", input.getCodigoDosier());
+			query.setParameter("anyoDosier", input.getAnyoDosier());
+			
+			@SuppressWarnings("unchecked")
+			List<BigDecimal> listado = query.getResultList();	
+			
+			if (listado != null && !listado.isEmpty()) {			
+				for (BigDecimal tmp : listado) {					
+					int estadoDosier = Integer.parseInt(String.valueOf(tmp));		
+					if (estadoDosier == 3) {
+						isInvalidado = true;
+					}
+				}
+			}			
+			
+		} catch(Exception ex) {
+			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE,"isDosierInvalidado",ex.getClass().getSimpleName(),ex.getMessage());	
+			throw new ApplicationException(ex.getMessage());			
+		}	
+		
+		return isInvalidado;
+	}
+	
+	@Override
+	public OutputDosierDocCabDTO getDocumentoInvalidado(InputDosierDocumentoDTO input) {	
+		
+		OutputDosierDocCabDTO outDocumentoDTO;
+		
+		// Obtiene los datos de cabecera del documento	
+		outDocumentoDTO = new OutputDosierDocCabDTO();	
+				
+		try {
+			
+			DocumentoDataJPA documento =  null;
+			
+			DocumentoDataPK inputPK = new DocumentoDataPK();
+			inputPK.setNumDosier(input.getCodigoDosier());
+			inputPK.setAnyo(input.getAnyoDosier());			
+			
+			documento = findById(inputPK);
+			
+			outDocumentoDTO.setCodigoDosier(Integer.toString(input.getCodigoDosier()));
+			outDocumentoDTO.setAnyoDosier(Integer.toString(input.getAnyoDosier()));
+			outDocumentoDTO.setTipoInforme(input.getTipoDocumento());
+			if (documento != null) {
+				outDocumentoDTO.setFicheroPDF(documento.getFicheroPdf());
+			}
+			
+		} catch (Exception ex) {
+			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE,"getDocumentoInvalidado",ex.getClass().getSimpleName(),ex.getMessage());	
+			throw new ApplicationException(ex.getMessage());
+		}			
+		
+		
+		return outDocumentoDTO;
+	}	
 	
 	/* carga datos de cabecera de la DV */
 	private List<OutputDeclaracionesDeValorDocCabDTO> getDatosCabecera(InputDosierDocumentoDTO input) {
@@ -135,10 +220,10 @@ public class GetDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, Docum
 					outDVDocumentoCabDTO.setImportadorCP(String.valueOf(tmp[19]));
 					outDVDocumentoCabDTO.setImportadorPoblacion(String.valueOf(tmp[20]));
 					outDVDocumentoCabDTO.setImportadorProvincia(String.valueOf(tmp[21]));
-					outDVDocumentoCabDTO.setImportadorNIF(String.valueOf(tmp[22]));		
-					if (tmp[23] != null) outDVDocumentoCabDTO.setTxtInfoREA(String.valueOf(tmp[23]));	
-					if (tmp[24] != null) outDVDocumentoCabDTO.setTxtInfoLPC(String.valueOf(tmp[24]));
-					if (tmp[25] != null) outDVDocumentoCabDTO.setTxtInfoGeneral(String.valueOf(tmp[25]));
+					outDVDocumentoCabDTO.setImportadorNIF(String.valueOf(tmp[22]));
+					outDVDocumentoCabDTO.setTxtInfoREA(emptyStringOrValue(tmp[23]));
+					outDVDocumentoCabDTO.setTxtInfoLPC(emptyStringOrValue(tmp[24]));
+					outDVDocumentoCabDTO.setTxtInfoGeneral(emptyStringOrValue(tmp[25]));					
 					outDVDocumentoCabDTO.setTipoInforme(String.valueOf(tmp[26]));				
 					
 					declaraciones.add(outDVDocumentoCabDTO);
@@ -148,7 +233,7 @@ public class GetDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, Docum
 
 			
 		} catch(Exception ex) {
-			this.logger.error("({}-{}) ERROR - {} {}","GetDocumentoApiDAOImpl(GESADUAN)","getDatosCabecera",ex.getClass().getSimpleName(),ex.getMessage());	
+			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE,"getDatosCabecera",ex.getClass().getSimpleName(),ex.getMessage());	
 			throw new ApplicationException(ex.getMessage());			
 		}	
 		
@@ -162,6 +247,7 @@ public class GetDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, Docum
 		
 		// Obtiene los datos de cabecera del documento	
 		lineas = new ArrayList<>();	
+		String tipoDocumento = input.getTipoDocumento();
 		
 		try {	
 			
@@ -295,72 +381,24 @@ public class GetDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, Docum
 					outDVDocumentoLinDTO.setCodigoDeclaracion(String.valueOf(tmp[0]));
 					outDVDocumentoLinDTO.setAnyoDeclaracion(String.valueOf(tmp[1]));
 					outDVDocumentoLinDTO.setVersionDeclaracion(String.valueOf(tmp[2]));
-					if (tmp[3] != null) {
-						outDVDocumentoLinDTO.setCodigoProducto(String.valueOf(tmp[3]));
-					} else {
-						outDVDocumentoLinDTO.setCodigoProducto("");
-					}
-					if (tmp[4] != null) {
-						outDVDocumentoLinDTO.setNombreProducto(replaceSpecialChars(String.valueOf(tmp[4])));
-					} else {
-						outDVDocumentoLinDTO.setNombreProducto("");
-					}
-					if (tmp[5] != null) {
-						outDVDocumentoLinDTO.setMarca(replaceSpecialChars(String.valueOf(tmp[5])));
-					} else {
-						outDVDocumentoLinDTO.setMarca("");
-					}
-					if (tmp[6] != null) {
-						outDVDocumentoLinDTO.setCodigoTaric(String.valueOf(tmp[6]));
-					} else {
-						outDVDocumentoLinDTO.setCodigoTaric("");
-					}
-					outDVDocumentoLinDTO.setTipoLinea(String.valueOf(tmp[7]));
-					if (tmp[8] != null) {
-						outDVDocumentoLinDTO.setCodigoRea(String.valueOf(tmp[8]));
-					} else {
-						outDVDocumentoLinDTO.setCodigoRea("");
-					}
-					if (tmp[9] != null) {
-						outDVDocumentoLinDTO.setPaisOrigen(String.valueOf(tmp[9]));
-					} else {
-						outDVDocumentoLinDTO.setPaisOrigen("");
-					}
-					if (tmp[10] != null) {
-						outDVDocumentoLinDTO.setLpc(String.valueOf(tmp[10]));
-					} else {
-						outDVDocumentoLinDTO.setLpc("");
-					}
-					outDVDocumentoLinDTO.setNumeroBultos(formatNumber(input.getTipoDocumento(),String.valueOf(tmp[11])));
-					if (tmp[12] != null) {
-						outDVDocumentoLinDTO.setTipoBultos(String.valueOf(tmp[12]));
-					} else {
-						outDVDocumentoLinDTO.setTipoBultos("");
-					}
-					outDVDocumentoLinDTO.setPesoBruto(formatNumber(input.getTipoDocumento(),String.valueOf(tmp[13])));
-					outDVDocumentoLinDTO.setPesoNeto(formatNumber(input.getTipoDocumento(),String.valueOf(tmp[14])));
-					outDVDocumentoLinDTO.setCantidad(formatNumber(input.getTipoDocumento(),String.valueOf(tmp[15])));
-					if (tmp[16] != null) {
-						outDVDocumentoLinDTO.setVolumen(formatNumber(input.getTipoDocumento(),String.valueOf(tmp[16])));
-					} else {
-						outDVDocumentoLinDTO.setVolumen("");
-					}
-					if (tmp[17] != null) {
-						outDVDocumentoLinDTO.setAlcohol(formatNumber(input.getTipoDocumento(),String.valueOf(tmp[17])));
-					} else {
-						outDVDocumentoLinDTO.setAlcohol("");
-					}
-					if (tmp[18] != null) {
-						outDVDocumentoLinDTO.setPlato(formatNumber(input.getTipoDocumento(),String.valueOf(tmp[18])));
-					} else {
-						outDVDocumentoLinDTO.setPlato("");
-					}
-					if (tmp[19] != null) {
-						outDVDocumentoLinDTO.setPrecio(formatNumber(input.getTipoDocumento(),String.valueOf(tmp[19])));
-					} else {
-						outDVDocumentoLinDTO.setPrecio("");
-					}
-					outDVDocumentoLinDTO.setImporte(formatNumber(input.getTipoDocumento(),String.valueOf(tmp[20])));
+					outDVDocumentoLinDTO.setCodigoProducto(emptyStringOrValue(tmp[3]));					
+					outDVDocumentoLinDTO.setNombreProducto(emptyStringOrValue(tmp[4]));
+					outDVDocumentoLinDTO.setMarca(emptyStringOrValue(tmp[5]));
+					outDVDocumentoLinDTO.setCodigoTaric(emptyStringOrValue(tmp[6]));
+					outDVDocumentoLinDTO.setTipoLinea(emptyStringOrValue(tmp[7]));
+					outDVDocumentoLinDTO.setCodigoRea(emptyStringOrValue(tmp[8]));
+					outDVDocumentoLinDTO.setPaisOrigen(emptyStringOrValue(tmp[9]));
+					outDVDocumentoLinDTO.setLpc(emptyStringOrValue(tmp[10]));					
+					outDVDocumentoLinDTO.setNumeroBultos(formatNumber(tipoDocumento,String.valueOf(tmp[11])));
+					outDVDocumentoLinDTO.setTipoBultos(emptyStringOrFormatNumber(tipoDocumento,tmp[12]));
+					outDVDocumentoLinDTO.setPesoBruto(formatNumber(tipoDocumento,String.valueOf(tmp[13])));
+					outDVDocumentoLinDTO.setPesoNeto(formatNumber(tipoDocumento,String.valueOf(tmp[14])));
+					outDVDocumentoLinDTO.setCantidad(formatNumber(tipoDocumento,String.valueOf(tmp[15])));
+					outDVDocumentoLinDTO.setVolumen(emptyStringOrFormatNumber(tipoDocumento,tmp[16]));
+					outDVDocumentoLinDTO.setAlcohol(emptyStringOrFormatNumber(tipoDocumento,tmp[17]));
+					outDVDocumentoLinDTO.setPlato(emptyStringOrFormatNumber(tipoDocumento,tmp[18]));
+					outDVDocumentoLinDTO.setPrecio(emptyStringOrFormatNumber(tipoDocumento,tmp[19]));
+					outDVDocumentoLinDTO.setImporte(formatNumber(tipoDocumento,String.valueOf(tmp[20])));
 					outDVDocumentoLinDTO.setProcesada(false);
 					
 					lineas.add(outDVDocumentoLinDTO);
@@ -369,7 +407,7 @@ public class GetDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, Docum
 			}
 			
 		} catch(Exception ex) {
-			this.logger.error("({}-{}) ERROR - {} {}","GetDocumentoApiDAOImpl(GESADUAN)","getDatosLineas",ex.getClass().getSimpleName(),ex.getMessage());	
+			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE,"getDatosLineas",ex.getClass().getSimpleName(),ex.getMessage());	
 			throw new ApplicationException(ex.getMessage());			
 		}				
 		
@@ -399,14 +437,13 @@ public class GetDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, Docum
 				List<OutputDeclaracionesDeValorDocLinDTO> lineasDeclaracion = new ArrayList<>();
 				
 				for (OutputDeclaracionesDeValorDocLinDTO outDVDocumentoLinDTO : lineas) {
-					if (!outDVDocumentoLinDTO.isProcesada()) {
-						if (outDVDocumentoCabDTO.getCodigoDeclaracion().equals(outDVDocumentoLinDTO.getCodigoDeclaracion()) && 
-							outDVDocumentoCabDTO.getAnyoDeclaracion().equals(outDVDocumentoLinDTO.getAnyoDeclaracion()) &&
-							outDVDocumentoCabDTO.getVersionDeclaracion().equals(outDVDocumentoLinDTO.getVersionDeclaracion())) {
+					if (!outDVDocumentoLinDTO.isProcesada() && 
+					    outDVDocumentoCabDTO.getCodigoDeclaracion().equals(outDVDocumentoLinDTO.getCodigoDeclaracion()) && 
+						outDVDocumentoCabDTO.getAnyoDeclaracion().equals(outDVDocumentoLinDTO.getAnyoDeclaracion()) &&
+						outDVDocumentoCabDTO.getVersionDeclaracion().equals(outDVDocumentoLinDTO.getVersionDeclaracion())) {
 							
-							lineasDeclaracion.add(outDVDocumentoLinDTO);
-							outDVDocumentoLinDTO.setProcesada(true);
-						}
+						lineasDeclaracion.add(outDVDocumentoLinDTO);
+						outDVDocumentoLinDTO.setProcesada(true);
 					}
 				}
 				
@@ -434,10 +471,8 @@ public class GetDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, Docum
 				}
 			}											
 		} else {
-			if (value != null ) {
-				if (",".equals(value.substring(value.length()-1))) {
-					value = value.substring(0,value.length()-1);
-				}
+			if ((value != null ) && (",".equals(value.substring(value.length()-1)))) {
+				value = value.substring(0,value.length()-1);
 			}											
 		}
 		return value;
@@ -451,5 +486,25 @@ public class GetDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, Docum
 		}
 		return value;
 	}	
+	
+	private String emptyStringOrFormatNumber(String tipoDocumento,Object value) {
+		String result = "";
+		if (value != null) {
+			result = formatNumber(tipoDocumento,String.valueOf(value));
+		} else {
+			result = "";
+		}
+		return result;
+	}	
+	
+	private String emptyStringOrValue(Object value) {
+		String result = "";
+		if (value != null) {
+			result = String.valueOf(String.valueOf(value));
+		} else {
+			result = "";
+		}
+		return result;
+	}		
 	
 }

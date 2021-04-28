@@ -24,6 +24,7 @@ import es.mercadona.fwk.reporting.Report;
 import es.mercadona.fwk.reporting.ReportTemplate;
 import es.mercadona.fwk.reporting.ReportingService;
 import es.mercadona.gesaduan.business.declaracionesdevalorapi.getdvdocumento.v1.DVDocumentoPDFService;
+import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dao.declaracionesdevalorapi.getdvdocumento.v1.GetDVDocumentoApiDAO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.InputDeclaracionesDeValorDocumentoDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocCabDTO;
@@ -42,14 +43,15 @@ public class DVDocumentoPDFServiceImpl implements DVDocumentoPDFService {
 	private ReportingService reportingService;	
 	
 	@Inject
-	private org.slf4j.Logger logger;		
+	private org.slf4j.Logger logger;	
+	
+	private static final String LOG_FILE = "DVDocumentoPDFServiceImpl(GESADUAN)"; 		
 
 	@Override
 	public OutputDeclaracionesDeValorDocCabDTO preparaDocumentoPDF(InputDeclaracionesDeValorDocumentoDTO input) {
 
 		// Obtiene los datos del informe (estructura del informe)
-		OutputDeclaracionesDeValorDocCabDTO outDVDocumentoDTO = getDVDocumentoOnlineDAO.getDatosDocumento(input);
-		//OutputDeclaracionesDeValorDocCabDTO outDVDocumentoDTO = preparaDatosPrueba();		
+		OutputDeclaracionesDeValorDocCabDTO outDVDocumentoDTO = getDVDocumentoOnlineDAO.getDatosDocumento(input);		
 				
 		// prepara el informe
 		outDVDocumentoDTO.setFicheroPDF(preparaDocumento(outDVDocumentoDTO));
@@ -128,7 +130,7 @@ public class DVDocumentoPDFServiceImpl implements DVDocumentoPDFService {
 		    ficheroByte = FileUtils.readFileToByteArray(file);
 	    
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}","DVDocumentoPDFServiceImpl(GESADUAN)","preparaDocumento",e.getClass().getSimpleName(),e.getMessage());	
+			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE,"preparaDocumento",e.getClass().getSimpleName(),e.getMessage());	
 			throw new ApplicationException(e.getMessage());			
 		}
 		
@@ -138,9 +140,13 @@ public class DVDocumentoPDFServiceImpl implements DVDocumentoPDFService {
 
 	private void preparaParametrosReport(OutputDeclaracionesDeValorDocCabDTO outDVDocumentoDTO,final Map<String, Object> mapParams) {
 		
-		mapParams.put("factura", outDVDocumentoDTO.getCodigoDeclaracion());
-		mapParams.put("anyo", outDVDocumentoDTO.getAnyoDeclaracion());
+		mapParams.put("codigoDeclaracion", outDVDocumentoDTO.getCodigoDeclaracion());
+		mapParams.put("anyoDeclaracion", outDVDocumentoDTO.getAnyoDeclaracion());
 		mapParams.put("fechaDeclaracion", outDVDocumentoDTO.getFechaDeclaracion());
+		mapParams.put("numDosier", outDVDocumentoDTO.getNumDosier());
+		mapParams.put("anyoDosier", outDVDocumentoDTO.getAnyoDosier());
+		mapParams.put("fechaDosier", outDVDocumentoDTO.getFechaDosier());		
+		mapParams.put("tipoOrigen", outDVDocumentoDTO.getTipoOrigen());		
 		mapParams.put("proveedor", outDVDocumentoDTO.getNombreOrigen());
 		mapParams.put("provinciaOrigen", outDVDocumentoDTO.getProvinciaOrigen());
 		mapParams.put("condicionesEntrega", outDVDocumentoDTO.getCondicionesEntrega());
@@ -167,11 +173,14 @@ public class DVDocumentoPDFServiceImpl implements DVDocumentoPDFService {
 		mapParams.put("report.title","Titulo Reporte");
 		mapParams.put("report.subtitle","Informe.");
 
-		mapParams.put("header.factura","FACTURA - Nº");
-		mapParams.put("header.declaracionValor","DECLARACIÓN VALOR - Nº");
+		mapParams.put("header.declaracionValor","FACTURA - Nº");
+		mapParams.put("header.declaracionValor2","DECLARACIÓN VALOR - Nº");
 		mapParams.put("header.fechaDV","Fecha DV");
-		mapParams.put("header.fechaFactura","Fecha factura");
+		mapParams.put("header.fechaDeclaracion","FECHA FACTURA");
+		mapParams.put("header.dosier","DOSIER - Nº");
+		mapParams.put("header.fechaDosier","FECHA DOSIER");		
 		mapParams.put("header.proveedor","Proveedor");
+		mapParams.put("header.bloqueLogistico","Bloque Logístico");		
 		mapParams.put("header.provinciaCarga","Provincia de carga (Origen)");
 		mapParams.put("header.condicionesEntrega","Condiciones de entrega");
 		mapParams.put("header.exportador","EXPEDIDOR / EXPORTADOR");
@@ -210,127 +219,4 @@ public class DVDocumentoPDFServiceImpl implements DVDocumentoPDFService {
 		
 	}			
 
-	/*
-	private OutputDeclaracionesDeValorDocCabDTO preparaDatosPrueba() {
-		
-		// prepara el informe
-		OutputDeclaracionesDeValorDocCabDTO outputDocumentoCabDTO = new OutputDeclaracionesDeValorDocCabDTO();
-		
-		// prepara la cabecera	
-		outputDocumentoCabDTO.setCodigoDeclaracion("33710");
-		outputDocumentoCabDTO.setAnyoDeclaracion("2021");
-		outputDocumentoCabDTO.setVersionDeclaracion("1");
-		outputDocumentoCabDTO.setFechaDeclaracion("26/03/2021");
-		outputDocumentoCabDTO.setNumDosier("6");
-		outputDocumentoCabDTO.setAnyoDosier("2021");
-		outputDocumentoCabDTO.setFechaDosier("09/04/2021");		
-		outputDocumentoCabDTO.setNombreOrigen("PALETAS MARPA SL");	
-		outputDocumentoCabDTO.setProvinciaOrigen("TERUEL");
-		outputDocumentoCabDTO.setTipoOrigen("PROVEEDOR");
-		outputDocumentoCabDTO.setCondicionesEntrega("EXW");
-		outputDocumentoCabDTO.setExportadorNombre("MERCADONA S.A.");	
-		outputDocumentoCabDTO.setExportadorDireccion("C/ VALENCIA 5");	
-		outputDocumentoCabDTO.setExportadorCP("46016");
-		outputDocumentoCabDTO.setExportadorPoblacion("TAVERNES BLANQUES");
-		outputDocumentoCabDTO.setExportadorProvincia("VALENCIA");
-		outputDocumentoCabDTO.setExportadorNIF("A46103834");
-		outputDocumentoCabDTO.setImportadorNombre("MERCADONA S.A.");	
-		outputDocumentoCabDTO.setImportadorDireccion("POLÍGONO INDUSTRIAL DE LAS MAJONERAS");	
-		outputDocumentoCabDTO.setImportadorCP("35250");
-		outputDocumentoCabDTO.setImportadorPoblacion("INGENIO");
-		outputDocumentoCabDTO.setImportadorProvincia("Las Palmas");
-		outputDocumentoCabDTO.setImportadorNIF("A46103834");		
-		outputDocumentoCabDTO.setTxtInfoREA("");	
-		outputDocumentoCabDTO.setTxtInfoLPC("");
-		outputDocumentoCabDTO.setTxtInfoGeneral("Mercancía exenta de IVA, según Artículo 21 de la Ley 37/1992 de 28 diciembre");
-		
-		outputDocumentoCabDTO.setTipoInforme("BASE");
-		
-		// prepara las lineas
-		
-		List<OutputDeclaracionesDeValorDocLinDTO> lineas = new ArrayList<>();		
-		
-		OutputDeclaracionesDeValorDocLinDTO outputDocumentoLinDTO = new OutputDeclaracionesDeValorDocLinDTO();	
-		
-		outputDocumentoLinDTO.setCodigoDeclaracion("33710");
-		outputDocumentoLinDTO.setAnyoDeclaracion("2021");
-		outputDocumentoLinDTO.setVersionDeclaracion("1");
-		outputDocumentoLinDTO.setCodigoProducto("59173");
-		outputDocumentoLinDTO.setNombreProducto("PALETA CURADA LONCHA");
-		outputDocumentoLinDTO.setMarca("MARPA");
-		outputDocumentoLinDTO.setCodigoTaric("210198190");
-		outputDocumentoLinDTO.setTipoLinea("LINEA");
-		outputDocumentoLinDTO.setCodigoRea("");
-		outputDocumentoLinDTO.setPaisOrigen("");
-		outputDocumentoLinDTO.setLpc("N");
-		outputDocumentoLinDTO.setNumeroBultos("1");
-		outputDocumentoLinDTO.setTipoBultos("Palet");
-		outputDocumentoLinDTO.setPesoBruto("729");
-		outputDocumentoLinDTO.setPesoNeto("648");
-		outputDocumentoLinDTO.setCantidad("2,700");
-		outputDocumentoLinDTO.setVolumen("");
-		outputDocumentoLinDTO.setAlcohol("");
-		outputDocumentoLinDTO.setPlato("");
-		outputDocumentoLinDTO.setPrecio("2,93");
-		outputDocumentoLinDTO.setImporte("7,911");		
-		
-		lineas.add(outputDocumentoLinDTO);
-		
-		OutputDeclaracionesDeValorDocLinDTO outputDocumentoLinTaricDTO = new OutputDeclaracionesDeValorDocLinDTO();
-
-		outputDocumentoLinTaricDTO.setCodigoDeclaracion("33710");
-		outputDocumentoLinTaricDTO.setAnyoDeclaracion("2021");
-		outputDocumentoLinTaricDTO.setVersionDeclaracion("1");
-		outputDocumentoLinTaricDTO.setCodigoProducto("210198190");
-		outputDocumentoLinTaricDTO.setNombreProducto("");
-		outputDocumentoLinTaricDTO.setMarca("");
-		outputDocumentoLinTaricDTO.setCodigoTaric("210198190");
-		outputDocumentoLinTaricDTO.setTipoLinea("TARIC");
-		outputDocumentoLinTaricDTO.setCodigoRea("");
-		outputDocumentoLinTaricDTO.setPaisOrigen("");
-		outputDocumentoLinTaricDTO.setLpc("");
-		outputDocumentoLinTaricDTO.setNumeroBultos("1");
-		outputDocumentoLinTaricDTO.setTipoBultos("");
-		outputDocumentoLinTaricDTO.setPesoBruto("729");
-		outputDocumentoLinTaricDTO.setPesoNeto("648");
-		outputDocumentoLinTaricDTO.setCantidad("2,700");
-		outputDocumentoLinTaricDTO.setVolumen("");
-		outputDocumentoLinTaricDTO.setAlcohol("");
-		outputDocumentoLinTaricDTO.setPlato("");
-		outputDocumentoLinTaricDTO.setPrecio("");
-		outputDocumentoLinTaricDTO.setImporte("7,911");		
-		
-		lineas.add(outputDocumentoLinTaricDTO);		
-
-		OutputDeclaracionesDeValorDocLinDTO outputDocumentoLinTotalDTO = new OutputDeclaracionesDeValorDocLinDTO();		
-		
-		outputDocumentoLinTotalDTO.setCodigoDeclaracion("33710");
-		outputDocumentoLinTotalDTO.setAnyoDeclaracion("2021");
-		outputDocumentoLinTotalDTO.setVersionDeclaracion("1");
-		outputDocumentoLinTotalDTO.setCodigoProducto("");
-		outputDocumentoLinTotalDTO.setNombreProducto("");
-		outputDocumentoLinTotalDTO.setMarca("");
-		outputDocumentoLinTotalDTO.setCodigoTaric("");
-		outputDocumentoLinTotalDTO.setTipoLinea("TOTAL");
-		outputDocumentoLinTotalDTO.setCodigoRea("");
-		outputDocumentoLinTotalDTO.setPaisOrigen("");
-		outputDocumentoLinTotalDTO.setLpc("");
-		outputDocumentoLinTotalDTO.setNumeroBultos("1");
-		outputDocumentoLinTotalDTO.setTipoBultos("");
-		outputDocumentoLinTotalDTO.setPesoBruto("729");
-		outputDocumentoLinTotalDTO.setPesoNeto("648");
-		outputDocumentoLinTotalDTO.setCantidad("2,700");
-		outputDocumentoLinTotalDTO.setVolumen("");
-		outputDocumentoLinTotalDTO.setAlcohol("");
-		outputDocumentoLinTotalDTO.setPlato("");
-		outputDocumentoLinTotalDTO.setPrecio("");
-		outputDocumentoLinTotalDTO.setImporte("7,911");		
-		
-		lineas.add(outputDocumentoLinTotalDTO);
-		
-		outputDocumentoCabDTO.setLineas(lineas);
-		
-		return outputDocumentoCabDTO;
-	}
-	*/		
 }

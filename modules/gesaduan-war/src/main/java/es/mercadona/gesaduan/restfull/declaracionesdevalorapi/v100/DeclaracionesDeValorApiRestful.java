@@ -37,6 +37,7 @@ import es.mercadona.gesaduan.business.declaracionesdevalor.getdvsumario.v1.GetDV
 import es.mercadona.gesaduan.business.declaracionesdevalor.postdv.v1.PostDVService;
 import es.mercadona.gesaduan.business.declaracionesdevalor.putdvestadodescarga.v1.PutDVEstadoDescargaService;
 import es.mercadona.gesaduan.business.declaracionesdevalorapi.getdvdocumento.v1.GetDVDocumentoService;
+import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dto.common.error.ErrorDTO;
 import es.mercadona.gesaduan.dto.common.error.OutputResponseErrorDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvdetalle.v1.InputDeclaracionesDeValorDetalleDTO;
@@ -75,7 +76,7 @@ public class DeclaracionesDeValorApiRestful {
 	private static final String FILE_BASE_NAME_PDF = "dv_";
 	private static final String FILE_BASE_NAME_CSV = "csv_";
 
-	private static final String LOG_FILE = "DeclaracionesDeValorRestful(GESADUAN)"; 	
+	private static final String LOG_FILE = "DeclaracionesDeValorApiRestful(GESADUAN)"; 	
 	
 	@GET
 	@Path("declaraciones-valor/sumario")
@@ -181,7 +182,7 @@ public class DeclaracionesDeValorApiRestful {
 			response = getDVSumarioService.getDeclaracionesDeValorList(inputParams, paginacion);
 
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}",LOG_FILE,"getDeclaracionesDeValorSumario",e.getClass().getSimpleName(),e.getMessage());			
+			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE,"getDeclaracionesDeValorSumario",e.getClass().getSimpleName(),e.getMessage());			
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
 		}
 
@@ -229,7 +230,7 @@ public class DeclaracionesDeValorApiRestful {
 			
 			
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}",LOG_FILE,"getDeclaracionDeValorDetalle",e.getClass().getSimpleName(),e.getMessage());
+			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE,"getDeclaracionDeValorDetalle",e.getClass().getSimpleName(),e.getMessage());
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
 		}
 
@@ -344,13 +345,13 @@ public class DeclaracionesDeValorApiRestful {
 			}
 
 		} catch (ResourceNotFoundException e) {
-			this.logger.error("({}-{}) ERROR - {} {}",LOG_FILE,"getDeclaracionesDeValorDocumento-1",e.getClass().getSimpleName(),e.getMessage());			
+			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE,"getDeclaracionesDeValorDocumento-1",e.getClass().getSimpleName(),e.getMessage());			
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
 		} catch (IllegalResourceNameException e) {
-			this.logger.error("({}-{}) ERROR - {} {}",LOG_FILE,"getDeclaracionesDeValorDocumento-2",e.getClass().getSimpleName(),e.getMessage());			
+			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE,"getDeclaracionesDeValorDocumento-2",e.getClass().getSimpleName(),e.getMessage());			
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}",LOG_FILE,"getDeclaracionesDeValorDocumento-3",e.getClass().getSimpleName(),e.getMessage());			
+			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE,"getDeclaracionesDeValorDocumento-3",e.getClass().getSimpleName(),e.getMessage());			
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
 		}
 
@@ -400,7 +401,7 @@ public class DeclaracionesDeValorApiRestful {
 			}
 			
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}",LOG_FILE,"putDeclaracionesDeValorConfirmaDescarga",e.getClass().getSimpleName(),e.getMessage());	
+			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE,"putDeclaracionesDeValorConfirmaDescarga",e.getClass().getSimpleName(),e.getMessage());	
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
 
 		}
