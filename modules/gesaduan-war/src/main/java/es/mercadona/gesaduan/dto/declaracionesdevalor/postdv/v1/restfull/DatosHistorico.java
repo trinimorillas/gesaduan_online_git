@@ -1,22 +1,15 @@
 package es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull;
 
 import es.mercadona.gesaduan.dto.declaracionesdevalor.AbstractDTO;
-import java.util.Date;
 
-public class DatosHistorico extends AbstractDTO{
+public class DatosHistorico extends AbstractDTO {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	
 	private String evento;
-	
 	private String fechaEvento;
-	
 	private Integer version;
-	
 	private boolean esVigente;
+	private Boolean esCorrecta;
 
 	public String getEvento() {
 		return evento;
@@ -49,7 +42,19 @@ public class DatosHistorico extends AbstractDTO{
 	public void setEsVigente(boolean esVigente) {
 		this.esVigente = esVigente;
 	}
-	
-	
+
+	/**
+	 * @return the esCorrecta
+	 */
+	public Boolean getEsCorrecta() {
+		return esCorrecta;
+	}
+
+	/**
+	 * @param esCorrecta the esCorrecta to set
+	 */
+	public void setEsCorrecta(Boolean esCorrecta) {
+		this.esCorrecta = esCorrecta;
+	}
 
 }

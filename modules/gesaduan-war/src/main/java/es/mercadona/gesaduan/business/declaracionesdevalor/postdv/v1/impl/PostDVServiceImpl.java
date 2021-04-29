@@ -12,18 +12,15 @@ import javax.transaction.Transactional;
 
 import es.mercadona.fwk.auth.SecurityService;
 import es.mercadona.fwk.core.exceptions.ApplicationException;
-import es.mercadona.gesaduan.business.common.v1.FilesService;
 import es.mercadona.gesaduan.business.declaracionesdevalor.postdv.v1.PostDVService;
 import es.mercadona.gesaduan.business.proveedores.getproveedoresdetalle.v1.GetProveedoresDetalleService;
+import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dao.declaracionesdevalor.postdv.v1.PostDeclaracionDeValorDAO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull.CabeceraDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull.DVInsertPKDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull.DatosDestinatarioDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull.InputPostDeclaracionesDeValorDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull.LineaDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull.OutputPostDeclaracionesDeValorDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull.ProveedorDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull.ProvinciaDeCargaDTO;
 import es.mercadona.gesaduan.jpa.declaracionesdevalor.postdv.v1.DeclaracionesDeValorPostJPA;
 import es.mercadona.gesaduan.jpa.declaracionesdevalor.postdv.v1.DeclaracionesDeValorPostPK;
 import es.mercadona.gesaduan.jpa.declaracionesdevalor.postdv.v1.LineaDeclaracionJPA;
@@ -35,9 +32,6 @@ public class PostDVServiceImpl implements PostDVService {
 
 	@Inject
 	private GetProveedoresDetalleService getProveedoresDetalleService;
-
-	@Inject
-	private FilesService filesService;
 
 	@Inject
 	private org.slf4j.Logger logger;
@@ -61,110 +55,37 @@ public class PostDVServiceImpl implements PostDVService {
 		try {
 			/* PARAMETROS CABECERA */
 			/* DATOS DECLARACION */
-			CabeceraDTO cabecera = input.getDatos().getDeclaracionDeValor().getCabecera();
-
-			if (cabecera.getDatosDeclaracion().getAnyo() != null) {
-				declaracionJPA.setAnyo(cabecera.getDatosDeclaracion().getAnyo());
-			} else {
-				declaracionJPA.setAnyo(Calendar.getInstance().get(Calendar.YEAR));
-			}
-
-			if (cabecera.getDatosDeclaracion().getCodigo() != null) {
-				declaracionJPA.setCodDeclaracionValor(cabecera.getDatosDeclaracion().getCodigo());
-			}
-
-			if (cabecera.getDatosDeclaracion().getVersion() != null) {
-				declaracionJPA.setVersion(cabecera.getDatosDeclaracion().getVersion());
-			} else {
-				declaracionJPA.setVersion(1);
-			}
+			CabeceraDTO cabecera = input.getDatos().getCabecera();	
+			
+			// DATOS FACTURA
+			getDatosFactura(declaracionJPA, cabecera);
 
 			declaracionJPA.setApp("GESADUAN");
 
 			/* DATOS PEDIDO */
-			String codigoPedido = cabecera.getDatosPedido().getCodigo();
+			String codigoPedido = cabecera.getPedidoList().getCodigoPedido();
 
-			/* PROVEEDOR */
-			ProveedorDTO proveedor = cabecera.getDatosPedido().getProveedor();
-
-			if (proveedor != null) {
-
-				String codigoProv = getProveedoresDetalleService.getCodigoProveedorSap(proveedor.getCodigo());
-
-				if (codigoProv != null) {
-					declaracionJPA.setProveedor(codigoProv);
-				}
-			}
-
-			/* PROVINCIA DE CARGA */
-			ProvinciaDeCargaDTO provinciaDeCarga = cabecera.getDatosPedido().getProvinciaDeCarga();
-			Integer codigoProvincia = Integer.parseInt(provinciaDeCarga.getCodigo());
-
-			String codigoExpedicion = cabecera.getDatosPedido().getCodigoExpedicion();
-			String condicionesEntrega = cabecera.getDatosPedido().getCondicionesEntrega();
-
-			String fechaAlbaran = (cabecera.getDatosPedido().getFechaAlbaran() != null
-					? cabecera.getDatosPedido().getFechaAlbaran().substring(0, 10)
-					: null);
-			String fechaEnvio = (cabecera.getDatosPedido().getFechaEnvio() != null
-					? cabecera.getDatosPedido().getFechaEnvio().substring(0, 10)
-					: null);
+			/* PROVEEDOR/ORIGEN */
+			getOrigen(declaracionJPA, cabecera);
 
 			if (codigoPedido != null) {
 				declaracionJPA.setPedido(codigoPedido);
 			}
-			if (codigoProvincia != null) {
-				declaracionJPA.setProvinciaCarga(codigoProvincia);
-			}
-			if (codigoExpedicion != null) {
-				declaracionJPA.setExpedicion(codigoExpedicion);
-			}
-
-			if (fechaAlbaran != null) {
-				Date fecha;
-				try {
-					fecha = new SimpleDateFormat(DATE_FORMAT).parse(fechaAlbaran);
-					declaracionJPA.setFechaAlbaran(fecha);
-				} catch (ParseException e) {
-					this.logger.error("({}-{}) ERROR - {} {}",LOG_FILE,LOG_METHOD_OUTPUTPOSTDECLARACIONES,e.getClass().getSimpleName(),e.getMessage());	  
-				}
-
-			}
-			if (condicionesEntrega != null) {
-				declaracionJPA.setCondicionesEntrega(condicionesEntrega);
-			}
-
-			if (fechaEnvio != null) {
-				Date fecha;
-				try {
-					fecha = new SimpleDateFormat(DATE_FORMAT).parse(fechaEnvio);
-					declaracionJPA.setFechaEnvio(fecha);
-				} catch (ParseException e) {
-					this.logger.error("({}-{}) ERROR - {} {}",LOG_FILE,LOG_METHOD_OUTPUTPOSTDECLARACIONES,e.getClass().getSimpleName(),e.getMessage());					
-				}
-
-			}
+			
+			
 
 			/* DATOS DESTINATARIO */
-
-			DatosDestinatarioDTO destinatarios = cabecera.getDatosDestinatario();
-			if (destinatarios != null) {
-				String codigoAlmacen = destinatarios.getCodigoAlmacen();
-
-				if (codigoAlmacen != null) {
-					declaracionJPA.setCodAlmacen(codigoAlmacen);
-				}
-			}
+			String codigoAlmacen = cabecera.getDestino().getCodigoDestino();
+			declaracionJPA.setCodAlmacen(codigoAlmacen);
 
 			Date fechaInicio = new Date();
 
 			declaracionJPA.setFechaCreacion(fechaInicio);
 			declaracionJPA.setFechaCreacionRegistro(fechaInicio);
-
 			declaracionJPA.setMcaCargaAuto("N");
 
 			try {
-				if (input.getDatos().getDeclaracionDeValor().getDatosComunes().isEsCorrecta()) {
+				if (input.getDatos().getDatosComunes().isEsCorrecta()) {
 					declaracionJPA.setMcaDvCorrecta("S");
 				} else {
 					declaracionJPA.setMcaDvCorrecta("N");
@@ -175,26 +96,15 @@ public class PostDVServiceImpl implements PostDVService {
 
 			declaracionJPA.setMcaEnvio("N");
 			declaracionJPA.setMcaDescarga("N");
-
-			try {
-				if (input.getDatos().getDeclaracionDeValor().getDatosComunes().isEsFactura()) {
-					declaracionJPA.setMcaFactura("F");
-				} else {
-					declaracionJPA.setMcaFactura("D");
-				}
-			} catch (Exception e1) {
-				this.logger.error("({}-{}) ERROR - {} {}",LOG_FILE,LOG_METHOD_OUTPUTPOSTDECLARACIONES,e1.getClass().getSimpleName(),e1.getMessage());				
-			}
+			declaracionJPA.setMcaFactura("F");
 
 			declaracionJPA.setMcaUltimaVigente("S");
-
 			declaracionJPA.setUsuarioCreacion(input.getMetadatos().getCodigoUsuario());
 
 			/* LINEAS */
-
 			/* RECUPERAMOS LAS LISTAS A INSERTAR */
 
-			List<LineaDTO> listado = input.getDatos().getDeclaracionDeValor().getLineas();
+			List<LineaDTO> listado = input.getDatos().getLineas();
 
 			/* ITERAMOS LAS LINEAS E INSERTAMOS EN EL OBJETO PARA PERSISTIR */
 
@@ -202,26 +112,27 @@ public class PostDVServiceImpl implements PostDVService {
 				for (LineaDTO tmp : listado) {
 					LineaDeclaracionJPA linea = new LineaDeclaracionJPA();
 
-					Integer codigoMerca = tmp.getProducto().getCodigoPublico();
-					Long codigoTaric = tmp.getProducto().getCodigoTaric();
-					String codigoRea = tmp.getProducto().getCodigoRea();
-					String nombreAlternativo = tmp.getProducto().getNombreAlternativo();
-					String descFormatoVentaAlternativo = tmp.getProducto().getDescFormatoVentaAlternativo();
-					String nombreTipoBulto = tmp.getProducto().getNombreTipoBulto();
-					Integer numeroBultos = tmp.getProducto().getNumeroDeBultos();
-					Double pesoNetoLinea = tmp.getProducto().getPesoNetoLinea();
-					Double pesoBrutoLinea = tmp.getProducto().getPesoBrutoLinea();
-					Double volumenUnidad = tmp.getProducto().getVolumenUnidad();
-					Double cantidadFormato = tmp.getProducto().getCantidadFormato();
-					Double precioUnidad = tmp.getProducto().getPrecioUnidad();
-					Double importeTotal = tmp.getProducto().getImporteTotal();
-					Double gradoAlcohol = tmp.getProducto().getGradoAlcohol();
-					Double gradoPlato = tmp.getProducto().getGradoPlato();
-					String marca = tmp.getProducto().getMarca();
+					Integer codigoMerca = tmp.getCodigoPublico();
+					Long codigoTaric = tmp.getCodigoTaric();
+					String codigoRea = tmp.getCodigoRea();
+					String nombreAlternativo = tmp.getNombreAlternativo();
+					String descFormatoVentaAlternativo = tmp.getDescFormatoVentaAlternativo();
+					String nombreTipoBulto = tmp.getNombreTipoBulto();
+					Integer numeroBultos = tmp.getNumDeBultos();
+					Double pesoNetoLinea = tmp.getPesoNetoLinea();
+					Double pesoBrutoLinea = tmp.getPesoBrutoLinea();
+					Double volumenUnidad = tmp.getVolumenUnidad();
+					Double cantidadFormato = tmp.getCantidadFormato();
+					Double precioUnidad = tmp.getPrecioUnidad();
+					Double importeTotal = tmp.getImporteTotal();
+					Double gradoAlcohol = tmp.getGradoAlcohol();
+					Double gradoPlato = tmp.getGradoPlato();
+					String marca = tmp.getMarca();
+					String marcaError = tmp.getMarcaError();
 
 					String paisOrigen = null;
-					if (tmp.getProducto().getPaisOrigen() != null) {
-						paisOrigen = tmp.getProducto().getPaisOrigen();
+					if (tmp.getPaisOrigen() != null) {
+						paisOrigen = tmp.getPaisOrigen();
 					}
 
 					linea.setCantidadFormato(cantidadFormato);
@@ -231,43 +142,57 @@ public class PostDVServiceImpl implements PostDVService {
 						fechaAlb = new SimpleDateFormat(DATE_FORMAT).parse(fechaAlbaran);
 						linea.setFechaAlbaran(fechaAlb);
 					} catch (ParseException pe) {
-						this.logger.error("({}-{}) ERROR - {} {}",LOG_FILE,LOG_METHOD_OUTPUTPOSTDECLARACIONES,pe.getClass().getSimpleName(),pe.getMessage());						
+						this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, LOG_METHOD_OUTPUTPOSTDECLARACIONES, pe.getClass().getSimpleName(), pe.getMessage());						
 					} catch (NullPointerException npe) {
-						this.logger.error("({}-{}) ERROR - {} {}",LOG_FILE,LOG_METHOD_OUTPUTPOSTDECLARACIONES,npe.getClass().getSimpleName(),npe.getMessage());						
+						this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, LOG_METHOD_OUTPUTPOSTDECLARACIONES, npe.getClass().getSimpleName(), npe.getMessage());						
 					}
 
 					if (codigoMerca != null) {
 						linea.setCodMerca(codigoMerca);
 					}
+					
 					if (codigoTaric != null) {
 						linea.setCodigoTaric(codigoTaric);
 					}
+					
 					if (codigoRea != null) {
 						linea.setCodigoRea(codigoRea);
 					}
+					
 					if (nombreAlternativo != null) {
 						linea.setNombreAlternativo(nombreAlternativo);
 					}
+					
 					if (descFormatoVentaAlternativo != null) {
 						linea.setDescFormatoVentaAlternativo(descFormatoVentaAlternativo);
 					}
+					
 					if (nombreTipoBulto != null) {
 						linea.setNombreTipoBulto(nombreTipoBulto);
 					}
+					
 					if (pesoNetoLinea != null) {
 						linea.setPesoNetoLinea(pesoNetoLinea);
 					}
+					
 					if (pesoBrutoLinea != null) {
 						linea.setPesoBrutoLinea(pesoBrutoLinea);
 					}
+					
 					if (volumenUnidad != null) {
 						linea.setVolumenUnidad(volumenUnidad);
 					}
+					
 					if (cantidadFormato != null) {
 						linea.setCantidadFormato(cantidadFormato);
 					}
+					
 					if (marca != null) {
 						linea.setMarca(marca);
+					}
+					
+					if (marcaError != null) {
+						linea.setMarcaError(marcaError);
 					}
 
 					linea.setFechaCreacion(new Date());
@@ -276,23 +201,28 @@ public class PostDVServiceImpl implements PostDVService {
 					if (precioUnidad != null) {
 						linea.setPrecioUnidad(precioUnidad);
 					}
+					
 					if (importeTotal != null) {
 						linea.setImporteTotal(importeTotal);
 					}
+					
 					if (gradoAlcohol != null) {
 						linea.setGradoAlcohol(gradoAlcohol);
 					}
+					
 					if (gradoPlato != null) {
 						linea.setGradoPlato(gradoPlato);
 					}
+					
 					if (numeroBultos != null) {
 						linea.setNumeroDeBultos(numeroBultos);
 					}
+					
 					if (paisOrigen != null) {
 						linea.setPaisOrigen(paisOrigen);
 					}
 
-					boolean esListoParaComer = tmp.getProducto().isEsListoParaComer();
+					boolean esListoParaComer = tmp.isEsListoParaComer();
 					if (esListoParaComer) {
 						linea.setEsListoParaComer("S");
 					} else {
@@ -312,74 +242,116 @@ public class PostDVServiceImpl implements PostDVService {
 			/* FIN LINEAS */
 
 			DeclaracionesDeValorPostPK dvpk = postDVCabeceraDAO.postCabecera(declaracionJPA);
-
-			/*
-			 * COMPROBAMOS SI ES LA MISMA DV, SI ES QUE SI ES UNA MODIFICACIÓN POR LO QUE
-			 * GENERAMOS EL TXT EN EL FTP PARA CREAR EL PDF, SI NO NO HACEMOS NADA
-			 */
-			if (dvpk.getCodDeclaracionValor()
-					.equals(input.getDatos().getDeclaracionDeValor().getCabecera().getDatosDeclaracion().getCodigo())
-					&& dvpk.getAnyo().equals(
-							input.getDatos().getDeclaracionDeValor().getCabecera().getDatosDeclaracion().getAnyo())) {
-
-				Date curDate = new Date();
-				SimpleDateFormat format = new SimpleDateFormat("yyyyMMddhhmmss");
-				String DateToStr = format.format(curDate);
-
-				String nameFile = "generaPdfOnline-".concat(DateToStr).concat(".txt");
-
-				List<String> lineas = new ArrayList<String> ();
-
-				lineas.add(dvpk.getCodDeclaracionValor().toString());
-				lineas.add(dvpk.getAnyo().toString());
-				lineas.add(dvpk.getVersion().toString());
-
-				filesService.createFile(nameFile, true, lineas);
-			}
-			/*
-			 * ES UNA NUEVA DV POR LO QUE TMB CREAMOS UN FICHERO SI ES LA VERSION NÚMERO 1
-			 */
-			else if (dvpk.getCodDeclaracionValor() != null && dvpk.getAnyo() != null && dvpk.getVersion().equals(1)) {
-				Date curDate = new Date();
-				SimpleDateFormat format = new SimpleDateFormat("yyyyMMddhhmmss");
-				String DateToStr = format.format(curDate);
-
-				String nameFile = "generaPdfOnline-".concat(DateToStr).concat(".txt");
-
-				List<String> lineas = new ArrayList<String> ();
-
-				lineas.add(dvpk.getCodDeclaracionValor().toString());
-				lineas.add(dvpk.getAnyo().toString());
-				lineas.add(dvpk.getVersion().toString());
-
-				filesService.createFile(nameFile, true, lineas);
-
-			}
-
 			pkResult.setNumeroDecalaracion(dvpk.getCodDeclaracionValor());
 			pkResult.setAnyo(dvpk.getAnyo());
 			pkResult.setVersion(dvpk.getVersion());
 
 			result.setNumeroDeclaracion(pkResult);
-
+			
+			// Crear una alerta cuando la factura que se modifica está asociada a un dosier ya descargado
+			postDVCabeceraDAO.generarAlerta(input.getMetadatos().getCodigoUsuario(), cabecera.getDatosFactura().getNumFactura(), cabecera.getDatosFactura().getAnyoFactura());
+			
+			// Si la factura estaba asociada a un dosier con errores y todos ellos se han resuleto, se marca el dosier como OK y se genera su correspondiente notificación
+			postDVCabeceraDAO.marcarDosierOK(input.getMetadatos().getCodigoUsuario(), cabecera.getDatosFactura().getNumFactura(), cabecera.getDatosFactura().getAnyoFactura());
 		} catch (NumberFormatException nfe) {
-			this.logger.error("({}-{}) ERROR - {} {}", LOG_FILE,LOG_METHOD_OUTPUTPOSTDECLARACIONES,nfe.getClass().getSimpleName(), nfe.getMessage());
-			establecerSalidaError(nfe, "createDeclaracionesDeValor");
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, LOG_METHOD_OUTPUTPOSTDECLARACIONES, nfe.getClass().getSimpleName(), nfe.getMessage());
+			establecerSalidaError(nfe, "createFactura");
 			throw new ApplicationException(nfe.getMessage());
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}", LOG_FILE, LOG_METHOD_OUTPUTPOSTDECLARACIONES,e.getClass().getSimpleName(), e.getMessage());
-			establecerSalidaError(e, "createDeclaracionesDeValor");
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, LOG_METHOD_OUTPUTPOSTDECLARACIONES, e.getClass().getSimpleName(), e.getMessage());
+			establecerSalidaError(e, "createFactura");
 			throw new ApplicationException(e.getMessage());
 		}
 
 		return result;
 	}
 
-	private void establecerSalidaError(Exception exception, String metodo) {
+	/**
+	 * @param declaracionJPA
+	 * @param cabecera
+	 * @return
+	 */
+	private void getDatosFactura(DeclaracionesDeValorPostJPA declaracionJPA, CabeceraDTO cabecera) {
+		if (cabecera.getDatosFactura().getAnyoFactura() != null) {
+			declaracionJPA.setAnyo(Integer.parseInt(cabecera.getDatosFactura().getAnyoFactura()));
+		} else {
+			declaracionJPA.setAnyo(Calendar.getInstance().get(Calendar.YEAR));
+		}
 
-		String login = this.securityService.getPrincipal().getLogin();
+		if (cabecera.getDatosFactura().getNumFactura() != null) {
+			declaracionJPA.setCodDeclaracionValor(Integer.parseInt(cabecera.getDatosFactura().getNumFactura()));
+		}
+
+		if (cabecera.getDatosFactura().getVersion() != null) {
+			declaracionJPA.setVersion(Integer.parseInt(cabecera.getDatosFactura().getVersion()));
+		} else {
+			declaracionJPA.setVersion(1);
+		}
 		
-		this.logger.error("({}-{}) ERROR - {}{} {} {}",LOG_FILE,"establecerSalidaError",metodo,login,exception.getClass().getSimpleName(),exception.getMessage());
+		String codigoExpedicion = cabecera.getDatosFactura().getCodigoExpedicion();
+		String condicionesEntrega = cabecera.getDatosFactura().getCondicionesEntrega();
+
+		String fechaAlbaran = (cabecera.getDatosFactura().getFechaAlbaran() != null
+				? cabecera.getDatosFactura().getFechaAlbaran().substring(0, 10)
+				: null);
+		String fechaEnvio = (cabecera.getDatosFactura().getFechaEnvio() != null
+				? cabecera.getDatosFactura().getFechaEnvio().substring(0, 10)
+				: null);
+		
+		if (codigoExpedicion != null) {
+			declaracionJPA.setExpedicion(codigoExpedicion);
+		}
+		
+		if (condicionesEntrega != null) {
+			declaracionJPA.setCondicionesEntrega(condicionesEntrega);
+		}
+
+		if (fechaAlbaran != null) {
+			Date fecha;
+			try {
+				fecha = new SimpleDateFormat(DATE_FORMAT).parse(fechaAlbaran);
+				declaracionJPA.setFechaAlbaran(fecha);
+			} catch (ParseException e) {
+				this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, LOG_METHOD_OUTPUTPOSTDECLARACIONES, e.getClass().getSimpleName(), e.getMessage());	  
+			}
+		}
+
+		if (fechaEnvio != null) {
+			Date fecha;
+			try {
+				fecha = new SimpleDateFormat(DATE_FORMAT).parse(fechaEnvio);
+				declaracionJPA.setFechaEnvio(fecha);
+			} catch (ParseException e) {
+				this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, LOG_METHOD_OUTPUTPOSTDECLARACIONES, e.getClass().getSimpleName(), e.getMessage());					
+			}
+		}
+	}
+
+	/**
+	 * @param declaracionJPA
+	 * @param cabecera
+	 */
+	private void getOrigen(DeclaracionesDeValorPostJPA declaracionJPA, CabeceraDTO cabecera) {
+		String codigoOrigen = cabecera.getOrigen().getCodigoOrigen();
+		String tipoOrigen = cabecera.getOrigen().getTipoOrigen();
+
+		if (codigoOrigen != null && tipoOrigen != null && tipoOrigen.equals("PROVEEDOR")) {
+			String codigoProv = getProveedoresDetalleService.getCodigoProveedorSap(codigoOrigen);
+
+			if (codigoProv != null) {
+				declaracionJPA.setProveedor(codigoProv);
+			}
+		}
+		
+		String provinciaOrigen = cabecera.getOrigen().getProvinciaOrigen();
+		if (provinciaOrigen != null) {
+			declaracionJPA.setProvinciaCarga(Integer.parseInt(provinciaOrigen));
+		}
+	}
+
+	private void establecerSalidaError(Exception exception, String metodo) {
+		String login = this.securityService.getPrincipal().getLogin();		
+		this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, "establecerSalidaError", metodo, login, exception.getClass().getSimpleName(), exception.getMessage());
 	}
 
 }

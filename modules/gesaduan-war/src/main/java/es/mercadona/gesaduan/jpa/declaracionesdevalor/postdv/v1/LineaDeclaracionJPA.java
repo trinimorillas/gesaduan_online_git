@@ -48,6 +48,9 @@ public class LineaDeclaracionJPA implements Serializable {
 
 	@Column(name = "TXT_MARCA")
 	private String marca;
+	
+	@Column(name = "MCA_ERROR")
+	private String marcaError;
 
 	@Column(name = "TXT_FORMATO_VENTA_ALTERNATIVO")
 	private String descFormatoVentaAlternativo;
@@ -317,6 +320,20 @@ public class LineaDeclaracionJPA implements Serializable {
 		this.usuarioEdit = usuarioEdit;
 	}
 
+	/**
+	 * @return the marcaError
+	 */
+	public String getMarcaError() {
+		return marcaError;
+	}
+
+	/**
+	 * @param marcaError the marcaError to set
+	 */
+	public void setMarcaError(String marcaError) {
+		this.marcaError = marcaError;
+	}
+
 	public LineaDeclaracionJPA(Integer codMerca, DeclaracionesDeValorPostJPA codigoDv, Long codigoTaric,
 			String codigoRea, String expedicion, String nombreAlternativo, String marca,
 			String descFormatoVentaAlternativo, String nombreTipoBulto, Integer numeroDeBultos, Double pesoNetoLinea,
@@ -402,152 +419,213 @@ public class LineaDeclaracionJPA implements Serializable {
 		result = prime * result + ((usuarioCreacion == null) ? 0 : usuarioCreacion.hashCode());
 		result = prime * result + ((usuarioEdit == null) ? 0 : usuarioEdit.hashCode());
 		result = prime * result + ((volumenUnidad == null) ? 0 : volumenUnidad.hashCode());
+		result = prime * result + ((marcaError == null) ? 0 : marcaError.hashCode());
 		return result;
 	}
 
 	
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		LineaDeclaracionJPA other = (LineaDeclaracionJPA) obj;
 		if (cantidadFormato == null) {
-			if (other.cantidadFormato != null)
+			if (other.cantidadFormato != null) {
 				return false;
-		} else if (!cantidadFormato.equals(other.cantidadFormato))
+			}
+		} else if (!cantidadFormato.equals(other.cantidadFormato)) {
 			return false;
+		}
 		if (codAplicacion == null) {
-			if (other.codAplicacion != null)
+			if (other.codAplicacion != null) {
 				return false;
-		} else if (!codAplicacion.equals(other.codAplicacion))
+			}
+		} else if (!codAplicacion.equals(other.codAplicacion)) {
 			return false;
+		}
 		if (codMerca == null) {
-			if (other.codMerca != null)
+			if (other.codMerca != null) {
 				return false;
-		} else if (!codMerca.equals(other.codMerca))
+			}
+		} else if (!codMerca.equals(other.codMerca)) {
 			return false;
+		}
 		if (codigoDv == null) {
-			if (other.codigoDv != null)
+			if (other.codigoDv != null) {
 				return false;
-		} else if (!codigoDv.equals(other.codigoDv))
+			}
+		} else if (!codigoDv.equals(other.codigoDv)) {
 			return false;
+		}
 		if (codigoRea == null) {
-			if (other.codigoRea != null)
+			if (other.codigoRea != null) {
 				return false;
-		} else if (!codigoRea.equals(other.codigoRea))
+			}
+		} else if (!codigoRea.equals(other.codigoRea)) {
 			return false;
+		}
 		if (codigoTaric == null) {
-			if (other.codigoTaric != null)
+			if (other.codigoTaric != null) {
 				return false;
-		} else if (!codigoTaric.equals(other.codigoTaric))
+			}
+		} else if (!codigoTaric.equals(other.codigoTaric)) {
 			return false;
+		}
 		if (descFormatoVentaAlternativo == null) {
-			if (other.descFormatoVentaAlternativo != null)
+			if (other.descFormatoVentaAlternativo != null) {
 				return false;
-		} else if (!descFormatoVentaAlternativo.equals(other.descFormatoVentaAlternativo))
+			}
+		} else if (!descFormatoVentaAlternativo.equals(other.descFormatoVentaAlternativo)) {
 			return false;
+		}
 		if (esListoParaComer == null) {
-			if (other.esListoParaComer != null)
+			if (other.esListoParaComer != null) {
 				return false;
-		} else if (!esListoParaComer.equals(other.esListoParaComer))
+			}
+		} else if (!esListoParaComer.equals(other.esListoParaComer)) {
 			return false;
+		}
 		if (expedicion == null) {
-			if (other.expedicion != null)
+			if (other.expedicion != null) {
 				return false;
-		} else if (!expedicion.equals(other.expedicion))
+			}
+		} else if (!expedicion.equals(other.expedicion)) {
 			return false;
+		}
 		if (fechaAlbaran == null) {
-			if (other.fechaAlbaran != null)
+			if (other.fechaAlbaran != null) {
 				return false;
-		} else if (!fechaAlbaran.equals(other.fechaAlbaran))
+			}
+		} else if (!fechaAlbaran.equals(other.fechaAlbaran)) {
 			return false;
+		}
 		if (fechaCreacion == null) {
-			if (other.fechaCreacion != null)
+			if (other.fechaCreacion != null) {
 				return false;
-		} else if (!fechaCreacion.equals(other.fechaCreacion))
+			}
+		} else if (!fechaCreacion.equals(other.fechaCreacion)) {
 			return false;
+		}
 		if (fechaModificacion == null) {
-			if (other.fechaModificacion != null)
+			if (other.fechaModificacion != null) {
 				return false;
-		} else if (!fechaModificacion.equals(other.fechaModificacion))
+			}
+		} else if (!fechaModificacion.equals(other.fechaModificacion)) {
 			return false;
+		}
 		if (gradoAlcohol == null) {
-			if (other.gradoAlcohol != null)
+			if (other.gradoAlcohol != null) {
 				return false;
-		} else if (!gradoAlcohol.equals(other.gradoAlcohol))
+			}
+		} else if (!gradoAlcohol.equals(other.gradoAlcohol)) {
 			return false;
+		}
 		if (gradoPlato == null) {
-			if (other.gradoPlato != null)
+			if (other.gradoPlato != null) {
 				return false;
-		} else if (!gradoPlato.equals(other.gradoPlato))
+			}
+		} else if (!gradoPlato.equals(other.gradoPlato)) {
 			return false;
+		}
 		if (importeTotal == null) {
-			if (other.importeTotal != null)
+			if (other.importeTotal != null) {
 				return false;
-		} else if (!importeTotal.equals(other.importeTotal))
+			}
+		} else if (!importeTotal.equals(other.importeTotal)) {
 			return false;
+		}
 		if (marca == null) {
-			if (other.marca != null)
+			if (other.marca != null) {
 				return false;
-		} else if (!marca.equals(other.marca))
+			}
+		} else if (!marca.equals(other.marca)) {
 			return false;
+		}
 		if (nombreAlternativo == null) {
-			if (other.nombreAlternativo != null)
+			if (other.nombreAlternativo != null) {
 				return false;
-		} else if (!nombreAlternativo.equals(other.nombreAlternativo))
+			}
+		} else if (!nombreAlternativo.equals(other.nombreAlternativo)) {
 			return false;
+		}
 		if (nombreTipoBulto == null) {
-			if (other.nombreTipoBulto != null)
+			if (other.nombreTipoBulto != null) {
 				return false;
-		} else if (!nombreTipoBulto.equals(other.nombreTipoBulto))
+			}
+		} else if (!nombreTipoBulto.equals(other.nombreTipoBulto)) {
 			return false;
+		}
 		if (numeroDeBultos == null) {
-			if (other.numeroDeBultos != null)
+			if (other.numeroDeBultos != null) {
 				return false;
-		} else if (!numeroDeBultos.equals(other.numeroDeBultos))
+			}
+		} else if (!numeroDeBultos.equals(other.numeroDeBultos)) {
 			return false;
+		}
 		if (paisOrigen == null) {
-			if (other.paisOrigen != null)
+			if (other.paisOrigen != null) {
 				return false;
-		} else if (!paisOrigen.equals(other.paisOrigen))
+			}
+		} else if (!paisOrigen.equals(other.paisOrigen)) {
 			return false;
+		}
 		if (pesoBrutoLinea == null) {
-			if (other.pesoBrutoLinea != null)
+			if (other.pesoBrutoLinea != null) {
 				return false;
-		} else if (!pesoBrutoLinea.equals(other.pesoBrutoLinea))
+			}
+		} else if (!pesoBrutoLinea.equals(other.pesoBrutoLinea)) {
 			return false;
+		}
 		if (pesoNetoLinea == null) {
-			if (other.pesoNetoLinea != null)
+			if (other.pesoNetoLinea != null) {
 				return false;
-		} else if (!pesoNetoLinea.equals(other.pesoNetoLinea))
+			}
+		} else if (!pesoNetoLinea.equals(other.pesoNetoLinea)) {
 			return false;
+		}
 		if (precioUnidad == null) {
-			if (other.precioUnidad != null)
+			if (other.precioUnidad != null) {
 				return false;
-		} else if (!precioUnidad.equals(other.precioUnidad))
+			}
+		} else if (!precioUnidad.equals(other.precioUnidad)) {
 			return false;
+		}
 		if (usuarioCreacion == null) {
-			if (other.usuarioCreacion != null)
+			if (other.usuarioCreacion != null) {
 				return false;
-		} else if (!usuarioCreacion.equals(other.usuarioCreacion))
+			}
+		} else if (!usuarioCreacion.equals(other.usuarioCreacion)) {
 			return false;
+		}
 		if (usuarioEdit == null) {
-			if (other.usuarioEdit != null)
+			if (other.usuarioEdit != null) {
 				return false;
-		} else if (!usuarioEdit.equals(other.usuarioEdit))
+			}
+		} else if (!usuarioEdit.equals(other.usuarioEdit)) {
 			return false;
+		}
 		if (volumenUnidad == null) {
-			if (other.volumenUnidad != null)
+			if (other.volumenUnidad != null) {
 				return false;
-		} else if (!volumenUnidad.equals(other.volumenUnidad))
+			}
+		} else if (!volumenUnidad.equals(other.volumenUnidad)) {
 			return false;
+		}
+		if (marcaError == null) {
+			if (other.marcaError != null) {
+				return false;
+			}
+		} else if (!marcaError.equals(other.marcaError)) {
+			return false;
+		}
 		return true;
-	}
-
-	
+	}	
 	
 }

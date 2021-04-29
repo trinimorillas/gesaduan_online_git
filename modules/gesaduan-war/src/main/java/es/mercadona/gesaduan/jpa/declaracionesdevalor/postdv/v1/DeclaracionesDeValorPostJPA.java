@@ -319,10 +319,5 @@ public class DeclaracionesDeValorPostJPA implements Serializable{
 	public void setApp(String app) {
 		this.app = app;
 	}
-	
-	
-
-	
-	
 
 }

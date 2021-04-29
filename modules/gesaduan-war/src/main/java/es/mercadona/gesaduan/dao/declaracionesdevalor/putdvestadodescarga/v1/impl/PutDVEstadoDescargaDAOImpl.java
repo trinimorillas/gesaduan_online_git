@@ -39,34 +39,31 @@ public class PutDVEstadoDescargaDAOImpl extends DaoBaseImpl<DeclaracionesDeValor
 
 	@Transactional
 	@Override
-	public OutputDeclaracionesDeValorEstadoDescargaDTO actualizarEstadoDescarga(
-			DeclaracionesDeValorEstadoDescargaServiceDTO input) {
-
+	public OutputDeclaracionesDeValorEstadoDescargaDTO actualizarEstadoDescarga(DeclaracionesDeValorEstadoDescargaServiceDTO input) {
 		OutputDeclaracionesDeValorEstadoDescargaDTO result = new OutputDeclaracionesDeValorEstadoDescargaDTO();
-
-		final StringBuilder sql = new StringBuilder();
 
 		try {
 			Integer codigoDeclaracion = input.getCodigoDeclaracion();
 			Integer anyo = input.getAnyo();
 			Integer version = input.getVersion();
 			boolean estaDescargado = input.isEstaDescargado();
-
-			sql.append(" UPDATE O_DECLARACION_VALOR_CAB ");
-			sql.append(" SET MCA_DESCARGA = ?estaDescargado ");
-			sql.append(" , FEC_DT_DESCARGA = systimestamp ");
-			sql.append(" , COD_V_USR_MODIFICACION = ?usuario ");
-			sql.append(" WHERE COD_N_DECLARACION_VALOR = ?codigoDeclaracion ");
-			sql.append(" AND NUM_ANYO = ?anyo ");
-			sql.append(" AND COD_N_VERSION = ?version ");
+			
+			final StringBuilder sql = new StringBuilder();
+			sql.append("UPDATE O_DECLARACION_VALOR_CAB SET ");
+			sql.append("MCA_DESCARGA = ?estaDescargado, ");
+			sql.append("FEC_DT_DESCARGA = SYSDATE, ");
+			sql.append("COD_V_USR_MODIFICACION = ?usuario ");
+			sql.append("WHERE COD_N_DECLARACION_VALOR = ?codigoDeclaracion ");
+			sql.append("AND NUM_ANYO = ?anyo ");
+			sql.append("AND COD_N_VERSION = ?version");
 
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
 
 			if (estaDescargado) {
-				query.setParameter("estaDescargado", new String("S"));
+				query.setParameter("estaDescargado", "S");
 			}
 			if (!estaDescargado) {
-				query.setParameter("estaDescargado", new String("N"));
+				query.setParameter("estaDescargado", "N");
 			}
 
 			query.setParameter("usuario", input.getUsuario());
@@ -78,23 +75,19 @@ public class PutDVEstadoDescargaDAOImpl extends DaoBaseImpl<DeclaracionesDeValor
 	
 			DeclaracionesDeValorEstadoDescargaDTO decEstaDesc = new DeclaracionesDeValorEstadoDescargaDTO();
 
-			if(resultado == 1) {
+			if (resultado == 1) {
 				decEstaDesc.setCodigoDeclaracion(codigoDeclaracion);
 				decEstaDesc.setAnyo(anyo);
 				decEstaDesc.setVersion(version);
 				result.setDatos(decEstaDesc);
-			}else {
+			} else {
 				result.setDatos(decEstaDesc);
 			}
-
-		} catch (Exception e) {
-			
+		} catch (Exception e) {			
 			throw new ApplicationException(e.getMessage());
 		}
 
 		return result;
 	}
-
-	
 
 }

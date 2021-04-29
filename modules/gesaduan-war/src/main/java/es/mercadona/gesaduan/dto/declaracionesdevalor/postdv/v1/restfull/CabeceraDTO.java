@@ -2,42 +2,68 @@ package es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull;
 
 import es.mercadona.gesaduan.dto.declaracionesdevalor.AbstractDTO;
 
-public class CabeceraDTO extends AbstractDTO{
+public class CabeceraDTO extends AbstractDTO {
+
+	private static final long serialVersionUID = 1L;
+	private DatosFacturaDTO datosFactura;
+	private DatosPedidoDTO pedidoList;
+	private OrigenDTO origen;
+	private DestinoDTO destino;
 
 	/**
-	 * 
+	 * @return the datosFactura
 	 */
-	private static final long serialVersionUID = 1L;
-	
-	private DatosDeclaracionDTO datosDeclaracion;
-	private DatosPedidoDTO datosPedido;
-	private DatosExportadorDTO datosExportador;
-	private DatosDestinatarioDTO datosDestinatario;
-	public DatosDeclaracionDTO getDatosDeclaracion() {
-		return datosDeclaracion;
+	public DatosFacturaDTO getDatosFactura() {
+		return datosFactura;
 	}
-	public void setDatosDeclaracion(DatosDeclaracionDTO datosDeclaracion) {
-		this.datosDeclaracion = datosDeclaracion;
+
+	/**
+	 * @param datosFactura the datosFactura to set
+	 */
+	public void setDatosFactura(DatosFacturaDTO datosFactura) {
+		this.datosFactura = datosFactura;
 	}
-	public DatosPedidoDTO getDatosPedido() {
-		return datosPedido;
+
+	/**
+	 * @return the pedidoList
+	 */
+	public DatosPedidoDTO getPedidoList() {
+		return pedidoList;
 	}
-	public void setDatosPedido(DatosPedidoDTO datosPedido) {
-		this.datosPedido = datosPedido;
+
+	/**
+	 * @param pedidoList the pedidoList to set
+	 */
+	public void setPedidoList(DatosPedidoDTO pedidoList) {
+		this.pedidoList = pedidoList;
 	}
-	public DatosExportadorDTO getDatosExportador() {
-		return datosExportador;
+
+	/**
+	 * @return the origen
+	 */
+	public OrigenDTO getOrigen() {
+		return origen;
 	}
-	public void setDatosExportador(DatosExportadorDTO datosExportador) {
-		this.datosExportador = datosExportador;
+
+	/**
+	 * @param origen the origen to set
+	 */
+	public void setOrigen(OrigenDTO origen) {
+		this.origen = origen;
 	}
-	public DatosDestinatarioDTO getDatosDestinatario() {
-		return datosDestinatario;
+
+	/**
+	 * @return the destino
+	 */
+	public DestinoDTO getDestino() {
+		return destino;
 	}
-	public void setDatosDestinatario(DatosDestinatarioDTO datosDestinatario) {
-		this.datosDestinatario = datosDestinatario;
+
+	/**
+	 * @param destino the destino to set
+	 */
+	public void setDestino(DestinoDTO destino) {
+		this.destino = destino;
 	}
-	
-	
 
 }
