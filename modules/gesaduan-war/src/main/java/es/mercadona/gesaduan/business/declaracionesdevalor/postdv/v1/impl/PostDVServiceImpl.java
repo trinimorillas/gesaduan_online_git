@@ -55,9 +55,12 @@ public class PostDVServiceImpl implements PostDVService {
 		try {
 			/* PARAMETROS CABECERA */
 			/* DATOS DECLARACION */
-			CabeceraDTO cabecera = input.getDatos().getCabecera();	
+			CabeceraDTO cabecera = input.getDatos().getCabecera();
 			
-			// DATOS FACTURA
+			/* DATOS COMUNES*/
+			getDatosComunes(declaracionJPA, cabecera);
+			
+			/* DATOS FACTURA */
 			getDatosFactura(declaracionJPA, cabecera);
 
 			declaracionJPA.setApp("GESADUAN");
@@ -136,16 +139,6 @@ public class PostDVServiceImpl implements PostDVService {
 					}
 
 					linea.setCantidadFormato(cantidadFormato);
-
-					Date fechaAlb;
-					try {
-						fechaAlb = new SimpleDateFormat(DATE_FORMAT).parse(fechaAlbaran);
-						linea.setFechaAlbaran(fechaAlb);
-					} catch (ParseException pe) {
-						this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, LOG_METHOD_OUTPUTPOSTDECLARACIONES, pe.getClass().getSimpleName(), pe.getMessage());						
-					} catch (NullPointerException npe) {
-						this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, LOG_METHOD_OUTPUTPOSTDECLARACIONES, npe.getClass().getSimpleName(), npe.getMessage());						
-					}
 
 					if (codigoMerca != null) {
 						linea.setCodMerca(codigoMerca);
@@ -291,9 +284,7 @@ public class PostDVServiceImpl implements PostDVService {
 		String codigoExpedicion = cabecera.getDatosFactura().getCodigoExpedicion();
 		String condicionesEntrega = cabecera.getDatosFactura().getCondicionesEntrega();
 
-		String fechaAlbaran = (cabecera.getDatosFactura().getFechaAlbaran() != null
-				? cabecera.getDatosFactura().getFechaAlbaran().substring(0, 10)
-				: null);
+		String fechaAlbaran = cabecera.getDatosFactura().getFechaAlbaran() != null ? cabecera.getDatosFactura().getFechaAlbaran().substring(0, 10) : null;
 		String fechaEnvio = (cabecera.getDatosFactura().getFechaEnvio() != null
 				? cabecera.getDatosFactura().getFechaEnvio().substring(0, 10)
 				: null);
@@ -347,6 +338,21 @@ public class PostDVServiceImpl implements PostDVService {
 		if (provinciaOrigen != null) {
 			declaracionJPA.setProvinciaCarga(Integer.parseInt(provinciaOrigen));
 		}
+	}
+	
+	private void getDatosComunes(DeclaracionesDeValorPostJPA declaracionJPA, CabeceraDTO cabecera) {
+		Boolean esUltimaVigente = cabecera.getDatosComunes().isEsUltimaVigente();
+		Boolean esCorrecta = cabecera.getDatosComunes().isEsCorrecta();
+		Boolean estaNotificada = cabecera.getDatosComunes().isEstaNotificada();
+		Boolean estaDescargada = cabecera.getDatosComunes().isEstaDescargada();
+		Boolean esCargaManual = cabecera.getDatosComunes().isEsCargaManual();
+		String fechaDescarga = cabecera.getDatosComunes().getFechaDescarga();
+		Boolean estaDescargadaExportador = cabecera.getDatosComunes().isEstaDescargadaExportador();
+		String fechaDescargaExportador = cabecera.getDatosComunes().getFechaDescargaExportador();
+		Boolean estaDescargadaImportador = cabecera.getDatosComunes().isEstaDescargadaImportador();
+		String fechaDescargaImportador = cabecera.getDatosComunes().getFechaDescargaImportador();
+		Boolean tienePdf = cabecera.getDatosComunes().isTienePdf();
+		Boolean tieneCsv = cabecera.getDatosComunes().isTieneCsv();
 	}
 
 	private void establecerSalidaError(Exception exception, String metodo) {

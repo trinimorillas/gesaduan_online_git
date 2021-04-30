@@ -5,10 +5,25 @@ import es.mercadona.gesaduan.dto.declaracionesdevalor.AbstractDTO;
 public class CabeceraDTO extends AbstractDTO {
 
 	private static final long serialVersionUID = 1L;
+	private DatosComunesDTO datosComunes;
 	private DatosFacturaDTO datosFactura;
 	private DatosPedidoDTO pedidoList;
 	private OrigenDTO origen;
 	private DestinoDTO destino;
+
+	/**
+	 * @return the datosComunes
+	 */
+	public DatosComunesDTO getDatosComunes() {
+		return datosComunes;
+	}
+
+	/**
+	 * @param datosComunes the datosComunes to set
+	 */
+	public void setDatosComunes(DatosComunesDTO datosComunes) {
+		this.datosComunes = datosComunes;
+	}
 
 	/**
 	 * @return the datosFactura
