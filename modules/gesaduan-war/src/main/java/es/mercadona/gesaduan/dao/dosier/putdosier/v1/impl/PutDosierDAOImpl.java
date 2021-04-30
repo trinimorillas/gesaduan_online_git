@@ -374,7 +374,7 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 			sql.append("AND E.FEC_DT_EXPEDICION = CE.FEC_DT_EXPEDICION) ");
 			sql.append("INNER JOIN D_PRODUCTO_R P ON (P.COD_N_PRODUCTO = E.COD_N_PRODUCTO) ");
 			sql.append("LEFT JOIN S_TARIC_PRODUCTO TP ON (TP.COD_N_PRODUCTO = E.COD_N_PRODUCTO) ");
-			sql.append("LEFT JOIN D_CODIGO_TARIC CT ON CT.COD_N_TARIC = TP.COD_N_TARIC");
+			sql.append("LEFT JOIN D_CODIGO_TARIC CT ON CT.COD_N_TARIC = TP.COD_N_TARIC ");
 			sql.append("LEFT JOIN S_REA_PRODUCTO RP ON (RP.COD_N_PRODUCTO = E.COD_N_PRODUCTO ");
 			sql.append("AND RP.FEC_D_INICIO <= TRUNC(SYSDATE) ");
 			sql.append("AND (RP.FEC_D_FIN IS NULL OR  RP.FEC_D_FIN >= TRUNC(SYSDATE))) ");
@@ -566,11 +566,12 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 			sql.append("AND DVL.NUM_ANYO = DV.NUM_ANYO AND DVL.COD_N_VERSION = DV.COD_N_VERSION) ");
 			sql.append("INNER JOIN D_PRODUCTO_R P ON (P.COD_N_PRODUCTO = DVL.COD_N_MERCA) ");
 			sql.append("INNER JOIN S_TARIC_PRODUCTO TP ON (TP.COD_N_PRODUCTO = DVL.COD_N_MERCA) ");
+			sql.append("INNER JOIN D_CODIGO_TARIC CT ON CT.COD_N_TARIC = TP.COD_N_TARIC ");
 			sql.append("LEFT JOIN S_REA_PRODUCTO REA ON (REA.COD_N_PRODUCTO = DVL.COD_N_MERCA) ");
 			sql.append("WHERE DV.COD_V_EXPEDICION IS NULL ");
 			sql.append("AND DV.NUM_DOSIER = ?numDosier ");
 			sql.append("AND DV.NUM_ANYO_DOSIER = ?anyoDosier ");
-			sql.append("AND (REA.COD_V_REA IS NOT NULL OR TP.MCA_FITO = 'S') ");
+			sql.append("AND (REA.COD_V_REA IS NOT NULL OR CT.MCA_FITO = 'S') ");
 			sql.append("AND P.COD_V_PAIS_ISO_ALFA2 IS NULL ");
 			sql.append("AND NOT EXISTS ( ");
 			sql.append("SELECT 1 ");
