@@ -593,9 +593,9 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 			String campos = "DISTINCT D.NUM_DOSIER, " + "D.NUM_ANYO, "
 					+ "TO_CHAR(D.FEC_DT_CREACION,'DD/MM/YYYY') FEC_DT_CREACION, " + "D.COD_V_USUARIO_CREACION, "
 					+ "D.COD_N_ESTADO," + "ED.TXT_NOMBRE_ESTADO, "
-					+ "D.MCA_ERROR, "
 					+ "TO_CHAR(D.FEC_DT_DESCARGA_EXPORTADOR,'DD/MM/YYYY') FEC_DT_DESCARGA_EXPORTADOR, "
-					+ "TO_CHAR(D.FEC_DT_DESCARGA_IMPORTADOR,'DD/MM/YYYY') FEC_DT_DESCARGA_IMPORTADOR ";
+					+ "TO_CHAR(D.FEC_DT_DESCARGA_IMPORTADOR,'DD/MM/YYYY') FEC_DT_DESCARGA_IMPORTADOR, "
+					+ "D.MCA_ERROR ";
 			String from = "FROM D_DOSIER D " + "JOIN D_ESTADO_DOSIER ED ON (ED.COD_N_ESTADO = D.COD_N_ESTADO) ";
 			String where = "WHERE D.COD_N_EMBARQUE = ?codigoPlanEmbarque ";
 
@@ -647,6 +647,7 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 					dosier.setNombreEstado(String.valueOf(tmp[5]));
 					dosier.setFechaDescargaExportador(String.valueOf(tmp[6]));
 					dosier.setFechaDescargaImportador(String.valueOf(tmp[7]));
+					dosier.setMcaError(String.valueOf(tmp[8]));
 
 					List<EquipoSimpleDTO> equiposDosier = consultarEquipoDosieresPlanEmbarque(dosier.getNumDosier(),
 							dosier.getAnyoDosier());
