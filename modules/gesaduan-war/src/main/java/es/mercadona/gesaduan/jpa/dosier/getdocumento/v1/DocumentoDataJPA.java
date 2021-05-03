@@ -22,7 +22,7 @@ public class DocumentoDataJPA implements Serializable{
 	
 	@Id
 	@Column(name="NUM_DOSIER")  
-	private Integer numDosier;
+	private Long numDosier;
 	
 	@Id  
 	@Column(name="NUM_ANYO")  
@@ -37,7 +37,7 @@ public class DocumentoDataJPA implements Serializable{
 	/**
 	 * @return the numDosier
 	 */
-	public Integer getNumDosier() {
+	public Long getNumDosier() {
 		return numDosier;
 	}
 
@@ -45,7 +45,7 @@ public class DocumentoDataJPA implements Serializable{
 	/**
 	 * @param numDosier the numDosier to set
 	 */
-	public void setNumDosier(Integer numDosier) {
+	public void setNumDosier(Long numDosier) {
 		this.numDosier = numDosier;
 	}
 

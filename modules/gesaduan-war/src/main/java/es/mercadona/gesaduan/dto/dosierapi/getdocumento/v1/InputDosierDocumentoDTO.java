@@ -11,7 +11,7 @@ public class InputDosierDocumentoDTO extends AbstractDTO implements Serializable
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private Integer codigoDosier;
+	private Long codigoDosier;
 	private Integer anyoDosier;	
 	private String locale;
 	private String tipoDocumento;
@@ -19,13 +19,13 @@ public class InputDosierDocumentoDTO extends AbstractDTO implements Serializable
 	/**
 	 * @return the codigoDosier
 	 */
-	public Integer getCodigoDosier() {
+	public Long getCodigoDosier() {
 		return codigoDosier;
 	}
 	/**
 	 * @param codigoDosier the codigoDosier to set
 	 */
-	public void setCodigoDosier(Integer codigoDosier) {
+	public void setCodigoDosier(Long codigoDosier) {
 		this.codigoDosier = codigoDosier;
 	}
 	/**
