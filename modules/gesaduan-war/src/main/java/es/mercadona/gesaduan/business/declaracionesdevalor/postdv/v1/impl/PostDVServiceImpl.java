@@ -84,7 +84,6 @@ public class PostDVServiceImpl implements PostDVService {
 			declaracionJPA.setMcaCargaAuto("N");
 			
 			declaracionJPA.setApp("GESADUAN");
-
 			
 
 			
