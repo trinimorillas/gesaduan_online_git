@@ -83,8 +83,7 @@ public class PostDVServiceImpl implements PostDVService {
 			declaracionJPA.setFechaCreacionRegistro(fechaInicio);
 			declaracionJPA.setMcaCargaAuto("N");
 			
-			declaracionJPA.setApp("GESADUAN");
-			
+			declaracionJPA.setApp("GESADUAN");		
 
 			
 
