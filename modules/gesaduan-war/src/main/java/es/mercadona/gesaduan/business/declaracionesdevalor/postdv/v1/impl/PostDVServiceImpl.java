@@ -62,30 +62,40 @@ public class PostDVServiceImpl implements PostDVService {
 			
 			/* DATOS FACTURA */
 			getDatosFactura(declaracionJPA, cabecera);
-
-			declaracionJPA.setApp("GESADUAN");
-
+			
 			/* DATOS PEDIDO */
 			String codigoPedido = cabecera.getPedidoList().getCodigoPedido();
-
+			
 			/* PROVEEDOR/ORIGEN */
 			getOrigen(declaracionJPA, cabecera);
+			
+			/* DATOS DESTINATARIO */
+			String codigoAlmacen = cabecera.getDestino().getCodigoDestino();
+			declaracionJPA.setCodAlmacen(codigoAlmacen);
 
 			if (codigoPedido != null) {
 				declaracionJPA.setPedido(codigoPedido);
 			}
 			
-			
-
-			/* DATOS DESTINATARIO */
-			String codigoAlmacen = cabecera.getDestino().getCodigoDestino();
-			declaracionJPA.setCodAlmacen(codigoAlmacen);
-
 			Date fechaInicio = new Date();
 
 			declaracionJPA.setFechaCreacion(fechaInicio);
 			declaracionJPA.setFechaCreacionRegistro(fechaInicio);
 			declaracionJPA.setMcaCargaAuto("N");
+			
+			declaracionJPA.setApp("GESADUAN");
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
 
 			try {
 				if (input.getDatos().getDatosComunes().isEsCorrecta()) {
