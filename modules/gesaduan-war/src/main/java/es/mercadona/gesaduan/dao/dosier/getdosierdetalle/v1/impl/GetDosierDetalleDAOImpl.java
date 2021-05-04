@@ -57,7 +57,7 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 			StringBuilder campos = new StringBuilder();	 
 			campos.append("D.NUM_DOSIER, "); 
 			campos.append("D.NUM_ANYO,  "); 
-			campos.append("TO_CHAR(D.FEC_DT_CREACION,'DD/MM/YYYY'), "); 
+			campos.append("TO_CHAR(D.FEC_DT_CREACION,'DD/MM/YYYY - HH24:MI'), "); 
 			campos.append("D.COD_V_USUARIO_CREACION, "); 
 			campos.append("D.COD_N_ESTADO, "); 
 			campos.append("ED.TXT_NOMBRE_ESTADO, ");
@@ -198,7 +198,7 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 			final StringBuilder sql = new StringBuilder();
 			
 			sql.append("SELECT DISTINCT F.COD_N_DECLARACION_VALOR, F.NUM_ANYO, F.MCA_DV_CORRECTA, ");
-			sql.append("DECODE(F.COD_V_EXPEDICION, NULL, F.FEC_DT_EXPEDICION, F.FEC_D_ALBARAN) AS FEC_DT_EXPEDICION, ");
+			sql.append("DECODE(F.COD_V_EXPEDICION, NULL, TO_CHAR(F.FEC_DT_EXPEDICION, 'DD/MM/YYYY'), TO_CHAR(F.FEC_D_ALBARAN, 'DD/MM/YYYY')) AS FEC_DT_EXPEDICION, ");
 			sql.append("DECODE(F.COD_N_PROVEEDOR, NULL, NULL, F.COD_N_PROVEEDOR) AS CODIGO_ORIGEN, ");
 			sql.append("DECODE(P.TXT_RAZON_SOCIAL, NULL, BL.TXT_NOMBRE, P.TXT_RAZON_SOCIAL) AS NOMBRE_ORIGEN, ");
 			sql.append("F.COD_N_PROVINCIA_CARGA, ");
