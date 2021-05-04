@@ -26,6 +26,7 @@ import es.mercadona.gesaduan.dto.planembarques.getplanembarquedetalle.v1.restful
 import es.mercadona.gesaduan.dto.planembarques.getplanembarquedetalle.v1.restfull.SuministroDTO;
 import es.mercadona.gesaduan.dto.planembarques.getplanembarquedetalle.v1.restfull.TipoCargaDTO;
 import es.mercadona.gesaduan.jpa.planembarques.v1.PlanEmbarquesJPA;
+import es.mercadona.gesaduan.common.Constantes;
 
 public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> implements GetPlanEmbarqueDetalleDAO {
 
@@ -36,32 +37,32 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 	public void setEntityClass() {
 		this.entityClass = PlanEmbarquesJPA.class;
 	}
+	
+	private static final String LOG_FILE = "GetPlanEmbarqueDetalleDAOImpl(GESADUAN)";
 
 	@Override
 	public OutputPlanEmbarqueDetalleDTO consultarPlanEmbarque(InputDatosDetalleDTO datos) {
-
 		OutputPlanEmbarqueDetalleDTO result = new OutputPlanEmbarqueDetalleDTO();
 		DatosPlanEmbarqueDetalleDTO planEmbarque = null;
 		InputPlanEmbarqueDetalleDTO input = datos.getDatos();
 
 		try {
-
 			Long codigoPlanEmbarque = input.getCodigoEmbarque();
 			final StringBuilder sql = new StringBuilder();
 
 			String select = "SELECT ";
-			String campos = "PE.COD_N_EMBARQUE, " + "TO_CHAR(PE.FEC_DT_EMBARQUE,'DD/MM/YYYY'), "
-					+ "BL.COD_N_BLOQUE_LOGISTICO, " + "BL.TXT_NOMBRE, PUE.COD_N_PUERTO, " + "PUE.TXT_NOMBRE_PUERTO, "
-					+ "PUD.COD_N_PUERTO, " + "PUD.TXT_NOMBRE_PUERTO, " + "PN.COD_N_PROVEEDOR, "
-					+ "PN.TXT_RAZON_SOCIAL, " + "NVL(PE.NUM_EQUIPOS, 0), " + "EPE.COD_N_ESTADO,"
-					+ "EPE.TXT_NOMBRE_ESTADO, " + "PE.COD_V_USUARIO_VALIDACION ";
+			String campos = "PE.COD_N_EMBARQUE, TO_CHAR(PE.FEC_DT_EMBARQUE,'DD/MM/YYYY'), "
+					+ "BL.COD_N_BLOQUE_LOGISTICO, BL.TXT_NOMBRE, PUE.COD_N_PUERTO, PUE.TXT_NOMBRE_PUERTO, "
+					+ "PUD.COD_N_PUERTO, PUD.TXT_NOMBRE_PUERTO, PN.COD_N_PROVEEDOR, "
+					+ "PN.TXT_RAZON_SOCIAL, NVL(PE.NUM_EQUIPOS, 0), EPE.COD_N_ESTADO,"
+					+ "EPE.TXT_NOMBRE_ESTADO, PE.COD_V_USUARIO_VALIDACION ";
 			String from = "FROM D_PLAN_EMBARQUE PE "
 					+ "INNER JOIN D_BLOQUE_LOGISTICO_R BL ON (BL.COD_N_BLOQUE_LOGISTICO = PE.COD_N_BLOQUE_ORIGEN) "
 					+ "INNER JOIN D_PUERTO PUE ON (PUE.COD_N_PUERTO = PE.COD_N_PUERTO_EMBARQUE) "
 					+ "INNER JOIN D_PUERTO PUD ON (PUD.COD_N_PUERTO = PE.COD_N_PUERTO_DESEMBARQUE) "
 					+ "INNER JOIN D_ESTADO_PLAN_EMBARQUE EPE ON (EPE.COD_N_ESTADO = PE.COD_N_ESTADO) "
 					+ "LEFT JOIN D_PROVEEDOR_R PN ON (PN.COD_N_PROVEEDOR = PE.COD_N_NAVIERA)";
-			String where = "WHERE PE.COD_N_EMBARQUE = ?codigoPlanEmbarque ";
+			String where = "WHERE PE.COD_N_EMBARQUE = ?codigoPlanEmbarque";
 
 			sql.append(select).append(campos).append(from).append(where);
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
@@ -88,15 +89,18 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 					planEmbarque.setNombrePuertoEmbarque(String.valueOf(tmp[5]));
 					planEmbarque.setCodigoPuertoDesembarque(Integer.parseInt(String.valueOf(tmp[6])));
 					planEmbarque.setNombrePuertoDesembarque(String.valueOf(tmp[7]));
-					if (tmp[8] != null)
+					if (tmp[8] != null) {
 						planEmbarque.setCodigoNaviera(String.valueOf(tmp[8]));
-					if (tmp[9] != null)
+					}
+					if (tmp[9] != null) {
 						planEmbarque.setNombreNaviera(String.valueOf(tmp[9]));
+					}
 					planEmbarque.setNumeroEquipos(Integer.parseInt(String.valueOf(tmp[10])));
 					planEmbarque.setCodigoEstado(Integer.parseInt(String.valueOf(tmp[11])));
 					planEmbarque.setNombreEstado(String.valueOf(tmp[12]));
-					if (tmp[13] != null)
+					if (tmp[13] != null) {
 						planEmbarque.setCodigoUsuarioValidacion(String.valueOf(tmp[13]));
+					}
 
 					listaEquipo = consultarEquiposPlanEmbarque(datos);
 
@@ -114,10 +118,8 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 
 			result.setMetadatos(mapaMetaData);
 			result.setDatos(planEmbarque);
-
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}", "GetPlanEmbarqueDetalleDAOImpl(GESADUAN)",
-					"consultarPlanEmbarque", e.getClass().getSimpleName(), e.getMessage());
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, "consultarPlanEmbarque", e.getClass().getSimpleName(), e.getMessage());
 			throw new ApplicationException(e.getMessage());
 		}
 
@@ -125,12 +127,10 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 	}
 
 	private List<EquipoDTO> consultarEquiposPlanEmbarque(InputDatosDetalleDTO datos) {
-
 		InputPlanEmbarqueDetalleDTO input = datos.getDatos();
 		List<EquipoDTO> listaEquipo = null;
 
 		try {
-
 			Long codigoPlanEmbarque = input.getCodigoEmbarque();
 
 			String usuarioCreacion = null;
@@ -158,20 +158,11 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 
 			String count = "SELECT COUNT(*) FROM (";
 			String select = "SELECT ";
-			String campos = "DISTINCT ET.COD_N_EQUIPO, "
-					+ "ET.TXT_MATRICULA, "
-					+ "PT.COD_N_PROVEEDOR, "
-					+ "PT.TXT_RAZON_SOCIAL, "
-					+ "T.COD_N_TEMPERATURA, "
-					+ "T.TXT_TEMPERATURA, "
-					+ "ET.NUM_CAPACIDAD, "
-					+ "ET.NUM_OCUPACION, "
-					+ "TO_CHAR(ET.FEC_DT_CARGA,'DD/MM/YYYY HH24:MI:SS'), "
-					+ "ET.COD_N_ESTADO, "
-					+ "EE.TXT_NOMBRE_ESTADO, "
-					+ "ET.COD_V_USUARIO_CREACION, "
-					+ "(ET.NUM_OCUPACION / ET.NUM_CAPACIDAD) AS PORCENTAJE, "
-					+ "ET.COD_N_ESTADO_DOCUMENTACION, "
+			String campos = "DISTINCT ET.COD_N_EQUIPO, ET.TXT_MATRICULA, PT.COD_N_PROVEEDOR, "
+					+ "PT.TXT_RAZON_SOCIAL, T.COD_N_TEMPERATURA, T.TXT_TEMPERATURA, ET.NUM_CAPACIDAD, "
+					+ "ET.NUM_OCUPACION, TO_CHAR(ET.FEC_DT_CARGA,'DD/MM/YYYY HH24:MI:SS'), ET.COD_N_ESTADO, "
+					+ "EE.TXT_NOMBRE_ESTADO, ET.COD_V_USUARIO_CREACION, "
+					+ "(ET.NUM_OCUPACION / ET.NUM_CAPACIDAD) AS PORCENTAJE, ET.COD_N_ESTADO_DOCUMENTACION, "
 					+ "EDE.TXT_NOMBRE_ESTADO ";
 			String from = "FROM D_EQUIPO_TRANSPORTE ET "
 					+ "LEFT JOIN D_ESTADO_EQUIPO EE ON (EE.COD_N_ESTADO = ET.COD_N_ESTADO) "
@@ -249,9 +240,6 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 				queryCount.setParameter("usuarioCreacion", usuarioCreacion);
 			}
 
-			this.logger.debug("({}-{}) QUERY - {}", "GetPlanEmbarqueDetalleDAOImpl(GESADUANP)",
-					"consultarEquiposPlanEmbarque", query.toString());
-
 			@SuppressWarnings("unchecked")
 			List<Object[]> listado = query.getResultList();
 
@@ -299,10 +287,8 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 					listaEquipo.add(equipo);
 				}
 			}
-
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}", "GetPlanEmbarqueDetalleDAOImpl(GESADUAN)",
-					"consultarEquiposPlanEmbarque", e.getClass().getSimpleName(), e.getMessage());
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, "consultarEquiposPlanEmbarque", e.getClass().getSimpleName(), e.getMessage());
 			throw new ApplicationException(e.getMessage());
 		}
 
@@ -310,11 +296,9 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 	}
 
 	private List<SuministroDTO> consultarSuministroEquipos(Long codigoEquipo) {
-
 		List<SuministroDTO> listaSuministro = null;
 
 		try {
-
 			final StringBuilder sql = new StringBuilder();
 			final StringBuilder sqlCount = new StringBuilder();
 
@@ -349,8 +333,7 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 			}
 
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}", "GetPlanEmbarqueDetalleDAOImpl(GESADUAN)",
-					"consultarSuministroEquipos", e.getClass().getSimpleName(), e.getMessage());
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, "consultarSuministroEquipos", e.getClass().getSimpleName(), e.getMessage());
 			throw new ApplicationException(e.getMessage());
 		}
 
@@ -358,18 +341,16 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 	}
 
 	private List<CategoriaDTO> consultarCategoriaEquipos(Long codigoEquipo) {
-
 		List<CategoriaDTO> listaCategoria = null;
 
 		try {
-
 			final StringBuilder sql = new StringBuilder();
 			final StringBuilder sqlCount = new StringBuilder();
 
 			String select = "SELECT ";
 			String campos = " DISTINCT COD_N_CATEGORIA,TXT_NOMBRE_CATEGORIA FROM ";
-			String from = "SELECT " + "NVL(CC.COD_N_CATEGORIA,-1) COD_N_CATEGORIA , "
-					+ "NVL(CC.TXT_NOMBRE_CATEGORIA,'Sin categoria') TXT_NOMBRE_CATEGORIA " + "FROM S_EQUIPO_CARGA EC "
+			String from = "SELECT NVL(CC.COD_N_CATEGORIA,-1) COD_N_CATEGORIA , "
+					+ "NVL(CC.TXT_NOMBRE_CATEGORIA,'Sin categoria') TXT_NOMBRE_CATEGORIA FROM S_EQUIPO_CARGA EC "
 					+ "LEFT JOIN D_CARGA CA ON (CA.COD_V_CARGA = EC.COD_V_CARGA AND CA.COD_V_ALMACEN_ORIGEN = EC.COD_V_ALMACEN_ORIGEN) "
 					+ "LEFT JOIN D_CATEGORIA_CARGA CC ON (CC.COD_N_CATEGORIA = CA.COD_N_CATEGORIA) ";
 			String where = "WHERE EC.COD_N_EQUIPO = ?codigoEquipo ";
@@ -396,10 +377,8 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 					listaCategoria.add(categoria);
 				}
 			}
-
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}", "GetPlanEmbarqueDetalleDAOImpl(GESADUAN)",
-					"consultarCategoriaEquipos", e.getClass().getSimpleName(), e.getMessage());
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, "consultarCategoriaEquipos", e.getClass().getSimpleName(), e.getMessage());
 			throw new ApplicationException(e.getMessage());
 		}
 
@@ -407,12 +386,10 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 	}
 
 	private List<CargaDTO> consultarCargaEquipos(InputDatosDetalleDTO datos, Long codigoEquipo) {
-
 		List<CargaDTO> listaCarga = new ArrayList<>();
 		InputPlanEmbarqueDetalleDTO input = datos.getDatos();
 
 		try {
-
 			String mcaIncluyePedidos = "N";
 			List<TipoCargaDTO> tipoCarga = null;
 			if (input.getMcaIncluyePedidos() != null) {
@@ -423,13 +400,13 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 			final StringBuilder sql = new StringBuilder();
 
 			String select = "SELECT ";
-			String campos = "DISTINCT CA.COD_V_CARGA, " + "TC.COD_N_TIPO_CARGA, " + "TC.TXT_NOMBRE_TIPO_CARGA, "
-					+ "TS.COD_N_TIPO_SUMINISTRO, " + "TS.TXT_NOMBRE_TIPO_SUMINISTRO, " + "CC.COD_N_CATEGORIA, "
-					+ "CC.TXT_NOMBRE_CATEGORIA, " + "PP.COD_N_PROVEEDOR, " + "PP.TXT_RAZON_SOCIAL, "
-					+ "CA.COD_V_ALMACEN_ORIGEN, " + "CA.COD_V_CENTRO_DESTINO, "
-					+ "TO_CHAR(CA.FEC_D_ENTREGA,'DD/MM/YYYY'), " + "TO_CHAR(CA.FEC_DT_SERVICIO,'DD/MM/YYYY'), "
-					+ "ESC.COD_N_ESTADO, " + "ESC.TXT_NOMBRE_ESTADO, " + "EC.NUM_HUECO_OCUPADO, "
-					+ "EC.NUM_PESO_OCUPADO, " + "EC.NUM_DIVISION, " + "CA.MCA_CONTIENE_LPC, "
+			String campos = "DISTINCT CA.COD_V_CARGA, TC.COD_N_TIPO_CARGA, TC.TXT_NOMBRE_TIPO_CARGA, "
+					+ "TS.COD_N_TIPO_SUMINISTRO, TS.TXT_NOMBRE_TIPO_SUMINISTRO, CC.COD_N_CATEGORIA, "
+					+ "CC.TXT_NOMBRE_CATEGORIA, PP.COD_N_PROVEEDOR, PP.TXT_RAZON_SOCIAL, "
+					+ "CA.COD_V_ALMACEN_ORIGEN, CA.COD_V_CENTRO_DESTINO, "
+					+ "TO_CHAR(CA.FEC_D_ENTREGA,'DD/MM/YYYY'), TO_CHAR(CA.FEC_DT_SERVICIO,'DD/MM/YYYY'), "
+					+ "ESC.COD_N_ESTADO, ESC.TXT_NOMBRE_ESTADO, EC.NUM_HUECO_OCUPADO, "
+					+ "EC.NUM_PESO_OCUPADO, EC.NUM_DIVISION, CA.MCA_CONTIENE_LPC, "
 					+ "CA.MCA_PEDIDOS_SIN_VALIDAR ";
 			String from = "FROM D_EQUIPO_TRANSPORTE ET "
 					+ "INNER JOIN S_EQUIPO_CARGA EC ON (EC.COD_N_EQUIPO = ET.COD_N_EQUIPO) "
@@ -490,10 +467,8 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 					listaCarga.add(carga);
 				}
 			}
-
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}", "GetPlanEmbarqueDetalleDAOImpl(GESADUAN)",
-					"consultarCargaEquipos", e.getClass().getSimpleName(), e.getMessage());
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, "consultarCargaEquipos", e.getClass().getSimpleName(), e.getMessage());
 			throw new ApplicationException(e.getMessage());
 		}
 
@@ -501,21 +476,17 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 	}
 
 	private List<PedidoDTO> consultarPedidosCarga(String codigoAlmacenOrigen, String codigoCarga) {
-
 		List<PedidoDTO> pedidos = new ArrayList<>();
 
 		try {
-
 			final StringBuilder sql = new StringBuilder();
 
-			String select = "SELECT ";
-			String campos = "DISTINCT CP.COD_V_PEDIDO ";
-			String from = "FROM S_CARGA_PEDIDO CP ";
-			String where = "WHERE CP.COD_V_ALMACEN_ORIGEN = ?codigoAlmacenOrigen "
-					+ " AND CP.COD_V_CARGA = ?codigoCarga ";
-			String order = "ORDER BY CP.COD_V_PEDIDO ASC";
+			String select = "SELECT DISTINCT CP.COD_V_PEDIDO ";
+			String from   = "FROM S_CARGA_PEDIDO CP ";
+			String where  = "WHERE CP.COD_V_ALMACEN_ORIGEN = ?codigoAlmacenOrigen AND CP.COD_V_CARGA = ?codigoCarga ";
+			String order  = "ORDER BY CP.COD_V_PEDIDO ASC";
 
-			sql.append(select).append(campos).append(from).append(where).append(order);
+			sql.append(select).append(from).append(where).append(order);
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
 
 			if (codigoAlmacenOrigen != null) {
@@ -535,10 +506,8 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 					pedidos.add(pedido);
 				}
 			}
-
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}", "GetPlanEmbarqueDetalleDAOImpl(GESADUAN)",
-					"consultarPedidosCarga", e.getClass().getSimpleName(), e.getMessage());
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, "consultarPedidosCarga", e.getClass().getSimpleName(), e.getMessage());
 			throw new ApplicationException(e.getMessage());
 		}
 
@@ -546,7 +515,6 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 	}
 
 	private boolean tipoCargaCorrecto(List<TipoCargaDTO> tipoCarga, int codigoTipoCarga) {
-
 		if (tipoCarga != null && !tipoCarga.isEmpty()) {
 			for (int i = 0; i < tipoCarga.size(); i++) {
 				int codigoTipoCargaTemp = Integer.parseInt(tipoCarga.get(i).getCodigoTipoCarga().toString());
@@ -559,17 +527,14 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 	}
 
 	private List<DosierDTO> consultarDosieresPlanEmbarque(InputDatosDetalleDTO datos) {
-
 		InputPlanEmbarqueDetalleDTO input = datos.getDatos();
 		List<DosierDTO> listaDosier = new ArrayList<>();
 
 		try {
-
 			Long codigoPlanEmbarque = input.getCodigoEmbarque();
 
 			String orden = "+numDosier";
 			if (input.getOrden() != null) {
-
 				Set<String> strings = new HashSet<>();
 				strings.add("-numDosier");
 				strings.add("+numDosier");
@@ -581,6 +546,8 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 				strings.add("+codigoEstado");
 				strings.add("-fechaDescarga");
 				strings.add("+fechaDescarga");
+				strings.add("-mcaError");
+				strings.add("+mcaError");
 
 				if (strings.contains(input.getOrden())) {
 					orden = input.getOrden();
@@ -590,33 +557,33 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 			final StringBuilder sql = new StringBuilder();
 
 			String select = "SELECT * FROM (SELECT ";
-			String campos = "DISTINCT D.NUM_DOSIER, " + "D.NUM_ANYO, "
-					+ "TO_CHAR(D.FEC_DT_CREACION,'DD/MM/YYYY') FEC_DT_CREACION, " + "D.COD_V_USUARIO_CREACION, "
-					+ "D.COD_N_ESTADO," + "ED.TXT_NOMBRE_ESTADO, "
-					+ "TO_CHAR(D.FEC_DT_DESCARGA_EXPORTADOR,'DD/MM/YYYY') FEC_DT_DESCARGA_EXPORTADOR, "
-					+ "TO_CHAR(D.FEC_DT_DESCARGA_IMPORTADOR,'DD/MM/YYYY') FEC_DT_DESCARGA_IMPORTADOR, "
+			String campos = "DISTINCT D.NUM_DOSIER, D.NUM_ANYO, "
+					+ "TO_CHAR(D.FEC_DT_CREACION, 'DD/MM/YYYY - HH24:MI') FEC_DT_CREACION, D.COD_V_USUARIO_CREACION, "
+					+ "D.COD_N_ESTADO, ED.TXT_NOMBRE_ESTADO, "
+					+ "TO_CHAR(D.FEC_DT_DESCARGA_EXPORTADOR, 'DD/MM/YYYY - HH24:MI') FEC_DT_DESCARGA_EXPORTADOR, "
+					+ "TO_CHAR(D.FEC_DT_DESCARGA_IMPORTADOR, 'DD/MM/YYYY - HH24:MI') FEC_DT_DESCARGA_IMPORTADOR, "
 					+ "D.MCA_ERROR ";
-			String from = "FROM D_DOSIER D " + "JOIN D_ESTADO_DOSIER ED ON (ED.COD_N_ESTADO = D.COD_N_ESTADO) ";
-			String where = "WHERE D.COD_N_EMBARQUE = ?codigoPlanEmbarque ";
+			String from = "FROM D_DOSIER D JOIN D_ESTADO_DOSIER ED ON (ED.COD_N_ESTADO = D.COD_N_ESTADO) ";
+			String where = "WHERE D.COD_N_EMBARQUE = ?codigoPlanEmbarque";
 
-			String order = ")";
+			String order = ") ";
 
 			if (orden.equals("-numDosier"))
-				order += "ORDER BY NUM_DOSIER DESC,NUM_ANYO DESC";
+				order += "ORDER BY NUM_DOSIER DESC, NUM_ANYO DESC";
 			else if (orden.equals("+numDosier"))
-				order += "ORDER BY NUM_DOSIER ASC,NUM_ANYO ASC";
+				order += "ORDER BY NUM_DOSIER ASC, NUM_ANYO ASC";
 			else if (orden.equals("-fechaCreacion"))
-				order += "ORDER BY TO_DATE(FEC_DT_CREACION,'DD/MM/YYYY') DESC";
+				order += "ORDER BY FEC_DT_CREACION DESC";
 			else if (orden.equals("+fechaCreacion"))
-				order += "ORDER BY TO_DATE(FEC_DT_CREACION,'DD/MM/YYYY') ASC";
+				order += "ORDER BY FEC_DT_CREACION ASC";
 			else if (orden.equals("-usuarioCreacion"))
 				order += "ORDER BY COD_V_USUARIO_CREACION DESC";
 			else if (orden.equals("+usuarioCreacion"))
 				order += "ORDER BY COD_V_USUARIO_CREACION ASC";
 			else if (orden.equals("-mcaError"))
-				order += "ORDER BY D.MCA_ERROR DESC";
+				order += "ORDER BY MCA_ERROR DESC";
 			else if (orden.equals("+mcaError"))
-				order += "ORDER BY D.MCA_ERROR ASC";
+				order += "ORDER BY MCA_ERROR ASC";
 			else if (orden.equals("-fechaDescargaExportador"))
 				order += "ORDER BY FEC_DT_DESCARGA_EXPORTADOR DESC";
 			else if (orden.equals("+fechaDescargaExportador"))
@@ -645,8 +612,12 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 					dosier.setUsuarioCreacion(String.valueOf(tmp[3]));
 					dosier.setCodigoEstado(Long.parseLong(String.valueOf(tmp[4])));
 					dosier.setNombreEstado(String.valueOf(tmp[5]));
-					dosier.setFechaDescargaExportador(String.valueOf(tmp[6]));
-					dosier.setFechaDescargaImportador(String.valueOf(tmp[7]));
+					if (tmp[6] != null) {
+						dosier.setFechaDescargaExportador(String.valueOf(tmp[6]));
+					}
+					if (tmp[7] != null) {
+						dosier.setFechaDescargaImportador(String.valueOf(tmp[7]));
+					}
 					dosier.setMcaError(String.valueOf(tmp[8]));
 
 					List<EquipoSimpleDTO> equiposDosier = consultarEquipoDosieresPlanEmbarque(dosier.getNumDosier(),
@@ -660,8 +631,7 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 			}
 
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}", "GetPlanEmbarqueDetalleDAOImpl(GESADUAN)",
-					"consultarDosieresPlanEmbarque", e.getClass().getSimpleName(), e.getMessage());
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, "consultarDosieresPlanEmbarque", e.getClass().getSimpleName(), e.getMessage());
 			throw new ApplicationException(e.getMessage());
 		}
 
@@ -669,20 +639,17 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 	}
 
 	private List<EquipoSimpleDTO> consultarEquipoDosieresPlanEmbarque(Long numDosiser, Integer anyoDosier) {
-
 		List<EquipoSimpleDTO> listaEquipoSimple = new ArrayList<>();
 
 		try {
-
 			final StringBuilder sql = new StringBuilder();
 
-			String select = "SELECT ";
-			String campos = "DISTINCT DE.COD_N_EQUIPO, " + "DE.TXT_MATRICULA ";
+			String select = "SELECT DISTINCT DE.COD_N_EQUIPO, DE.TXT_MATRICULA ";
 			String from   = "FROM S_DOSIER_EQUIPO DE ";
-			String where  = "WHERE DE.NUM_DOSIER = ?numDosiser AND  " + "DE.NUM_ANYO = ?anyoDosier ";
+			String where  = "WHERE DE.NUM_DOSIER = ?numDosiser AND DE.NUM_ANYO = ?anyoDosier ";
 			String order  = "ORDER BY DE.TXT_MATRICULA ";
 
-			sql.append(select).append(campos).append(from).append(where).append(order);
+			sql.append(select).append(from).append(where).append(order);
 
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
 
@@ -705,8 +672,7 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 			}
 
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}", "GetPlanEmbarqueDetalleDAOImpl(GESADUAN)",
-					"consultarEquipoDosieresPlanEmbarque", e.getClass().getSimpleName(), e.getMessage());
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, "consultarEquipoDosieresPlanEmbarque", e.getClass().getSimpleName(), e.getMessage());
 			throw new ApplicationException(e.getMessage());
 		}
 
