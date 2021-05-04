@@ -18,8 +18,6 @@ import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.Outpu
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocLinDTO;
 import es.mercadona.gesaduan.dto.dosierapi.getdocumento.v1.InputDosierDocumentoDTO;
 import es.mercadona.gesaduan.dto.dosierapi.getdocumento.v1.OutputDosierDocCabDTO;
-import es.mercadona.gesaduan.jpa.declaracionesdevalor.getdocumentodv.v1.DocumentoDVDataJPA;
-import es.mercadona.gesaduan.jpa.declaracionesdevalor.getdocumentodv.v1.DocumentoDVDataPK;
 import es.mercadona.gesaduan.jpa.dosier.getdocumento.v1.DocumentoDataJPA;
 import es.mercadona.gesaduan.jpa.dosier.getdocumento.v1.DocumentoDataPK;
 
@@ -115,7 +113,7 @@ public class GetDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDataPK, Documen
 			
 			documento = findById(inputPK);
 			
-			outDocumentoDTO.setCodigoDosier(Integer.toString(input.getCodigoDosier()));
+			outDocumentoDTO.setCodigoDosier(Long.toString(input.getCodigoDosier()));
 			outDocumentoDTO.setAnyoDosier(Integer.toString(input.getAnyoDosier()));
 			outDocumentoDTO.setTipoInforme(input.getTipoDocumento());
 			if (documento != null) {

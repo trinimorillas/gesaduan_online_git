@@ -9,7 +9,7 @@ public class DocumentoDataPK implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
   
-	private Integer numDosier;
+	private Long numDosier;
 	
 	private Integer anyo;
 
@@ -18,13 +18,13 @@ public class DocumentoDataPK implements Serializable{
 	/**
 	 * @return the numDosier
 	 */
-	public Integer getNumDosier() {
+	public Long getNumDosier() {
 		return numDosier;
 	}
 	/**
 	 * @param numDosier the numDosier to set
 	 */
-	public void setNumDosier(Integer numDosier) {
+	public void setNumDosier(Long numDosier) {
 		this.numDosier = numDosier;
 	}
 	/**
@@ -40,7 +40,7 @@ public class DocumentoDataPK implements Serializable{
 		this.anyo = anyo;
 	}
 	
-	public DocumentoDataPK(Integer numDosier, Integer anyo) {
+	public DocumentoDataPK(Long numDosier, Integer anyo) {
 		super();
 		this.numDosier = numDosier;
 		this.anyo = anyo;
