@@ -34,8 +34,8 @@ public class CambiarEstadoServiceImpl implements CambiarEstadoService {
 			if (cambiarEstadoDao.getEquiposNoCargados(input.getDatos().getCodigoEmbarque()) == 0) codigoEstado = 3;
 			datos.setUsuarioValidacion(input.getMetadatos().getCodigoUsuario());
 			
-			cambiarEstadoDao.crearContenedoresFicticios(input.getDatos().getCodigoEmbarque(), input.getMetadatos().getCodigoUsuario());
-		}		
+			//cambiarEstadoDao.crearContenedoresFicticios(input.getDatos().getCodigoEmbarque(), input.getMetadatos().getCodigoUsuario());
+		}
 		
 		datos.setCodigoEmbarque(input.getDatos().getCodigoEmbarque());
 		datos.setEstado(codigoEstado);
