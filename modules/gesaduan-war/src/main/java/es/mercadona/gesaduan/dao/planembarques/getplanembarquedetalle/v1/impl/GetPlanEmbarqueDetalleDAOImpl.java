@@ -407,7 +407,7 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 					+ "TO_CHAR(CA.FEC_D_ENTREGA,'DD/MM/YYYY'), TO_CHAR(CA.FEC_DT_SERVICIO,'DD/MM/YYYY'), "
 					+ "ESC.COD_N_ESTADO, ESC.TXT_NOMBRE_ESTADO, EC.NUM_HUECO_OCUPADO, "
 					+ "EC.NUM_PESO_OCUPADO, EC.NUM_DIVISION, CA.MCA_CONTIENE_LPC, "
-					+ "CA.MCA_PEDIDOS_SIN_VALIDAR ";
+					+ "CA.MCA_PEDIDOS_SIN_VALIDAR, CE.NUM_DOSIER, CE.NUM_ANYO ";
 			String from = "FROM D_EQUIPO_TRANSPORTE ET "
 					+ "INNER JOIN S_EQUIPO_CARGA EC ON (EC.COD_N_EQUIPO = ET.COD_N_EQUIPO) "
 					+ "INNER JOIN D_CARGA CA ON (CA.COD_V_CARGA = EC.COD_V_CARGA AND CA.COD_V_ALMACEN_ORIGEN = EC.COD_V_ALMACEN_ORIGEN) "
@@ -415,7 +415,8 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 					+ "LEFT JOIN D_TIPO_SUMINISTRO TS ON (TS.COD_N_TIPO_SUMINISTRO = CA.COD_N_TIPO_SUMINISTRO) "
 					+ "LEFT JOIN D_CATEGORIA_CARGA CC ON (CC.COD_N_CATEGORIA = CA.COD_N_CATEGORIA) "
 					+ "LEFT JOIN D_PROVEEDOR_R PP ON (PP.COD_N_PROVEEDOR = CA.COD_N_PROVEEDOR) "
-					+ "INNER JOIN D_ESTADO_CARGA ESC ON (ESC.COD_N_ESTADO = CA.COD_N_ESTADO) ";
+					+ "INNER JOIN D_ESTADO_CARGA ESC ON (ESC.COD_N_ESTADO = CA.COD_N_ESTADO) "
+					+ "LEFT JOIN O_CONTENEDOR_EXPEDIDO CE ON (CE.COD_V_CARGA = CA.COD_V_CARGA AND CE.COD_V_ALMACEN = CA.COD_V_ALMACEN_ORIGEN) ";
 			String where = "WHERE ET.COD_N_EQUIPO = ?codigoEquipo ";
 
 			String order = "ORDER BY CA.COD_V_CARGA ASC";
@@ -458,6 +459,12 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 					carga.setNumeroDivision(Integer.parseInt(String.valueOf(tmp[17])));
 					carga.setMarcaLpC(String.valueOf(tmp[18]));
 					carga.setPedidosSinValidar(String.valueOf(tmp[19]));
+					if (tmp[9] != null) {
+						carga.setNumDosier(Long.parseLong(String.valueOf(tmp[9])));
+					}
+					if (tmp[10] != null) {
+						carga.setAnyoDosier(Integer.parseInt(String.valueOf(tmp[10])));
+					}
 
 					listaPedido = new ArrayList<>();
 					if ("S".equals(mcaIncluyePedidos) && tipoCargaCorrecto(tipoCarga, carga.getCodigoTipoCarga())) {
