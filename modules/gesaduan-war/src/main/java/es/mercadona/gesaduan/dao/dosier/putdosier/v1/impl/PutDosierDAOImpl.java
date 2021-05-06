@@ -352,8 +352,9 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 			sql.append("FROM (SELECT DV.COD_N_DECLARACION_VALOR,DV.NUM_ANYO,DV.COD_N_VERSION,E.COD_N_PRODUCTO,TP.COD_N_TARIC,RP.COD_V_REA, ");
 			sql.append("DECODE(P.TXT_DENOMINA_ALTERNATIVA,NULL,DP.TXT_DESCRIPCION,P.TXT_DENOMINA_ALTERNATIVA) AS TXT_NOMBRE_PRODUCTO, ");
 			sql.append("DECODE(P.TXT_FORMATO_ALTERNATIVO,NULL,P.NUM_FORMATO_VENTA||' '||P.TXT_UNIDAD_MEDIDA, ");
-			sql.append("P.TXT_FORMATO_ALTERNATIVO) AS TXT_FORMATO, ");
-			sql.append("P.TXT_MARCA,'PENDIENTE:NOMBRE_BULTO' AS NOMBRE_BULTO,E.NUM_FORMATOS_VENTA_EXPEDIDO AS NUM_BULTOS, ");
+			sql.append("P.TXT_FORMATO_ALTERNATIVO) AS TXT_FORMATO, P.TXT_MARCA, ");
+			sql.append("DECODE(E.COD_N_VARIABLE_LOGISTICA,0,'Caj./Paq.','Palet') AS NOMBRE_BULTO, ");
+			sql.append("E.NUM_FORMATOS_VENTA_EXPEDIDO AS NUM_BULTOS, ");
 			sql.append("(E.NUM_CANTIDAD_EXPEDIDO_PESO/1000)*TO_NUMBER('0,9') AS NUM_PESO_NETO, ");
 			sql.append("E.NUM_CANTIDAD_EXPEDIDO_PESO/1000 AS NUM_PESO_BRUTO, ");
 			sql.append("DECODE(P.TXT_UNIDAD_MEDIDA,'ML',P.NUM_FORMATO_VENTA/1000,'LI',P.NUM_FORMATO_VENTA)*E.NUM_CANTIDAD_EXPEDIDO_UNIDAD ");
@@ -374,7 +375,7 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 			sql.append("AND E.FEC_DT_EXPEDICION = CE.FEC_DT_EXPEDICION) ");
 			sql.append("INNER JOIN D_PRODUCTO_R P ON (P.COD_N_PRODUCTO = E.COD_N_PRODUCTO) ");
 			sql.append("LEFT JOIN S_TARIC_PRODUCTO TP ON (TP.COD_N_PRODUCTO = E.COD_N_PRODUCTO) ");
-			sql.append("LEFT JOIN D_CODIGO_TARIC CT ON CT.COD_N_TARIC = TP.COD_N_TARIC ");
+			sql.append("LEFT JOIN D_CODIGO_TARIC CT ON (CT.COD_N_TARIC = TP.COD_N_TARIC) ");
 			sql.append("LEFT JOIN S_REA_PRODUCTO RP ON (RP.COD_N_PRODUCTO = E.COD_N_PRODUCTO ");
 			sql.append("AND RP.FEC_D_INICIO <= TRUNC(SYSDATE) ");
 			sql.append("AND (RP.FEC_D_FIN IS NULL OR  RP.FEC_D_FIN >= TRUNC(SYSDATE))) ");
@@ -385,8 +386,8 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 			sql.append("WHERE DV.NUM_DOSIER = ?numDosier ");
 			sql.append("AND DV.NUM_ANYO_DOSIER = ?anyoDosier ");
 			sql.append("AND P.COD_N_PRODUCTO IS NOT NULL ");
-			sql.append(") ");
-			sql.append(") ");
+			sql.append(")");
+			sql.append(")");
 			sql.append("WHERE PRIMERO = 1");
 					
 			final Query query = getEntityManager().createNativeQuery(sql.toString());

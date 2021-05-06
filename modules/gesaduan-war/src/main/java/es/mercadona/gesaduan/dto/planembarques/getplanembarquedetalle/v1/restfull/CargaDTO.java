@@ -28,6 +28,8 @@ public class CargaDTO extends AbstractDTO {
 	private Number numeroDivision;
 	private String marcaLpC;
 	private String pedidosSinValidar;
+	private Long numDosier;
+	private Integer anyoDosier;
 	private List<PedidoDTO> pedido;
 	
 	public String getCodigoCarga() {
@@ -187,6 +189,34 @@ public class CargaDTO extends AbstractDTO {
 
 	public void setPedidosSinValidar(String pedidosSinValidar) {
 		this.pedidosSinValidar = pedidosSinValidar;
+	}
+
+	/**
+	 * @return the numDosier
+	 */
+	public Long getNumDosier() {
+		return numDosier;
+	}
+
+	/**
+	 * @param numDosier the numDosier to set
+	 */
+	public void setNumDosier(Long numDosier) {
+		this.numDosier = numDosier;
+	}
+
+	/**
+	 * @return the anyoDosier
+	 */
+	public Integer getAnyoDosier() {
+		return anyoDosier;
+	}
+
+	/**
+	 * @param anyoDosier the anyoDosier to set
+	 */
+	public void setAnyoDosier(Integer anyoDosier) {
+		this.anyoDosier = anyoDosier;
 	}
 
 	public List<PedidoDTO> getPedido() {
