@@ -459,11 +459,11 @@ public class GetPlanEmbarqueDetalleDAOImpl extends BaseDAO<PlanEmbarquesJPA> imp
 					carga.setNumeroDivision(Integer.parseInt(String.valueOf(tmp[17])));
 					carga.setMarcaLpC(String.valueOf(tmp[18]));
 					carga.setPedidosSinValidar(String.valueOf(tmp[19]));
-					if (tmp[9] != null) {
-						carga.setNumDosier(Long.parseLong(String.valueOf(tmp[9])));
+					if (tmp[20] != null) {
+						carga.setNumDosier(Long.parseLong(String.valueOf(tmp[20])));
 					}
-					if (tmp[10] != null) {
-						carga.setAnyoDosier(Integer.parseInt(String.valueOf(tmp[10])));
+					if (tmp[21] != null) {
+						carga.setAnyoDosier(Integer.parseInt(String.valueOf(tmp[21])));
 					}
 
 					listaPedido = new ArrayList<>();

@@ -32,12 +32,11 @@ public class PutDosierServiceImpl implements PutDosierService {
 		DatosDosierPutDTO datos = new DatosDosierPutDTO();		
 		List<DosierPutDTO> listaDosieres = new ArrayList<>();
 		List<InputDosierDTO> dosieres = input.getDatos().getDosier();
-		String codigoUsario = input.getMetadatos().getCodigoUsuario();	
-		Long nuevoNumDosier = null;
-		
-		DosierPkJPA dosierPk = putDosierDao.getNewDosierPk();		
+		String codigoUsario = input.getMetadatos().getCodigoUsuario();						
 		
 		for (InputDosierDTO dosier: dosieres) {
+			Long nuevoNumDosier = null;
+			DosierPkJPA dosierPk = putDosierDao.getNewDosierPk();
 			
 			nuevoNumDosier = dosierPk.getNumDosier();
 			DosierJPA dosierJPA = new DosierJPA();
@@ -65,26 +64,22 @@ public class PutDosierServiceImpl implements PutDosierService {
 			
 			dosierPk.setNumDosier(dosierPk.getNumDosier() + 1);
 			
-		}
-		
-		// Actualiza C_VARIABLE con el último numero de dosier
-		if (nuevoNumDosier != null) {
-			putDosierDao.updateNumDosier(nuevoNumDosier);
+			// Actualiza C_VARIABLE con el último numero de dosier
+			if (nuevoNumDosier != null) {
+				putDosierDao.updateNumDosier(nuevoNumDosier);
+			}
 		}
 		
 		if (listaDosieres.isEmpty()) listaDosieres = null;
 		datos.setDosier(listaDosieres);
-		result.setDatos(datos);
-		
+		result.setDatos(datos);		
 		
 		return result;	
 	}
 	
-	private void putRelacionEquipoDosier(DosierJPA dosierJPA ,List<InputDosierEquipoDTO> equipos) {
-		
+	private void putRelacionEquipoDosier(DosierJPA dosierJPA ,List<InputDosierEquipoDTO> equipos) {		
 		// Se crea un nuevo dosier
-		for (InputDosierEquipoDTO equipo: equipos) {
-			
+		for (InputDosierEquipoDTO equipo: equipos) {			
 			DosierEquipoJPA dosierEquipoJPA = new DosierEquipoJPA();
 			
 			dosierEquipoJPA.setNumDosier(dosierJPA.getId().getNumDosier());
