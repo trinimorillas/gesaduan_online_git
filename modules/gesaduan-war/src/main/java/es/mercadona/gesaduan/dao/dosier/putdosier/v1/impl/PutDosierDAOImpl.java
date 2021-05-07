@@ -176,7 +176,7 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 		try {			
 			DosierPkJPA dosierPk = null;			
 			
-			String select = "SELECT TO_NUMBER(TXT_VALOR)+1, TO_CHAR(SYSDATE, 'YYYY') FROM C_VARIABLE WHERE COD_V_VARIABLE = 'NUM_DOSIER'";
+			String select = "SELECT TO_NUMBER(TXT_VALOR), TO_CHAR(SYSDATE, 'YYYY') FROM C_VARIABLE WHERE COD_V_VARIABLE = 'NUM_DOSIER'";
 
 			final Query query = getEntityManager().createNativeQuery(select);
 			@SuppressWarnings("unchecked")
@@ -200,14 +200,13 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 	
 	@Transactional	
 	@Override
-	public void updateNumDosier(Long lastNumDosier) {		
+	public void updateNumDosier() {		
 		try {			
 			StringBuilder update = new StringBuilder();
 		
-			update.append("UPDATE C_VARIABLE SET TXT_VALOR = ?lastNumDosier WHERE COD_V_VARIABLE = 'NUM_DOSIER' ");
+			update.append("UPDATE C_VARIABLE SET TXT_VALOR = TO_CHAR(TO_NUMBER(TXT_VALOR)+1) WHERE COD_V_VARIABLE = 'NUM_DOSIER' ");
 					
 			final Query query = getEntityManager().createNativeQuery(update.toString());
-			query.setParameter("lastNumDosier", lastNumDosier);
 			query.executeUpdate();			
 		} catch(Exception ex) {
 			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "updateNumDosier", ex.getClass().getSimpleName(), ex.getMessage());	
@@ -567,7 +566,7 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 			sql.append("AND DVL.NUM_ANYO = DV.NUM_ANYO AND DVL.COD_N_VERSION = DV.COD_N_VERSION) ");
 			sql.append("INNER JOIN D_PRODUCTO_R P ON (P.COD_N_PRODUCTO = DVL.COD_N_MERCA) ");
 			sql.append("INNER JOIN S_TARIC_PRODUCTO TP ON (TP.COD_N_PRODUCTO = DVL.COD_N_MERCA) ");
-			sql.append("INNER JOIN D_CODIGO_TARIC CT ON CT.COD_N_TARIC = TP.COD_N_TARIC ");
+			sql.append("INNER JOIN D_CODIGO_TARIC CT ON (CT.COD_N_TARIC = TP.COD_N_TARIC) ");
 			sql.append("LEFT JOIN S_REA_PRODUCTO REA ON (REA.COD_N_PRODUCTO = DVL.COD_N_MERCA) ");
 			sql.append("WHERE DV.COD_V_EXPEDICION IS NULL ");
 			sql.append("AND DV.NUM_DOSIER = ?numDosier ");

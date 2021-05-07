@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 import es.mercadona.gesaduan.business.dosier.putdosier.v1.PutDosierService;
 import es.mercadona.gesaduan.dao.dosier.putdosier.v1.PutDosierDAO;
@@ -24,7 +25,7 @@ public class PutDosierServiceImpl implements PutDosierService {
 	@Inject
 	private PutDosierDAO putDosierDao;
 	
-	
+	@Transactional
 	@Override
 	public OutputDosierPutDTO putDosier(InputDatosPutDTO input) {
 		
@@ -35,10 +36,11 @@ public class PutDosierServiceImpl implements PutDosierService {
 		String codigoUsario = input.getMetadatos().getCodigoUsuario();						
 		
 		for (InputDosierDTO dosier: dosieres) {
-			Long nuevoNumDosier = null;
+			
+			// ACtualiza y obtiene un nuevo numero de dosier
+			putDosierDao.updateNumDosier();
 			DosierPkJPA dosierPk = putDosierDao.getNewDosierPk();
 			
-			nuevoNumDosier = dosierPk.getNumDosier();
 			DosierJPA dosierJPA = new DosierJPA();
 			dosierJPA.setId(dosierPk);
 			
@@ -61,13 +63,7 @@ public class PutDosierServiceImpl implements PutDosierService {
 			listaDosieres.add(dosierOutPut);
 			
 			putDosierDao.validarFacturas(dosierPk, input.getMetadatos().getCodigoUsuario());
-			
-			dosierPk.setNumDosier(dosierPk.getNumDosier() + 1);
-			
-			// Actualiza C_VARIABLE con el último numero de dosier
-			if (nuevoNumDosier != null) {
-				putDosierDao.updateNumDosier(nuevoNumDosier);
-			}
+						
 		}
 		
 		if (listaDosieres.isEmpty()) listaDosieres = null;
