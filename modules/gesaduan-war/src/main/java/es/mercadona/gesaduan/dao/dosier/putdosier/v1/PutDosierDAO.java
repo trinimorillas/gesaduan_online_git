@@ -12,7 +12,7 @@ public interface PutDosierDAO {
 	public void crearRelacionDosierContenedor(DosierContenedorJPA dosierContenedorJPA);		
 	public void crearRelacionDosierContenedorDeEquipo(DosierContenedorJPA dosierContenedorJPA);
 	public DosierPkJPA getNewDosierPk();
-	public void updateNumDosier(Long lastNumDosier);
+	public void updateNumDosier();
 	public Integer getNumCategorias(DosierEquipoJPA dosierEquipo);
 	public void crearFacturas(DosierEquipoJPA dosierEquipo);
 	public void actualizarContenedores(DosierEquipoJPA dosierEquipo);
