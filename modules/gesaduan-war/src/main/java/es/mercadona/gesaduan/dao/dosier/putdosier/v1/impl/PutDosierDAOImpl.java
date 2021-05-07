@@ -570,13 +570,13 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 			sql.append("LEFT JOIN S_REA_PRODUCTO REA ON (REA.COD_N_PRODUCTO = DVL.COD_N_MERCA) ");
 			sql.append("WHERE DV.COD_V_EXPEDICION IS NULL ");
 			sql.append("AND DV.NUM_DOSIER = ?numDosier ");
-			sql.append("AND DV.NUM_ANYO_DOSIER = ?anyoDosier ");
+			sql.append("AND DV.NUM_ANYO_DOSIER = ?anyoDosier ");			
 			sql.append("AND (REA.COD_V_REA IS NOT NULL OR CT.MCA_FITO = 'S') ");
 			sql.append("AND P.COD_V_PAIS_ISO_ALFA2 IS NULL ");
 			sql.append("AND NOT EXISTS ( ");
 			sql.append("SELECT 1 ");
 			sql.append("FROM S_NOTIF_ALERTA_EXPED_DV NA ");
-			sql.append("WHERE NA.COD_V_ELEMENTO = DVL.COD_N_MERCA ");
+			sql.append("WHERE NA.COD_V_ELEMENTO = TO_CHAR(DVL.COD_N_MERCA) ");
 			sql.append("AND NA.COD_N_DECLARACION_VALOR = DV.COD_N_DECLARACION_VALOR ");
 			sql.append("AND NA.NUM_ANYO = DV.NUM_ANYO ");
 			sql.append("AND NA.COD_N_VERSION = DV.COD_N_VERSION ");
