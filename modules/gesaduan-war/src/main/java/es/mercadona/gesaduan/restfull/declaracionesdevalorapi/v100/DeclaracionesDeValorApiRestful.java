@@ -31,25 +31,26 @@ import es.mercadona.fwk.core.io.exceptions.IllegalResourceNameException;
 import es.mercadona.fwk.core.io.exceptions.ResourceNotFoundException;
 import es.mercadona.fwk.core.web.BoPage;
 import es.mercadona.fwk.restful.service.annotate.RESTful;
-import es.mercadona.gesaduan.business.declaracionesdevalor.getdvdetalle.v1.GetDVDetalleService;
 import es.mercadona.gesaduan.business.declaracionesdevalor.getdvsumario.v1.GetDVSumarioService;
 import es.mercadona.gesaduan.business.declaracionesdevalor.postdv.v1.PostDVService;
 import es.mercadona.gesaduan.business.declaracionesdevalor.putdvestadodescarga.v1.PutDVEstadoDescargaService;
 import es.mercadona.gesaduan.business.declaracionesdevalorapi.getdvdocumento.v1.GetDVDocumentoService;
+import es.mercadona.gesaduan.business.declaracionesdevalorapi.getvaluedeclarationdetail.v1.GetValueDeclarationDetailService;
 import es.mercadona.gesaduan.business.declaracionesdevalorapi.putfacturaconfirmadescarga.v1.PutFacturaConfirmaDescargaService;
+import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dto.common.error.ErrorDTO;
 import es.mercadona.gesaduan.dto.common.error.OutputResponseErrorDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvdetalle.v1.InputDeclaracionesDeValorDetalleDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvdetalle.v1.restfull.OutputDeclaracionesDeValorDetalleDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvsumario.v1.InputDeclaracionesDeValorDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvsumario.v1.restfull.OutputDeclaracionesDeValorDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.InputDeclaracionesDeValorDocumentoDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocCabDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvaluedeclarationdetail.v1.InputValueDeclarationDetailDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvaluedeclarationdetail.v1.restfull.OutputValueDeclarationDetailDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.putfacturaconfirmadescarga.v1.InputPutFacturaConfirmaDescargaDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.putfacturaconfirmadescarga.v1.restfull.OutputPutFacturaConfirmaDescargaDTO;
 import es.mercadona.gesaduan.exception.EnumGesaduanException;
 import es.mercadona.gesaduan.exception.GesaduanException;
-import es.mercadona.gesaduan.common.Constantes;
 
 @RESTful
 @Path("logistica/gestion-aduanas/v2.0")
@@ -60,7 +61,7 @@ public class DeclaracionesDeValorApiRestful {
 	private org.slf4j.Logger logger;
 
 	@Inject
-	private GetDVDetalleService getDVDetalleService;
+	private GetValueDeclarationDetailService getValueDeclarationDetailService;
 	@Inject
 	private ResourceService resourceService;
 	@Inject
@@ -188,36 +189,31 @@ public class DeclaracionesDeValorApiRestful {
 	}
 
 	@GET
-	@Path("declaraciones-valor/{codigoDeclaracion}-{anyo}-{version}")
+	@Path("declaraciones-valor/{valueDeclarationCode}")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getDeclaracionDeValorDetalle(@NotNull @PathParam("codigoDeclaracion") Integer codigoDeclaracion,
-			@NotNull @PathParam("anyo") Integer anyo, @NotNull @PathParam("version") Integer version,
-			@NotNull @DefaultValue("es_ES") @QueryParam("locale") String locale) {
-
-		OutputDeclaracionesDeValorDetalleDTO declaracionesPorCodigo;
+	public Response getDeclaracionDeValorDetalle(@NotNull @PathParam("valueDeclarationCode") String valueDeclaration,
+			@NotNull @DefaultValue("es_ES") @QueryParam("localeId") String localeId,
+			@NotNull @QueryParam("userCode") String userCode) {
+		OutputValueDeclarationDetailDTO result;
 
 		try {
-			InputDeclaracionesDeValorDetalleDTO input = new InputDeclaracionesDeValorDetalleDTO();
+			InputValueDeclarationDetailDTO input = new InputValueDeclarationDetailDTO();
+			input.setValueDeclarationCode(valueDeclaration);
+			input.setLocaleId(localeId);
 
-			input.setCodigoDeclaracion(codigoDeclaracion);
-			input.setAnyo(anyo);
-			input.setVersion(version);
+			result = getValueDeclarationDetailService.getValueDeclarationDetail(input, null);
 
-			declaracionesPorCodigo = getDVDetalleService.getDeclaracionesDeValorPorCodigoList(input, null);
-
-			if (declaracionesPorCodigo == null) {
-
+			if (result == null) {
 				OutputResponseErrorDTO error = new OutputResponseErrorDTO();
 				ErrorDTO errorDesc = new ErrorDTO();
 				errorDesc.setCodigo("400");
 				errorDesc.setDescripcion("La Declaración de Valor no existe.");
-
 				error.setError(errorDesc);
-
+				
 				return Response.status(Status.BAD_REQUEST).entity(error).build();
 			} else {
-				return Response.ok(declaracionesPorCodigo, MediaType.APPLICATION_JSON).build();
+				return Response.ok(result, MediaType.APPLICATION_JSON).build();
 			}
 
 		} catch (Exception e) {
