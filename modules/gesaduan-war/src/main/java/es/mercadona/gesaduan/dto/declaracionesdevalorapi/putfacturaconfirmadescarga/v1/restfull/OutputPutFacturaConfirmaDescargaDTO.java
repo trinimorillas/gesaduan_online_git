@@ -9,14 +9,14 @@ public class OutputPutFacturaConfirmaDescargaDTO extends AbstractDTO implements 
 
 	private static final long serialVersionUID = 1L;
 
-	private Map<?, ?> metadatos;
+	private Map<String,String> metadatos;
 	private OutputDatosDTO datos;
 
-	public Map<?, ?> getMetadatos() {
+	public Map<String, String> getMetadatos() {
 		return metadatos;
 	}
 
-	public void setMetadatos(Map<?, ?> metadatos) {
+	public void setMetadatos(Map<String,String> metadatos) {
 		this.metadatos = metadatos;
 	}
 

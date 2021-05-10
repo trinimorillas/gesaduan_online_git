@@ -46,79 +46,79 @@ public class DVDocumentoCSVServiceImpl implements DVDocumentoCSVService {
 	private String preparaCabeceraDocumento(OutputDeclaracionesDeValorDocCabDTO outDVDocumentoDTO) {
 		
 		// prepara el informe
-		StringBuilder cabeceraStr = new StringBuilder();
+		StringBuilder cabeceraStrDV = new StringBuilder();
 		
 		// prepara cabecera
-		cabeceraStr.append("CAB").append("|");
-		cabeceraStr.append(outDVDocumentoDTO.getCodigoDeclaracion()).append("|");
-		cabeceraStr.append(outDVDocumentoDTO.getAnyoDeclaracion()).append("|");
-		cabeceraStr.append(outDVDocumentoDTO.getVersionDeclaracion()).append("|");
-		cabeceraStr.append(outDVDocumentoDTO.getFechaDeclaracion()).append("|");
-		cabeceraStr.append(outDVDocumentoDTO.getCodigoDeclaracion()).append("|"); /* nunmero de pedido ??? */
-		cabeceraStr.append(outDVDocumentoDTO.getNombreOrigen()).append("|");
-		cabeceraStr.append(outDVDocumentoDTO.getProvinciaOrigen()).append("|");
-		cabeceraStr.append(outDVDocumentoDTO.getCondicionesEntrega()).append("|");
-		cabeceraStr.append(outDVDocumentoDTO.getExportadorNombre()).append("|");		
-		cabeceraStr.append(outDVDocumentoDTO.getExportadorDireccion()).append("|");
-		cabeceraStr.append(outDVDocumentoDTO.getExportadorCP()).append("|");
-		cabeceraStr.append(outDVDocumentoDTO.getExportadorPoblacion()).append("|");
-		cabeceraStr.append(outDVDocumentoDTO.getExportadorProvincia()).append("|");
-		cabeceraStr.append(outDVDocumentoDTO.getExportadorNIF()).append("|");
-		cabeceraStr.append(outDVDocumentoDTO.getImportadorNombre()).append("|");
-		cabeceraStr.append(outDVDocumentoDTO.getImportadorDireccion()).append("|");
-		cabeceraStr.append(outDVDocumentoDTO.getImportadorCP()).append("|");
-		cabeceraStr.append(outDVDocumentoDTO.getImportadorPoblacion()).append("|");
-		cabeceraStr.append(outDVDocumentoDTO.getImportadorProvincia()).append("|");				
-		cabeceraStr.append(outDVDocumentoDTO.getImportadorNIF()).append("|");
-		cabeceraStr.append(outDVDocumentoDTO.getTxtInfoREA()).append("|");
-		cabeceraStr.append(outDVDocumentoDTO.getTxtInfoLPC()).append("|");				
-		cabeceraStr.append(outDVDocumentoDTO.getTxtInfoGeneral()).append("|");
-		cabeceraStr.append("F").append("|");
-		cabeceraStr.append(outDVDocumentoDTO.getNumDosier()).append("|");
-		cabeceraStr.append(outDVDocumentoDTO.getAnyoDosier()).append("|");
-		cabeceraStr.append(outDVDocumentoDTO.getFechaDosier()).append("\r\n");		
+		cabeceraStrDV.append("CAB").append("|");
+		cabeceraStrDV.append(outDVDocumentoDTO.getCodigoDeclaracion()).append("|");
+		cabeceraStrDV.append(outDVDocumentoDTO.getAnyoDeclaracion()).append("|");
+		cabeceraStrDV.append(outDVDocumentoDTO.getVersionDeclaracion()).append("|");
+		cabeceraStrDV.append(outDVDocumentoDTO.getFechaDeclaracion()).append("|");
+		cabeceraStrDV.append(outDVDocumentoDTO.getCodigoDeclaracion()).append("|"); /* nunmero de pedido ??? */
+		cabeceraStrDV.append(outDVDocumentoDTO.getNombreOrigen()).append("|");
+		cabeceraStrDV.append(outDVDocumentoDTO.getProvinciaOrigen()).append("|");
+		cabeceraStrDV.append(outDVDocumentoDTO.getCondicionesEntrega()).append("|");
+		cabeceraStrDV.append(outDVDocumentoDTO.getExportadorNombre()).append("|");		
+		cabeceraStrDV.append(outDVDocumentoDTO.getExportadorDireccion()).append("|");
+		cabeceraStrDV.append(outDVDocumentoDTO.getExportadorCP()).append("|");
+		cabeceraStrDV.append(outDVDocumentoDTO.getExportadorPoblacion()).append("|");
+		cabeceraStrDV.append(outDVDocumentoDTO.getExportadorProvincia()).append("|");
+		cabeceraStrDV.append(outDVDocumentoDTO.getExportadorNIF()).append("|");
+		cabeceraStrDV.append(outDVDocumentoDTO.getImportadorNombre()).append("|");
+		cabeceraStrDV.append(outDVDocumentoDTO.getImportadorDireccion()).append("|");
+		cabeceraStrDV.append(outDVDocumentoDTO.getImportadorCP()).append("|");
+		cabeceraStrDV.append(outDVDocumentoDTO.getImportadorPoblacion()).append("|");
+		cabeceraStrDV.append(outDVDocumentoDTO.getImportadorProvincia()).append("|");				
+		cabeceraStrDV.append(outDVDocumentoDTO.getImportadorNIF()).append("|");
+		cabeceraStrDV.append(outDVDocumentoDTO.getTxtInfoREA()).append("|");
+		cabeceraStrDV.append(outDVDocumentoDTO.getTxtInfoLPC()).append("|");				
+		cabeceraStrDV.append(outDVDocumentoDTO.getTxtInfoGeneral()).append("|");
+		cabeceraStrDV.append("F").append("|");
+		cabeceraStrDV.append(outDVDocumentoDTO.getNumDosier()).append("|");
+		cabeceraStrDV.append(outDVDocumentoDTO.getAnyoDosier()).append("|");
+		cabeceraStrDV.append(outDVDocumentoDTO.getFechaDosier()).append("\r\n");		
 		
-		return cabeceraStr.toString();
+		return cabeceraStrDV.toString();
 
 	}		
 	
 	private String preparaLineasDocumento(OutputDeclaracionesDeValorDocCabDTO outDVDocumentoDTO) {
 		
 		// prepara el informe
-		StringBuilder lineasStr = new StringBuilder();
+		StringBuilder lineasStrDV = new StringBuilder();
 		
 		// prepara las lineas
 		if (!outDVDocumentoDTO.getLineas().isEmpty()) {
 			
 			for (OutputDeclaracionesDeValorDocLinDTO linea : outDVDocumentoDTO.getLineas()) {
 				
-				lineasStr.append("LIN").append("|");
-				lineasStr.append(linea.getCodigoDeclaracion()).append("|");				
-				lineasStr.append(linea.getAnyoDeclaracion()).append("|");
-				lineasStr.append(linea.getVersionDeclaracion()).append("|");
-				lineasStr.append(linea.getTipoLinea()).append("|");
-				lineasStr.append(linea.getCodigoTaric()).append("|");
-				lineasStr.append(linea.getCodigoProducto()).append("|");
-				lineasStr.append(linea.getNombreProducto()).append("|");
-				lineasStr.append(linea.getMarca()).append("|");
-				lineasStr.append(linea.getCodigoRea()).append("|");
-				lineasStr.append(linea.getPaisOrigen()).append("|");
-				lineasStr.append(linea.getLpc()).append("|");
-				lineasStr.append(linea.getNumeroBultos()).append("|");
-				lineasStr.append(linea.getTipoBultos()).append("|");
-				lineasStr.append(linea.getPesoBruto()).append("|");
-				lineasStr.append(linea.getCantidad()).append("|");
-				lineasStr.append(linea.getVolumen()).append("|");
-				lineasStr.append(linea.getAlcohol()).append("|");
-				lineasStr.append(linea.getPlato()).append("|");
-				lineasStr.append(linea.getPrecio()).append("|");
-				lineasStr.append(linea.getImporte()).append("\r\n");				
+				lineasStrDV.append("LIN").append("|");
+				lineasStrDV.append(linea.getCodigoDeclaracion()).append("|");				
+				lineasStrDV.append(linea.getAnyoDeclaracion()).append("|");
+				lineasStrDV.append(linea.getVersionDeclaracion()).append("|");
+				lineasStrDV.append(linea.getTipoLinea()).append("|");
+				lineasStrDV.append(linea.getCodigoTaric()).append("|");
+				lineasStrDV.append(linea.getCodigoProducto()).append("|");
+				lineasStrDV.append(linea.getNombreProducto()).append("|");
+				lineasStrDV.append(linea.getMarca()).append("|");
+				lineasStrDV.append(linea.getCodigoRea()).append("|");
+				lineasStrDV.append(linea.getPaisOrigen()).append("|");
+				lineasStrDV.append(linea.getLpc()).append("|");
+				lineasStrDV.append(linea.getNumeroBultos()).append("|");
+				lineasStrDV.append(linea.getTipoBultos()).append("|");
+				lineasStrDV.append(linea.getPesoBruto()).append("|");
+				lineasStrDV.append(linea.getCantidad()).append("|");
+				lineasStrDV.append(linea.getVolumen()).append("|");
+				lineasStrDV.append(linea.getAlcohol()).append("|");
+				lineasStrDV.append(linea.getPlato()).append("|");
+				lineasStrDV.append(linea.getPrecio()).append("|");
+				lineasStrDV.append(linea.getImporte()).append("\r\n");				
 				
 			}
 			
 		}
 		
-		return lineasStr.toString();
+		return lineasStrDV.toString();
 
 	}	
 	
