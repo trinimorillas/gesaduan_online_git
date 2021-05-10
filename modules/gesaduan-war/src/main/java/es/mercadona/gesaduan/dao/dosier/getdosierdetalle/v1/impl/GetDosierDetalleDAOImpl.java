@@ -57,13 +57,13 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 			StringBuilder campos = new StringBuilder();	 
 			campos.append("D.NUM_DOSIER, "); 
 			campos.append("D.NUM_ANYO,  "); 
-			campos.append("TO_CHAR(D.FEC_DT_CREACION,'DD/MM/YYYY - HH24:MI'), "); 
+			campos.append("TO_CHAR(D.FEC_DT_CREACION, 'DD/MM/YYYY - HH24:MI'), "); 
 			campos.append("D.COD_V_USUARIO_CREACION, "); 
 			campos.append("D.COD_N_ESTADO, "); 
 			campos.append("ED.TXT_NOMBRE_ESTADO, ");
 			campos.append("D.MCA_ERROR, ");
-			campos.append("D.FEC_DT_DESCARGA_EXPORTADOR, ");
-			campos.append("D.FEC_DT_DESCARGA_IMPORTADOR ");
+			campos.append("TO_CHAR(D.FEC_DT_DESCARGA_EXPORTADOR, 'DD/MM/YYYY - HH24:MI'), ");
+			campos.append("TO_CHAR(D.FEC_DT_DESCARGA_IMPORTADOR, 'DD/MM/YYYY - HH24:MI') ");
 			StringBuilder from = new StringBuilder();	 
 			from.append("FROM D_DOSIER D "); 
 			from.append("JOIN D_ESTADO_DOSIER ED ON (ED.COD_N_ESTADO = D.COD_N_ESTADO) "); 
@@ -197,7 +197,7 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 
 			final StringBuilder sql = new StringBuilder();
 			
-			sql.append("SELECT DISTINCT F.COD_N_DECLARACION_VALOR, F.NUM_ANYO, F.MCA_DV_CORRECTA, ");
+			sql.append("SELECT DISTINCT F.COD_N_DECLARACION_VALOR, F.NUM_ANYO, F.COD_N_VERSION, F.MCA_DV_CORRECTA, ");
 			sql.append("DECODE(F.COD_V_EXPEDICION, NULL, TO_CHAR(F.FEC_DT_EXPEDICION, 'DD/MM/YYYY'), TO_CHAR(F.FEC_D_ALBARAN, 'DD/MM/YYYY')) AS FEC_DT_EXPEDICION, ");
 			sql.append("DECODE(F.COD_N_PROVEEDOR, NULL, NULL, F.COD_N_PROVEEDOR) AS CODIGO_ORIGEN, ");
 			sql.append("DECODE(P.TXT_RAZON_SOCIAL, NULL, BL.TXT_NOMBRE, P.TXT_RAZON_SOCIAL) AS NOMBRE_ORIGEN, ");
@@ -251,12 +251,13 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 					
 					if (tmp[0] != null) dv.setCodigoDV(Long.parseLong(String.valueOf(tmp[0])));
 					if (tmp[1] != null) dv.setAnyoDV(Integer.parseInt(String.valueOf(tmp[1])));
-					if (tmp[2] != null) dv.setEsDVCorrecta(String.valueOf(tmp[2]));
-					if (tmp[3] != null) dv.setFechaExpedicion(String.valueOf(tmp[3]));					
-					if (tmp[4] != null) origen.setCodigoOrigen(String.valueOf(tmp[4]));
-					if (tmp[5] != null) origen.setNombreOrigen(String.valueOf(tmp[5]));
-					if (tmp[6] != null) origen.setProvinciaOrigen(String.valueOf(tmp[6]));
-					if (tmp[7] != null) origen.setTipoOrigen(String.valueOf(tmp[7]));
+					if (tmp[2] != null) dv.setVersionDV(Integer.parseInt(String.valueOf(tmp[2])));
+					if (tmp[3] != null) dv.setEsDVCorrecta(String.valueOf(tmp[3]));
+					if (tmp[4] != null) dv.setFechaExpedicion(String.valueOf(tmp[4]));					
+					if (tmp[5] != null) origen.setCodigoOrigen(String.valueOf(tmp[5]));
+					if (tmp[6] != null) origen.setNombreOrigen(String.valueOf(tmp[6]));
+					if (tmp[7] != null) origen.setProvinciaOrigen(String.valueOf(tmp[7]));
+					if (tmp[8] != null) origen.setTipoOrigen(String.valueOf(tmp[8]));
 					dv.setOrigen(origen);
 					listaDV.add(dv);
 					
