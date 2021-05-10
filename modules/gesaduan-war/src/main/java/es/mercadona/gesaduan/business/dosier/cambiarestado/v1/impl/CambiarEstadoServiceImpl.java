@@ -26,8 +26,10 @@ public class CambiarEstadoServiceImpl implements CambiarEstadoService {
 		dosierJPA.setId(dosierPkJPA);
 		dosierJPA.setUsuarioModificacion(input.getMetadatos().getCodigoUsuario());
 
-		// Generar fichero PDF
-		cambiarEstadoDao.generarPDF(dosierJPA);
+		Boolean tieneErrores = cambiarEstadoDao.tieneErrorDosier(dosierJPA);
+		if (tieneErrores) { // Generar fichero PDF
+			cambiarEstadoDao.generarPDF(dosierJPA);
+		}
 		
 		// Borrar alertas y notificaciones
 		cambiarEstadoDao.eliminarAlertas(dosierJPA);
@@ -41,8 +43,9 @@ public class CambiarEstadoServiceImpl implements CambiarEstadoService {
 		// Elimina asociación con los equipos
 		// cambiarEstadoDao.eliminaRelacionEquipo(dosierJPA);
 		
-		// Insertar alerta dosier inválido
-		cambiarEstadoDao.insertarAlerta(dosierJPA, input.getMetadatos().getCodigoUsuario());
+		if (tieneErrores) {// Insertar alerta dosier inválido
+			cambiarEstadoDao.insertarAlerta(dosierJPA, input.getMetadatos().getCodigoUsuario());
+		}
 
 		// Cambia el estado del dosier
 		return cambiarEstadoDao.cambiarEstado(dosierJPA);

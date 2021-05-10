@@ -47,6 +47,26 @@ public class CambiarEstadoDAOImpl extends DaoBaseImpl<Long, DosierJPA> implement
 	
 	@Transactional
 	@Override
+	public Boolean tieneErrorDosier(DosierJPA dosierJPA) {		
+		try {
+			StringBuilder sql = new StringBuilder();
+			sql.append("SELECT MCA_ERROR FROM D_DOSIER ");
+			sql.append("WHERE NUM_DOSIER = ?numDosier AND ");
+			sql.append("NUM_ANYO = ?anyoDosier");
+
+			final Query query = getEntityManager().createNativeQuery(sql.toString());
+			query.setParameter("numDosier", dosierJPA.getId().getNumDosier());
+			query.setParameter("anyoDosier", dosierJPA.getId().getAnyoDosier());
+			
+			return "S".equals(query.getSingleResult());
+		} catch (Exception e) {
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, "comprobarDosierError", e.getClass().getSimpleName(), e.getMessage());
+			throw new ApplicationException(e.getMessage());
+		}
+	}
+	
+	@Transactional
+	@Override
 	public void generarPDF(DosierJPA dosierJPA) {
 		try {
 			// Prepara llamada al servicio para crear el fichero
@@ -239,8 +259,10 @@ public class CambiarEstadoDAOImpl extends DaoBaseImpl<Long, DosierJPA> implement
 		eliminarAlertasFacturas(dosierJPA);
 		eliminarAlertasUsuarios(dosierJPA);
 		eliminarAlertasGenerales(dosierJPA);
-		eliminarCabeceraFacturas(dosierJPA);
 		eliminarLineasFacturas(dosierJPA);
+		eliminarRelacionPedidos(dosierJPA);
+		eliminarContenedores(dosierJPA);
+		eliminarCabeceraFacturas(dosierJPA);
 	}
 	
 	@Transactional
@@ -351,7 +373,7 @@ public class CambiarEstadoDAOImpl extends DaoBaseImpl<Long, DosierJPA> implement
 	
 	@Transactional
 	@Override
-	public void eliminarCabeceraFacturas(DosierJPA dosierJPA) {
+	public void eliminarLineasFacturas(DosierJPA dosierJPA) {
 		StringBuilder delete = new StringBuilder();
 		
 		try {
@@ -369,14 +391,58 @@ public class CambiarEstadoDAOImpl extends DaoBaseImpl<Long, DosierJPA> implement
 			query.setParameter("anyoDosier", dosierJPA.getId().getAnyoDosier());
 			query.executeUpdate();
 		} catch (Exception e) {
-			this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, "eliminarCabeceraFacturas", e.getClass().getSimpleName(), e.getMessage());
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, "eliminarLineasFacturas", e.getClass().getSimpleName(), e.getMessage());
 			throw new ApplicationException(e.getMessage());
 		}
 	}
 	
 	@Transactional
 	@Override
-	public void eliminarLineasFacturas(DosierJPA dosierJPA) {
+	public void eliminarRelacionPedidos(DosierJPA dosierJPA) {
+		StringBuilder delete = new StringBuilder();
+		
+		try {
+			delete.append("DELETE FROM S_DECLARACION_VALOR_PEDIDO DVP ");
+			delete.append("WHERE EXISTS (");
+			delete.append("SELECT 1 ");
+			delete.append("FROM O_DECLARACION_VALOR_CAB DVC ");
+			delete.append("WHERE DVC.COD_N_DECLARACION_VALOR = DVP.COD_N_DECLARACION_VALOR AND ");
+			delete.append("DVC.NUM_ANYO = DVP.NUM_ANYO_DV ");
+			delete.append("AND DVC.NUM_DOSIER = ?numDosier AND DVC.NUM_ANYO_DOSIER = ?anyoDosier)");
+
+			final Query query = getEntityManager().createNativeQuery(delete.toString());
+			query.setParameter("numDosier", dosierJPA.getId().getNumDosier());
+			query.setParameter("anyoDosier", dosierJPA.getId().getAnyoDosier());
+			query.executeUpdate();
+		} catch (Exception e) {
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, "eliminarRelacionPedidos", e.getClass().getSimpleName(), e.getMessage());
+			throw new ApplicationException(e.getMessage());
+		}
+	}
+	
+	@Transactional
+	@Override
+	public void eliminarContenedores(DosierJPA dosierJPA) {
+		StringBuilder delete = new StringBuilder();
+		
+		try {
+			delete.append("DELETE FROM O_CONTENEDOR_EXPEDIDO ");
+		    delete.append("WHERE NUM_DOSIER = ?numDosier AND ");
+		    delete.append("NUM_ANYO = ?anyoDosier");
+
+			final Query query = getEntityManager().createNativeQuery(delete.toString());
+			query.setParameter("numDosier", dosierJPA.getId().getNumDosier());
+			query.setParameter("anyoDosier", dosierJPA.getId().getAnyoDosier());
+			query.executeUpdate();
+		} catch (Exception e) {
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, "eliminarContenedores", e.getClass().getSimpleName(), e.getMessage());
+			throw new ApplicationException(e.getMessage());
+		}
+	}
+	
+	@Transactional
+	@Override
+	public void eliminarCabeceraFacturas(DosierJPA dosierJPA) {
 		StringBuilder delete = new StringBuilder();
 		
 		try {
@@ -389,7 +455,7 @@ public class CambiarEstadoDAOImpl extends DaoBaseImpl<Long, DosierJPA> implement
 			query.setParameter("anyoDosier", dosierJPA.getId().getAnyoDosier());
 			query.executeUpdate();
 		} catch (Exception e) {
-			this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, "eliminarLineasFacturas", e.getClass().getSimpleName(), e.getMessage());
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, "eliminarCabeceraFacturas", e.getClass().getSimpleName(), e.getMessage());
 			throw new ApplicationException(e.getMessage());
 		}
 	}
