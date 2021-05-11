@@ -21,3 +21,9 @@ deploy.cmd
 
 *.jar
 hs_err_pid*
+
+# Plantillas #
+Informe Aduanas.xlsx
+mercadona.png
+Expedicion.xlsm
+PlantillaFactura_v1.0.2.xlsm
