@@ -14,6 +14,7 @@ public interface CambiarEstadoDAO {
 	public void eliminarAlertasFacturasDosier(DosierJPA dosierJPA);
 	public void eliminarAlertasAsociacionContactos(DosierJPA dosierJPA);
 	public void eliminarAlertasFacturas(DosierJPA dosierJPA);
+	public void eliminarContactoAlertas(DosierJPA dosierJPA);
 	public void eliminarAlertasUsuarios(DosierJPA dosierJPA);
 	public void eliminarAlertasGenerales(DosierJPA dosierJPA);
 	public void eliminarLineasFacturas(DosierJPA dosierJPA);
