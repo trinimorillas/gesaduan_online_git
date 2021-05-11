@@ -257,6 +257,7 @@ public class CambiarEstadoDAOImpl extends DaoBaseImpl<Long, DosierJPA> implement
 		eliminarAlertasFacturasDosier(dosierJPA);
 		eliminarAlertasAsociacionContactos(dosierJPA);
 		eliminarAlertasFacturas(dosierJPA);
+		eliminarContactoAlertas(dosierJPA);
 		eliminarAlertasUsuarios(dosierJPA);
 		eliminarAlertasGenerales(dosierJPA);
 		eliminarLineasFacturas(dosierJPA);
@@ -327,6 +328,27 @@ public class CambiarEstadoDAOImpl extends DaoBaseImpl<Long, DosierJPA> implement
 			query.executeUpdate();
 		} catch (Exception e) {
 			this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, "eliminarAlertasFacturas", e.getClass().getSimpleName(), e.getMessage());
+			throw new ApplicationException(e.getMessage());
+		}
+	}
+	
+	@Transactional
+	@Override
+	public void eliminarContactoAlertas(DosierJPA dosierJPA) {
+		StringBuilder delete = new StringBuilder();
+		
+		try {
+			delete.append("DELETE FROM S_CONTACTO_NOTIFICACION_ALERTA SCN ");
+			delete.append("WHERE (SCN.COD_N_ALERTA, SCN.COD_V_ELEMENTO) IN (");
+			delete.append("SELECT SNA.COD_N_ALERTA, SNA.COD_V_ELEMENTO FROM S_NOTIFICACION_ALERTA SNA ");
+			delete.append("WHERE SNA.COD_V_ELEMENTO = SUBSTR(?anyoDosier,3,2)||'-'||LPAD(?numDosier,5,'0') AND SNA.COD_N_ALERTA <> 47)");
+
+			final Query query = getEntityManager().createNativeQuery(delete.toString());
+			query.setParameter("numDosier", dosierJPA.getId().getNumDosier());
+			query.setParameter("anyoDosier", dosierJPA.getId().getAnyoDosier());
+			query.executeUpdate();
+		} catch (Exception e) {
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, "eliminarContactoAlertas", e.getClass().getSimpleName(), e.getMessage());
 			throw new ApplicationException(e.getMessage());
 		}
 	}
@@ -423,14 +445,15 @@ public class CambiarEstadoDAOImpl extends DaoBaseImpl<Long, DosierJPA> implement
 	@Transactional
 	@Override
 	public void eliminarContenedores(DosierJPA dosierJPA) {
-		StringBuilder delete = new StringBuilder();
+		StringBuilder update = new StringBuilder();
 		
 		try {
-			delete.append("DELETE FROM O_CONTENEDOR_EXPEDIDO ");
-		    delete.append("WHERE NUM_DOSIER = ?numDosier AND ");
-		    delete.append("NUM_ANYO = ?anyoDosier");
+			update.append("UPDATE O_CONTENEDOR_EXPEDIDO ");
+			update.append("SET COD_N_DECLARACION_VALOR = NULL, NUM_ANYO_DV = NULL, COD_N_VERSION_DV = NULL ");
+			update.append("WHERE NUM_DOSIER = ?numDosier AND ");
+			update.append("NUM_ANYO = ?anyoDosier");
 
-			final Query query = getEntityManager().createNativeQuery(delete.toString());
+			final Query query = getEntityManager().createNativeQuery(update.toString());
 			query.setParameter("numDosier", dosierJPA.getId().getNumDosier());
 			query.setParameter("anyoDosier", dosierJPA.getId().getAnyoDosier());
 			query.executeUpdate();
