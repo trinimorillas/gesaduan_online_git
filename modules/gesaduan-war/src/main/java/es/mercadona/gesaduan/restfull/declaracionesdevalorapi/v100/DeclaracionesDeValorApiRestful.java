@@ -32,7 +32,6 @@ import es.mercadona.fwk.core.io.exceptions.IllegalResourceNameException;
 import es.mercadona.fwk.core.io.exceptions.ResourceNotFoundException;
 import es.mercadona.fwk.restful.service.annotate.RESTful;
 import es.mercadona.gesaduan.business.declaracionesdevalor.getdvdetalle.v1.GetDVDetalleService;
-import es.mercadona.gesaduan.business.declaracionesdevalor.getdvsumario.v1.GetDVSumarioService;
 import es.mercadona.gesaduan.business.declaracionesdevalor.postdv.v1.PostDVService;
 import es.mercadona.gesaduan.business.declaracionesdevalor.putdvestadodescarga.v1.PutDVEstadoDescargaService;
 import es.mercadona.gesaduan.business.declaracionesdevalorapi.getdvdocumento.v1.GetDVDocumentoService;
@@ -41,8 +40,6 @@ import es.mercadona.gesaduan.business.declaracionesdevalorapi.putfacturaconfirma
 import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dto.common.error.ErrorDTO;
 import es.mercadona.gesaduan.dto.common.error.OutputResponseErrorDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvdetalle.v1.InputDeclaracionesDeValorDetalleDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvdetalle.v1.restfull.OutputDeclaracionesDeValorDetalleDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.InputDeclaracionesDeValorDocumentoDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocCabDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.InputValueDeclarationSumaryDTO;
@@ -53,7 +50,7 @@ import es.mercadona.gesaduan.exception.EnumGesaduanException;
 import es.mercadona.gesaduan.exception.GesaduanException;
 
 @RESTful
-@Path("logistica/gestion-aduanas/v2.0")
+@Path("logistica/gestion-aduanas/v1.0")
 @RequestScoped
 public class DeclaracionesDeValorApiRestful {
 
