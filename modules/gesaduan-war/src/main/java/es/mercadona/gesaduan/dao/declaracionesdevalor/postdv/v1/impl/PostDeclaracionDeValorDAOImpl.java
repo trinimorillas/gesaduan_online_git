@@ -13,29 +13,39 @@ import javax.transaction.Transactional;
 
 import es.mercadona.fwk.core.exceptions.ApplicationException;
 import es.mercadona.fwk.data.DaoBaseImpl;
+import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dao.declaracionesdevalor.postdv.v1.PostDeclaracionDeValorDAO;
 import es.mercadona.gesaduan.jpa.declaracionesdevalor.postdv.v1.DeclaracionesDeValorPostJPA;
 import es.mercadona.gesaduan.jpa.declaracionesdevalor.postdv.v1.DeclaracionesDeValorPostPK;
 import es.mercadona.gesaduan.jpa.declaracionesdevalor.postdv.v1.LineaDeclaracionJPA;
 
 @Stateless
-public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeValorPostPK, DeclaracionesDeValorPostJPA>
-		implements PostDeclaracionDeValorDAO {
+public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeValorPostPK, DeclaracionesDeValorPostJPA> implements PostDeclaracionDeValorDAO {
+	
+	@Override
+	protected EntityManager getEntityManager() {
+		return this.entityM;
+	}
+
+	@Override
+	public void setEntityClass() {
+		entityClass = DeclaracionesDeValorPostJPA.class;
+	}
 
 	@Inject
 	private org.slf4j.Logger logger;
 
 	@PersistenceContext
 	private EntityManager entityM;
+	
+	private static final String NOMBRE_CLASE = "PostDeclaracionDeValorDAOImpl(GESADUAN)";
 
 	@Override
 	@Transactional
 	public DeclaracionesDeValorPostPK postCabecera(DeclaracionesDeValorPostJPA input) {
-
 		DeclaracionesDeValorPostPK pk = new DeclaracionesDeValorPostPK();
 
 		try {
-
 			input = savePk(input);
 
 			pk.setCodDeclaracionValor(input.getCodDeclaracionValor());
@@ -77,8 +87,6 @@ public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeVa
 					if ("S".equals(dv.getMcaDvCorrecta())) {
 						alertasSolucionadas(input.getCodDeclaracionValor(),input.getAnyo());
 					}
-					
-					// dv.setMcaDvCorrecta("S");
 
 					entityM.merge(dv);
 					entityM.flush();
@@ -99,9 +107,14 @@ public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeVa
 				pk.setVersion(input.getVersion());
 
 			}
+			
+			if (input.getExpedicion() == null) {
+				insertarPedidos(input);
+			}
+			
+			updateContenedor(input);
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}", "PostDeclaracionDeValorDAOImpl(GESADUAN)", "postCabecera",
-					e.getClass().getSimpleName(), e.getMessage());
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "postCabecera", e.getClass().getSimpleName(), e.getMessage());
 			throw new ApplicationException(e.getMessage());
 		}
 
@@ -109,61 +122,86 @@ public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeVa
 
 	}
 
-	@Override
-	protected EntityManager getEntityManager() {
-
-		return this.entityM;
-	}
-
-	@Override
-	public void setEntityClass() {
-		entityClass = DeclaracionesDeValorPostJPA.class;
-
-	}
-
 	private DeclaracionesDeValorPostJPA savePk(DeclaracionesDeValorPostJPA declaracion) {
-
 		if (declaracion.getLineasProductos() != null && !declaracion.getLineasProductos().isEmpty()) {
 			for (LineaDeclaracionJPA linea : declaracion.getLineasProductos()) {
 				linea.setCodigoDv(declaracion);
 			}
 		}
 		return declaracion;
-
 	}
 	
 	@Transactional	
-	private void alertasSolucionadas (Integer codDeclaracionValor,Integer anyo) {
+	private void insertarPedidos (DeclaracionesDeValorPostJPA input) {
+		StringBuilder sql = new StringBuilder();
 		
-		String sql ="";
-		
-		try {
-		
-			sql = "UPDATE S_NOTIF_ALERTA_EXPED_DV " + 
-				  "   SET MCA_RESUELTA = 'S' " + 
-				  " WHERE COD_N_DECLARACION_VALOR = ?codDeclaracionValor " + 
-				  "   AND NUM_ANYO = ?anyo ";	
+		try {		
+			sql.append("INSERT INTO S_DECLARACION_VALOR_PEDIDO (COD_N_DECLARACION_VALOR, NUM_ANYO_DV, COD_N_VERSION_DV, COD_V_PEDIDO, FEC_DT_CREACION, COD_V_APLICACION, COD_V_USUARIO_CREACION) "); 
+			sql.append("SELECT COD_N_DECLARACION_VALOR, NUM_ANYO_DV, ?nuevaVersion, COD_V_PEDIDO, SYSDATE, 'GESADUAN', ?codigoUsuario ");
+			sql.append("FROM S_DECLARACION_VALOR_PEDIDO ");
+			sql.append("WHERE COD_N_DECLARACION_VALOR = ?codDeclaracionValor ");
+			sql.append("AND NUM_ANYO_DV = ?anyo AND COD_N_VERSION_DV = ?versionAntigua");	
 			
-			final Query query = getEntityManager().createNativeQuery(sql);	
-			query.setParameter("codDeclaracionValor", codDeclaracionValor);	
-			query.setParameter("anyo", anyo);	
-			
-			query.executeUpdate();
-		
+			final Query query = getEntityManager().createNativeQuery(sql.toString());	
+			query.setParameter("codDeclaracionValor", input.getCodDeclaracionValor());	
+			query.setParameter("anyo", input.getAnyo());
+			query.setParameter("versionAntigua", input.getVersion());
+			query.setParameter("nuevaVersion", input.getVersion()+1);
+			query.setParameter("codigoUsuario", input.getUsuarioCreacion());
+			query.executeUpdate();		
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}","PostDeclaracionDeValorDAOImpl(GESADUAN)","alertasSolucionadas",e.getClass().getSimpleName(),e.getMessage());	
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "insertarPedidos", e.getClass().getSimpleName(), e.getMessage());	
 			throw new ApplicationException(e.getMessage());
 		}		
+	}
+	
+	@Transactional	
+	private void updateContenedor (DeclaracionesDeValorPostJPA input) {
+		StringBuilder sql = new StringBuilder();
 		
+		try {		
+			sql.append("UPDATE O_CONTENEDOR_EXPEDIDO "); 
+			sql.append("SET COD_N_VERSION_DV = ?nuevaVersion, FEC_D_MODIFICACION = SYSDATE, COD_V_USR_MODIFICACION = ?codigoUsuario ");
+			sql.append("WHERE COD_N_DECLARACION_VALOR = ?codDeclaracionValor ");
+			sql.append("AND NUM_ANYO_DV = ?anyo AND COD_N_VERSION_DV = ?versionAntigua");
+			
+			final Query query = getEntityManager().createNativeQuery(sql.toString());	
+			query.setParameter("codDeclaracionValor", input.getCodDeclaracionValor());	
+			query.setParameter("anyo", input.getAnyo());
+			query.setParameter("versionAntigua", input.getVersion());
+			query.setParameter("nuevaVersion", input.getVersion()+1);
+			query.setParameter("codigoUsuario", input.getUsuarioCreacion());
+			query.executeUpdate();
+		} catch (Exception e) {
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "updateContenedor", e.getClass().getSimpleName(), e.getMessage());	
+			throw new ApplicationException(e.getMessage());
+		}		
+	}
+	
+	@Transactional	
+	private void alertasSolucionadas (Integer codDeclaracionValor, Integer anyo) {		
+		StringBuilder sql = new StringBuilder();
+		
+		try {		
+			sql.append("UPDATE S_NOTIF_ALERTA_EXPED_DV "); 
+			sql.append("SET MCA_RESUELTA = 'S' ");
+			sql.append("WHERE COD_N_DECLARACION_VALOR = ?codDeclaracionValor ");
+			sql.append("AND NUM_ANYO = ?anyo ");	
+			
+			final Query query = getEntityManager().createNativeQuery(sql.toString());	
+			query.setParameter("codDeclaracionValor", codDeclaracionValor);	
+			query.setParameter("anyo", anyo);			
+			query.executeUpdate();		
+		} catch (Exception e) {
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "alertasSolucionadas", e.getClass().getSimpleName(), e.getMessage());	
+			throw new ApplicationException(e.getMessage());
+		}		
 	}
 
-	private DeclaracionesDeValorPostJPA checkCambios(DeclaracionesDeValorPostJPA dvEdit,
-			DeclaracionesDeValorPostJPA dvJpa) {
-
+	private DeclaracionesDeValorPostJPA checkCambios(DeclaracionesDeValorPostJPA dvEdit, DeclaracionesDeValorPostJPA dvJpa) {
 		Date fechaInicio = new Date();
 
 		try {
-
 			/* Comprobar provincia de Carga Editable */
 			if (dvEdit.getProvinciaCarga() != null) {
 				dvJpa.setProvinciaCarga(dvEdit.getProvinciaCarga());
@@ -185,7 +223,6 @@ public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeVa
 				List<LineaDeclaracionJPA> aux = new ArrayList();
 
 				for (LineaDeclaracionJPA lineaJPA : dvJpa.getLineasProductos()) {
-
 					DeclaracionesDeValorPostJPA pkLinea = new DeclaracionesDeValorPostJPA();
 					pkLinea.setCodDeclaracionValor(dvJpa.getCodDeclaracionValor());
 					pkLinea.setVersion(dvJpa.getVersion() + 1);
@@ -242,7 +279,6 @@ public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeVa
 						} else {
 							aux.add(lineaJPA);
 						}
-
 					}
 				}
 
@@ -250,12 +286,96 @@ public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeVa
 			}
 
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}", "PostDeclaracionDeValorDAOImpl(GESADUAN)", "checkCambios",
-					e.getClass().getSimpleName(), e.getMessage());
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "checkCambios", e.getClass().getSimpleName(), e.getMessage());
 			throw new ApplicationException(e.getMessage());
 		}
 
 		return dvJpa;
+	}
+	
+	@Transactional	
+	public void generarAlerta(String codigoUsuario, String numFactura, String anyoFactura) {
+		StringBuilder sql = new StringBuilder();
+		
+		try {		
+			sql.append("INSERT INTO S_NOTIF_ALERTA_EXPED_DV (COD_N_ALERTA, COD_V_ELEMENTO, COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION, ");
+			sql.append("MCA_CORREO_ENVIADO,MCA_SMS_ENVIADO, MCA_RESUELTA, FEC_D_CREACION, COD_V_APLICACION, COD_V_USUARIO_CREACION) ");
+			sql.append("SELECT 46, SUBSTR(NUM_ANYO_DOSIER,3,2)||'-'||LPAD(NUM_DOSIER,5,'0'), COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION, ");
+			sql.append("'N', 'N', 'N', SYSDATE, 'GESADUAN', ?codigoUsuario ");
+			sql.append("FROM ( ");
+			sql.append("SELECT DV.COD_N_DECLARACION_VALOR, DV.NUM_ANYO, DV.COD_N_VERSION,DV.NUM_ANYO_DOSIER,DV.NUM_DOSIER, ");
+			sql.append("ROW_NUMBER() OVER(PARTITION BY DV.COD_N_DECLARACION_VALOR,DV.NUM_ANYO,DV.COD_N_VERSION ORDER BY DV.COD_N_VERSION) NUMERO ");
+			sql.append("FROM O_DECLARACION_VALOR_CAB DV ");
+			sql.append("INNER JOIN D_DOSIER D ON (D.NUM_DOSIER = DV.NUM_DOSIER) ");
+			sql.append("WHERE DV.COD_N_DECLARACION_VALOR = ?numFactura ");
+			sql.append("AND DV.NUM_ANYO = ?anyoFactura ");
+			sql.append("AND DV.MCA_ULTIMA_VIGENTE = 'S' ");
+			sql.append("AND (D.FEC_DT_DESCARGA_EXPORTADOR IS NOT NULL OR D.FEC_DT_DESCARGA_IMPORTADOR IS NOT NULL) ");
+			sql.append("AND NOT EXISTS (");
+			sql.append("SELECT 1 ");
+			sql.append("FROM S_NOTIF_ALERTA_EXPED_DV NA ");
+			sql.append("WHERE NA.COD_N_DECLARACION_VALOR = DV.COD_N_DECLARACION_VALOR ");
+			sql.append("AND NA.NUM_ANYO = DV.NUM_ANYO ");
+			sql.append("AND NA.COD_N_VERSION = DV.COD_N_VERSION ");
+			sql.append("AND NA.COD_N_ALERTA = 46) ");
+			sql.append(") TABLA ");
+			sql.append("WHERE NUMERO = 1 ");
+			sql.append("AND EXISTS ( ");
+			sql.append("SELECT 1 ");
+			sql.append("FROM D_ALERTA ");
+			sql.append("WHERE MCA_ACTIVA = 'S' ");
+			sql.append("AND COD_N_ALERTA = 46 ");
+			sql.append(")");	
+			
+			final Query query = getEntityManager().createNativeQuery(sql.toString());
+			query.setParameter("codigoUsuario", codigoUsuario);
+			query.setParameter("numFactura", numFactura);
+			query.setParameter("anyoFactura", anyoFactura);
+		} catch (Exception e) {
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "generarAlerta", e.getClass().getSimpleName(), e.getMessage());	
+			throw new ApplicationException(e.getMessage());
+		}
+	}
+	
+	@Transactional	
+	public void marcarDosierOK(String codigoUsuario, String numFactura, String anyoFactura) {
+		try {
+			StringBuilder sql = new StringBuilder();
+			
+			sql.append("INSERT INTO S_NOTIFICACION_ALERTA (COD_N_ALERTA, COD_V_ELEMENTO, MCA_CORREO_ENVIADO, ");
+			sql.append("MCA_SMS_ENVIADO, MCA_RESUELTA, FEC_D_CREACION, COD_V_APLICACION, COD_V_USUARIO_CREACION) ");
+			sql.append("SELECT 0, SUBSTR(NUM_ANYO, 3, 2)||'-'||LPAD(NUM_DOSIER, 5, '0'), ");
+			sql.append("'N', 'N', 'N', SYSDATE, 'GESADUAN', ?codigoUsuario ");
+			sql.append("FROM ( ");
+			sql.append("SELECT D.NUM_DOSIER,D.NUM_ANYO,SUBSTR(D.NUM_ANYO,3,2),LPAD(D.NUM_DOSIER,5,'0') ");
+			sql.append("FROM  D_DOSIER D ");
+			sql.append("INNER JOIN O_DECLARACION_VALOR_CAB DV ON (DV.NUM_DOSIER = D.NUM_DOSIER AND DV.NUM_ANYO_DOSIER = D.NUM_ANYO) ");
+			sql.append("WHERE DV.COD_N_DECLARACION_VALOR = ?numFactura ");
+			sql.append("AND DV.NUM_ANYO = ?anyoFactura ");
+			sql.append("and MCA_ERROR = 'N' ");
+			sql.append("AND NOT EXISTS ( ");
+			sql.append("SELECT 1 ");
+			sql.append("FROM S_NOTIFICACION_ALERTA NA ");
+			sql.append("WHERE SUBSTR(NA.COD_V_ELEMENTO, 1, 2) = SUBSTR(D.NUM_ANYO, 3, 2) ");
+			sql.append("AND SUBSTR(NA.COD_V_ELEMENTO, 4, LENGTH(NA.COD_V_ELEMENTO)) = LPAD(D.NUM_DOSIER, 5, '0') ");
+			sql.append("AND NA.COD_N_ALERTA = 0) ");
+			sql.append(") TABLA ");
+			sql.append("WHERE EXISTS ( ");
+			sql.append("SELECT 1 ");
+			sql.append("FROM D_ALERTA ");
+			sql.append("WHERE MCA_ACTIVA = 'S' ");
+			sql.append("AND COD_N_ALERTA = 0 ");
+			sql.append(")");
+			
+			final Query query = getEntityManager().createNativeQuery(sql.toString());
+			query.setParameter("codigoUsuario", codigoUsuario);
+			query.setParameter("numFactura", numFactura);
+			query.setParameter("anyoFactura", anyoFactura);
+			query.executeUpdate();
+		} catch (Exception e) {
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "marcarDosierOK", e.getClass().getSimpleName(), e.getMessage());	
+			throw new ApplicationException(e.getMessage());
+		}
 	}
 
 }

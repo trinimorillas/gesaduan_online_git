@@ -1,25 +1,24 @@
-package es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull;
+package es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvaluedeclarationdetail.v1.restfull;
 
 import es.mercadona.gesaduan.dto.declaracionesdevalor.AbstractDTO;
 
-public class OutputPostDeclaracionesDeValorDTO extends AbstractDTO {
-
+public class OutputValueDeclarationDetailDTO extends AbstractDTO {
 	private static final long serialVersionUID = 1L;
-	private DVInsertPKDTO datos;
+	private DataDTO data;
 	private MetadataDTO metadata;
 
 	/**
-	 * @return the datos
+	 * @return the data
 	 */
-	public DVInsertPKDTO getDatos() {
-		return datos;
+	public DataDTO getData() {
+		return data;
 	}
 
 	/**
-	 * @param datos the datos to set
+	 * @param data the data to set
 	 */
-	public void setDatos(DVInsertPKDTO datos) {
-		this.datos = datos;
+	public void setData(DataDTO data) {
+		this.data = data;
 	}
 
 	/**
