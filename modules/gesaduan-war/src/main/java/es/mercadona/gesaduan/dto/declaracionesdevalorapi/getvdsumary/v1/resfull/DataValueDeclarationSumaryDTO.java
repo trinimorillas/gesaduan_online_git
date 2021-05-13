@@ -31,7 +31,7 @@ public class DataValueDeclarationSumaryDTO extends AbstractDTO implements Serial
 	/**
 	 * @return the isValueDeclarationOk
 	 */
-	public boolean isValueDeclarationOk() {
+	public boolean isIsValueDeclarationOk() {
 		return isValueDeclarationOk;
 	}
 	/**
@@ -43,7 +43,7 @@ public class DataValueDeclarationSumaryDTO extends AbstractDTO implements Serial
 	/**
 	 * @return the isAutomaticLoading
 	 */
-	public boolean isAutomaticLoading() {
+	public boolean isIsAutomaticLoading() {
 		return isAutomaticLoading;
 	}
 	/**

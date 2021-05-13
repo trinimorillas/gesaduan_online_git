@@ -16,6 +16,7 @@ import es.mercadona.gesaduan.dao.BaseDAO;
 import es.mercadona.gesaduan.dao.declaracionesdevalorapi.getvdsumary.v1.GetVDSumaryDAO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.InputValueDeclarationSumaryDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.resfull.DataValueDeclarationSumaryDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.resfull.DataValueDeclarationSumaryOrderDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.resfull.DataValueDeclarationSumarySourceDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.resfull.OutputValueDeclarationSumaryDTO;
 import es.mercadona.gesaduan.jpa.declaracionesdevalor.DeclaracionesDeValorJPA;
@@ -68,8 +69,8 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 			select.append(",DV.COD_N_VERSION ");
 			select.append(",DV.NUM_DOSIER ");
 			select.append(",DV.NUM_ANYO_DOSIER ");
-			select.append(",NVL((SELECT SUM(NVL(NUM_IMPORTE_TOTAL, 0.0))FROM O_DECLARACION_VALOR_LIN LIN WHERE LIN.COD_N_DECLARACION_VALOR =    DV.COD_N_DECLARACION_VALOR AND LIN.COD_N_VERSION = DV.COD_N_VERSION AND LIN.NUM_ANYO = DV.NUM_ANYO), 0.0) AS TOTALDV ");
-			select.append(",DECODE(DV.FEC_D_ALBARAN,NULL,DV.FEC_DT_EXPEDICION,DV.FEC_D_ALBARAN) ");
+			select.append(",NVL((SELECT SUM(NVL(NUM_IMPORTE_TOTAL, 0.0))FROM O_DECLARACION_VALOR_LIN LIN WHERE LIN.COD_N_DECLARACION_VALOR = DV.COD_N_DECLARACION_VALOR AND LIN.COD_N_VERSION = DV.COD_N_VERSION AND LIN.NUM_ANYO = DV.NUM_ANYO), 0.0) AS TOTALDV ");
+			select.append(",DECODE(DV.FEC_D_ALBARAN,NULL,DV.FEC_DT_EXPEDICION,DV.FEC_D_ALBARAN) FEC_EXPEDICION ");
 			select.append(",DV.FEC_DT_CREACION ");
 			select.append(",DV.FEC_DT_DESCARGA ");
 			select.append(",DV.FEC_DT_DESCARGA_EXPORTADOR ");
@@ -79,6 +80,7 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 			select.append(",DV.COD_N_PROVINCIA_CARGA PROVINCIA_ORIGEN ");
 			select.append(",DECODE(DV.COD_N_PROVEEDOR,NULL,'BLOQUE','PROVEEDOR') TIPO_ORIGEN ");
 			select.append(",DV.COD_V_EXPEDICION ");
+			select.append(",DV.COD_N_PROVEEDOR ");			
 			
 			selectCount.append("SELECT COUNT(DISTINCT CONCAT(DV.COD_N_DECLARACION_VALOR,DV.NUM_ANYO)) ");			
 			
@@ -120,15 +122,15 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 			}	
 			
 			if(data.getDossierNumber() != null) {
-				sql.append(" AND DV.NUM_DOSIER  = ?valueDeclarationNumber ");
+				sql.append(" AND DV.NUM_DOSIER  = ?dossierNumber ");
 			}		
 			
 			if(data.getDossierYear() != null) {
-				sql.append(" AND DV.NUM_ANYO_DOSIER  = ?valueDeclarationYear ");
+				sql.append(" AND DV.NUM_ANYO_DOSIER  = ?dossierYear ");
 			}	
 			
 			if(data.getInternalOrderId() != null) {
-				sql.append(" AND DVP.COD_V_PEDIDO = ?internalOrderId ");
+				sql.append(" AND (DVP.COD_V_PEDIDO = ?internalOrderId OR DV.COD_V_PEDIDO = ?internalOrderId ) ");
 			}
 			
 			if(data.getSupplierLegacyId() != null) {
@@ -171,10 +173,10 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 			
 			if(data.getDownloadStateId() != null && !data.getDownloadStateId().equals("T")) {
 				if (data.getDownloadStateId().equals("D")) {
-					sql.append(" AND (DV.FEC_DT_DESCARGA IS NOT NULL OR DV.FEC_DT_DESCARGA_EXPORTADOR IS NOT NULL OR FEC_DT_DESCARGA_IMPORTADOR IS NOT NULL) ");				
+					sql.append(" AND (DV.FEC_DT_DESCARGA IS NOT NULL OR DV.FEC_DT_DESCARGA_EXPORTADOR IS NOT NULL OR DV.FEC_DT_DESCARGA_IMPORTADOR IS NOT NULL) ");				
 				}
 				if (data.getDownloadStateId().equals("N")) {
-					sql.append(" AND (DV.FEC_DT_DESCARGA IS NULL AND DV.FEC_DT_DESCARGA_EXPORTADOR IS  NULL AND FEC_DT_DESCARGA_IMPORTADOR IS NULL) ");
+					sql.append(" AND (DV.FEC_DT_DESCARGA IS NULL AND DV.FEC_DT_DESCARGA_EXPORTADOR IS NULL AND DV.FEC_DT_DESCARGA_IMPORTADOR IS NULL) ");
 				}
 			}		
 			
@@ -182,26 +184,26 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 				
 				if(data.getDateFilterTypeId().equals("FE")) {
 					if(data.getDateFrom() != null) {
-						sql.append(" AND TRUNC(FEC_D_ALBARAN) >= TO_DATE(?dateFrom, 'DD/MM/YYYY') ");
+						sql.append(" AND ((TRUNC(DV.FEC_D_ALBARAN) >= TO_DATE(?dateFrom,'DD/MM/YYYY')) OR (TRUNC(DV.FEC_DT_EXPEDICION) >= TO_DATE(?dateFrom,'DD/MM/YYYY'))) ");
 					}
 					if(data.getDateTo() != null) {
-						sql.append(" AND TRUNC(FEC_D_ALBARAN) <= TO_DATE(?dateTo, 'DD/MM/YYYY') ");
+						sql.append(" AND ((TRUNC(DV.FEC_D_ALBARAN) <= TO_DATE(?dateTo,'DD/MM/YYYY')) OR (TRUNC(DV.FEC_DT_EXPEDICION) <= TO_DATE(?dateTo,'DD/MM/YYYY'))) ");
 					}
 				}			
 				if(data.getDateFilterTypeId().equals("FV")) {
 					if(data.getDateFrom() != null) {
-						sql.append(" AND TRUNC(FEC_DT_CREACION) >= TO_DATE(?dateFrom, 'DD/MM/YYYY') ");
+						sql.append(" AND TRUNC(DV.FEC_DT_CREACION) >= TO_DATE(?dateFrom,'DD/MM/YYYY') "); 
 					}
 					if(data.getDateTo() != null) {
-						sql.append(" AND TRUNC(FEC_DT_CREACION) <= TO_DATE(?dateTo, 'DD/MM/YYYY') ");
+						sql.append(" AND TRUNC(DV.FEC_DT_CREACION) <= TO_DATE(?dateTo,'DD/MM/YYYY') ");
 					}
 				}			
 				if(data.getDateFilterTypeId().equals("FD")) {
 					if(data.getDateTo() != null) {
-						sql.append(" AND TRUNC(FEC_DT_DESCARGA) >= TO_DATE(?dateFrom, 'DD/MM/YYYY') ");
+						sql.append(" AND ((TRUNC(DV.FEC_DT_DESCARGA) >= TO_DATE(?dateFrom,'DD/MM/YYYY')) OR (TRUNC(DV.FEC_DT_DESCARGA_EXPORTADOR) >= TO_DATE(?dateFrom,'DD/MM/YYYY')) OR (TRUNC(DV.FEC_DT_DESCARGA_IMPORTADOR) >= TO_DATE(?dateFrom,'DD/MM/YYYY'))) ");
 					}
 					if(data.getDateTo() != null) {
-						sql.append(" AND TRUNC(FEC_DT_DESCARGA) <= TO_DATE(?dateTo, 'DD/MM/YYYY') ");
+						sql.append(" AND ((TRUNC(DV.FEC_DT_DESCARGA) <= TO_DATE(?dateTo,'DD/MM/YYYY')) OR (TRUNC(DV.FEC_DT_DESCARGA_EXPORTADOR) <= TO_DATE(?dateTo,'DD/MM/YYYY')) OR (TRUNC(DV.FEC_DT_DESCARGA_IMPORTADOR) <= TO_DATE(?dateTo,'DD/MM/YYYY'))) ");
 					}				
 				}
 				
@@ -230,9 +232,9 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 					selectOrder.append(" ORDER BY DV.NUM_ANYO_DOSIER DESC");
 				
 				else if(orden.equals("+dispatchDate"))
-					selectOrder.append(" ORDER BY DV.FEC_DT_EXPEDICION ASC,DV.FEC_D_ALBARAN ASC");
+					selectOrder.append(" ORDER BY FEC_EXPEDICION ASC");
 				else if(orden.equals("-dispatchDate"))
-					selectOrder.append(" ORDER BY DV.FEC_DT_EXPEDICION DESC,DV.FEC_D_ALBARAN DESC");
+					selectOrder.append(" ORDER BY FEC_EXPEDICION DESC");
 				
 				else if(orden.equals("+valueDeclarationGenerationDate"))
 					selectOrder.append(" ORDER BY DV.FEC_DT_CREACION ASC");
@@ -240,14 +242,14 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 					selectOrder.append(" ORDER BY DV.FEC_DT_CREACION DESC");
 				
 				else if(orden.equals("+supplierLegacyId"))
-					selectOrder.append(" ORDER BY CASE WHEN REPLACE(TRANSLATE(TRIM(P.COD_N_LEGACY_PROVEEDOR), '0123456789', '0'), '0', '') IS NULL THEN TO_NUMBER(P.COD_N_LEGACY_PROVEEDOR) END, P.COD_N_LEGACY_PROVEEDOR");
+					selectOrder.append(" ORDER BY CASE WHEN REPLACE(TRANSLATE(TRIM(DV.COD_N_PROVEEDOR), '0123456789', '0'), '0', '') IS NULL THEN TO_NUMBER(DV.COD_N_PROVEEDOR) END, DV.COD_N_PROVEEDOR");
 				else if(orden.equals("-supplierLegacyId"))
-					selectOrder.append(" ORDER BY CASE WHEN REPLACE(TRANSLATE(TRIM(P.COD_N_LEGACY_PROVEEDOR), '0123456789', '0'), '0', '') IS NULL THEN TO_NUMBER(P.COD_N_LEGACY_PROVEEDOR) END DESC, P.COD_N_LEGACY_PROVEEDOR DESC");
+					selectOrder.append(" ORDER BY CASE WHEN REPLACE(TRANSLATE(TRIM(DV.COD_N_PROVEEDOR), '0123456789', '0'), '0', '') IS NULL THEN TO_NUMBER(DV.COD_N_PROVEEDOR) END DESC, DV.COD_N_PROVEEDOR DESC");
 				
 				else if(orden.equals("+sourceName"))
-					selectOrder.append(" ORDER BY P.TXT_RAZON_SOCIAL ASC, BL.TXT_NOMBRE ASC ");
+					selectOrder.append(" ORDER BY NOMBRE_ORIGEN ASC ");
 				else if(orden.equals("-sourceName"))
-					selectOrder.append(" ORDER BY P.TXT_RAZON_SOCIAL DESC, BL.TXT_NOMBRE DESC");
+					selectOrder.append(" ORDER BY NOMBRE_ORIGEN DESC");
 				
 				else if(orden.equals("+exportDownloadDate"))
 					selectOrder.append(" ORDER BY DV.FEC_DT_DESCARGA_EXPORTADOR ASC");
@@ -425,7 +427,14 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 					valueDeclaractionSumary.setExportDownloadDate(String.valueOf(tmp[11]));
 					valueDeclaractionSumary.setImportDownloadDate(String.valueOf(tmp[12]));
 					
+					if (tmp[17] != null) {
+						valueDeclaractionSumary.setDispatchCode(String.valueOf(tmp[17]));
+					}
+					
 					valueDeclaractionSumary.setValueDeclarationStatus(calculaEstado(tmp[1].toString(),tmp[0].toString(),data.getValueDeclarationStateId()));
+
+					// Obtiene la lista de pedidos
+					valueDeclaractionSumary.setInternalOrderList(getPedidos(tmp[2].toString(),tmp[3].toString(),tmp[4].toString(),tmp[17])); 					
 					
 					DataValueDeclarationSumarySourceDTO valueDeclaractionSource = new DataValueDeclarationSumarySourceDTO();
 					
@@ -452,6 +461,46 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 		return result;
 	}
 
+	
+	private List<DataValueDeclarationSumaryOrderDTO> getPedidos(String valueDeclarationCode, String valueDeclarationYear, String valueDeclarationVersion, Object expedicion) {
+
+		StringBuilder sqlPedido = new StringBuilder();
+		
+		if (expedicion != null) {
+			sqlPedido.append("SELECT COD_V_PEDIDO ");			
+			sqlPedido.append("FROM O_DECLARACION_VALOR_CAB ");
+			sqlPedido.append("WHERE COD_N_DECLARACION_VALOR = ?valueDeclarationNumber ");
+			sqlPedido.append("AND NUM_ANYO = ?valueDeclarationYear ");
+			sqlPedido.append("AND COD_N_VERSION = ?valueDeclarationVersion");			
+		} else {
+			sqlPedido.append("SELECT COD_V_PEDIDO ");			
+			sqlPedido.append("FROM S_DECLARACION_VALOR_PEDIDO ");
+			sqlPedido.append("WHERE COD_N_DECLARACION_VALOR = ?valueDeclarationNumber ");
+			sqlPedido.append("AND NUM_ANYO_DV = ?valueDeclarationYear ");
+			sqlPedido.append("AND COD_N_VERSION_DV = ?valueDeclarationVersion");						
+		}
+
+		final Query queryPedido = getEntityManager().createNativeQuery(sqlPedido.toString());
+		queryPedido.setParameter("valueDeclarationNumber", valueDeclarationCode);
+		queryPedido.setParameter("valueDeclarationYear", valueDeclarationYear);
+		queryPedido.setParameter("valueDeclarationVersion", valueDeclarationVersion);
+
+		List<String> listadoPedido = queryPedido.getResultList();
+		List<DataValueDeclarationSumaryOrderDTO> pedidos = null;
+
+		if (listadoPedido != null && !listadoPedido.isEmpty()) {
+			pedidos = new ArrayList<>();
+			for (String pedido : listadoPedido) {
+				DataValueDeclarationSumaryOrderDTO internalOrderList = new DataValueDeclarationSumaryOrderDTO();
+				if (pedido != null) {
+					internalOrderList.setInternalOrderId(pedido);
+				}
+				pedidos.add(internalOrderList);
+			}
+		}
+
+		return pedidos;
+	} 	
 
 	private String calculaEstado(String mcaCargaAuto, String mcaDVCorrecta, String filtroEstado) {
 		
