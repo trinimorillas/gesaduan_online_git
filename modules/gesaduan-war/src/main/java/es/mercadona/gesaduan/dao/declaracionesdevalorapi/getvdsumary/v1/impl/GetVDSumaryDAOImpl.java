@@ -146,7 +146,7 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 			}
 			
 			if(data.getTargetName() != null) {
-				sql.append(" AND (UPPER(C.TXT_RAZON_SOCIAL) LIKE ('%'|| UPPER(?targetName) ||'%')  OR UPPER(PU.TXT_NOMBRE_PUERTO) LIKE ('%'|| UPPER(?targetName) ||'%')) ");
+				sql.append(" AND (UPPER(C.TXT_NOMBRE_LARGO) LIKE ('%'|| UPPER(?targetName) ||'%')  OR UPPER(PU.TXT_NOMBRE_PUERTO) LIKE ('%'|| UPPER(?targetName) ||'%')) ");
 			}	
 			
 			if(data.getValueDeclarationStateId() != null && !data.getValueDeclarationStateId().equals("TD")) {

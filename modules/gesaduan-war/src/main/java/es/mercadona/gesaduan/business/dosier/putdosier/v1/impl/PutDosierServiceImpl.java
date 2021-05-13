@@ -77,6 +77,9 @@ public class PutDosierServiceImpl implements PutDosierService {
 		// Se crea un nuevo dosier
 		for (InputDosierEquipoDTO equipo: equipos) {			
 			DosierEquipoJPA dosierEquipoJPA = new DosierEquipoJPA();
+			dosierEquipoJPA.setNumDosier(dosierJPA.getId().getNumDosier());
+			dosierEquipoJPA.setAnyoDosier(dosierJPA.getId().getAnyoDosier());
+			dosierEquipoJPA.setCodigoEquipo(equipo.getCodigoEquipo());
 			dosierEquipoJPA.setMatricula(equipo.getMatricula());
 			dosierEquipoJPA.setUsuarioCreacion(dosierJPA.getUsuarioCreacion());
 			
