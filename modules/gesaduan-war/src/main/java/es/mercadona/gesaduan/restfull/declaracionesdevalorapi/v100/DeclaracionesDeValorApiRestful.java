@@ -42,6 +42,8 @@ import es.mercadona.gesaduan.dto.common.error.ErrorDTO;
 import es.mercadona.gesaduan.dto.common.error.OutputResponseErrorDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.InputDeclaracionesDeValorDocumentoDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocCabDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvaluedeclarationdetail.v1.InputValueDeclarationDetailDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvaluedeclarationdetail.v1.restfull.OutputValueDeclarationDetailDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.InputValueDeclarationSumaryDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.resfull.OutputValueDeclarationSumaryDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.putfacturaconfirmadescarga.v1.InputPutFacturaConfirmaDescargaDTO;
@@ -109,7 +111,6 @@ public class DeclaracionesDeValorApiRestful {
 		return Response.ok(response, MediaType.APPLICATION_JSON).build();
 	}
 
-	/*
 	@GET
 	@Path("declaraciones-valor/{valueDeclarationCode}")
 	@Consumes(MediaType.WILDCARD)
@@ -144,7 +145,7 @@ public class DeclaracionesDeValorApiRestful {
 		}
 
 	}
-	*/
+
 
 	@GET
 	@Path("valueDeclaration/{codigoDeclaracion}-{anyo}-{version}/documento")
