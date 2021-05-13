@@ -9,6 +9,7 @@ public class DeclaracionValorDTO extends AbstractDTO {
 	private static final long serialVersionUID = 1L;
 	private Long codigoDV;
 	private Integer anyoDV;
+	private Integer versionDV;
 	private String fechaExpedicion;
 	private OrigenDTO origen;
 	private String esDVCorrecta;
@@ -40,6 +41,20 @@ public class DeclaracionValorDTO extends AbstractDTO {
 	 */
 	public void setAnyoDV(Integer anyoDV) {
 		this.anyoDV = anyoDV;
+	}
+
+	/**
+	 * @return the versionDV
+	 */
+	public Integer getVersionDV() {
+		return versionDV;
+	}
+
+	/**
+	 * @param versionDV the versionDV to set
+	 */
+	public void setVersionDV(Integer versionDV) {
+		this.versionDV = versionDV;
 	}
 
 	/**

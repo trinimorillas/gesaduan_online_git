@@ -24,16 +24,7 @@ public class PutCambiarEstadoServiceImpl implements PutCambiarEstadoService {
 		
 		boolean realizarCambio = true;
 		
-		if ((input.getDatos().getCodigoEstado() == 2 || input.getDatos().getCodigoEstado() == 3) && input.getDatos().getForzarCambio().equals("N")) {
-			List<EquipoDTO> equipos = putCambiarEstadoDao.comprobarPedidosSinValidar(input.getDatos().getEquipo());
-			if (equipos != null) {
-				String resultadoValidacion = "No se deben marcar como facturados o cargados Equipos con Cargas que tienen Pedidos sin validar.";
-				datos.setResultadoValidacion(resultadoValidacion);
-				datos.setCambioEstado("N");
-				datos.setEquipo(equipos);
-				realizarCambio = false;
-			}
-		} else if (input.getDatos().getCodigoEstado() == 1) {
+		if (input.getDatos().getCodigoEstado() == 1) {
 			List<EquipoDTO> equipos = putCambiarEstadoDao.comprobarEquiposDosierGenerado(input.getDatos().getEquipo());
 			if (equipos != null) {
 				String resultadoValidacion = "No se puede cambiar a pendiente Equipos asociados a un Dosier.";
@@ -42,26 +33,41 @@ public class PutCambiarEstadoServiceImpl implements PutCambiarEstadoService {
 				datos.setEquipo(equipos);
 				realizarCambio = false;
 			}
+		} else {
+			if ((input.getDatos().getCodigoEstado() == 2 || input.getDatos().getCodigoEstado() == 3) && input.getDatos().getForzarCambio().equals("N")) {
+				List<EquipoDTO> equipos = putCambiarEstadoDao.comprobarPedidosSinValidar(input.getDatos().getEquipo());
+				if (equipos != null) {
+					String resultadoValidacion = "No se deben marcar como facturados o cargados Equipos con Cargas que tienen Pedidos sin validar.";
+					datos.setResultadoValidacion(resultadoValidacion);
+					datos.setCambioEstado("N");
+					datos.setEquipo(equipos);
+					realizarCambio = false;
+				}
+			}
 		}
 
 		if (realizarCambio) {
-			putCambiarEstadoDao.actualizarEstados(input);
-			
-			if (input.getDatos().getCodigoEstado() == 1) {
-				putCambiarEstadoDao.confirmarPlanEmbarque(input);
-				putCambiarEstadoDao.asignarCarga(input);
-			} else if (input.getDatos().getCodigoEstado() == 2) {
-				putCambiarEstadoDao.facturarPlanEmbarque(input);
-				putCambiarEstadoDao.facturarCarga(input);
-			} else if (input.getDatos().getCodigoEstado() == 3) {
-				putCambiarEstadoDao.cargarPlanEmbarque(input);
-				putCambiarEstadoDao.cargarCarga(input);
-			}
-			
-			datos.setCambioEstado("S");
+			actualizarEstados(input, datos);
 		}
 		
 		result.setDatos(datos);
 		return result;
+	}
+
+	private void actualizarEstados(InputDatosCambiarEstadoDTO input, DatosCambiarEstadoDTO datos) {
+		putCambiarEstadoDao.actualizarEstados(input);
+		
+		if (input.getDatos().getCodigoEstado() == 1) {
+			putCambiarEstadoDao.confirmarPlanEmbarque(input);
+			putCambiarEstadoDao.asignarCarga(input);
+		} else if (input.getDatos().getCodigoEstado() == 2) {
+			putCambiarEstadoDao.facturarPlanEmbarque(input);
+			putCambiarEstadoDao.facturarCarga(input);
+		} else if (input.getDatos().getCodigoEstado() == 3) {
+			putCambiarEstadoDao.cargarPlanEmbarque(input);
+			putCambiarEstadoDao.cargarCarga(input);
+		}
+		
+		datos.setCambioEstado("S");
 	}
 }

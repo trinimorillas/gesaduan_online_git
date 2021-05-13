@@ -78,7 +78,7 @@ public class DosierApiRestful {
 	@Consumes(MediaType.WILDCARD)
 	@Produces({ MIMETYPE_PDF, MIMETYPE_CSV, MediaType.APPLICATION_JSON })
 	public Response getDeclaracionesDeValorDocumento(
-			@NotNull @PathParam("codigoDosier") Integer codigoDosier,
+			@NotNull @PathParam("codigoDosier") Long codigoDosier,
 			@NotNull @PathParam("anyo") Integer anyo,  
 			@Context HttpServletRequest request,
 			@DefaultValue("es-ES") @QueryParam("locale") String locale,

@@ -176,7 +176,7 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 		try {			
 			DosierPkJPA dosierPk = null;			
 			
-			String select = "SELECT TO_NUMBER(TXT_VALOR)+1, TO_CHAR(SYSDATE, 'YYYY') FROM C_VARIABLE WHERE COD_V_VARIABLE = 'NUM_DOSIER'";
+			String select = "SELECT TO_NUMBER(TXT_VALOR), TO_CHAR(SYSDATE, 'YYYY') FROM C_VARIABLE WHERE COD_V_VARIABLE = 'NUM_DOSIER'";
 
 			final Query query = getEntityManager().createNativeQuery(select);
 			@SuppressWarnings("unchecked")
@@ -200,14 +200,13 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 	
 	@Transactional	
 	@Override
-	public void updateNumDosier(Long lastNumDosier) {		
+	public void updateNumDosier() {		
 		try {			
 			StringBuilder update = new StringBuilder();
 		
-			update.append("UPDATE C_VARIABLE SET TXT_VALOR = ?lastNumDosier WHERE COD_V_VARIABLE = 'NUM_DOSIER' ");
+			update.append("UPDATE C_VARIABLE SET TXT_VALOR = TO_CHAR(TO_NUMBER(TXT_VALOR)+1) WHERE COD_V_VARIABLE = 'NUM_DOSIER' ");
 					
 			final Query query = getEntityManager().createNativeQuery(update.toString());
-			query.setParameter("lastNumDosier", lastNumDosier);
 			query.executeUpdate();			
 		} catch(Exception ex) {
 			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "updateNumDosier", ex.getClass().getSimpleName(), ex.getMessage());	
@@ -217,7 +216,7 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 	
 	@Transactional	
 	@Override
-	public Integer getNumCategorias(DosierEquipoJPA dosierEquipo) {
+	public Integer getNumCategorias(DosierJPA dosierJPA) {
 		try {			
 			StringBuilder sql = new StringBuilder();
 		
@@ -228,8 +227,8 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 			sql.append("AND CE.NUM_ANYO = ?anyoDosier ");
 					
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
-			query.setParameter("numDosier", dosierEquipo.getNumDosier());
-			query.setParameter("anyoDosier", dosierEquipo.getAnyoDosier());
+			query.setParameter("numDosier", dosierJPA.getId().getNumDosier());
+			query.setParameter("anyoDosier", dosierJPA.getId().getAnyoDosier());
 			return Integer.parseInt(query.getSingleResult().toString());
 		} catch(Exception ex) {
 			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "getNumCategorias", ex.getClass().getSimpleName(), ex.getMessage());	
@@ -239,7 +238,7 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 	
 	@Transactional	
 	@Override
-	public void crearFacturas(DosierEquipoJPA dosierEquipo) {		
+	public void crearFacturas(DosierJPA dosierJPA) {		
 		try {			
 			StringBuilder sql = new StringBuilder();
 		
@@ -277,9 +276,9 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 			sql.append("WHERE ORDEN = 1");
 					
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
-			query.setParameter("numDosier", dosierEquipo.getNumDosier());
-			query.setParameter("anyoDosier", dosierEquipo.getAnyoDosier());
-			query.setParameter("codigoUsuario", dosierEquipo.getUsuarioCreacion());
+			query.setParameter("numDosier", dosierJPA.getId().getNumDosier());
+			query.setParameter("anyoDosier", dosierJPA.getId().getAnyoDosier());
+			query.setParameter("codigoUsuario", dosierJPA.getUsuarioCreacion());
 			query.executeUpdate();			
 		} catch(Exception ex) {
 			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "crearFacturas", ex.getClass().getSimpleName(), ex.getMessage());	
@@ -289,7 +288,7 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 	
 	@Transactional	
 	@Override
-	public void actualizarContenedores(DosierEquipoJPA dosierEquipo) {		
+	public void actualizarContenedores(DosierJPA dosierJPA) {		
 		try {			
 			StringBuilder sql = new StringBuilder();
 		
@@ -313,9 +312,9 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 			sql.append("OCE.COD_V_USR_MODIFICACION = ?codigoUsuario ");
 					
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
-			query.setParameter("numDosier", dosierEquipo.getNumDosier());
-			query.setParameter("anyoDosier", dosierEquipo.getAnyoDosier());
-			query.setParameter("codigoUsuario", dosierEquipo.getUsuarioCreacion());
+			query.setParameter("numDosier", dosierJPA.getId().getNumDosier());
+			query.setParameter("anyoDosier", dosierJPA.getId().getAnyoDosier());
+			query.setParameter("codigoUsuario", dosierJPA.getUsuarioCreacion());
 			query.executeUpdate();			
 		} catch(Exception ex) {
 			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "insertarPedidos", ex.getClass().getSimpleName(), ex.getMessage());	
@@ -325,7 +324,7 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 	
 	@Transactional	
 	@Override
-	public void insertarLineasFacturas(DosierEquipoJPA dosierEquipo) {		
+	public void insertarLineasFacturas(DosierJPA dosierJPA) {		
 		try {			
 			StringBuilder sql = new StringBuilder();
 		
@@ -352,8 +351,9 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 			sql.append("FROM (SELECT DV.COD_N_DECLARACION_VALOR,DV.NUM_ANYO,DV.COD_N_VERSION,E.COD_N_PRODUCTO,TP.COD_N_TARIC,RP.COD_V_REA, ");
 			sql.append("DECODE(P.TXT_DENOMINA_ALTERNATIVA,NULL,DP.TXT_DESCRIPCION,P.TXT_DENOMINA_ALTERNATIVA) AS TXT_NOMBRE_PRODUCTO, ");
 			sql.append("DECODE(P.TXT_FORMATO_ALTERNATIVO,NULL,P.NUM_FORMATO_VENTA||' '||P.TXT_UNIDAD_MEDIDA, ");
-			sql.append("P.TXT_FORMATO_ALTERNATIVO) AS TXT_FORMATO, ");
-			sql.append("P.TXT_MARCA,'PENDIENTE:NOMBRE_BULTO' AS NOMBRE_BULTO,E.NUM_FORMATOS_VENTA_EXPEDIDO AS NUM_BULTOS, ");
+			sql.append("P.TXT_FORMATO_ALTERNATIVO) AS TXT_FORMATO, P.TXT_MARCA, ");
+			sql.append("DECODE(E.COD_N_VARIABLE_LOGISTICA,0,'Caj./Paq.','Palet') AS NOMBRE_BULTO, ");
+			sql.append("E.NUM_FORMATOS_VENTA_EXPEDIDO AS NUM_BULTOS, ");
 			sql.append("(E.NUM_CANTIDAD_EXPEDIDO_PESO/1000)*TO_NUMBER('0,9') AS NUM_PESO_NETO, ");
 			sql.append("E.NUM_CANTIDAD_EXPEDIDO_PESO/1000 AS NUM_PESO_BRUTO, ");
 			sql.append("DECODE(P.TXT_UNIDAD_MEDIDA,'ML',P.NUM_FORMATO_VENTA/1000,'LI',P.NUM_FORMATO_VENTA)*E.NUM_CANTIDAD_EXPEDIDO_UNIDAD ");
@@ -374,7 +374,7 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 			sql.append("AND E.FEC_DT_EXPEDICION = CE.FEC_DT_EXPEDICION) ");
 			sql.append("INNER JOIN D_PRODUCTO_R P ON (P.COD_N_PRODUCTO = E.COD_N_PRODUCTO) ");
 			sql.append("LEFT JOIN S_TARIC_PRODUCTO TP ON (TP.COD_N_PRODUCTO = E.COD_N_PRODUCTO) ");
-			sql.append("LEFT JOIN D_CODIGO_TARIC CT ON CT.COD_N_TARIC = TP.COD_N_TARIC");
+			sql.append("LEFT JOIN D_CODIGO_TARIC CT ON (CT.COD_N_TARIC = TP.COD_N_TARIC) ");
 			sql.append("LEFT JOIN S_REA_PRODUCTO RP ON (RP.COD_N_PRODUCTO = E.COD_N_PRODUCTO ");
 			sql.append("AND RP.FEC_D_INICIO <= TRUNC(SYSDATE) ");
 			sql.append("AND (RP.FEC_D_FIN IS NULL OR  RP.FEC_D_FIN >= TRUNC(SYSDATE))) ");
@@ -385,14 +385,14 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 			sql.append("WHERE DV.NUM_DOSIER = ?numDosier ");
 			sql.append("AND DV.NUM_ANYO_DOSIER = ?anyoDosier ");
 			sql.append("AND P.COD_N_PRODUCTO IS NOT NULL ");
-			sql.append(") ");
-			sql.append(") ");
+			sql.append(")");
+			sql.append(")");
 			sql.append("WHERE PRIMERO = 1");
 					
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
-			query.setParameter("numDosier", dosierEquipo.getNumDosier());
-			query.setParameter("anyoDosier", dosierEquipo.getAnyoDosier());
-			query.setParameter("codigoUsuario", dosierEquipo.getUsuarioCreacion());
+			query.setParameter("numDosier", dosierJPA.getId().getNumDosier());
+			query.setParameter("anyoDosier", dosierJPA.getId().getAnyoDosier());
+			query.setParameter("codigoUsuario", dosierJPA.getUsuarioCreacion());
 			query.executeUpdate();			
 		} catch(Exception ex) {
 			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "insertarLineasFacturas", ex.getClass().getSimpleName(), ex.getMessage());	
@@ -566,16 +566,17 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 			sql.append("AND DVL.NUM_ANYO = DV.NUM_ANYO AND DVL.COD_N_VERSION = DV.COD_N_VERSION) ");
 			sql.append("INNER JOIN D_PRODUCTO_R P ON (P.COD_N_PRODUCTO = DVL.COD_N_MERCA) ");
 			sql.append("INNER JOIN S_TARIC_PRODUCTO TP ON (TP.COD_N_PRODUCTO = DVL.COD_N_MERCA) ");
+			sql.append("INNER JOIN D_CODIGO_TARIC CT ON (CT.COD_N_TARIC = TP.COD_N_TARIC) ");
 			sql.append("LEFT JOIN S_REA_PRODUCTO REA ON (REA.COD_N_PRODUCTO = DVL.COD_N_MERCA) ");
 			sql.append("WHERE DV.COD_V_EXPEDICION IS NULL ");
 			sql.append("AND DV.NUM_DOSIER = ?numDosier ");
-			sql.append("AND DV.NUM_ANYO_DOSIER = ?anyoDosier ");
-			sql.append("AND (REA.COD_V_REA IS NOT NULL OR TP.MCA_FITO = 'S') ");
+			sql.append("AND DV.NUM_ANYO_DOSIER = ?anyoDosier ");			
+			sql.append("AND (REA.COD_V_REA IS NOT NULL OR CT.MCA_FITO = 'S') ");
 			sql.append("AND P.COD_V_PAIS_ISO_ALFA2 IS NULL ");
 			sql.append("AND NOT EXISTS ( ");
 			sql.append("SELECT 1 ");
 			sql.append("FROM S_NOTIF_ALERTA_EXPED_DV NA ");
-			sql.append("WHERE NA.COD_V_ELEMENTO = DVL.COD_N_MERCA ");
+			sql.append("WHERE NA.COD_V_ELEMENTO = TO_CHAR(DVL.COD_N_MERCA) ");
 			sql.append("AND NA.COD_N_DECLARACION_VALOR = DV.COD_N_DECLARACION_VALOR ");
 			sql.append("AND NA.NUM_ANYO = DV.NUM_ANYO ");
 			sql.append("AND NA.COD_N_VERSION = DV.COD_N_VERSION ");
@@ -878,7 +879,7 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 	
 	@Transactional	
 	@Override
-	public void relFacturaPedidoCargaTT(DosierEquipoJPA dosier, String codigoUsuario) {
+	public void relFacturaPedidoCargaTT(DosierJPA dosierJPA) {
 		try {			
 			StringBuilder sql = new StringBuilder();
 		
@@ -898,9 +899,9 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 			sql.append("GROUP BY DV.COD_N_DECLARACION_VALOR,DV.NUM_ANYO,DV.COD_N_VERSION,E.COD_V_PEDIDO ");
 					
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
-			query.setParameter("numDosier", dosier.getNumDosier());
-			query.setParameter("anyoDosier", dosier.getAnyoDosier());
-			query.setParameter("codigoUsuario", codigoUsuario);
+			query.setParameter("numDosier", dosierJPA.getId().getNumDosier());
+			query.setParameter("anyoDosier", dosierJPA.getId().getAnyoDosier());
+			query.setParameter("codigoUsuario", dosierJPA.getUsuarioCreacion());
 			query.executeUpdate();			
 		} catch(Exception ex) {
 			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "relFacturaPedidoCargaTT", ex.getClass().getSimpleName(), ex.getMessage());	

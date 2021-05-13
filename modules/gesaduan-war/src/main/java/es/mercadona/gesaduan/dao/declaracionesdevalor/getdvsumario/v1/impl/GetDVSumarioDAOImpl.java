@@ -572,7 +572,7 @@ public class GetDVSumarioDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> implem
 				}
 				
 				if(tmp[12] != null && tmp[12].equals("S")) {
-					decDeValor.setEsCargaAutomatica(true);
+					decDeValor.setEsCargaAutomatica(tmp[12] != null && tmp[12].equals("S"));
 				}else {
 					decDeValor.setEsCargaAutomatica(false);
 				}
