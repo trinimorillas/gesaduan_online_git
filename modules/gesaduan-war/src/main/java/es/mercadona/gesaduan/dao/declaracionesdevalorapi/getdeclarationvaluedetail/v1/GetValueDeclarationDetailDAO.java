@@ -2,12 +2,11 @@ package es.mercadona.gesaduan.dao.declaracionesdevalorapi.getdeclarationvaluedet
 
 import java.util.List;
 
-import es.mercadona.fwk.core.web.BoPage;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvdetalle.v1.restfull.DatosHistorico;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvaluedeclarationdetail.v1.InputValueDeclarationDetailDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvaluedeclarationdetail.v1.restfull.OutputValueDeclarationDetailDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvaluedeclarationdetail.v1.restfull.ValueDeclarationHistoricalDTO;
 
 public interface GetValueDeclarationDetailDAO {	
-	public OutputValueDeclarationDetailDTO getValueDeclarationDetail(InputValueDeclarationDetailDTO input, BoPage paginacion);
-	public List<DatosHistorico> obtenerHistoricoDV(String declarationValue, Integer declarationYear);
+	public OutputValueDeclarationDetailDTO getValueDeclarationDetail(InputValueDeclarationDetailDTO input);
+	public List<ValueDeclarationHistoricalDTO> getHistorico(Long valueDeclarationNumber, Integer valueDeclarationYear);
 }

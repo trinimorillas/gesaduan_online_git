@@ -116,6 +116,33 @@ public class DeclaracionesDeValorPostJPA implements Serializable{
 	
 	@Column (name = "COD_V_APLICACION")
 	private String app;
+	
+	@Column (name = "COD_N_BLOQUE_LOGISTICO")
+	private Integer bloqueLogistico;
+	
+	@Column (name = "COD_N_PUERTO_DESEMBARQUE")
+	private Integer codigoPuertoDesembarque;
+	
+	@Column (name = "COD_N_CATEGORIA")
+	private Integer codigoCategoria;
+	
+	@Column (name = "FEC_DT_EXPEDICION")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date fechaExpedicion;
+	
+	@Column (name = "NUM_DOSIER")
+	private Long numDosier;
+	
+	@Column (name = "NUM_ANYO_DOSIER")
+	private Integer anyoDosier;
+	
+	@Column (name = "FEC_DT_DESCARGA_EXPORTADOR")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date fechaDescargaExportador;
+	
+	@Column (name = "FEC_DT_DESCARGA_IMPORTADOR")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date fechaDescargaImportador;
 
 	public Integer getCodDeclaracionValor() {
 		return codDeclaracionValor;
@@ -132,8 +159,6 @@ public class DeclaracionesDeValorPostJPA implements Serializable{
 	public void setAnyo(Integer anyo) {
 		this.anyo = anyo;
 	}
-
-
 
 	public Integer getVersion() {
 		return version;
@@ -318,6 +343,118 @@ public class DeclaracionesDeValorPostJPA implements Serializable{
 
 	public void setApp(String app) {
 		this.app = app;
+	}
+
+	/**
+	 * @return the bloqueLogistico
+	 */
+	public Integer getBloqueLogistico() {
+		return bloqueLogistico;
+	}
+
+	/**
+	 * @param bloqueLogistico the bloqueLogistico to set
+	 */
+	public void setBloqueLogistico(Integer bloqueLogistico) {
+		this.bloqueLogistico = bloqueLogistico;
+	}
+
+	/**
+	 * @return the codigoPuertoDesembarque
+	 */
+	public Integer getCodigoPuertoDesembarque() {
+		return codigoPuertoDesembarque;
+	}
+
+	/**
+	 * @param codigoPuertoDesembarque the codigoPuertoDesembarque to set
+	 */
+	public void setCodigoPuertoDesembarque(Integer codigoPuertoDesembarque) {
+		this.codigoPuertoDesembarque = codigoPuertoDesembarque;
+	}
+
+	/**
+	 * @return the codigoCategoria
+	 */
+	public Integer getCodigoCategoria() {
+		return codigoCategoria;
+	}
+
+	/**
+	 * @param codigoCategoria the codigoCategoria to set
+	 */
+	public void setCodigoCategoria(Integer codigoCategoria) {
+		this.codigoCategoria = codigoCategoria;
+	}
+
+	/**
+	 * @return the fechaExpedicion
+	 */
+	public Date getFechaExpedicion() {
+		return fechaExpedicion;
+	}
+
+	/**
+	 * @param fechaExpedicion the fechaExpedicion to set
+	 */
+	public void setFechaExpedicion(Date fechaExpedicion) {
+		this.fechaExpedicion = fechaExpedicion;
+	}
+
+	/**
+	 * @return the numDosier
+	 */
+	public Long getNumDosier() {
+		return numDosier;
+	}
+
+	/**
+	 * @param numDosier the numDosier to set
+	 */
+	public void setNumDosier(Long numDosier) {
+		this.numDosier = numDosier;
+	}
+
+	/**
+	 * @return the anyoDosier
+	 */
+	public Integer getAnyoDosier() {
+		return anyoDosier;
+	}
+
+	/**
+	 * @param anyoDosier the anyoDosier to set
+	 */
+	public void setAnyoDosier(Integer anyoDosier) {
+		this.anyoDosier = anyoDosier;
+	}
+
+	/**
+	 * @return the fechaDescargaExportador
+	 */
+	public Date getFechaDescargaExportador() {
+		return fechaDescargaExportador;
+	}
+
+	/**
+	 * @param fechaDescargaExportador the fechaDescargaExportador to set
+	 */
+	public void setFechaDescargaExportador(Date fechaDescargaExportador) {
+		this.fechaDescargaExportador = fechaDescargaExportador;
+	}
+
+	/**
+	 * @return the fechaDescargaImportador
+	 */
+	public Date getFechaDescargaImportador() {
+		return fechaDescargaImportador;
+	}
+
+	/**
+	 * @param fechaDescargaImportador the fechaDescargaImportador to set
+	 */
+	public void setFechaDescargaImportador(Date fechaDescargaImportador) {
+		this.fechaDescargaImportador = fechaDescargaImportador;
 	}
 
 }

@@ -13,11 +13,11 @@ import javax.transaction.Transactional;
 
 import es.mercadona.fwk.core.exceptions.ApplicationException;
 import es.mercadona.fwk.data.DaoBaseImpl;
+import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dao.declaracionesdevalor.postdv.v1.PostDeclaracionDeValorDAO;
 import es.mercadona.gesaduan.jpa.declaracionesdevalor.postdv.v1.DeclaracionesDeValorPostJPA;
 import es.mercadona.gesaduan.jpa.declaracionesdevalor.postdv.v1.DeclaracionesDeValorPostPK;
 import es.mercadona.gesaduan.jpa.declaracionesdevalor.postdv.v1.LineaDeclaracionJPA;
-import es.mercadona.gesaduan.common.Constantes;
 
 @Stateless
 public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeValorPostPK, DeclaracionesDeValorPostJPA> implements PostDeclaracionDeValorDAO {
@@ -107,6 +107,12 @@ public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeVa
 				pk.setVersion(input.getVersion());
 
 			}
+			
+			if (input.getExpedicion() == null) {
+				insertarPedidos(input);
+			}
+			
+			updateContenedor(input);
 		} catch (Exception e) {
 			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "postCabecera", e.getClass().getSimpleName(), e.getMessage());
 			throw new ApplicationException(e.getMessage());
@@ -126,7 +132,54 @@ public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeVa
 	}
 	
 	@Transactional	
-	private void alertasSolucionadas (Integer codDeclaracionValor,Integer anyo) {		
+	private void insertarPedidos (DeclaracionesDeValorPostJPA input) {
+		StringBuilder sql = new StringBuilder();
+		
+		try {		
+			sql.append("INSERT INTO S_DECLARACION_VALOR_PEDIDO (COD_N_DECLARACION_VALOR, NUM_ANYO_DV, COD_N_VERSION_DV, COD_V_PEDIDO, FEC_DT_CREACION, COD_V_APLICACION, COD_V_USUARIO_CREACION) "); 
+			sql.append("SELECT COD_N_DECLARACION_VALOR, NUM_ANYO_DV, ?nuevaVersion, COD_V_PEDIDO, SYSDATE, 'GESADUAN', ?codigoUsuario ");
+			sql.append("FROM S_DECLARACION_VALOR_PEDIDO ");
+			sql.append("WHERE COD_N_DECLARACION_VALOR = ?codDeclaracionValor ");
+			sql.append("AND NUM_ANYO_DV = ?anyo AND COD_N_VERSION_DV = ?versionAntigua");	
+			
+			final Query query = getEntityManager().createNativeQuery(sql.toString());	
+			query.setParameter("codDeclaracionValor", input.getCodDeclaracionValor());	
+			query.setParameter("anyo", input.getAnyo());
+			query.setParameter("versionAntigua", input.getVersion());
+			query.setParameter("nuevaVersion", input.getVersion()+1);
+			query.setParameter("codigoUsuario", input.getUsuarioCreacion());
+			query.executeUpdate();		
+		} catch (Exception e) {
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "insertarPedidos", e.getClass().getSimpleName(), e.getMessage());	
+			throw new ApplicationException(e.getMessage());
+		}		
+	}
+	
+	@Transactional	
+	private void updateContenedor (DeclaracionesDeValorPostJPA input) {
+		StringBuilder sql = new StringBuilder();
+		
+		try {		
+			sql.append("UPDATE O_CONTENEDOR_EXPEDIDO "); 
+			sql.append("SET COD_N_VERSION_DV = ?nuevaVersion, FEC_D_MODIFICACION = SYSDATE, COD_V_USR_MODIFICACION = ?codigoUsuario ");
+			sql.append("WHERE COD_N_DECLARACION_VALOR = ?codDeclaracionValor ");
+			sql.append("AND NUM_ANYO_DV = ?anyo AND COD_N_VERSION_DV = ?versionAntigua");
+			
+			final Query query = getEntityManager().createNativeQuery(sql.toString());	
+			query.setParameter("codDeclaracionValor", input.getCodDeclaracionValor());	
+			query.setParameter("anyo", input.getAnyo());
+			query.setParameter("versionAntigua", input.getVersion());
+			query.setParameter("nuevaVersion", input.getVersion()+1);
+			query.setParameter("codigoUsuario", input.getUsuarioCreacion());
+			query.executeUpdate();
+		} catch (Exception e) {
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "updateContenedor", e.getClass().getSimpleName(), e.getMessage());	
+			throw new ApplicationException(e.getMessage());
+		}		
+	}
+	
+	@Transactional	
+	private void alertasSolucionadas (Integer codDeclaracionValor, Integer anyo) {		
 		StringBuilder sql = new StringBuilder();
 		
 		try {		

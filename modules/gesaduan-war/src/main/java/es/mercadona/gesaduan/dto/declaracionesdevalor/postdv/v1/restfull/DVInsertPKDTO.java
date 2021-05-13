@@ -4,13 +4,9 @@ import java.io.Serializable;
 
 import es.mercadona.gesaduan.dto.declaracionesdevalor.AbstractDTO;
 
-public class DVInsertPKDTO extends AbstractDTO implements Serializable{
+public class DVInsertPKDTO extends AbstractDTO implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	
 	private Integer numeroDecalaracion;
 	private Integer anyo;
 	private Integer version;
@@ -38,7 +34,5 @@ public class DVInsertPKDTO extends AbstractDTO implements Serializable{
 	public void setNumeroDecalaracion(Integer numeroDecalaracion) {
 		this.numeroDecalaracion = numeroDecalaracion;
 	}
-	
-	
 
 }

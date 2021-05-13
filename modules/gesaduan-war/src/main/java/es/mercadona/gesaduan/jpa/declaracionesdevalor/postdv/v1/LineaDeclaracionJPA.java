@@ -28,6 +28,10 @@ public class LineaDeclaracionJPA implements Serializable {
 	private Integer codMerca;
 
 	@Id
+	@Column(name = "TXT_NOMBRE_BULTO_DV")
+	private String nombreTipoBulto;
+
+	@Id
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumns({ @JoinColumn(name = "COD_N_DECLARACION_VALOR", referencedColumnName = "COD_N_DECLARACION_VALOR"),
 			@JoinColumn(name = "NUM_ANYO", referencedColumnName = "NUM_ANYO"),
@@ -54,9 +58,6 @@ public class LineaDeclaracionJPA implements Serializable {
 
 	@Column(name = "TXT_FORMATO_VENTA_ALTERNATIVO")
 	private String descFormatoVentaAlternativo;
-
-	@Column(name = "TXT_NOMBRE_BULTO_DV")
-	private String nombreTipoBulto;
 
 	@Column(name = "NUM_BULTOS")
 	private Integer numeroDeBultos;

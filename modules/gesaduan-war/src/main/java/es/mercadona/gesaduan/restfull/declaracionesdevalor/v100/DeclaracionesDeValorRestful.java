@@ -1,6 +1,5 @@
 package es.mercadona.gesaduan.restfull.declaracionesdevalor.v100;
 
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,13 +44,14 @@ import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvdetalle.v1.InputDecla
 import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvdetalle.v1.restfull.OutputDeclaracionesDeValorDetalleDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvsumario.v1.InputDeclaracionesDeValorDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvsumario.v1.restfull.OutputDeclaracionesDeValorDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull.InputPostDeclaracionesDeValorDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull.InputPutValueDeclarationDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull.OutputPostDeclaracionesDeValorDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.putdvinddescarga.v1.DeclaracionesDeValorEstadoDescargaServiceDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.putdvinddescarga.v1.restfull.InputDatosComunesDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.putdvinddescarga.v1.restfull.OutputDeclaracionesDeValorEstadoDescargaDTO;
 import es.mercadona.gesaduan.jpa.declaracionesdevalor.getdocumentodv.v1.DocumentoDVDataJPA;
 import es.mercadona.gesaduan.jpa.declaracionesdevalor.getdocumentodv.v1.DocumentoDVDataPK;
+import es.mercadona.gesaduan.common.Constantes;
 
 @RESTful
 @Path("logistica/gestion-aduanas/v1.0")
@@ -244,14 +244,13 @@ public class DeclaracionesDeValorRestful {
 	@Path("declaraciones-valor")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response postDeclaracionesDeValor(
-			@NotNull InputPostDeclaracionesDeValorDTO valoresDeEntrada) {
-
+	public Response postDeclaracionesDeValor(@NotNull InputPutValueDeclarationDTO input) {
 		OutputPostDeclaracionesDeValorDTO response = null;
-		try {
-			response = postDVService.createDeclaracionesDeValor(valoresDeEntrada);
+		
+		try {			
+			response = postDVService.createValueDeclaration(input);
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}",LOG_FILE,"postDeclaracionesDeValor",e.getClass().getSimpleName(),e.getMessage());	
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, "postDeclaracionesDeValor", e.getClass().getSimpleName(),e.getMessage());	
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
 		}
 

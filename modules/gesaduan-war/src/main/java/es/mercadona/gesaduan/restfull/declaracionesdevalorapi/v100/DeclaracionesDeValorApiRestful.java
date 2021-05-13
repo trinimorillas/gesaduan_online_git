@@ -40,7 +40,6 @@ import es.mercadona.gesaduan.business.declaracionesdevalorapi.putfacturaconfirma
 import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dto.common.error.ErrorDTO;
 import es.mercadona.gesaduan.dto.common.error.OutputResponseErrorDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvdetalle.v1.restfull.OutputDeclaracionesDeValorDetalleDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvsumario.v1.InputDeclaracionesDeValorDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvsumario.v1.restfull.OutputDeclaracionesDeValorDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.InputDeclaracionesDeValorDocumentoDTO;
@@ -202,7 +201,7 @@ public class DeclaracionesDeValorApiRestful {
 			input.setValueDeclarationCode(valueDeclaration);
 			input.setLocaleId(localeId);
 
-			result = getValueDeclarationDetailService.getValueDeclarationDetail(input, null);
+			result = getValueDeclarationDetailService.getValueDeclarationDetail(input);
 
 			if (result == null) {
 				OutputResponseErrorDTO error = new OutputResponseErrorDTO();

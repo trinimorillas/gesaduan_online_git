@@ -1,4 +1,4 @@
-package es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvaluedeclarationdetail.v1.restfull;
+package es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull;
 
 import java.util.List;
 
