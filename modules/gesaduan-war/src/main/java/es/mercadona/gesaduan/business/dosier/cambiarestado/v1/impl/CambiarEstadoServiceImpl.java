@@ -27,7 +27,7 @@ public class CambiarEstadoServiceImpl implements CambiarEstadoService {
 		dosierJPA.setUsuarioModificacion(input.getMetadatos().getCodigoUsuario());
 
 		Boolean tieneErrores = cambiarEstadoDao.tieneErrorDosier(dosierJPA);
-		if (tieneErrores) { // Generar fichero PDF
+		if (!tieneErrores) { // Generar fichero PDF
 			cambiarEstadoDao.generarPDF(dosierJPA);
 		}
 		
@@ -43,7 +43,7 @@ public class CambiarEstadoServiceImpl implements CambiarEstadoService {
 		// Elimina asociación con los equipos
 		/* cambiarEstadoDao.eliminaRelacionEquipo(dosierJPA); */
 		
-		if (tieneErrores) {// Insertar alerta dosier inválido
+		if (!tieneErrores) {// Insertar alerta dosier inválido
 			cambiarEstadoDao.insertarAlerta(dosierJPA, input.getMetadatos().getCodigoUsuario());
 		}
 

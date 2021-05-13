@@ -58,7 +58,13 @@ public class CambiarEstadoDAOImpl extends DaoBaseImpl<Long, DosierJPA> implement
 			query.setParameter("numDosier", dosierJPA.getId().getNumDosier());
 			query.setParameter("anyoDosier", dosierJPA.getId().getAnyoDosier());
 			
-			return "S".equals(query.getSingleResult());
+			String restultadoQuery = query.getSingleResult().toString();
+			
+			if ("S".equals(restultadoQuery)) {
+				return true;
+			} else {
+				return false;
+			}
 		} catch (Exception e) {
 			this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, "comprobarDosierError", e.getClass().getSimpleName(), e.getMessage());
 			throw new ApplicationException(e.getMessage());

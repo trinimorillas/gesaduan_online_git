@@ -198,9 +198,9 @@ public class GetDVDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, Doc
 			select.append(",TO_CHAR(PESO_BRUTO, 'FM9G999G990D999') ");
 			select.append(",TO_CHAR(PESO_NETO, 'FM9G999G990D999') ");
 			select.append(",TO_CHAR(CANTIDAD, 'FM9G999G990D999') ");
-			select.append(",DECODE(VOLUMEN,NULL,VOLUMEN,TO_CHAR(VOLUMEN, 'FM9G999G990D999')) ");
-			select.append(",DECODE(ALCOHOL,NULL,ALCOHOL,TO_CHAR(ALCOHOL, 'FM9G999G990D999')) ");
-			select.append(",DECODE(PLATO,NULL,PLATO,TO_CHAR(PLATO, 'FM9G999G990D999')) ");
+			select.append(",TO_CHAR(VOLUMEN, 'FM9G999G990D999') ");
+			select.append(",TO_CHAR(ALCOHOL, 'FM9G999G990D999') ");
+			select.append(",TO_CHAR(PLATO, 'FM9G999G990D999') ");
 			select.append(",TO_CHAR(PRECIO, 'FM9G999G990D9999') ");
 			select.append(",TO_CHAR(IMPORTE, 'FM9G999G990D999') ");			
 			select.append("FROM ( ");
