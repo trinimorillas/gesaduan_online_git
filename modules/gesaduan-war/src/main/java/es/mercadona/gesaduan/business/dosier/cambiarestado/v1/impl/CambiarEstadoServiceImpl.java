@@ -41,7 +41,7 @@ public class CambiarEstadoServiceImpl implements CambiarEstadoService {
 		cambiarEstadoDao.actualizaEquipos(dosierJPA);
 
 		// Elimina asociación con los equipos
-		// cambiarEstadoDao.eliminaRelacionEquipo(dosierJPA);
+		/* cambiarEstadoDao.eliminaRelacionEquipo(dosierJPA); */
 		
 		if (tieneErrores) {// Insertar alerta dosier inválido
 			cambiarEstadoDao.insertarAlerta(dosierJPA, input.getMetadatos().getCodigoUsuario());

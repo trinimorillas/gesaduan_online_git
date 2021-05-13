@@ -57,23 +57,29 @@ public class DocumentoDataPK implements Serializable{
 	
 	@Override
 	public boolean equals(Object obj) {
+		
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
+		
 		DocumentoDataPK other = (DocumentoDataPK) obj;
-		if (numDosier == null) {
+		
+		if (numDosier == null) { 
 			if (other.numDosier != null)
 				return false;
-		} else if (!numDosier.equals(other.numDosier))
-			return false;
+		} else 
+			if (!numDosier.equals(other.numDosier))
+				return false;
+		
 		if (anyo == null) {
 			if (other.anyo != null)
 				return false;
-		} else if (!anyo.equals(other.anyo))
-			return false;
+		} else 
+			if (!anyo.equals(other.anyo))
+				return false;
 		return true;
 	}
 	

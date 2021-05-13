@@ -47,23 +47,27 @@ public class PutCambiarEstadoServiceImpl implements PutCambiarEstadoService {
 		}
 
 		if (realizarCambio) {
-			putCambiarEstadoDao.actualizarEstados(input);
-			
-			if (input.getDatos().getCodigoEstado() == 1) {
-				putCambiarEstadoDao.confirmarPlanEmbarque(input);
-				putCambiarEstadoDao.asignarCarga(input);
-			} else if (input.getDatos().getCodigoEstado() == 2) {
-				putCambiarEstadoDao.facturarPlanEmbarque(input);
-				putCambiarEstadoDao.facturarCarga(input);
-			} else if (input.getDatos().getCodigoEstado() == 3) {
-				putCambiarEstadoDao.cargarPlanEmbarque(input);
-				putCambiarEstadoDao.cargarCarga(input);
-			}
-			
-			datos.setCambioEstado("S");
+			actualizarEstados(input, datos);
 		}
 		
 		result.setDatos(datos);
 		return result;
+	}
+
+	private void actualizarEstados(InputDatosCambiarEstadoDTO input, DatosCambiarEstadoDTO datos) {
+		putCambiarEstadoDao.actualizarEstados(input);
+		
+		if (input.getDatos().getCodigoEstado() == 1) {
+			putCambiarEstadoDao.confirmarPlanEmbarque(input);
+			putCambiarEstadoDao.asignarCarga(input);
+		} else if (input.getDatos().getCodigoEstado() == 2) {
+			putCambiarEstadoDao.facturarPlanEmbarque(input);
+			putCambiarEstadoDao.facturarCarga(input);
+		} else if (input.getDatos().getCodigoEstado() == 3) {
+			putCambiarEstadoDao.cargarPlanEmbarque(input);
+			putCambiarEstadoDao.cargarCarga(input);
+		}
+		
+		datos.setCambioEstado("S");
 	}
 }

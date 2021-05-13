@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -29,30 +30,27 @@ import es.mercadona.fwk.core.io.Resource;
 import es.mercadona.fwk.core.io.ResourceService;
 import es.mercadona.fwk.core.io.exceptions.IllegalResourceNameException;
 import es.mercadona.fwk.core.io.exceptions.ResourceNotFoundException;
-import es.mercadona.fwk.core.web.BoPage;
 import es.mercadona.fwk.restful.service.annotate.RESTful;
 import es.mercadona.gesaduan.business.declaracionesdevalor.getdvdetalle.v1.GetDVDetalleService;
-import es.mercadona.gesaduan.business.declaracionesdevalor.getdvsumario.v1.GetDVSumarioService;
 import es.mercadona.gesaduan.business.declaracionesdevalor.postdv.v1.PostDVService;
 import es.mercadona.gesaduan.business.declaracionesdevalor.putdvestadodescarga.v1.PutDVEstadoDescargaService;
 import es.mercadona.gesaduan.business.declaracionesdevalorapi.getdvdocumento.v1.GetDVDocumentoService;
+import es.mercadona.gesaduan.business.declaracionesdevalorapi.getvdsumary.v1.GetVDSumaryService;
 import es.mercadona.gesaduan.business.declaracionesdevalorapi.putfacturaconfirmadescarga.v1.PutFacturaConfirmaDescargaService;
+import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dto.common.error.ErrorDTO;
 import es.mercadona.gesaduan.dto.common.error.OutputResponseErrorDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvdetalle.v1.InputDeclaracionesDeValorDetalleDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvdetalle.v1.restfull.OutputDeclaracionesDeValorDetalleDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvsumario.v1.InputDeclaracionesDeValorDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvsumario.v1.restfull.OutputDeclaracionesDeValorDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.InputDeclaracionesDeValorDocumentoDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocCabDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.InputValueDeclarationSumaryDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.resfull.OutputValueDeclarationSumaryDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.putfacturaconfirmadescarga.v1.InputPutFacturaConfirmaDescargaDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.putfacturaconfirmadescarga.v1.restfull.OutputPutFacturaConfirmaDescargaDTO;
 import es.mercadona.gesaduan.exception.EnumGesaduanException;
 import es.mercadona.gesaduan.exception.GesaduanException;
-import es.mercadona.gesaduan.common.Constantes;
 
 @RESTful
-@Path("logistica/gestion-aduanas/v2.0")
+@Path("logistica/gestion-aduanas/v1.0")
 @RequestScoped
 public class DeclaracionesDeValorApiRestful {
 
@@ -66,7 +64,7 @@ public class DeclaracionesDeValorApiRestful {
 	@Inject
 	private GetDVDocumentoService getDocumentoDVService;
 	@Inject
-	private GetDVSumarioService getDVSumarioService;
+	private GetVDSumaryService getVDSumaryService;
 	@Inject
 	private PutDVEstadoDescargaService putDVEstadoDescargaService;
 	@Inject
@@ -81,103 +79,27 @@ public class DeclaracionesDeValorApiRestful {
 
 	private static final String LOG_FILE = "DeclaracionesDeValorApiRestful(GESADUAN)"; 	
 	
-	@GET
-	@Path("declaraciones-valor/sumario")
+	@POST
+	@Path("valueDeclaration/sumary")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getDeclaracionesDeValorSumario(@NotNull @DefaultValue("es-ES") @QueryParam("locale") String locale,
-			@NotNull @QueryParam("codigoUsuario") String codigoUsuario,
-			@QueryParam("codigoAgencia") String codigoAgencia,
-			@DefaultValue("1") @QueryParam("paginaInicio") Integer paginaInicio, @QueryParam("anyo") Integer anyo,
-			@QueryParam("numeroDeclaracion") Integer numeroDeclaracion, @QueryParam("codigoPedido") String codigoPedido,
-			@QueryParam("codigoAlmacen") String codigoAlmacen, @QueryParam("nombreAlmacen") String nombreAlmacen,
-			@DefaultValue("10") @QueryParam("paginaTamanyo") Integer paginaTamanyo,
-			@DefaultValue("-numeroDeclaracion") @QueryParam("orden") String orden,
-			@QueryParam("codigoProveedor") Integer codigoProveedor,
-			@QueryParam("nombreProveedor") String nombreProveedor,
-			@DefaultValue("T") @QueryParam("tipoDeclaracion") String tipoDeclaracion,
-			@DefaultValue("TD") @QueryParam("estadoDeclaracion") String estadoDeclaracion,
-			@DefaultValue("T") @QueryParam("estadoDescarga") String estadoDescarga,
-			@QueryParam("tipoFechaFiltro") String tipoFechaFiltro, @QueryParam("fechaDesde") String fechaDesde,
-			@QueryParam("fechaHasta") String fechaHasta) {
+	public Response getValueDeclarationSumary(@NotNull @DefaultValue("es-ES") @QueryParam("localeId") String localeId,
+			@NotNull @QueryParam("userCode") String userCode,
+			@DefaultValue("1") @QueryParam("firstPage") Integer firstPage,
+			@DefaultValue("10") @QueryParam("sizePage") Integer sizePage,
+			@DefaultValue("-numeroDeclaracion") @QueryParam("order") String order,
+			InputValueDeclarationSumaryDTO data) {
 
-		OutputDeclaracionesDeValorDTO response = null;
+		OutputValueDeclarationSumaryDTO response = null;
 
 		try {
-			InputDeclaracionesDeValorDTO inputParams = new InputDeclaracionesDeValorDTO();
+			data.setLocaleId(localeId);
+			data.setUserCode(userCode);
+			data.setFirstPage(firstPage);
+			data.setSizePage(sizePage);
+			data.setOrder(order);
 
-			inputParams.setLocale(locale);
-			inputParams.setCodigoUsuario(codigoUsuario);
-
-			if (codigoAgencia != null) {
-				inputParams.setCodigoAgencia(codigoAgencia);
-			}
-
-			if (anyo != null) {
-				inputParams.setAnyo(anyo);
-			}
-			if (numeroDeclaracion != null) {
-				inputParams.setNumeroDeclaracion(numeroDeclaracion);
-			}
-
-			if (codigoPedido != null) {
-				inputParams.setCodigoPedido(codigoPedido);
-			}
-
-			if (codigoAlmacen != null) {
-				inputParams.setCodigoAlmacen(codigoAlmacen);
-			}
-
-			if (nombreAlmacen != null) {
-				inputParams.setNombreAlmacen(nombreAlmacen);
-			}
-
-			if (orden != null) {
-				inputParams.setOrden(orden);
-			}
-
-			if (codigoProveedor != null) {
-				inputParams.setCodigoProveedor(Integer.toString(codigoProveedor));
-			}
-
-			if (nombreProveedor != null) {
-				inputParams.setNombreProveedor(nombreProveedor);
-			}
-
-			inputParams.setTipoDeclaracion(tipoDeclaracion);
-			inputParams.setEstadoDeclaracion(estadoDeclaracion);
-			inputParams.setEstadoDescarga(estadoDescarga);
-
-			if (tipoFechaFiltro != null) {
-
-				inputParams.setTipoFechaFiltro(tipoFechaFiltro);
-				SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-
-				if (fechaDesde != null) {
-
-					Date fDesde = inFormat.parse(fechaDesde);
-					inputParams.setFechaDesde(fDesde);
-				}
-
-				if (fechaHasta != null) {
-					Date fHasta = inFormat.parse(fechaHasta);
-					inputParams.setFechaHasta(fHasta);
-
-				}
-
-			}
-
-			BoPage paginacion = new BoPage();
-
-			if (paginaInicio != null) {
-				paginacion.setPage(Long.valueOf(paginaInicio));
-			}
-
-			if (paginaTamanyo != null) {
-				paginacion.setLimit(Long.valueOf(paginaTamanyo));
-			}
-
-			response = getDVSumarioService.getDeclaracionesDeValorList(inputParams, paginacion);
+			response = getVDSumaryService.getValueDeclarationList(data);
 
 		} catch (Exception e) {
 			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE,"getDeclaracionesDeValorSumario",e.getClass().getSimpleName(),e.getMessage());			
@@ -187,6 +109,7 @@ public class DeclaracionesDeValorApiRestful {
 		return Response.ok(response, MediaType.APPLICATION_JSON).build();
 	}
 
+	/*
 	@GET
 	@Path("declaraciones-valor/{codigoDeclaracion}-{anyo}-{version}")
 	@Consumes(MediaType.WILDCARD)
@@ -226,9 +149,10 @@ public class DeclaracionesDeValorApiRestful {
 		}
 
 	}
+	*/
 
 	@GET
-	@Path("declaraciones-valor/{codigoDeclaracion}-{anyo}-{version}/documento")
+	@Path("valueDeclaration/{codigoDeclaracion}-{anyo}-{version}/documento")
 	@Consumes(MediaType.WILDCARD)
 	@Produces({ MIMETYPE_PDF, MIMETYPE_CSV, MediaType.APPLICATION_JSON })
 	public Response getDeclaracionesDeValorDocumento(@NotNull @PathParam("codigoDeclaracion") Integer codigoDeclaracion,
@@ -345,7 +269,7 @@ public class DeclaracionesDeValorApiRestful {
 	}
 
 	@PUT
-	@Path("factura/{codigoFactura}/confirmar-descarga")
+	@Path("valueDeclaration/{codigoFactura}/confirmar-descarga")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response putFacturaConfirmaDescarga(@NotNull @PathParam("codigoFactura") String codigoFactura,
