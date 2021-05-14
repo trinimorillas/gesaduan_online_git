@@ -12,7 +12,8 @@ import javax.transaction.Transactional;
 import es.mercadona.fwk.core.exceptions.ApplicationException;
 import es.mercadona.fwk.data.DaoBaseImpl;
 import es.mercadona.gesaduan.dao.dosierapi.putdosierconfirmadescarga.v1.PutDosierConfirmaDescargaDAO;
-import es.mercadona.gesaduan.dto.dosierapi.putdosierconfirmadescarga.v1.InputPutDosierConfirmaDescargaDTO;
+import es.mercadona.gesaduan.dto.dosierapi.putdosierconfirmadescarga.v1.InputDataDTO;
+import es.mercadona.gesaduan.dto.dosierapi.putdosierconfirmadescarga.v1.InputPutDossierConfirmDownloadDTO;
 import es.mercadona.gesaduan.dto.dosierapi.putdosierconfirmadescarga.v1.restfull.OutputDatosDTO;
 import es.mercadona.gesaduan.dto.dosierapi.putdosierconfirmadescarga.v1.restfull.OutputPutDosierConfirmaDescargaDTO;
 import es.mercadona.gesaduan.jpa.dosier.DosierJPA;
@@ -35,17 +36,15 @@ public class PutDosierConfirmaDescargaDAOImpl extends DaoBaseImpl<Long, DosierJP
 
 	@Transactional
 	@Override
-	public OutputPutDosierConfirmaDescargaDTO actualizarEstadoDescarga(InputPutDosierConfirmaDescargaDTO input) {
+	public OutputPutDosierConfirmaDescargaDTO actualizarEstadoDescarga(InputDataDTO input) {
 		OutputPutDosierConfirmaDescargaDTO result = null;
 
 		try {
-			String codigoDosier = input.getDatos().getCodigoDosier();
-			String[] dosier = codigoDosier.split("-");
-			String numDosier = dosier[0];
-			String anyoDosier = dosier[1];
-			String codigoAgencia = input.getDatos().getCodigoAgencia();
-			String codigoUsuario = input.getMetadatos().getCodigoUsuario();
-			Boolean estaDescargado = input.getDatos().getEstaDescargado();
+			String numeroDosier = input.getDossierNumber();
+			String anyoDosier = input.getDossierYear();			
+			String codigoAgencia = input.getAgencyId();
+			String codigoUsuario = input.getUserId();
+			Boolean estaDescargado = input.getIsDownloaded();
 			
 			String descargado;
 			if (estaDescargado) {
@@ -67,7 +66,7 @@ public class PutDosierConfirmaDescargaDAOImpl extends DaoBaseImpl<Long, DosierJP
 			final Query queryAgenciaExportadora = getEntityManager().createNativeQuery(sqlAgenciaExportadora.toString());
 			
 			queryAgenciaExportadora.setParameter("estaDescargado", descargado);
-			queryAgenciaExportadora.setParameter("numDosier", numDosier);
+			queryAgenciaExportadora.setParameter("numDosier", numeroDosier);
 			queryAgenciaExportadora.setParameter("anyoDosier", anyoDosier);
 			queryAgenciaExportadora.setParameter("codigoAgencia", codigoAgencia);
 			queryAgenciaExportadora.setParameter("codigoUsuario", codigoUsuario);
@@ -87,7 +86,7 @@ public class PutDosierConfirmaDescargaDAOImpl extends DaoBaseImpl<Long, DosierJP
 			final Query queryAgenciaImportadora = getEntityManager().createNativeQuery(sqlAgenciaImportadora.toString());
 
 			queryAgenciaImportadora.setParameter("estaDescargado", descargado);
-			queryAgenciaImportadora.setParameter("numDosier", numDosier);
+			queryAgenciaImportadora.setParameter("numDosier", numeroDosier);
 			queryAgenciaImportadora.setParameter("anyoDosier", anyoDosier);
 			queryAgenciaImportadora.setParameter("codigoAgencia", codigoAgencia);
 			queryAgenciaExportadora.setParameter("codigoUsuario", codigoUsuario);
@@ -95,13 +94,13 @@ public class PutDosierConfirmaDescargaDAOImpl extends DaoBaseImpl<Long, DosierJP
 			
 			result = new OutputPutDosierConfirmaDescargaDTO();
 			OutputDatosDTO datosSalida = new OutputDatosDTO();
-			datosSalida.setNumDosier(Long.parseLong(numDosier));
+			datosSalida.setNumDosier(Long.parseLong(numeroDosier));
 			datosSalida.setAnyoDosier(Integer.parseInt(anyoDosier));
 			result.setDatos(datosSalida);
-			Map<String, String> metadatos = new HashMap<>();
-			metadatos.put("codigoUsuario", codigoUsuario);
-			metadatos.put("locale", input.getMetadatos().getLocale());
-			result.setMetadatos(metadatos);
+			Map<String, String> metadata = new HashMap<>();
+			metadata.put("userId", codigoUsuario);
+			// metadata.put("locale", input.getMetadata().getLocale());
+			result.setMetadatos(metadata);
 		} catch (Exception e) {			
 			throw new ApplicationException(e.getMessage());
 		}

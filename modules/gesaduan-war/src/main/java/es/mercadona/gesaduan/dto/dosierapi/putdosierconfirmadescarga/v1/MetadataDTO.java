@@ -4,18 +4,18 @@ import java.io.Serializable;
 
 import es.mercadona.gesaduan.dto.common.AbstractDTO;
 
-public class MetadatosDTO extends AbstractDTO implements Serializable {
+public class MetadataDTO extends AbstractDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private String codigoUsuario;
+	private String userId;
 	private String locale;
 
-	public String getCodigoUsuario() {
-		return codigoUsuario;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setCodigoUsuario(String codigoUsuario) {
-		this.codigoUsuario = codigoUsuario;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public String getLocale() {
