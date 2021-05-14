@@ -8,14 +8,14 @@ import javax.transaction.Transactional;
 
 import es.mercadona.fwk.core.exceptions.ApplicationException;
 import es.mercadona.fwk.data.DaoBaseImpl;
-import es.mercadona.gesaduan.business.dosierapi.getdocumento.v1.GetDocumentoService;
+import es.mercadona.gesaduan.business.dosierapi.getdocument.v1.GetDocumentService;
 import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dao.dosier.cambiarestado.v1.CambiarEstadoDAO;
 import es.mercadona.gesaduan.dao.dosier.cambiarestado.v1.GuardarPDFDAO;
 import es.mercadona.gesaduan.dto.dosier.cambiarestado.v1.resfull.DatosCambiarEstadoDTO;
 import es.mercadona.gesaduan.dto.dosier.cambiarestado.v1.resfull.OutputCambiarEstadoDTO;
-import es.mercadona.gesaduan.dto.dosierapi.getdocumento.v1.InputDosierDocumentoDTO;
-import es.mercadona.gesaduan.dto.dosierapi.getdocumento.v1.OutputDosierDocCabDTO;
+import es.mercadona.gesaduan.dto.dosierapi.getdocument.v1.InputDossierDocumentDTO;
+import es.mercadona.gesaduan.dto.dosierapi.getdocument.v1.OutputDossierDocHeadDTO;
 import es.mercadona.gesaduan.jpa.dosier.DosierJPA;
 import es.mercadona.gesaduan.jpa.dosier.getdocumento.v1.DocumentoDataJPA;
 
@@ -25,7 +25,7 @@ public class CambiarEstadoDAOImpl extends DaoBaseImpl<Long, DosierJPA> implement
 	private org.slf4j.Logger logger;
 	
 	@Inject
-	private GetDocumentoService getDocumentoService;
+	private GetDocumentService getDocumentoService;
 	
 	@Inject
 	private GuardarPDFDAO guardarPDF;
@@ -76,13 +76,13 @@ public class CambiarEstadoDAOImpl extends DaoBaseImpl<Long, DosierJPA> implement
 	public void generarPDF(DosierJPA dosierJPA) {
 		try {
 			// Prepara llamada al servicio para crear el fichero
-			InputDosierDocumentoDTO inputDocumentoDTO = new InputDosierDocumentoDTO();
+			InputDossierDocumentDTO inputDocumentoDTO = new InputDossierDocumentDTO();
 	
-			inputDocumentoDTO.setCodigoDosier(dosierJPA.getId().getNumDosier());
-			inputDocumentoDTO.setAnyoDosier(dosierJPA.getId().getAnyoDosier());
-			inputDocumentoDTO.setTipoDocumento("pdf");
+			inputDocumentoDTO.setDossierNumber(Long.toString(dosierJPA.getId().getNumDosier()));
+			inputDocumentoDTO.setDossierYear(Integer.toString(dosierJPA.getId().getAnyoDosier()));
+			inputDocumentoDTO.setDocumentType("pdf");
 	
-			OutputDosierDocCabDTO outputDocumentoDTO = null;
+			OutputDossierDocHeadDTO outputDocumentoDTO = null;
 			outputDocumentoDTO = getDocumentoService.preparaDocumento(inputDocumentoDTO);
 			
 			if (outputDocumentoDTO != null) {

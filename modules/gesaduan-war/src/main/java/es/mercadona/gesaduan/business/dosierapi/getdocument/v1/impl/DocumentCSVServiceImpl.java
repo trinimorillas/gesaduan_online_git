@@ -1,27 +1,27 @@
-package es.mercadona.gesaduan.business.dosierapi.getdocumento.v1.impl;
+package es.mercadona.gesaduan.business.dosierapi.getdocument.v1.impl;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import es.mercadona.gesaduan.business.dosierapi.getdocumento.v1.DocumentoCSVService;
-import es.mercadona.gesaduan.dao.dosierapi.getdocumento.v1.GetDocumentoApiDAO;
+import es.mercadona.gesaduan.business.dosierapi.getdocument.v1.DocumentCSVService;
+import es.mercadona.gesaduan.dao.dosierapi.getdocument.v1.GetDocumentApiDAO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocCabDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocLinDTO;
-import es.mercadona.gesaduan.dto.dosierapi.getdocumento.v1.InputDosierDocumentoDTO;
-import es.mercadona.gesaduan.dto.dosierapi.getdocumento.v1.OutputDosierDocCabDTO;
+import es.mercadona.gesaduan.dto.dosierapi.getdocument.v1.InputDossierDocumentDTO;
+import es.mercadona.gesaduan.dto.dosierapi.getdocument.v1.OutputDossierDocHeadDTO;
 
 
-public class DocumentoCSVServiceImpl implements DocumentoCSVService {
+public class DocumentCSVServiceImpl implements DocumentCSVService {
 
 	@Inject
-	private GetDocumentoApiDAO getDocumentoOnlineDAO;
+	private GetDocumentApiDAO getDocumentOnlineDAO;
 
 	@Override
-	public OutputDosierDocCabDTO preparaDocumentoCSV(InputDosierDocumentoDTO input) {
+	public OutputDossierDocHeadDTO preparaDocumentoCSV(InputDossierDocumentDTO input) {
 
 		// Obtiene los datos del informe (estructura del informe)
-		OutputDosierDocCabDTO outDVDocumentoDTO = getDocumentoOnlineDAO.getDatosDocumento(input);
+		OutputDossierDocHeadDTO outDVDocumentoDTO = getDocumentOnlineDAO.getDatosDocumento(input);
 				
 		// prepara el informe
 		outDVDocumentoDTO.setFicheroCSV(preparaDocumento(outDVDocumentoDTO));
@@ -31,7 +31,7 @@ public class DocumentoCSVServiceImpl implements DocumentoCSVService {
 
 	}
 
-	private byte[] preparaDocumento(OutputDosierDocCabDTO outDVDocumentoDTO) {
+	private byte[] preparaDocumento(OutputDossierDocHeadDTO outDVDocumentoDTO) {
 				
 		// prepara el informe
 		StringBuilder documentoStr = new StringBuilder();

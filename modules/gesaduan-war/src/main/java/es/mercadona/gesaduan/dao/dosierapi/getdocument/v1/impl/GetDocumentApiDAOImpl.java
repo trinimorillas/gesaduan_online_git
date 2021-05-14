@@ -1,4 +1,4 @@
-package es.mercadona.gesaduan.dao.dosierapi.getdocumento.v1.impl;
+package es.mercadona.gesaduan.dao.dosierapi.getdocument.v1.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -13,16 +13,16 @@ import javax.persistence.Query;
 import es.mercadona.fwk.core.exceptions.ApplicationException;
 import es.mercadona.fwk.data.DaoBaseImpl;
 import es.mercadona.gesaduan.common.Constantes;
-import es.mercadona.gesaduan.dao.dosierapi.getdocumento.v1.GetDocumentoApiDAO;
+import es.mercadona.gesaduan.dao.dosierapi.getdocument.v1.GetDocumentApiDAO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocCabDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocLinDTO;
-import es.mercadona.gesaduan.dto.dosierapi.getdocumento.v1.InputDosierDocumentoDTO;
-import es.mercadona.gesaduan.dto.dosierapi.getdocumento.v1.OutputDosierDocCabDTO;
+import es.mercadona.gesaduan.dto.dosierapi.getdocument.v1.InputDossierDocumentDTO;
+import es.mercadona.gesaduan.dto.dosierapi.getdocument.v1.OutputDossierDocHeadDTO;
 import es.mercadona.gesaduan.jpa.dosier.getdocumento.v1.DocumentoDataJPA;
 import es.mercadona.gesaduan.jpa.dosier.getdocumento.v1.DocumentoDataPK;
 
 @Stateless
-public class GetDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDataPK, DocumentoDataJPA> implements GetDocumentoApiDAO{
+public class GetDocumentApiDAOImpl extends DaoBaseImpl<DocumentoDataPK, DocumentoDataJPA> implements GetDocumentApiDAO{
 
 	@PersistenceContext
 	private EntityManager entityM;
@@ -45,13 +45,13 @@ public class GetDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDataPK, Documen
 	}
 
 	@Override
-	public OutputDosierDocCabDTO getDatosDocumento(InputDosierDocumentoDTO input) {
+	public OutputDossierDocHeadDTO getDatosDocumento(InputDossierDocumentDTO input) {
 		
 		return preparaEstructura(getDatosCabecera(input),getDatosLineas(input));
 	}
 	
 	@Override
-	public boolean isDosierInvalidado(InputDosierDocumentoDTO input) {
+	public boolean isDosierInvalidado(InputDossierDocumentDTO input) {
 
 		boolean isInvalidado = false;
 		
@@ -66,14 +66,14 @@ public class GetDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDataPK, Documen
 			select.append("COD_N_ESTADO ");
 			select.append("FROM D_DOSIER ");
 			select.append("WHERE ");
-			select.append("NUM_DOSIER = ?codigoDosier AND ");
-			select.append("NUM_ANYO = ?anyoDosier ");
+			select.append("NUM_DOSIER = ?dossierNumber AND ");
+			select.append("NUM_ANYO = ?dossierYear ");
 			
 			sql.append(select);		
 			
 			final Query query = getEntityManager().createNativeQuery(sql.toString());		
-			query.setParameter("codigoDosier", input.getCodigoDosier());
-			query.setParameter("anyoDosier", input.getAnyoDosier());
+			query.setParameter("dossierNumber", input.getDossierNumber());
+			query.setParameter("dossierYear", input.getDossierYear());
 			
 			@SuppressWarnings("unchecked")
 			List<BigDecimal> listado = query.getResultList();	
@@ -96,26 +96,27 @@ public class GetDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDataPK, Documen
 	}
 	
 	@Override
-	public OutputDosierDocCabDTO getDocumentoInvalidado(InputDosierDocumentoDTO input) {	
+	public OutputDossierDocHeadDTO getDocumentoInvalidado(InputDossierDocumentDTO input) {	
 		
-		OutputDosierDocCabDTO outDocumentoDTO;
+		OutputDossierDocHeadDTO outDocumentoDTO;
 		
 		// Obtiene los datos de cabecera del documento	
-		outDocumentoDTO = new OutputDosierDocCabDTO();	
+		outDocumentoDTO = new OutputDossierDocHeadDTO();	
 				
 		try {
 			
 			DocumentoDataJPA documento =  null;
 			
 			DocumentoDataPK inputPK = new DocumentoDataPK();
-			inputPK.setNumDosier(input.getCodigoDosier());
-			inputPK.setAnyo(input.getAnyoDosier());			
+			
+			inputPK.setNumDosier(Long.parseLong(input.getDossierNumber()));
+			inputPK.setAnyo(Integer.parseInt(input.getDossierYear()));			
 			
 			documento = findById(inputPK);
 			
-			outDocumentoDTO.setCodigoDosier(Long.toString(input.getCodigoDosier()));
-			outDocumentoDTO.setAnyoDosier(Integer.toString(input.getAnyoDosier()));
-			outDocumentoDTO.setTipoInforme(input.getTipoDocumento());
+			outDocumentoDTO.setCodigoDosier(input.getDossierNumber());
+			outDocumentoDTO.setAnyoDosier(input.getDossierYear());
+			outDocumentoDTO.setTipoInforme(input.getDocumentType());
 			if (documento != null) {
 				outDocumentoDTO.setFicheroPDF(documento.getFicheroPdf());
 			}
@@ -130,7 +131,7 @@ public class GetDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDataPK, Documen
 	}	
 	
 	/* carga datos de cabecera de la DV */
-	private List<OutputDeclaracionesDeValorDocCabDTO> getDatosCabecera(InputDosierDocumentoDTO input) {
+	private List<OutputDeclaracionesDeValorDocCabDTO> getDatosCabecera(InputDossierDocumentDTO input) {
 		
 		List<OutputDeclaracionesDeValorDocCabDTO> declaraciones = new ArrayList<>();
 		
@@ -178,15 +179,15 @@ public class GetDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDataPK, Documen
 			select.append("LEFT JOIN D_CENTRO_R C ON D.COD_V_ALMACEN = C.COD_V_CENTRO ");
 			select.append("LEFT JOIN D_DOSIER DOS ON DOS.NUM_DOSIER = D.NUM_DOSIER AND DOS.NUM_ANYO= D.NUM_ANYO_DOSIER ");
 			select.append("WHERE ");
-			select.append("D.NUM_DOSIER = ?codigoDosier AND ");
-			select.append("D.NUM_ANYO_DOSIER = ?anyoDosier ");
+			select.append("D.NUM_DOSIER = ?dossierNumber AND ");
+			select.append("D.NUM_ANYO_DOSIER = ?dossierYear ");
 			select.append("ORDER BY D.COD_N_DECLARACION_VALOR,D.NUM_ANYO,D.COD_N_VERSION ");
 			
 			sql.append(select);
 			
 			final Query query = getEntityManager().createNativeQuery(sql.toString());		
-			query.setParameter("codigoDosier", input.getCodigoDosier());
-			query.setParameter("anyoDosier", input.getAnyoDosier());						
+			query.setParameter("dossierNumber", input.getDossierNumber());
+			query.setParameter("dossierYear", input.getDossierYear());						
 			
 			List<Object[]> listado = query.getResultList();	
 			
@@ -239,13 +240,13 @@ public class GetDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDataPK, Documen
 	}
 	
 	/* carga datos de lineas de la DV */
-	private List<OutputDeclaracionesDeValorDocLinDTO> getDatosLineas(InputDosierDocumentoDTO input) {
+	private List<OutputDeclaracionesDeValorDocLinDTO> getDatosLineas(InputDossierDocumentDTO input) {
 		
 		List<OutputDeclaracionesDeValorDocLinDTO> lineas;
 		
 		// Obtiene los datos de cabecera del documento	
 		lineas = new ArrayList<>();	
-		String tipoDocumento = input.getTipoDocumento();
+		String tipoDocumento = input.getDocumentType();
 		
 		try {	
 			
@@ -359,15 +360,15 @@ public class GetDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDataPK, Documen
 			select.append(") ");	
 			select.append("INNER JOIN O_DECLARACION_VALOR_CAB DV ON DV.COD_N_DECLARACION_VALOR = DECLARACION_VALOR AND DV.NUM_ANYO= ANYO AND DV.COD_N_VERSION= VERSION_N ");
 			select.append("WHERE ");
-			select.append("DV.NUM_DOSIER = ?codigoDosier AND ");
-			select.append("DV.NUM_ANYO_DOSIER = ?anyoDosier ");
+			select.append("DV.NUM_DOSIER = ?dossierNumber AND ");
+			select.append("DV.NUM_ANYO_DOSIER = ?dossierYear ");
 			select.append("ORDER BY DECLARACION_VALOR,ANYO,VERSION_N,CODIGO_TARIC,TIPO_LINEA,CODIGO ");
 			
 			sql.append(select);
 			
 			final Query query = getEntityManager().createNativeQuery(sql.toString());		
-			query.setParameter("codigoDosier", input.getCodigoDosier());
-			query.setParameter("anyoDosier", input.getAnyoDosier());							
+			query.setParameter("dossierNumber", input.getDossierNumber());
+			query.setParameter("dossierYear", input.getDossierYear());							
 			
 			List<Object[]> listado = query.getResultList();	
 			
@@ -413,12 +414,12 @@ public class GetDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDataPK, Documen
 	}
 	
 	/* carga datos de cabecera de la DV */
-	private OutputDosierDocCabDTO preparaEstructura(List<OutputDeclaracionesDeValorDocCabDTO> declaraciones, List<OutputDeclaracionesDeValorDocLinDTO> lineas) {
+	private OutputDossierDocHeadDTO preparaEstructura(List<OutputDeclaracionesDeValorDocCabDTO> declaraciones, List<OutputDeclaracionesDeValorDocLinDTO> lineas) {
 		
-		OutputDosierDocCabDTO outDocumentoDTO;
+		OutputDossierDocHeadDTO outDocumentoDTO;
 		
 		// Obtiene los datos de cabecera del documento	
-		outDocumentoDTO = new OutputDosierDocCabDTO();	
+		outDocumentoDTO = new OutputDossierDocHeadDTO();	
 		
 		
 

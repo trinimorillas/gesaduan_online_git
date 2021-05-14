@@ -1,4 +1,4 @@
-package es.mercadona.gesaduan.business.dosierapi.getdocumento.v1.impl;
+package es.mercadona.gesaduan.business.dosierapi.getdocument.v1.impl;
 
 
 import java.io.File;
@@ -23,18 +23,18 @@ import es.mercadona.fwk.reporting.DataRecordType;
 import es.mercadona.fwk.reporting.Report;
 import es.mercadona.fwk.reporting.ReportTemplate;
 import es.mercadona.fwk.reporting.ReportingService;
-import es.mercadona.gesaduan.business.dosierapi.getdocumento.v1.DocumentoPDFService;
+import es.mercadona.gesaduan.business.dosierapi.getdocument.v1.DocumentPDFService;
 import es.mercadona.gesaduan.common.Constantes;
-import es.mercadona.gesaduan.dao.dosierapi.getdocumento.v1.GetDocumentoApiDAO;
+import es.mercadona.gesaduan.dao.dosierapi.getdocument.v1.GetDocumentApiDAO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocCabDTO;
-import es.mercadona.gesaduan.dto.dosierapi.getdocumento.v1.InputDosierDocumentoDTO;
-import es.mercadona.gesaduan.dto.dosierapi.getdocumento.v1.OutputDosierDocCabDTO;
+import es.mercadona.gesaduan.dto.dosierapi.getdocument.v1.InputDossierDocumentDTO;
+import es.mercadona.gesaduan.dto.dosierapi.getdocument.v1.OutputDossierDocHeadDTO;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
-public class DocumentoPDFServiceImpl implements DocumentoPDFService {
+public class DocumentPDFServiceImpl implements DocumentPDFService {
 
 	@Inject
-	private GetDocumentoApiDAO getDocumentoOnlineDAO;
+	private GetDocumentApiDAO getDocumentOnlineDAO;
 	
 	@Inject
 	private FileSystemService fileSystemService;
@@ -48,20 +48,20 @@ public class DocumentoPDFServiceImpl implements DocumentoPDFService {
 	private static final String LOG_FILE = "DocumentoPDFServiceImpl(GESADUAN)"; 
 
 	@Override
-	public OutputDosierDocCabDTO preparaDocumentoPDF(InputDosierDocumentoDTO input) {
+	public OutputDossierDocHeadDTO preparaDocumentoPDF(InputDossierDocumentDTO input) {
 
-		OutputDosierDocCabDTO outDVDocumentoDTO = null;
+		OutputDossierDocHeadDTO outDVDocumentoDTO = null;
 		
 		// Obtiene los datos del informe (estructura del informe)
-		if (!getDocumentoOnlineDAO.isDosierInvalidado(input)) {
+		if (!getDocumentOnlineDAO.isDosierInvalidado(input)) {
 			
-			outDVDocumentoDTO = getDocumentoOnlineDAO.getDatosDocumento(input);		
+			outDVDocumentoDTO = getDocumentOnlineDAO.getDatosDocumento(input);		
 				
 			// prepara el informe
 			outDVDocumentoDTO.setFicheroPDF(preparaDocumento(outDVDocumentoDTO));
 		} else {
 			
-			outDVDocumentoDTO = getDocumentoOnlineDAO.getDocumentoInvalidado(input);
+			outDVDocumentoDTO = getDocumentOnlineDAO.getDocumentoInvalidado(input);
 			
 		}
 		
@@ -70,7 +70,7 @@ public class DocumentoPDFServiceImpl implements DocumentoPDFService {
 
 	}
 	
-	private byte[] preparaDocumento(OutputDosierDocCabDTO outDVDocumentoDTO) {
+	private byte[] preparaDocumento(OutputDossierDocHeadDTO outDVDocumentoDTO) {
 		
 		// prepara el informe
 		byte[] ficheroByte =  null;

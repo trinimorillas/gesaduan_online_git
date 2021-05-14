@@ -32,23 +32,20 @@ import es.mercadona.fwk.core.io.exceptions.IllegalResourceNameException;
 import es.mercadona.fwk.core.io.exceptions.ResourceNotFoundException;
 import es.mercadona.fwk.restful.service.annotate.RESTful;
 import es.mercadona.gesaduan.business.declaracionesdevalor.putdvestadodescarga.v1.PutDVEstadoDescargaService;
-import es.mercadona.gesaduan.business.dosierapi.getdocumento.v1.GetDocumentoService;
+import es.mercadona.gesaduan.business.dosierapi.getdocument.v1.GetDocumentService;
 import es.mercadona.gesaduan.business.dosierapi.putdosierconfirmadescarga.v1.PutDosierConfirmaDescargaService;
 import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dto.common.error.ErrorDTO;
 import es.mercadona.gesaduan.dto.common.error.OutputResponseErrorDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.putdvinddescarga.v1.DeclaracionesDeValorEstadoDescargaServiceDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.putdvinddescarga.v1.restfull.InputDatosComunesDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.putdvinddescarga.v1.restfull.OutputDeclaracionesDeValorEstadoDescargaDTO;
-import es.mercadona.gesaduan.dto.dosierapi.getdocumento.v1.InputDosierDocumentoDTO;
-import es.mercadona.gesaduan.dto.dosierapi.getdocumento.v1.OutputDosierDocCabDTO;
-import es.mercadona.gesaduan.dto.dosierapi.putdosierconfirmadescarga.v1.InputPutDosierConfirmaDescargaDTO;
+import es.mercadona.gesaduan.dto.dosierapi.getdocument.v1.InputDossierDocumentDTO;
+import es.mercadona.gesaduan.dto.dosierapi.getdocument.v1.OutputDossierDocHeadDTO;
+import es.mercadona.gesaduan.dto.dosierapi.putdosierconfirmadescarga.v1.InputDataDTO;
 import es.mercadona.gesaduan.dto.dosierapi.putdosierconfirmadescarga.v1.restfull.OutputPutDosierConfirmaDescargaDTO;
 import es.mercadona.gesaduan.exception.EnumGesaduanException;
 import es.mercadona.gesaduan.exception.GesaduanException;
 
 @RESTful
-@Path("logistica/gestion-aduanas/v2.0")
+@Path("logistica/gestion-aduanas/v1.0")
 @RequestScoped
 public class DosierApiRestful {
 	
@@ -58,7 +55,7 @@ public class DosierApiRestful {
 	@Inject
 	private ResourceService resourceService;
 	@Inject
-	private GetDocumentoService getDocumentoService;
+	private GetDocumentService getDocumentService;
 	@Inject
 	private PutDVEstadoDescargaService putDVEstadoDescargaService;
 	@Inject
@@ -72,61 +69,67 @@ public class DosierApiRestful {
 	private static final String LOG_FILE = "DeclaracionesDeValorRestful(GESADUAN)"; 	
 	
 	
-
 	@GET
-	@Path("dosier/{codigoDosier}-{anyo}/documento")
+	@Path("dossier/{dossierId}/document")
 	@Consumes(MediaType.WILDCARD)
 	@Produces({ MIMETYPE_PDF, MIMETYPE_CSV, MediaType.APPLICATION_JSON })
-	public Response getDeclaracionesDeValorDocumento(
-			@NotNull @PathParam("codigoDosier") Long codigoDosier,
-			@NotNull @PathParam("anyo") Integer anyo,  
+	public Response getDosierDocumento(
+			@NotNull @PathParam("dossierId") String dossierId,  
 			@Context HttpServletRequest request,
 			@DefaultValue("es-ES") @QueryParam("locale") String locale,
-			@NotNull @QueryParam("codigoUsuario") String codigoUsuario,
-			@NotNull @DefaultValue("pdf") @QueryParam("tipoDocumento") String tipoDocumento) {
-		
+			@NotNull @QueryParam("userId") String userId,
+			@NotNull @DefaultValue("pdf") @QueryParam("documentType") String documentType) {
+	
 		ResponseBuilder rb = null;
 
 		try {
 			String fileExtension = ".";
 			String mimeType = null;
 			String fileBaseName = null;
+			
+			String[] dosierIdArr = dossierId.split("-");
+			
+			String dossierNumber = dosierIdArr[0];
+			String dossierYear = dosierIdArr[1];					
+			
 
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 			Date date = new Date(System.currentTimeMillis());
 
+			
+			
 			// Prepara datos basicos del fichero (extension,mimetype,nombre)
-			if (tipoDocumento.equalsIgnoreCase("pdf")) {
-				fileExtension += tipoDocumento.toLowerCase();
+			if (documentType.equalsIgnoreCase("pdf")) {
+				fileExtension += documentType.toLowerCase();
 				mimeType = MIMETYPE_PDF;
-				fileBaseName = FILE_BASE_NAME_PDF.concat(codigoDosier.toString()).concat("_")
-						.concat(anyo.toString()).concat("_").concat(formatter.format(date));
-			} else if (tipoDocumento.equalsIgnoreCase("csv")) {
-				fileExtension += tipoDocumento.toLowerCase();
+				fileBaseName = FILE_BASE_NAME_PDF.concat(dossierNumber).concat("_")
+						.concat(dossierYear).concat("_").concat(formatter.format(date));
+			} else if (documentType.equalsIgnoreCase("csv")) {
+				fileExtension += documentType.toLowerCase();
 				mimeType = MIMETYPE_CSV;
-				fileBaseName = FILE_BASE_NAME_CSV.concat(codigoDosier.toString()).concat("_")
-						.concat(anyo.toString()).concat("_").concat(formatter.format(date));
+				fileBaseName = FILE_BASE_NAME_CSV.concat(dossierNumber).concat("_")
+						.concat(dossierYear).concat("_").concat(formatter.format(date));
 			}
 
 			// Prepara llamada al servicio que va a montar el fichero			
-			InputDosierDocumentoDTO inputDocumentoDTO = new InputDosierDocumentoDTO();
+			InputDossierDocumentDTO inputDocumentDTO = new InputDossierDocumentDTO();
 			
-			inputDocumentoDTO.setCodigoDosier(codigoDosier);
-			inputDocumentoDTO.setAnyoDosier(anyo);
-			inputDocumentoDTO.setTipoDocumento(tipoDocumento);			
+			inputDocumentDTO.setDossierNumber(dossierNumber);
+			inputDocumentDTO.setDossierYear(dossierYear);
+			inputDocumentDTO.setDocumentType(documentType);			
 
-			OutputDosierDocCabDTO outputDocumentoDTO = null;
+			OutputDossierDocHeadDTO outputDocumentoDTO = null;
 
-			outputDocumentoDTO = getDocumentoService.preparaDocumento(inputDocumentoDTO);
+			outputDocumentoDTO = getDocumentService.preparaDocumento(inputDocumentDTO);
 
 			// devuelve el fichero y controla los posibles errores			
 			if(outputDocumentoDTO != null) {
 			
 				byte[] file = null;
 	
-				if (tipoDocumento.equalsIgnoreCase("pdf")) { 
+				if (documentType.equalsIgnoreCase("pdf")) { 
 					file = outputDocumentoDTO.getFicheroPDF();
-				} else if (tipoDocumento.equalsIgnoreCase("csv")) {
+				} else if (documentType.equalsIgnoreCase("csv")) {
 					file = outputDocumentoDTO.getFicheroCSV();
 				} else {
 					throw new WebApplicationException(Status.BAD_REQUEST);
@@ -175,13 +178,13 @@ public class DosierApiRestful {
 			}
 
 		} catch (ResourceNotFoundException e) {
-			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE,"getDeclaracionesDeValorDocumento-1",e.getClass().getSimpleName(),e.getMessage());			
+			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE,"getDosierDocumento-1",e.getClass().getSimpleName(),e.getMessage());			
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
 		} catch (IllegalResourceNameException e) {
-			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE,"getDeclaracionesDeValorDocumento-2",e.getClass().getSimpleName(),e.getMessage());			
+			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE,"getDosierDocumento-2",e.getClass().getSimpleName(),e.getMessage());			
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
 		} catch (Exception e) {
-			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE,"getDeclaracionesDeValorDocumento-3",e.getClass().getSimpleName(),e.getMessage());			
+			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE,"getDosierDocumento-3",e.getClass().getSimpleName(),e.getMessage());			
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
 		}
 
@@ -190,23 +193,28 @@ public class DosierApiRestful {
 
 
 	@PUT
-	@Path("dosier/{codigoDosier}/confirmar-descarga")
+	@Path("dossier/{dossierId}/confirm-download")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response putDosierConfirmaDescarga(
-			@NotNull @PathParam("codigoDosier") String codigoDosier,
-			@NotNull @QueryParam("codigoAgencia") String codigoAgencia,
-			@NotNull InputPutDosierConfirmaDescargaDTO inputData) {
+			@NotNull @PathParam("dossierId ") String dossierId ,
+			@NotNull @QueryParam("agencyId") String agencyId,
+			@NotNull InputDataDTO inputData) {
 		OutputPutDosierConfirmaDescargaDTO response = null;
 
 		try {
-			if (inputData.getMetadatos().getCodigoUsuario() == null || inputData.getMetadatos().getLocale() == null
-					|| inputData.getDatos().getEstaDescargado() == null) {
+			
+			String[] dosierIdArr = dossierId.split("-");
+			
+			String dossierNumber = dosierIdArr[0];
+			String dossierYear = dosierIdArr[1];				
+			
+			if (inputData.getUserId() == null || inputData.getIsDownloaded() == null) {
 				throw new GesaduanException(EnumGesaduanException.PARAMETROS_OBLIGATORIOS);
 			}
 
-			inputData.getDatos().setCodigoDosier(codigoDosier);
-			inputData.getDatos().setCodigoAgencia(codigoAgencia);
+			inputData.setDossierNumber(dossierNumber);
+			inputData.setDossierYear(dossierYear);
 
 			response = putDosierConfirmaDescargaService.updateEstadoDescarga(inputData);
 
