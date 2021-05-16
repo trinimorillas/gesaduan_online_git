@@ -7,32 +7,50 @@ import es.mercadona.gesaduan.dto.declaracionesdevalor.AbstractDTO;
 public class DVInsertPKDTO extends AbstractDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private Integer numeroDecalaracion;
-	private Integer anyo;
-	private Integer version;
+	private Integer valueDeclarationNumber;
+	private Integer valueDeclarationYear;
+	private Integer valueDeclarationVersion;
 
-	public Integer getAnyo() {
-		return anyo;
+	/**
+	 * @return the valueDeclarationNumber
+	 */
+	public Integer getValueDeclarationNumber() {
+		return valueDeclarationNumber;
 	}
 
-	public void setAnyo(Integer anyo) {
-		this.anyo = anyo;
+	/**
+	 * @param valueDeclarationNumber the valueDeclarationNumber to set
+	 */
+	public void setValueDeclarationNumber(Integer valueDeclarationNumber) {
+		this.valueDeclarationNumber = valueDeclarationNumber;
 	}
 
-	public Integer getVersion() {
-		return version;
+	/**
+	 * @return the valueDeclarationYear
+	 */
+	public Integer getValueDeclarationYear() {
+		return valueDeclarationYear;
 	}
 
-	public void setVersion(Integer version) {
-		this.version = version;
+	/**
+	 * @param valueDeclarationYear the valueDeclarationYear to set
+	 */
+	public void setValueDeclarationYear(Integer valueDeclarationYear) {
+		this.valueDeclarationYear = valueDeclarationYear;
 	}
 
-	public Integer getNumeroDecalaracion() {
-		return numeroDecalaracion;
+	/**
+	 * @return the valueDeclarationVersion
+	 */
+	public Integer getValueDeclarationVersion() {
+		return valueDeclarationVersion;
 	}
 
-	public void setNumeroDecalaracion(Integer numeroDecalaracion) {
-		this.numeroDecalaracion = numeroDecalaracion;
+	/**
+	 * @param valueDeclarationVersion the valueDeclarationVersion to set
+	 */
+	public void setValueDeclarationVersion(Integer valueDeclarationVersion) {
+		this.valueDeclarationVersion = valueDeclarationVersion;
 	}
 
 }
