@@ -9,7 +9,7 @@ public class DataDTO extends AbstractDTO {
 	private ValueDeclarationCommonDataDTO valueDeclarationCommonData;
 	private ValueDeclarationHeaderDTO valueDeclarationHeader;
 	private List<ValueDeclarationHistoricalDTO> valueDeclarationHistorical;
-	private List<ValueDeclarationLineDTO> valueDeclarationLineDTO;
+	private List<ValueDeclarationLineDTO> valueDeclarationLine;
 
 	/**
 	 * @return the valueDeclarationCommonData
@@ -56,15 +56,15 @@ public class DataDTO extends AbstractDTO {
 	/**
 	 * @return the valueDeclarationLineDTO
 	 */
-	public List<ValueDeclarationLineDTO> getValueDeclarationLineDTO() {
-		return valueDeclarationLineDTO;
+	public List<ValueDeclarationLineDTO> getValueDeclarationLine() {
+		return valueDeclarationLine;
 	}
 
 	/**
 	 * @param valueDeclarationLineDTO the valueDeclarationLineDTO to set
 	 */
-	public void setValueDeclarationLineDTO(List<ValueDeclarationLineDTO> valueDeclarationLineDTO) {
-		this.valueDeclarationLineDTO = valueDeclarationLineDTO;
+	public void setValueDeclarationLine(List<ValueDeclarationLineDTO> valueDeclarationLine) {
+		this.valueDeclarationLine = valueDeclarationLine;
 	}
 
 }

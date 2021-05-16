@@ -112,7 +112,7 @@ public class DeclaracionesDeValorApiRestful {
 	}
 
 	@GET
-	@Path("declaraciones-valor/{valueDeclarationCode}")
+	@Path("valueDeclaration/{valueDeclarationCode}")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getDeclaracionDeValorDetalle(@NotNull @PathParam("valueDeclarationCode") String valueDeclaration,

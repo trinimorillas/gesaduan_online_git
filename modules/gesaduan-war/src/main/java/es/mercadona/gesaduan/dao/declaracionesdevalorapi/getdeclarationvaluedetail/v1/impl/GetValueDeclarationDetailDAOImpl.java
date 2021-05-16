@@ -99,13 +99,13 @@ public class GetValueDeclarationDetailDAOImpl extends BaseDAO<DeclaracionesDeVal
 						commonData.setNotified(false);
 					}
 					if (tmp[3] != null) {
-						commonData.setValueDeclarationDownloadDate((String) tmp[3]);
+						commonData.setValueDeclarationDownloadDate(String.valueOf(tmp[3]));
 					}
 					if (tmp[4] != null) {
-						commonData.setExportDownloadDate((String) tmp[4]);
+						commonData.setExportDownloadDate(String.valueOf(tmp[4]));
 					}
 					if (tmp[5] != null) {
-						commonData.setImportDownloadDate((String) tmp[5]);
+						commonData.setImportDownloadDate(String.valueOf(tmp[5]));
 					}
 					if ("S".equals(tmp[6])) {
 						commonData.setManualLoading(false);
@@ -128,47 +128,47 @@ public class GetValueDeclarationDetailDAOImpl extends BaseDAO<DeclaracionesDeVal
 					}
 					header.setTotalAmountCurrency("EUR");
 					if (tmp[13] != null) {
-						header.setValueDeclarationDate((String) tmp[13]);
+						header.setValueDeclarationDate(String.valueOf(tmp[13]));
 					}
 					if (tmp[14] != null) {
-						header.setDispatchId((String) tmp[14]);
+						header.setDispatchId(String.valueOf(tmp[14]));
 					}
 					if (tmp[15] != null) {
-						header.setIncoterm((String) tmp[15]);
+						header.setIncoterm(String.valueOf(tmp[15]));
 					}
 					if (tmp[16] != null) {
-						header.setDeliveryNoteDate((String) tmp[16]);
+						header.setDeliveryNoteDate(String.valueOf(tmp[16]));
 					}
 					if (tmp[17] != null) {
-						header.setDispatchDate((String) tmp[17]);
+						header.setDispatchDate(String.valueOf(tmp[17]));
 					}
 
 					// ORIGEN
 					SourceDTO source = new SourceDTO();
 					if (tmp[18] != null) {
-						source.setId((String) tmp[18]);
+						source.setId(String.valueOf(tmp[18]));
 					}
 					if (tmp[19] != null) {
-						source.setName((String) tmp[19]);
+						source.setName(String.valueOf(tmp[19]));
 					}
 					if (tmp[20] != null) {
 						source.setRegionId(String.valueOf(tmp[20]));
 					}
 					if (tmp[21] != null) {
-						source.setTypeId((String) tmp[21]);
+						source.setTypeId(String.valueOf(tmp[21]));
 					}
 					header.setSource(source);
 
 					// DESTINO
 					TargetDTO target = new TargetDTO();
 					if (tmp[22] != null) {
-						target.setId((String) tmp[22]);
+						target.setId(String.valueOf(tmp[22]));
 					}
 					if (tmp[23] != null) {
-						target.setName((String) tmp[23]);
+						target.setName(String.valueOf(tmp[23]));
 					}
 					if (tmp[24] != null) {
-						target.setTypeId((String) tmp[24]);
+						target.setTypeId(String.valueOf(tmp[24]));
 					}
 					header.setTarget(target);
 					
@@ -177,7 +177,7 @@ public class GetValueDeclarationDetailDAOImpl extends BaseDAO<DeclaracionesDeVal
 					header.setInternalOrderList(getPedidos(valueDeclarationCode, valueDeclarationYear, valueDeclarationVersion, header.getDispatchId()));
 					data.setValueDeclarationHeader(header);
 					// Lineas
-					data.setValueDeclarationLineDTO(getLines(valueDeclarationCode, valueDeclarationYear, valueDeclarationVersion, locale, source.getId()));
+					data.setValueDeclarationLine(getLines(valueDeclarationCode, valueDeclarationYear, valueDeclarationVersion, locale, source.getId()));
 					data.setValueDeclarationHistorical(getHistorico(valueDeclarationCode, valueDeclarationYear));
 				}
 			}
@@ -267,31 +267,31 @@ public class GetValueDeclarationDetailDAOImpl extends BaseDAO<DeclaracionesDeVal
 					linea.setTaricId(Long.parseLong(String.valueOf(tmp[1])));
 				}
 				if (tmp[2] != null) {
-					linea.setRea((String) tmp[2]);
+					linea.setRea(String.valueOf(tmp[2]));
 				}
 				if (tmp[3] != null) {
-					linea.setGtin13((String) tmp[3]);
+					linea.setGtin13(String.valueOf(tmp[3]));
 				}
 				if (tmp[4] != null) {
-					linea.setProductName((String) tmp[4]);
+					linea.setProductName(String.valueOf(tmp[4]));
 				}
 				if (tmp[5] != null) {
-					linea.setProductAlternativeName((String) tmp[5]);
+					linea.setProductAlternativeName(String.valueOf(tmp[5]));
 				}
 				if (tmp[6] != null) {
-					linea.setStandardSalesFormat((String) tmp[6]);
+					linea.setStandardSalesFormat(String.valueOf(tmp[6]));
 				}
 				if (tmp[7] != null) {
-					linea.setAlternativeSalesFormatDescription((String) tmp[7]);
+					linea.setAlternativeSalesFormatDescription(String.valueOf(tmp[7]));
 				}
 				if (tmp[8] != null) {
-					linea.setBrandName((String) tmp[8]);
+					linea.setBrandName(String.valueOf(tmp[8]));
 				}
 				if (tmp[9] != null) {
-					linea.setPackageTypeId((String) tmp[9]);
+					linea.setPackageTypeId(String.valueOf(tmp[9]));
 				}
 				if (tmp[10] != null) {
-					linea.setPackageName((String) tmp[10]);
+					linea.setPackageName(String.valueOf(tmp[10]));
 				}
 				if (tmp[11] != null) {
 					linea.setPackageQuantity(Integer.parseInt(String.valueOf(tmp[11])));
@@ -309,7 +309,7 @@ public class GetValueDeclarationDetailDAOImpl extends BaseDAO<DeclaracionesDeVal
 					linea.setLineGrossWeightUnit("KG");
 				}
 				if (tmp[14] != null) {
-					linea.setVolume((Double) tmp[14]);
+					linea.setVolume(Double.parseDouble(String.valueOf(tmp[14])));
 				}
 				if (tmp[14] != null) {
 					linea.setVolumeUnit("L");
@@ -330,19 +330,19 @@ public class GetValueDeclarationDetailDAOImpl extends BaseDAO<DeclaracionesDeVal
 					linea.setTotalLineAmountCurrency("EUR");
 				}
 				if (tmp[18] != null) {
-					linea.setAlcoholPercentage((Double) tmp[18]);
+					linea.setAlcoholPercentage(Double.parseDouble(String.valueOf(tmp[18])));
 				}
 				if (tmp[18] != null) {
 					linea.setAlcoholPercentageUnit(null);
 				}
 				if (tmp[19] != null) {
-					linea.setPlateGrade((Double) tmp[19]);
+					linea.setPlateGrade(Double.parseDouble(String.valueOf(tmp[19])));
 				}
 				if (tmp[19] != null) {
 					linea.setPlateGradeUnit(null);
 				}
 				if (tmp[20] != null) {
-					linea.setSourceCountryId((String) tmp[20]);
+					linea.setSourceCountryId(String.valueOf(tmp[20]));
 				}
 				if (tmp[21] != null) {
 					if ("S".equals(tmp[21])) {
@@ -352,7 +352,7 @@ public class GetValueDeclarationDetailDAOImpl extends BaseDAO<DeclaracionesDeVal
 					}
 				}
 				if (tmp[22] != null) {
-					linea.setHasError((String) tmp[22]);
+					linea.setHasError(String.valueOf(tmp[22]));
 				}
 				if (linea.getTaricId() == null) {
 					StringBuilder sqlTaric = new StringBuilder();
@@ -379,11 +379,11 @@ public class GetValueDeclarationDetailDAOImpl extends BaseDAO<DeclaracionesDeVal
 		try {
 			final StringBuilder sql = new StringBuilder();
 
-			sql.append("SELECT EVENTO, TO_CHAR(FECHA, 'DD/MM/YYYY HH24:MI:SS') AS FECHA, VERSION, VIGENTE, CORRECTA ");
+			sql.append("SELECT EVENTO, TO_CHAR(FECHA, 'DD/MM/YYYY') AS FECHA, VERSION, VIGENTE, CORRECTA ");
 			sql.append("FROM (");
 			sql.append("SELECT EVENTO, FECHA, VERSION, VIGENTE, CORRECTA, ROW_NUMBER() OVER (PARTITION BY EVENTO, FECHA ORDER BY VERSION) PRIMERA ");
 			sql.append("FROM (");
-			sql.append("SELECT DISTINCT 'Generación DV - Versión ' || DV.COD_N_VERSION AS EVENTO, DV.FEC_DT_CREACION AS FECHA, ");
+			sql.append("SELECT DISTINCT 'Generación Factura - Versión ' || DV.COD_N_VERSION AS EVENTO, DV.FEC_DT_CREACION AS FECHA, ");
 			sql.append("DV.COD_N_VERSION AS VERSION, DV.MCA_ULTIMA_VIGENTE AS VIGENTE, DV.MCA_DV_CORRECTA AS CORRECTA ");
 			sql.append("FROM O_DECLARACION_VALOR_CAB DV ");
 			sql.append("WHERE DV.COD_N_DECLARACION_VALOR = ?valueDeclarationNumber ");
@@ -414,7 +414,7 @@ public class GetValueDeclarationDetailDAOImpl extends BaseDAO<DeclaracionesDeVal
 			sql.append("AND DV.NUM_ANYO = ?valueDeclarationYear ");
 			sql.append("AND NOTIF.FEC_DT_ENVIO IS NOT NULL ");
 			sql.append("UNION ");
-			sql.append("SELECT DISTINCT 'Descarga DV por el agente de aduanas', DV.FEC_DT_DESCARGA, ");
+			sql.append("SELECT DISTINCT 'Descarga Factura por el agente de aduanas', DV.FEC_DT_DESCARGA, ");
 			sql.append("DV.COD_N_VERSION, NULL, DV.MCA_DV_CORRECTA AS CORRECTA ");
 			sql.append("FROM O_DECLARACION_VALOR_CAB DV ");
 			sql.append("WHERE DV.COD_N_DECLARACION_VALOR = ?valueDeclarationNumber ");
@@ -471,10 +471,10 @@ public class GetValueDeclarationDetailDAOImpl extends BaseDAO<DeclaracionesDeVal
 					ValueDeclarationHistoricalDTO historico = new ValueDeclarationHistoricalDTO();
 
 					if (tmp[0] != null) {
-						historico.setEventId((String) tmp[0]);
+						historico.setEventId(String.valueOf(tmp[0]));
 					}
 					if (tmp[1] != null) {
-						historico.setEventCreateDate((String) tmp[1]);
+						historico.setEventCreateDate(String.valueOf(tmp[1]));
 					}
 					if (tmp[2] != null) {
 						historico.setValueDeclarationVersion(Integer.parseInt(String.valueOf(tmp[2])));

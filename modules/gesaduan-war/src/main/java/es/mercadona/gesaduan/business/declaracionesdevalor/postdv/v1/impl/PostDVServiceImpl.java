@@ -60,14 +60,18 @@ public class PostDVServiceImpl implements PostDVService {
 					declaracionJPA.setPedido(input.getData().getValueDeclarationHeader().getInternalOrderList().get(0).getInternalOrderId());
 				}
 			}
-			if (input.getData().getValueDeclarationHeader().getSource().getId() != null) {
-				declaracionJPA.setProveedor(input.getData().getValueDeclarationHeader().getSource().getId());
+			if (input.getData().getValueDeclarationHeader().getSource() != null) {
+				if (input.getData().getValueDeclarationHeader().getSource().getId() != null) {
+					declaracionJPA.setProveedor(input.getData().getValueDeclarationHeader().getSource().getId());
+				}
+				if (input.getData().getValueDeclarationHeader().getSource().getRegionId() != null) {
+					declaracionJPA.setProvinciaCarga(Integer.parseInt(input.getData().getValueDeclarationHeader().getSource().getRegionId()));
+				}
 			}
-			if (input.getData().getValueDeclarationHeader().getSource().getRegionId() != null) {
-				declaracionJPA.setProvinciaCarga(Integer.parseInt(input.getData().getValueDeclarationHeader().getSource().getRegionId()));
-			}
-			if (input.getData().getValueDeclarationHeader().getTarget().getId() != null) {
-				declaracionJPA.setCodAlmacen(input.getData().getValueDeclarationHeader().getTarget().getId());
+			if (input.getData().getValueDeclarationHeader().getTarget() != null) { 
+				if (input.getData().getValueDeclarationHeader().getTarget().getId() != null) {
+					declaracionJPA.setCodAlmacen(input.getData().getValueDeclarationHeader().getTarget().getId());
+				}
 			}
 			if (input.getData().getValueDeclarationHeader().getIncoterm() != null) {
 				declaracionJPA.setCondicionesEntrega(input.getData().getValueDeclarationHeader().getIncoterm());
@@ -105,7 +109,7 @@ public class PostDVServiceImpl implements PostDVService {
 			declaracionJPA.setApp("GESADUAN");
 			
 			// Líneas
-			List<ValueDeclarationLineDTO> listado = input.getData().getValueDeclarationLineDTO();
+			List<ValueDeclarationLineDTO> listado = input.getData().getValueDeclarationLine();
 
 			if (listado != null && !listado.isEmpty()) {
 				for (ValueDeclarationLineDTO tmp : listado) {
@@ -162,7 +166,9 @@ public class PostDVServiceImpl implements PostDVService {
 					if (tmp.getSourceCountryId() != null) {
 						linea.setPaisOrigen(tmp.getSourceCountryId());
 					}
-					linea.setEsListoParaComer(tmp.getIsLpc() ? "S" : "N");
+					if (tmp.getIsLpc() != null) {
+						linea.setEsListoParaComer(tmp.getIsLpc() ? "S" : "N");
+					}
 					if (tmp.getHasError() != null) {
 						linea.setMarcaError(tmp.getHasError());
 					}
@@ -178,9 +184,9 @@ public class PostDVServiceImpl implements PostDVService {
 			
 			DeclaracionesDeValorPostPK dvpk = postDVCabeceraDAO.postCabecera(declaracionJPA);
 			
-			pkResult.setNumeroDecalaracion(dvpk.getCodDeclaracionValor());
-			pkResult.setAnyo(dvpk.getAnyo());
-			pkResult.setVersion(dvpk.getVersion());
+			pkResult.setValueDeclarationNumber(dvpk.getCodDeclaracionValor());
+			pkResult.setValueDeclarationYear(dvpk.getAnyo());
+			pkResult.setValueDeclarationVersion(dvpk.getVersion());
 
 			result.setDatos(pkResult);
 			result.setMetadata(input.getMetadata());
