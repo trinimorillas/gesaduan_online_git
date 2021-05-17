@@ -24,7 +24,7 @@ import es.mercadona.fwk.reporting.ReportingService;
 import es.mercadona.gesaduan.business.declaracionesdevalorapi.getdvdocumento.v1.DVDocumentoPDFService;
 import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dao.declaracionesdevalorapi.getdvdocumento.v1.GetDVDocumentoApiDAO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.InputDeclaracionesDeValorDocumentoDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.InputValueDeclarationDocumentDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocCabDTO;
 
 public class DVDocumentoPDFServiceImpl implements DVDocumentoPDFService {
@@ -44,7 +44,7 @@ public class DVDocumentoPDFServiceImpl implements DVDocumentoPDFService {
 	private static final String LOG_FILE = "DVDocumentoPDFServiceImpl(GESADUAN)"; 		
 
 	@Override
-	public OutputDeclaracionesDeValorDocCabDTO preparaDocumentoPDF(InputDeclaracionesDeValorDocumentoDTO input) {
+	public OutputDeclaracionesDeValorDocCabDTO preparaDocumentoPDF(InputValueDeclarationDocumentDTO input) {
 
 		// Obtiene los datos del informe (estructura del informe)
 		OutputDeclaracionesDeValorDocCabDTO outDVDocumentoDTO = getDVDocumentoOnlineDAO.getDatosDocumento(input);		
