@@ -82,7 +82,7 @@
 				<imageExpression><![CDATA["/reporting/templates/mercadona.png"]]></imageExpression>
 			</image>
 			<textField isStretchWithOverflow="true">
-				<reportElement positionType="FixRelativeToBottom" x="510" y="15" width="50" height="12" uuid="6617b785-fda7-46a6-9058-ce8d2a2fe6d0">
+				<reportElement positionType="FixRelativeToBottom" x="510" y="15" width="100" height="12" uuid="6617b785-fda7-46a6-9058-ce8d2a2fe6d0">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -237,7 +237,7 @@
 				<textElement markup="html">
 					<font fontName="SansSerif" size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{header.dosier}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[(new Boolean($P{numDosier}.trim().compareToIgnoreCase("null")==0)? "" : $P{header.dosier})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="360" y="3" width="120" height="14" uuid="3776188c-80f4-4f5b-bcfc-8d38e1d61eb4">
@@ -247,7 +247,7 @@
 				<textElement markup="html">
 					<font fontName="SansSerif" size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{anyoDosier} + " - " + $P{numDosier}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[(new Boolean($P{numDosier}.trim().compareToIgnoreCase("null")==0)? "" : $P{anyoDosier} + " - " + $P{numDosier})]]></textFieldExpression>
 			</textField>			
 			<textField>
 				<reportElement x="260" y="15" width="100" height="14" uuid="3776188c-80f4-4f5b-bcfc-8d38e1d61eb4">
@@ -257,7 +257,7 @@
 				<textElement markup="html">
 					<font fontName="SansSerif" size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{header.fechaDosier}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[(new Boolean($P{numDosier}.trim().compareToIgnoreCase("null")==0)? "" : $P{header.fechaDosier})]]></textFieldExpression>
 			</textField>			
 			<textField>
 				<reportElement x="360" y="15" width="120" height="14" uuid="3776188c-80f4-4f5b-bcfc-8d38e1d61eb4">
@@ -267,7 +267,7 @@
 				<textElement markup="html">
 					<font fontName="SansSerif" size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{fechaDosier}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[(new Boolean($P{numDosier}.trim().compareToIgnoreCase("null")==0)? "" : $P{fechaDosier})]]></textFieldExpression>
 			</textField>				
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="Float" x="41" y="82" width="190" height="12" uuid="600377c9-aff9-41be-81e5-a6eecb25dd68">

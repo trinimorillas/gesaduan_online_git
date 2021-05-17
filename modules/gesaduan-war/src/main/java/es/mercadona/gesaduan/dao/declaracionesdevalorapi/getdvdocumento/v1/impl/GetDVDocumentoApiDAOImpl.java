@@ -13,7 +13,7 @@ import es.mercadona.fwk.core.exceptions.ApplicationException;
 import es.mercadona.fwk.data.DaoBaseImpl;
 import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dao.declaracionesdevalorapi.getdvdocumento.v1.GetDVDocumentoApiDAO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.InputDeclaracionesDeValorDocumentoDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.InputValueDeclarationDocumentDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocCabDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocLinDTO;
 import es.mercadona.gesaduan.jpa.declaracionesdevalor.getdocumentodv.v1.DocumentoDVDataJPA;
@@ -43,7 +43,7 @@ public class GetDVDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, Doc
 	}
 
 	@Override
-	public OutputDeclaracionesDeValorDocCabDTO getDatosDocumento(InputDeclaracionesDeValorDocumentoDTO input) {
+	public OutputDeclaracionesDeValorDocCabDTO getDatosDocumento(InputValueDeclarationDocumentDTO input) {
 		
 		OutputDeclaracionesDeValorDocCabDTO outDVDocumentoDTO;
 		
@@ -54,7 +54,7 @@ public class GetDVDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, Doc
 	}
 	
 	/* carga datos de cabecera de la DV */
-	private OutputDeclaracionesDeValorDocCabDTO getDatosCabecera(InputDeclaracionesDeValorDocumentoDTO input) {
+	private OutputDeclaracionesDeValorDocCabDTO getDatosCabecera(InputValueDeclarationDocumentDTO input) {
 		
 		OutputDeclaracionesDeValorDocCabDTO outDVDocumentoDTO;
 		List<OutputDeclaracionesDeValorDocLinDTO> lineas;
@@ -106,16 +106,16 @@ public class GetDVDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, Doc
 			select.append("LEFT JOIN D_CENTRO_R C ON D.COD_V_ALMACEN = C.COD_V_CENTRO ");
 			select.append("LEFT JOIN D_DOSIER DOS ON DOS.NUM_DOSIER = D.NUM_DOSIER AND DOS.NUM_ANYO= D.NUM_ANYO_DOSIER ");
 			select.append("WHERE ");
-			select.append("D.COD_N_DECLARACION_VALOR = ?codigoDeclaracion AND ");
-			select.append("D.NUM_ANYO = ?anyoDeclaracion AND ");
-			select.append("D.COD_N_VERSION = ?versionDeclaracion ");
+			select.append("D.COD_N_DECLARACION_VALOR = ?valueDeclarationNumber AND ");
+			select.append("D.NUM_ANYO = ?valueDeclarationYear AND ");
+			select.append("D.COD_N_VERSION = ?valueDeclarationVersion ");
 			
 			sql.append(select);
 			
 			final Query query = getEntityManager().createNativeQuery(sql.toString());		
-			query.setParameter("codigoDeclaracion", input.getCodigoDeclaracion());
-			query.setParameter("anyoDeclaracion", input.getAnyoDeclaracion());				
-			query.setParameter("versionDeclaracion", input.getVersionDeclaracion());		
+			query.setParameter("valueDeclarationNumber", input.getValueDeclarationNumber());
+			query.setParameter("valueDeclarationYear", input.getValueDeclarationYear());				
+			query.setParameter("valueDeclarationVersion", input.getValueDeclarationVersion());		
 			
 			List<Object[]> listado = query.getResultList();	
 			
@@ -166,13 +166,13 @@ public class GetDVDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, Doc
 	}
 	
 	/* carga datos de lineas de la DV */
-	private List<OutputDeclaracionesDeValorDocLinDTO> getDatosLineas(InputDeclaracionesDeValorDocumentoDTO input) {
+	private List<OutputDeclaracionesDeValorDocLinDTO> getDatosLineas(InputValueDeclarationDocumentDTO input) {
 		
 		List<OutputDeclaracionesDeValorDocLinDTO> lineas;
 		
 		// Obtiene los datos de cabecera del documento	
 		lineas = new ArrayList<>();	
-		String tipoDocumento = input.getTipoDocumento();
+		String tipoDocumento = input.getDocumentType();
 		
 		try {	
 			
@@ -285,17 +285,17 @@ public class GetDVDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, Doc
 			select.append("GROUP BY L.COD_N_DECLARACION_VALOR,L.NUM_ANYO,L.COD_N_VERSION ");
 			select.append(") ");			
 			select.append("WHERE ");
-			select.append("DECLARACION_VALOR = ?codigoDeclaracion AND ");
-			select.append("ANYO = ?anyoDeclaracion AND ");
-			select.append("VERSION_N = ?versionDeclaracion ");
+			select.append("DECLARACION_VALOR = ?valueDeclarationNumber AND ");
+			select.append("ANYO = ?valueDeclarationYear AND ");
+			select.append("VERSION_N = ?valueDeclarationVersion ");
 			select.append("ORDER BY CODIGO_TARIC,TIPO_LINEA,CODIGO ");
 			
 			sql.append(select);
 			
 			final Query query = getEntityManager().createNativeQuery(sql.toString());		
-			query.setParameter("codigoDeclaracion", input.getCodigoDeclaracion());
-			query.setParameter("anyoDeclaracion", input.getAnyoDeclaracion());				
-			query.setParameter("versionDeclaracion", input.getVersionDeclaracion());		
+			query.setParameter("valueDeclarationNumber", input.getValueDeclarationNumber());
+			query.setParameter("valueDeclarationYear", input.getValueDeclarationYear());				
+			query.setParameter("valueDeclarationVersion", input.getValueDeclarationVersion());			
 			
 			List<Object[]> listado = query.getResultList();	
 			

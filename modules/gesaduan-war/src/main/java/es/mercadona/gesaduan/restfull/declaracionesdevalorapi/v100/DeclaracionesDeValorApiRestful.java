@@ -40,7 +40,7 @@ import es.mercadona.gesaduan.business.declaracionesdevalorapi.putfacturaconfirma
 import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dto.common.error.ErrorDTO;
 import es.mercadona.gesaduan.dto.common.error.OutputResponseErrorDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.InputDeclaracionesDeValorDocumentoDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.InputValueDeclarationDocumentDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocCabDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvaluedeclarationdetail.v1.InputValueDeclarationDetailDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvaluedeclarationdetail.v1.restfull.OutputValueDeclarationDetailDTO;
@@ -148,14 +148,14 @@ public class DeclaracionesDeValorApiRestful {
 
 
 	@GET
-	@Path("valueDeclaration/{codigoDeclaracion}-{anyo}-{version}/documento")
+	@Path("valueDeclaration/{valueDeclarationId}/document")
 	@Consumes(MediaType.WILDCARD)
 	@Produces({ MIMETYPE_PDF, MIMETYPE_CSV, MediaType.APPLICATION_JSON })
-	public Response getDeclaracionesDeValorDocumento(@NotNull @PathParam("codigoDeclaracion") Integer codigoDeclaracion,
-			@NotNull @PathParam("anyo") Integer anyo, @NotNull @PathParam("version") Integer version,
-			@Context HttpServletRequest request, @DefaultValue("es-ES") @QueryParam("locale") String locale,
-			@NotNull @QueryParam("codigoUsuario") String codigoUsuario,
-			@NotNull @DefaultValue("pdf") @QueryParam("tipoDocumento") String tipoDocumento) {
+	public Response getDeclaracionesDeValorDocumento(@NotNull @PathParam("valueDeclarationId") String valueDeclarationId,
+			@Context HttpServletRequest request, 
+			@DefaultValue("es-ES") @QueryParam("locale") String locale,
+			@NotNull @QueryParam("userId") String userId,
+			@NotNull @DefaultValue("pdf") @QueryParam("documentType") String documentType) {
 
 		ResponseBuilder rb = null;
 
@@ -163,45 +163,51 @@ public class DeclaracionesDeValorApiRestful {
 			String fileExtension = ".";
 			String mimeType = null;
 			String fileBaseName = null;
+			
+			String[] valueDeclarationIdArr = valueDeclarationId.split("-");
+			
+			String valueDeclarationNumber = valueDeclarationIdArr[0];
+			String valueDeclarationYear = valueDeclarationIdArr[1];				
+			String valueDeclarationVersion = valueDeclarationIdArr[2];			
 
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 			Date date = new Date(System.currentTimeMillis());
 
 			// Prepara datos basicos del fichero (extension,mimetype,nombre)
-			if (tipoDocumento.equalsIgnoreCase("pdf")) {
-				fileExtension += tipoDocumento.toLowerCase();
+			if (documentType.equalsIgnoreCase("pdf")) {
+				fileExtension += documentType.toLowerCase();
 				mimeType = MIMETYPE_PDF;
-				fileBaseName = FILE_BASE_NAME_PDF.concat(codigoDeclaracion.toString()).concat("_")
-						.concat(anyo.toString()).concat("_").concat(version.toString()).concat("_")
+				fileBaseName = FILE_BASE_NAME_PDF.concat(valueDeclarationNumber).concat("_")
+						.concat(valueDeclarationYear).concat("_").concat(valueDeclarationVersion).concat("_")
 						.concat(formatter.format(date));
-			} else if (tipoDocumento.equalsIgnoreCase("csv")) {
-				fileExtension += tipoDocumento.toLowerCase();
+			} else if (documentType.equalsIgnoreCase("csv")) {
+				fileExtension += documentType.toLowerCase();
 				mimeType = MIMETYPE_CSV;
-				fileBaseName = FILE_BASE_NAME_CSV.concat(codigoDeclaracion.toString()).concat("_")
-						.concat(anyo.toString()).concat("_").concat(version.toString()).concat("_")
+				fileBaseName = FILE_BASE_NAME_CSV.concat(valueDeclarationNumber).concat("_")
+						.concat(valueDeclarationYear).concat("_").concat(valueDeclarationVersion).concat("_")
 						.concat(formatter.format(date));
 			}
 
 			// Prepara llamada al servicio que va a montar el fichero
-			InputDeclaracionesDeValorDocumentoDTO inputDVDocumentoDTO = new InputDeclaracionesDeValorDocumentoDTO();
+			InputValueDeclarationDocumentDTO inputVDDocumentDTO = new InputValueDeclarationDocumentDTO();
 
-			inputDVDocumentoDTO.setCodigoDeclaracion(codigoDeclaracion);
-			inputDVDocumentoDTO.setAnyoDeclaracion(anyo);
-			inputDVDocumentoDTO.setVersionDeclaracion(version);
-			inputDVDocumentoDTO.setTipoDocumento(tipoDocumento);
+			inputVDDocumentDTO.setValueDeclarationNumber(valueDeclarationNumber);
+			inputVDDocumentDTO.setValueDeclarationYear(valueDeclarationYear);
+			inputVDDocumentDTO.setValueDeclarationVersion(valueDeclarationVersion);
+			inputVDDocumentDTO.setDocumentType(documentType);
 
 			OutputDeclaracionesDeValorDocCabDTO outputDVDocumentoDTO = null;
 
-			outputDVDocumentoDTO = getDocumentoDVService.preparaDocumento(inputDVDocumentoDTO);
+			outputDVDocumentoDTO = getDocumentoDVService.preparaDocumento(inputVDDocumentDTO);
 
 			// devuelve el fichero y controla los posibles errores
 			if (outputDVDocumentoDTO != null) {
 
 				byte[] file = null;
 
-				if (tipoDocumento.equalsIgnoreCase("pdf")) {
+				if (documentType.equalsIgnoreCase("pdf")) {
 					file = outputDVDocumentoDTO.getFicheroPDF();
-				} else if (tipoDocumento.equalsIgnoreCase("csv")) {
+				} else if (documentType.equalsIgnoreCase("csv")) {
 					file = outputDVDocumentoDTO.getFicheroCSV();
 				} else {
 					throw new WebApplicationException(Status.BAD_REQUEST);

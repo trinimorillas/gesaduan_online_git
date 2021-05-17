@@ -4,7 +4,7 @@ import javax.inject.Inject;
 
 import es.mercadona.gesaduan.business.declaracionesdevalorapi.getdvdocumento.v1.DVDocumentoCSVService;
 import es.mercadona.gesaduan.dao.declaracionesdevalorapi.getdvdocumento.v1.GetDVDocumentoApiDAO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.InputDeclaracionesDeValorDocumentoDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.InputValueDeclarationDocumentDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocCabDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocLinDTO;
 
@@ -15,7 +15,7 @@ public class DVDocumentoCSVServiceImpl implements DVDocumentoCSVService {
 	private GetDVDocumentoApiDAO getDVDocumentoOnlineDAO;
 
 	@Override
-	public OutputDeclaracionesDeValorDocCabDTO preparaDocumentoCSV(InputDeclaracionesDeValorDocumentoDTO input) {
+	public OutputDeclaracionesDeValorDocCabDTO preparaDocumentoCSV(InputValueDeclarationDocumentDTO input) {
 
 		// Obtiene los datos del informe (estructura del informe)
 		OutputDeclaracionesDeValorDocCabDTO outDVDocumentoDTO = getDVDocumentoOnlineDAO.getDatosDocumento(input);
