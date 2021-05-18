@@ -7,6 +7,7 @@ import es.mercadona.gesaduan.dto.common.AbstractDTO;
 public class InputDataDTO extends AbstractDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	
 	private String dossierNumber;
 	private String dossierYear;	
 	private String agencyId;

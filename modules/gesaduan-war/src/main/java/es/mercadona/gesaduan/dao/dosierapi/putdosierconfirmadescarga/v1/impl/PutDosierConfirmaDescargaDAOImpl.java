@@ -40,18 +40,42 @@ public class PutDosierConfirmaDescargaDAOImpl extends DaoBaseImpl<Long, DosierJP
 		OutputPutDosierConfirmaDescargaDTO result = null;
 
 		try {
-			String numeroDosier = input.getDossierNumber();
-			String anyoDosier = input.getDossierYear();			
-			String codigoAgencia = input.getAgencyId();
-			String codigoUsuario = input.getUserId();
-			Boolean estaDescargado = input.getIsDownloaded();
 			
-			String descargado;
-			if (estaDescargado) {
-				descargado = "S";
-			} else {
-				descargado = "N";
-			}
+			
+			// Agencia exportadora en dosier
+			actualizarEstadoDescargaDosierExp(input);
+			
+			// Agencia importadora en dosier
+			actualizarEstadoDescargaDosierExp(input);	
+			
+			// Agencia exportadora en dosier
+			actualizarEstadoDescargaDVExp(input);
+			
+			// Agencia importadora en dosier
+			actualizarEstadoDescargaDVExp(input);				
+			
+			
+			result = new OutputPutDosierConfirmaDescargaDTO();
+			OutputDatosDTO datosSalida = new OutputDatosDTO();
+			datosSalida.setNumDosier(Long.parseLong(input.getDossierNumber()));
+			datosSalida.setAnyoDosier(Integer.parseInt(input.getDossierYear()));
+			result.setDatos(datosSalida);
+			Map<String, String> metadata = new HashMap<>();
+			metadata.put("userId", input.getUserId());
+			// metadata.put("locale", input.getMetadata().getLocale());
+			result.setMetadatos(metadata);
+		} catch (Exception e) {			
+			throw new ApplicationException(e.getMessage());
+		}
+		
+		return result;
+	}	
+
+	
+	@Transactional
+	private void actualizarEstadoDescargaDosierExp(InputDataDTO input) {
+
+		try {
 			
 			// Agencia exportadora
 			final StringBuilder sqlAgenciaExportadora = new StringBuilder();
@@ -65,14 +89,25 @@ public class PutDosierConfirmaDescargaDAOImpl extends DaoBaseImpl<Long, DosierJP
 
 			final Query queryAgenciaExportadora = getEntityManager().createNativeQuery(sqlAgenciaExportadora.toString());
 			
-			queryAgenciaExportadora.setParameter("estaDescargado", descargado);
-			queryAgenciaExportadora.setParameter("numDosier", numeroDosier);
-			queryAgenciaExportadora.setParameter("anyoDosier", anyoDosier);
-			queryAgenciaExportadora.setParameter("codigoAgencia", codigoAgencia);
-			queryAgenciaExportadora.setParameter("codigoUsuario", codigoUsuario);
+			queryAgenciaExportadora.setParameter("estaDescargado", (input.getIsDownloaded().booleanValue()?"S":"N"));
+			queryAgenciaExportadora.setParameter("numDosier", input.getDossierNumber());
+			queryAgenciaExportadora.setParameter("anyoDosier", input.getDossierYear());
+			queryAgenciaExportadora.setParameter("codigoAgencia", input.getAgencyId());
+			queryAgenciaExportadora.setParameter("codigoUsuario", input.getUserId());
 			queryAgenciaExportadora.executeUpdate();
-			
-			
+						
+		} catch (Exception e) {			
+			throw new ApplicationException(e.getMessage());
+		}
+		
+	}	
+	
+	
+	@Transactional
+	private void actualizarEstadoDescargaDosierImp(InputDataDTO input) {
+
+		try {
+						
 			// Agencia importadora
 			final StringBuilder sqlAgenciaImportadora = new StringBuilder();
 			sqlAgenciaImportadora.append("UPDATE D_DOSIER SET ");
@@ -85,27 +120,95 @@ public class PutDosierConfirmaDescargaDAOImpl extends DaoBaseImpl<Long, DosierJP
 
 			final Query queryAgenciaImportadora = getEntityManager().createNativeQuery(sqlAgenciaImportadora.toString());
 
-			queryAgenciaImportadora.setParameter("estaDescargado", descargado);
-			queryAgenciaImportadora.setParameter("numDosier", numeroDosier);
-			queryAgenciaImportadora.setParameter("anyoDosier", anyoDosier);
-			queryAgenciaImportadora.setParameter("codigoAgencia", codigoAgencia);
-			queryAgenciaExportadora.setParameter("codigoUsuario", codigoUsuario);
+			queryAgenciaImportadora.setParameter("estaDescargado", (input.getIsDownloaded().booleanValue()?"S":"N"));
+			queryAgenciaImportadora.setParameter("numDosier", input.getDossierNumber());
+			queryAgenciaImportadora.setParameter("anyoDosier", input.getDossierYear());
+			queryAgenciaImportadora.setParameter("codigoAgencia", input.getAgencyId());
+			queryAgenciaImportadora.setParameter("codigoUsuario", input.getUserId());
 			queryAgenciaImportadora.executeUpdate();			
 			
-			result = new OutputPutDosierConfirmaDescargaDTO();
-			OutputDatosDTO datosSalida = new OutputDatosDTO();
-			datosSalida.setNumDosier(Long.parseLong(numeroDosier));
-			datosSalida.setAnyoDosier(Integer.parseInt(anyoDosier));
-			result.setDatos(datosSalida);
-			Map<String, String> metadata = new HashMap<>();
-			metadata.put("userId", codigoUsuario);
-			// metadata.put("locale", input.getMetadata().getLocale());
-			result.setMetadatos(metadata);
+		} catch (Exception e) {			
+			throw new ApplicationException(e.getMessage());
+		}
+
+	}		
+	
+	@Transactional
+	private void actualizarEstadoDescargaDVExp(InputDataDTO input) {
+
+		try {
+			
+			// Agencia exportadora
+			final StringBuilder sqlAgenciaExportadora = new StringBuilder();
+			
+			sqlAgenciaExportadora.append("MERGE  INTO  O_DECLARACION_VALOR_CAB DV ");
+			sqlAgenciaExportadora.append("USING ( ");
+			sqlAgenciaExportadora.append("SELECT NUM_DOSIER,NUM_ANYO ");
+			sqlAgenciaExportadora.append("FROM D_DOSIER  ");
+			sqlAgenciaExportadora.append("WHERE COD_V_AGENCIA_EXPORTACION = ?codigoAgencia ");
+			sqlAgenciaExportadora.append(") DD ");
+			sqlAgenciaExportadora.append("ON (DV.NUM_DOSIER = DD.NUM_DOSIER AND DV.NUM_ANYO = DD.NUM_ANYO) ");
+			sqlAgenciaExportadora.append("WHEN MATCHED ");
+			sqlAgenciaExportadora.append("THEN ");
+			sqlAgenciaExportadora.append("UPDATE  ");
+			sqlAgenciaExportadora.append("SET FEC_DT_DESCARGA_EXPORTADOR= DECODE(?estaDescargado,'S',systimestamp,NULL)  ");
+			sqlAgenciaExportadora.append(",COD_V_USR_MODIFICACION = ?codigoUsuario ");
+			sqlAgenciaExportadora.append("WHERE ");
+			sqlAgenciaExportadora.append("DV.NUM_DOSIER = ?numDosier AND ");
+			sqlAgenciaExportadora.append("DV.NUM_ANYO = ?anyoDosier ");			
+
+			final Query queryAgenciaExportadora = getEntityManager().createNativeQuery(sqlAgenciaExportadora.toString());
+			
+			queryAgenciaExportadora.setParameter("estaDescargado", (input.getIsDownloaded().booleanValue()?"S":"N"));
+			queryAgenciaExportadora.setParameter("numDosier", input.getDossierNumber());
+			queryAgenciaExportadora.setParameter("anyoDosier", input.getDossierYear());
+			queryAgenciaExportadora.setParameter("codigoAgencia", input.getAgencyId());
+			queryAgenciaExportadora.setParameter("codigoUsuario", input.getUserId());
+			queryAgenciaExportadora.executeUpdate();
+						
 		} catch (Exception e) {			
 			throw new ApplicationException(e.getMessage());
 		}
 		
-		return result;
 	}	
+	
+	
+	@Transactional
+	private void actualizarEstadoDescargaDVImp(InputDataDTO input) {
 
+		try {
+						
+			// Agencia importadora
+			final StringBuilder sqlAgenciaImportadora = new StringBuilder();
+			sqlAgenciaImportadora.append("MERGE  INTO O_DECLARACION_VALOR_CAB DV ");	
+			sqlAgenciaImportadora.append("USING ( ");	
+			sqlAgenciaImportadora.append("SELECT NUM_DOSIER,NUM_ANYO ");	
+			sqlAgenciaImportadora.append("FROM D_DOSIER  ");	
+			sqlAgenciaImportadora.append("WHERE COD_V_AGENCIA_IMPORTACION = ?codigoAgencia ");	
+			sqlAgenciaImportadora.append(") DD ");	
+			sqlAgenciaImportadora.append("ON (DV.NUM_DOSIER = DD.NUM_DOSIER AND DV.NUM_ANYO = DD.NUM_ANYO) ");	
+			sqlAgenciaImportadora.append("WHEN MATCHED ");	
+			sqlAgenciaImportadora.append("THEN ");	
+			sqlAgenciaImportadora.append("UPDATE  ");	
+			sqlAgenciaImportadora.append("SET FEC_DT_DESCARGA_IMPORTADOR = DECODE(?estaDescargado,'S',systimestamp,NULL)  ");	
+			sqlAgenciaImportadora.append(",COD_V_USR_MODIFICACION = ?codigoUsuario ");	
+			sqlAgenciaImportadora.append("WHERE ");	
+			sqlAgenciaImportadora.append("DV.NUM_DOSIER = ?numDosier AND ");	
+			sqlAgenciaImportadora.append("DV.NUM_ANYO = ?anyoDosier ");			
+
+			final Query queryAgenciaImportadora = getEntityManager().createNativeQuery(sqlAgenciaImportadora.toString());
+
+			queryAgenciaImportadora.setParameter("estaDescargado", (input.getIsDownloaded().booleanValue()?"S":"N"));
+			queryAgenciaImportadora.setParameter("numDosier", input.getDossierNumber());
+			queryAgenciaImportadora.setParameter("anyoDosier", input.getDossierYear());
+			queryAgenciaImportadora.setParameter("codigoAgencia", input.getAgencyId());
+			queryAgenciaImportadora.setParameter("codigoUsuario", input.getUserId());
+			queryAgenciaImportadora.executeUpdate();			
+			
+		} catch (Exception e) {			
+			throw new ApplicationException(e.getMessage());
+		}
+
+	}			
+	
 }

@@ -197,7 +197,7 @@ public class DosierApiRestful {
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response putDosierConfirmaDescarga(
-			@NotNull @PathParam("dossierId ") String dossierId ,
+			@NotNull @PathParam("dossierId") String dossierId ,
 			@NotNull @QueryParam("agencyId") String agencyId,
 			@NotNull InputDataDTO inputData) {
 		OutputPutDosierConfirmaDescargaDTO response = null;
@@ -215,6 +215,7 @@ public class DosierApiRestful {
 
 			inputData.setDossierNumber(dossierNumber);
 			inputData.setDossierYear(dossierYear);
+			inputData.setAgencyId(agencyId);
 
 			response = putDosierConfirmaDescargaService.updateEstadoDescarga(inputData);
 
