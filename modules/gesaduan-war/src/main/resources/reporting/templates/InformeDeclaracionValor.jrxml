@@ -82,7 +82,7 @@
 				<imageExpression><![CDATA["/reporting/templates/mercadona.png"]]></imageExpression>
 			</image>
 			<textField isStretchWithOverflow="true">
-				<reportElement positionType="FixRelativeToBottom" x="510" y="15" width="100" height="12" uuid="6617b785-fda7-46a6-9058-ce8d2a2fe6d0">
+				<reportElement positionType="FixRelativeToBottom" x="510" y="15" width="80" height="12" forecolor="#039760" uuid="6617b785-fda7-46a6-9058-ce8d2a2fe6d0">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -116,7 +116,7 @@
 				<textFieldExpression><![CDATA[$P{header.provinciaCarga} + ":"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement positionType="FixRelativeToBottom" x="560" y="15" width="220" height="12" uuid="3855f02f-9df1-4a23-9f72-96bb4041407d">
+				<reportElement positionType="FixRelativeToBottom" x="590" y="15" width="220" height="12" uuid="3855f02f-9df1-4a23-9f72-96bb4041407d">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
@@ -185,7 +185,7 @@
 				<textElement>
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{importadorProvincia}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[(new Boolean($P{importadorProvincia}.trim().compareToIgnoreCase("null")==0)? "" : $P{importadorProvincia})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement positionType="Float" x="1" y="41" width="230" height="12" forecolor="#039760" uuid="c02ef5bc-c141-4202-a10f-56cb273cf8b6">
@@ -287,7 +287,7 @@
 				<textElement>
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{importadorCP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[(new Boolean($P{importadorCP}.trim().compareToIgnoreCase("null")==0)? "" : $P{importadorCP})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="Float" x="1" y="70" width="230" height="12" uuid="c4a4a9d7-5a52-41a7-a38c-35eb8a063aad">
@@ -307,7 +307,7 @@
 				<textElement>
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{importadorPoblacion}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[(new Boolean($P{importadorPoblacion}.trim().compareToIgnoreCase("null")==0)? "" : $P{importadorPoblacion})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="Float" x="510" y="58" width="220" height="12" uuid="8565ac67-6f99-4ba6-b41f-3213b56f8044">
@@ -389,7 +389,7 @@
 	<detail>
 		<band height="20" splitType="Stretch">
 			<subreport>
-				<reportElement positionType="Float" x="0" y="0" width="800" height="20" uuid="24be4ab8-100a-49fe-969d-520ccfa4cca9">
+				<reportElement positionType="Float" x="0" y="0" width="800" height="20" isRemoveLineWhenBlank="true" uuid="24be4ab8-100a-49fe-969d-520ccfa4cca9">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -404,7 +404,7 @@
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isStretchWithOverflow="true" evaluationTime="Auto">
-				<reportElement x="0" y="10" width="420" height="35" uuid="b8a1beb0-6303-4e27-b838-b86e8a3062bf">
+				<reportElement  x="0" y="10" width="420" height="35" uuid="b8a1beb0-6303-4e27-b838-b86e8a3062bf">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
