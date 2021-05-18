@@ -31,8 +31,6 @@ import es.mercadona.fwk.core.io.ResourceService;
 import es.mercadona.fwk.core.io.exceptions.IllegalResourceNameException;
 import es.mercadona.fwk.core.io.exceptions.ResourceNotFoundException;
 import es.mercadona.fwk.restful.service.annotate.RESTful;
-import es.mercadona.gesaduan.business.declaracionesdevalor.postdv.v1.PostDVService;
-import es.mercadona.gesaduan.business.declaracionesdevalor.putdvestadodescarga.v1.PutDVEstadoDescargaService;
 import es.mercadona.gesaduan.business.declaracionesdevalorapi.getdvdocumento.v1.GetDVDocumentoService;
 import es.mercadona.gesaduan.business.declaracionesdevalorapi.getvaluedeclarationdetail.v1.GetValueDeclarationDetailService;
 import es.mercadona.gesaduan.business.declaracionesdevalorapi.getvdsumary.v1.GetVDSumaryService;
@@ -68,11 +66,7 @@ public class DeclaracionesDeValorApiRestful {
 	@Inject
 	private GetVDSumaryService getVDSumaryService;
 	@Inject
-	private PutDVEstadoDescargaService putDVEstadoDescargaService;
-	@Inject
 	private PutFacturaConfirmaDescargaService putFacturaConfirmaDescargaService;
-	@Inject
-	private PostDVService postDVService;
 
 	private static final String MIMETYPE_PDF = "application/pdf";
 	private static final String MIMETYPE_CSV = "text/csv";
@@ -89,7 +83,7 @@ public class DeclaracionesDeValorApiRestful {
 			@NotNull @QueryParam("userCode") String userCode,
 			@DefaultValue("1") @QueryParam("firstPage") Integer firstPage,
 			@DefaultValue("10") @QueryParam("sizePage") Integer sizePage,
-			@DefaultValue("-numeroDeclaracion") @QueryParam("order") String order,
+			@DefaultValue("-valueDeclarationNumber") @QueryParam("order") String order,
 			InputValueDeclarationSumaryDTO data) {
 
 		OutputValueDeclarationSumaryDTO response = null;
