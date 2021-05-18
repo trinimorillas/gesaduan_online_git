@@ -298,9 +298,9 @@ public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeVa
 		StringBuilder sql = new StringBuilder();
 		
 		try {		
-			sql.append("INSERT INTO S_NOTIF_ALERTA_EXPED_DV (COD_N_ALERTA, COD_V_ELEMENTO, COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION, ");
+			sql.append("INSERT INTO S_NOTIF_ALERTA_EXPED_DV (COD_N_ALERTA, COD_V_ELEMENTO, COD_V_EXPEDICION, FEC_D_ALBARAN, COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION, ");
 			sql.append("MCA_CORREO_ENVIADO,MCA_SMS_ENVIADO, MCA_RESUELTA, FEC_D_CREACION, COD_V_APLICACION, COD_V_USUARIO_CREACION) ");
-			sql.append("SELECT 46, SUBSTR(NUM_ANYO_DOSIER,3,2)||'-'||LPAD(NUM_DOSIER,5,'0'), COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION, ");
+			sql.append("SELECT 46, SUBSTR(NUM_ANYO_DOSIER,3,2)||'-'||LPAD(NUM_DOSIER,5,'0'), '-', SYSDATE, COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION, ");
 			sql.append("'N', 'N', 'N', SYSDATE, 'GESADUAN', ?codigoUsuario ");
 			sql.append("FROM ( ");
 			sql.append("SELECT DV.COD_N_DECLARACION_VALOR, DV.NUM_ANYO, DV.COD_N_VERSION,DV.NUM_ANYO_DOSIER,DV.NUM_DOSIER, ");
@@ -352,7 +352,8 @@ public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeVa
 			sql.append("INNER JOIN O_DECLARACION_VALOR_CAB DV ON (DV.NUM_DOSIER = D.NUM_DOSIER AND DV.NUM_ANYO_DOSIER = D.NUM_ANYO) ");
 			sql.append("WHERE DV.COD_N_DECLARACION_VALOR = ?numFactura ");
 			sql.append("AND DV.NUM_ANYO = ?anyoFactura ");
-			sql.append("and MCA_ERROR = 'N' ");
+			sql.append("AND DV.MCA_ULTIMA_VIGENTE = 'S' ");
+			sql.append("AND D.MCA_ERROR = 'N' ");
 			sql.append("AND NOT EXISTS ( ");
 			sql.append("SELECT 1 ");
 			sql.append("FROM S_NOTIFICACION_ALERTA NA ");

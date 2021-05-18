@@ -41,7 +41,9 @@ public class PostDVServiceImpl implements PostDVService {
 
 		try {
 			// Cabecera
-			declaracionJPA.setCodDeclaracionValor(Integer.parseInt(input.getData().getValueDeclarationHeader().getValueDeclarationNumber()));
+			if (input.getData().getValueDeclarationHeader().getValueDeclarationNumber() != null) {
+				declaracionJPA.setCodDeclaracionValor(Integer.parseInt(input.getData().getValueDeclarationHeader().getValueDeclarationNumber()));
+			}
 			if (input.getData().getValueDeclarationHeader().getValueDeclarationYear() == null) {
 				declaracionJPA.setAnyo(Calendar.getInstance().get(Calendar.YEAR));
 			} else {
@@ -94,6 +96,8 @@ public class PostDVServiceImpl implements PostDVService {
 			}
 			if (input.getData().getValueDeclarationHeader().getValueDeclarationDate() != null) {
 				declaracionJPA.setFechaCreacion(toDate(input.getData().getValueDeclarationHeader().getValueDeclarationDate()));
+			} else {
+				declaracionJPA.setFechaCreacion(toDate(new Date().toString()));
 			}
 			if (input.getData().getValueDeclarationCommonData().getValueDeclarationDownloadDate() != null) {
 				declaracionJPA.setFechaDescarga(toDate(input.getData().getValueDeclarationCommonData().getValueDeclarationDownloadDate()));
@@ -202,7 +206,7 @@ public class PostDVServiceImpl implements PostDVService {
 		Date fechaEnvio = null;
 		if (fecha != null) {
 			try {
-				fechaEnvio = new SimpleDateFormat("DD/MM/YYYY HH24:MI:SS").parse(fecha);
+				fechaEnvio = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss").parse(fecha);
 			} catch (Exception e) {
 				this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, "toDate", e.getClass().getSimpleName(), e.getMessage());					
 			}
