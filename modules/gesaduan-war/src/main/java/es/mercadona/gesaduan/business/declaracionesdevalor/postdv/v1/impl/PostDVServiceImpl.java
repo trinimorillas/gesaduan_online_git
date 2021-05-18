@@ -78,7 +78,7 @@ public class PostDVServiceImpl implements PostDVService {
 			if (input.getData().getValueDeclarationHeader().getIncoterm() != null) {
 				declaracionJPA.setCondicionesEntrega(input.getData().getValueDeclarationHeader().getIncoterm());
 			}
-			declaracionJPA.setMcaFactura("S");
+			declaracionJPA.setMcaFactura("F");
 			declaracionJPA.setMcaUltimaVigente(input.getData().getValueDeclarationCommonData().isLastCurrent() ? "S" : "N");
 			declaracionJPA.setMcaCargaAuto(input.getData().getValueDeclarationCommonData().isManualLoading() ? "N" : "S");
 			declaracionJPA.setMcaDvCorrecta(input.getData().getValueDeclarationCommonData().isValueDeclarationOk() ? "S" : "N");
@@ -97,7 +97,7 @@ public class PostDVServiceImpl implements PostDVService {
 			if (input.getData().getValueDeclarationHeader().getValueDeclarationDate() != null) {
 				declaracionJPA.setFechaCreacion(toDate(input.getData().getValueDeclarationHeader().getValueDeclarationDate()));
 			} else {
-				declaracionJPA.setFechaCreacion(toDate(new Date().toString()));
+				declaracionJPA.setFechaCreacion(new Date());
 			}
 			if (input.getData().getValueDeclarationCommonData().getValueDeclarationDownloadDate() != null) {
 				declaracionJPA.setFechaDescarga(toDate(input.getData().getValueDeclarationCommonData().getValueDeclarationDownloadDate()));
@@ -206,7 +206,7 @@ public class PostDVServiceImpl implements PostDVService {
 		Date fechaEnvio = null;
 		if (fecha != null) {
 			try {
-				fechaEnvio = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss").parse(fecha);
+				fechaEnvio = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(fecha);
 			} catch (Exception e) {
 				this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, "toDate", e.getClass().getSimpleName(), e.getMessage());					
 			}
