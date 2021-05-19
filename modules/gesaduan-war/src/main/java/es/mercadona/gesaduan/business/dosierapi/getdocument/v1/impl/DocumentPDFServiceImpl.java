@@ -161,7 +161,8 @@ public class DocumentPDFServiceImpl implements DocumentPDFService {
 		mapParams.put("header.fechaDV","Fecha DV");
 		mapParams.put("header.fechaDeclaracion","FECHA FACTURA");
 		mapParams.put("header.dosier","DOSIER - Nº");
-		mapParams.put("header.fechaDosier","FECHA DOSIER");		
+		mapParams.put("header.fechaDosier","FECHA DOSIER");	
+		mapParams.put("header.pedido","Nº Pedido");			
 		mapParams.put("header.proveedor","Proveedor");
 		mapParams.put("header.bloqueLogistico","Bloque Logístico");		
 		mapParams.put("header.provinciaCarga","Provincia de carga (Origen)");

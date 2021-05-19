@@ -140,10 +140,11 @@ public class DVDocumentoPDFServiceImpl implements DVDocumentoPDFService {
 		mapParams.put("anyoDeclaracion", outDVDocumentoDTO.getAnyoDeclaracion());
 		mapParams.put("fechaDeclaracion", outDVDocumentoDTO.getFechaDeclaracion());
 		mapParams.put("numDosier", outDVDocumentoDTO.getNumDosier());
-		mapParams.put("anyoDosier", outDVDocumentoDTO.getAnyoDosier());
-		mapParams.put("fechaDosier", outDVDocumentoDTO.getFechaDosier());		
+		mapParams.put("anyoDosier", outDVDocumentoDTO.getAnyoDosier());		
+		mapParams.put("fechaDosier", outDVDocumentoDTO.getFechaDosier());
+		mapParams.put("numPedido", outDVDocumentoDTO.getNumPedido());		
 		mapParams.put("tipoOrigen", outDVDocumentoDTO.getTipoOrigen());		
-		mapParams.put("proveedor", outDVDocumentoDTO.getNombreOrigen());
+		mapParams.put("nombreOrigen", outDVDocumentoDTO.getNombreOrigen());
 		mapParams.put("provinciaOrigen", outDVDocumentoDTO.getProvinciaOrigen());
 		mapParams.put("condicionesEntrega", outDVDocumentoDTO.getCondicionesEntrega());
 		mapParams.put("exportadorNombre", outDVDocumentoDTO.getExportadorNombre());
@@ -174,7 +175,8 @@ public class DVDocumentoPDFServiceImpl implements DVDocumentoPDFService {
 		mapParams.put("header.fechaDV","Fecha DV");
 		mapParams.put("header.fechaDeclaracion","FECHA FACTURA");
 		mapParams.put("header.dosier","DOSIER - Nº");
-		mapParams.put("header.fechaDosier","FECHA DOSIER");		
+		mapParams.put("header.fechaDosier","FECHA DOSIER");
+		mapParams.put("header.pedido","Nº Pedido");		
 		mapParams.put("header.proveedor","Proveedor");
 		mapParams.put("header.bloqueLogistico","Bloque Logístico");		
 		mapParams.put("header.provinciaCarga","Provincia de carga (Origen)");

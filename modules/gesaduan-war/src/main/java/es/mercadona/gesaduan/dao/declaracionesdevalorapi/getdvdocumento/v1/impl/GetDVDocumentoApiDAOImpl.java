@@ -77,26 +77,29 @@ public class GetDVDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, Doc
 			select.append(",TO_CHAR(D.NUM_DOSIER) DOSIER ");
 			select.append(",TO_CHAR(D.NUM_ANYO_DOSIER) ANYO_DOSIER ");
 			select.append(",TO_CHAR(DOS.FEC_DT_CREACION, 'DD/MM/YYYY') FECHA_DOSIER ");
-			select.append(",DECODE(D.COD_N_PROVEEDOR, NULL, REGEXP_REPLACE(BL.TXT_NOMBRE, '\"|;', ''), REGEXP_REPLACE(P.TXT_RAZON_SOCIAL, '\"|;', '')) NOMBRE_ORIGEN ");
+			select.append(",DECODE(D.COD_V_EXPEDICION, NULL, REGEXP_REPLACE(BL.TXT_NOMBRE, '\"|;', ''), REGEXP_REPLACE(P.TXT_RAZON_SOCIAL, '\"|;', '')) NOMBRE_ORIGEN ");
 			select.append(",R.TXT_NOMBRE PROVINCIA_ORIGEN ");
-			select.append(",DECODE(D.COD_N_PROVEEDOR, NULL, 'BLOQUE', 'PROVEEDOR') TIPO_ORIGEN ");
+			select.append(",DECODE(D.COD_V_EXPEDICION, NULL, 'BLOQUE', 'PROVEEDOR') TIPO_ORIGEN ");
 			select.append(",D.TXT_CONDICIONES_ENTREGA CONDICIONES_ENTREGA ");
 			select.append(",REGEXP_REPLACE(E.TXT_RAZON_SOCIAL, '\"|;', '') EXP_NOMBRE ");
 			select.append(",REGEXP_REPLACE(E.TXT_DIRECCION, '\"|;', '') EXP_DIRECCION ");
 			select.append(",E.TXT_CODIGO_POSTAL EXP_CP ");
 			select.append(",E.TXT_POBLACION EXP_POBLACION ");
 			select.append(",E.TXT_PROVINCIA EXP_PROVINCIA ");
-			select.append(",E.NUM_CIF EXP_NIF ");
-			select.append(",DECODE(D.COD_N_PROVEEDOR,NULL,REGEXP_REPLACE(PU.TXT_NOMBRE_PUERTO, '\"|;', ''),REGEXP_REPLACE(C.TXT_RAZON_SOCIAL, '\"|;', '')) IMP_NOMBRE ");
-			select.append(",DECODE(D.COD_N_PROVEEDOR,NULL,REGEXP_REPLACE(PU.TXT_DIRECCION, '\\\"|;', ''),REGEXP_REPLACE(C.TXT_DIRECCION, '\"|;', '')) IMP_DIRECCION ");
-			select.append(",DECODE(D.COD_N_PROVEEDOR,NULL,'',C.TXT_COD_POSTAL) IMP_CP ");
-			select.append(",DECODE(D.COD_N_PROVEEDOR,NULL,'',C.TXT_LOCALIDAD) IMP_POBLACION ");
-			select.append(",DECODE(D.COD_N_PROVEEDOR,NULL,'',C.TXT_PROVINCIA) IMP_PROVINCIA ");
+			select.append(",E.NUM_CIF EXP_NIF ");			
+			select.append(",DECODE(D.COD_V_EXPEDICION,NULL,REGEXP_REPLACE(PU.TXT_NOMBRE_PUERTO, '\"|;', ''),REGEXP_REPLACE(C.TXT_RAZON_SOCIAL, '\"|;', '')) IMP_NOMBRE ");
+			select.append(",DECODE(D.COD_V_EXPEDICION,NULL,REGEXP_REPLACE(PU.TXT_DIRECCION, '\\\"|;', ''),REGEXP_REPLACE(C.TXT_DIRECCION, '\"|;', '')) IMP_DIRECCION ");
+			select.append(",DECODE(D.COD_V_EXPEDICION,NULL,'',C.TXT_COD_POSTAL) IMP_CP ");
+			select.append(",DECODE(D.COD_V_EXPEDICION,NULL,'',C.TXT_LOCALIDAD) IMP_POBLACION ");
+			select.append(",DECODE(D.COD_V_EXPEDICION,NULL,'',C.TXT_PROVINCIA) IMP_PROVINCIA ");
 			select.append(",E.NUM_CIF IMP_NIF ");
 			select.append(",(SELECT TXT_VALOR FROM C_VARIABLE WHERE COD_V_VARIABLE = 'MERCANCIA_REA' AND EXISTS ( SELECT L.COD_N_MERCA FROM O_DECLARACION_VALOR_LIN L WHERE L.COD_N_DECLARACION_VALOR = D.COD_N_DECLARACION_VALOR AND L.NUM_ANYO = D.NUM_ANYO AND L.COD_N_VERSION = D.COD_N_VERSION AND L.COD_V_REA IS NOT NULL ) ) AS TXT_INFO_REA ");
 			select.append(",(SELECT TXT_VALOR FROM C_VARIABLE WHERE COD_V_VARIABLE = 'MERCANCIA_REG_CANARIO' AND EXISTS ( SELECT L.COD_N_MERCA FROM O_DECLARACION_VALOR_LIN L WHERE L.COD_N_DECLARACION_VALOR = D.COD_N_DECLARACION_VALOR AND L.NUM_ANYO = D.NUM_ANYO AND L.COD_N_VERSION = D.COD_N_VERSION AND L.MCA_PRODUCTO_LPC = 'S' ) ) AS TXT_INFO_LPC ");
 			select.append(",(SELECT TXT_VALOR FROM C_VARIABLE WHERE COD_V_VARIABLE = 'MERCANCIA_EXENTA_IVA' ) AS TXT_INFO_GENERAL ");
 			select.append(",(SELECT (CASE WHEN ((COUNT(L.NUM_GRADO_ALCOHOL) > 0) AND ((COUNT(L.NUM_VOLUMEN)) > 0) ) THEN 'VOLUMEN_ALCOHOL' WHEN COUNT(L.NUM_VOLUMEN) > 0 THEN 'VOLUMEN' ELSE 'BASE' END ) FROM O_DECLARACION_VALOR_LIN L WHERE L.COD_N_DECLARACION_VALOR = D.COD_N_DECLARACION_VALOR AND L.NUM_ANYO = D.NUM_ANYO AND L.COD_N_VERSION = D.COD_N_VERSION GROUP BY L.COD_N_DECLARACION_VALOR ,L.NUM_ANYO ,L.COD_N_VERSION ) AS TIPO_INFORME ");
+			select.append(",D.COD_V_PEDIDO COD_PEDIDO ");			
+			select.append(",D.COD_V_EXPEDICION COD_EXPEDICION ");	
+			select.append(",D.COD_N_PUERTO_DESEMBARQUE COD_PUERTO ");				
 			select.append("FROM O_DECLARACION_VALOR_CAB D ");
 			select.append("LEFT JOIN D_PROVEEDOR_R P ON D.COD_N_PROVEEDOR = P.COD_N_PROVEEDOR ");
 			select.append("LEFT JOIN D_PROVINCIA_R R ON D.COD_N_PROVINCIA_CARGA = R.COD_N_PROVINCIA ");
@@ -139,16 +142,25 @@ public class GetDVDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, Doc
 					outDVDocumentoDTO.setExportadorPoblacion(String.valueOf(tmp[14]));
 					outDVDocumentoDTO.setExportadorProvincia(String.valueOf(tmp[15]));
 					outDVDocumentoDTO.setExportadorNIF(String.valueOf(tmp[16]));
+										
 					outDVDocumentoDTO.setImportadorNombre(String.valueOf(tmp[17]));	
 					outDVDocumentoDTO.setImportadorDireccion(String.valueOf(tmp[18]));	
 					outDVDocumentoDTO.setImportadorCP(String.valueOf(tmp[19]));
 					outDVDocumentoDTO.setImportadorPoblacion(String.valueOf(tmp[20]));
-					outDVDocumentoDTO.setImportadorProvincia(String.valueOf(tmp[21]));
+					outDVDocumentoDTO.setImportadorProvincia(String.valueOf(tmp[21]));					
 					outDVDocumentoDTO.setImportadorNIF(String.valueOf(tmp[22]));		
+					
 					outDVDocumentoDTO.setTxtInfoREA(emptyStringOrValue(tmp[23]));
 					outDVDocumentoDTO.setTxtInfoLPC(emptyStringOrValue(tmp[24]));
 					outDVDocumentoDTO.setTxtInfoGeneral(emptyStringOrValue(tmp[25]));	
 					outDVDocumentoDTO.setTipoInforme(String.valueOf(tmp[26]));				
+					outDVDocumentoDTO.setNumPedido(emptyStringOrValue(tmp[27]));
+					
+					// Si no tiene expedicion y tiene puerto 
+					if ((tmp[28] == null) && (tmp[29] != null)) {
+						String puertoDesembarque = emptyStringOrValue(tmp[29]);
+						getDatosPuertos(puertoDesembarque,outDVDocumentoDTO);
+					}
 					
 				}
 			}
@@ -338,6 +350,50 @@ public class GetDVDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, Doc
 		
 		return lineas;
 	}
+	
+	
+	private void getDatosPuertos(String puertoDesembarque,OutputDeclaracionesDeValorDocCabDTO outDVDocumentoDTO) {
+		
+		try {		
+		
+			// Query
+			final StringBuilder sql = new StringBuilder();		
+			
+			StringBuilder select = new StringBuilder();	
+			
+
+			select.append("SELECT "); 
+			select.append("SUBSTR(TXT_DIRECCION,0,INSTR(TXT_DIRECCION,CHR(10))) AS DIRECCION, ");
+			select.append("SUBSTR(SUBSTR(TXT_DIRECCION,INSTR(TXT_DIRECCION,CHR(10))+1,INSTR(TXT_DIRECCION,CHR(32),INSTR(TXT_DIRECCION,CHR(10))+1,1)),0,INSTR(SUBSTR(TXT_DIRECCION,INSTR(TXT_DIRECCION,CHR(10))+1,INSTR(TXT_DIRECCION,CHR(32),INSTR(TXT_DIRECCION,CHR(10))+1,1)),CHR(32))-1) AS CODIGO_POSTAL, ");
+			select.append("SUBSTR(TXT_DIRECCION,INSTR(TXT_DIRECCION,CHR(32),INSTR(TXT_DIRECCION,CHR(10))+1,1)+1,LENGTH(SUBSTR(TXT_DIRECCION,INSTR(TXT_DIRECCION,CHR(32),INSTR(TXT_DIRECCION,CHR(10))+1,1)+1,INSTR(TXT_DIRECCION,CHR(10),1,2)))-(LENGTH(TXT_DIRECCION)-INSTR(TXT_DIRECCION,CHR(10),1,2))) AS POBLACION, ");
+			select.append("SUBSTR(TXT_DIRECCION,INSTR(TXT_DIRECCION,CHR(10),1,2)+1,LENGTH(TXT_DIRECCION)-INSTR(TXT_DIRECCION,CHR(10),1,2))AS PROVINCIA ");
+			select.append("FROM D_PUERTO ");
+			select.append("WHERE COD_N_PUERTO = ?puertoDesembarque ");			
+							
+			sql.append(select);
+			
+			final Query query = getEntityManager().createNativeQuery(sql.toString());		
+			query.setParameter("puertoDesembarque", puertoDesembarque);
+			
+			List<Object[]> listado = query.getResultList();	
+			
+			if (listado != null && !listado.isEmpty()) {			
+				for (Object[] tmp : listado) {	
+					
+					outDVDocumentoDTO.setImportadorDireccion(replaceReturn(emptyStringOrValue(tmp[0])));
+					outDVDocumentoDTO.setImportadorCP(replaceReturn(emptyStringOrValue(tmp[1])));
+					outDVDocumentoDTO.setImportadorPoblacion(replaceReturn(emptyStringOrValue(tmp[2])));
+					outDVDocumentoDTO.setImportadorProvincia(replaceReturn(emptyStringOrValue(tmp[3])));					
+				}						
+			}		
+		
+
+		} catch (Exception e) {
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, "getDatosPuertos", e.getClass().getSimpleName(), e.getMessage());	
+			throw new ApplicationException(e.getMessage());
+		}
+		
+	}	
 
 	private String formatNumber(String tipoDocumento, String value) {
 		if ("csv".equals(tipoDocumento)) {
@@ -365,6 +421,14 @@ public class GetDVDocumentoApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, Doc
 		}
 		return value;
 	}	
+	
+	private String replaceReturn(String value) {
+		if (value != null ) {
+			value = value.replace("\n", " ");
+			value = value.replace("\r", " ");
+		}
+		return value;
+	}		
 	
 	private String emptyStringOrFormatNumber(String tipoDocumento,Object value) {
 		String result = "";
