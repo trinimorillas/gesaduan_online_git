@@ -206,7 +206,7 @@ public class PostDVServiceImpl implements PostDVService {
 		Date fechaEnvio = null;
 		if (fecha != null) {
 			try {
-				fechaEnvio = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(fecha);
+				fechaEnvio = new SimpleDateFormat("yyyy/MM/dd").parse(fecha);
 			} catch (Exception e) {
 				this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, "toDate", e.getClass().getSimpleName(), e.getMessage());					
 			}

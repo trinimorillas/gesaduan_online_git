@@ -212,6 +212,7 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 			sql.append("LEFT JOIN D_BLOQUE_LOGISTICO_R BL ON (BL.COD_N_BLOQUE_LOGISTICO = F.COD_N_BLOQUE_LOGISTICO) ");
 			sql.append("WHERE F.NUM_DOSIER = ?numDosier ");
 			sql.append("AND F.NUM_ANYO_DOSIER = ?anyoDosier ");
+			sql.append("AND F.MCA_ULTIMA_VIGENTE = 'S' ");			
 			
 			if (orden.equals("-codigoDV"))
 				sql.append("ORDER BY F.COD_N_DECLARACION_VALOR DESC");
