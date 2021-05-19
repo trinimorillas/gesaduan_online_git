@@ -54,7 +54,7 @@ public class DVDocumentoCSVServiceImpl implements DVDocumentoCSVService {
 		cabeceraStrDV.append(outDVDocumentoDTO.getAnyoDeclaracion()).append("|");
 		cabeceraStrDV.append(outDVDocumentoDTO.getVersionDeclaracion()).append("|");
 		cabeceraStrDV.append(outDVDocumentoDTO.getFechaDeclaracion()).append("|");
-		cabeceraStrDV.append(outDVDocumentoDTO.getCodigoDeclaracion()).append("|"); /* nunmero de pedido ??? */
+		cabeceraStrDV.append(outDVDocumentoDTO.getNumPedido()).append("|"); /* nunmero de pedido ??? */
 		cabeceraStrDV.append(outDVDocumentoDTO.getNombreOrigen()).append("|");
 		cabeceraStrDV.append(outDVDocumentoDTO.getProvinciaOrigen()).append("|");
 		cabeceraStrDV.append(outDVDocumentoDTO.getCondicionesEntrega()).append("|");

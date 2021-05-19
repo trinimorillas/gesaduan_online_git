@@ -16,7 +16,8 @@ public class OutputDeclaracionesDeValorDocCabDTO extends AbstractDTO implements 
 	private String fechaDeclaracion;
 	private String numDosier;
 	private String anyoDosier;
-	private String fechaDosier;		
+	private String fechaDosier;
+	private String numPedido;	
 	private String nombreOrigen;	
 	private String provinciaOrigen;
 	private String tipoOrigen;
@@ -125,6 +126,18 @@ public class OutputDeclaracionesDeValorDocCabDTO extends AbstractDTO implements 
 	 */
 	public void setFechaDosier(String fechaDosier) {
 		this.fechaDosier = fechaDosier;
+	}
+	/**
+	 * @return the numPedido
+	 */
+	public String getNumPedido() {
+		return numPedido;
+	}
+	/**
+	 * @param numPedido the numPedido to set
+	 */
+	public void setNumPedido(String numPedido) {
+		this.numPedido = numPedido;
 	}
 	/**
 	 * @return the nombreOrigen
