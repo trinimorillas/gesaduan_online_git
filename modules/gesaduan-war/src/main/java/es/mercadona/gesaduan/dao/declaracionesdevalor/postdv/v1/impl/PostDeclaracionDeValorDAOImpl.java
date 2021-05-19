@@ -86,6 +86,7 @@ public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeVa
 					// Si la declaracion es correcta marca las alertas como solucionadas
 					if ("S".equals(dv.getMcaDvCorrecta())) {
 						alertasSolucionadas(input.getCodDeclaracionValor(),input.getAnyo());
+						
 					}
 
 					entityM.merge(dv);
@@ -113,6 +114,11 @@ public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeVa
 			}
 			
 			updateContenedor(input);
+			
+			generarAlerta(input.getUsuarioCreacion(), Long.toBinaryString(pk.getCodDeclaracionValor()), Integer.toString(pk.getAnyo()));
+			marcarDosierOK(Long.toBinaryString(pk.getCodDeclaracionValor()), Integer.toString(pk.getAnyo()));
+			generaAlertaDosierOK(input.getUsuarioCreacion(),Long.toBinaryString(pk.getCodDeclaracionValor()), Integer.toString(pk.getAnyo()));
+			
 		} catch (Exception e) {
 			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "postCabecera", e.getClass().getSimpleName(), e.getMessage());
 			throw new ApplicationException(e.getMessage());
@@ -293,6 +299,7 @@ public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeVa
 		return dvJpa;
 	}
 	
+	@Override
 	@Transactional	
 	public void generarAlerta(String codigoUsuario, String numFactura, String anyoFactura) {
 		StringBuilder sql = new StringBuilder();
@@ -337,8 +344,46 @@ public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeVa
 		}
 	}
 	
+	
+	@Override
+	
 	@Transactional	
-	public void marcarDosierOK(String codigoUsuario, String numFactura, String anyoFactura) {
+	public void marcarDosierOK(String numFactura, String anyoFactura) {
+		try {
+			StringBuilder sql = new StringBuilder();
+			
+			
+			
+			sql.append("UPDATE D_DOSIER D ");
+			sql.append("SET D.MCA_ERROR = 'N'  ");
+			sql.append("WHERE (D.NUM_DOSIER, D.NUM_ANYO) IN ( ");
+			sql.append("SELECT DV.NUM_DOSIER,DV.NUM_ANYO_DOSIER ");
+			sql.append("FROM O_DECLARACION_VALOR_CAB DV ");
+			sql.append("WHERE DV.COD_N_DECLARACION_VALOR = ?numFactura ");
+			sql.append("AND DV.NUM_ANYO = ?anyoFactura ");
+			sql.append("AND NOT EXISTS ( ");
+			sql.append("SELECT 1 ");
+			sql.append("FROM O_DECLARACION_VALOR_CAB DVC ");
+			sql.append("WHERE DVC.NUM_DOSIER = DV.NUM_DOSIER ");
+			sql.append("AND DVC.NUM_ANYO_DOSIER = DV.NUM_ANYO_DOSIER ");
+			sql.append("AND DVC.MCA_ULTIMA_VIGENTE = 'S' ");
+			sql.append("AND DVC.MCA_DV_CORRECTA = 'N' ");
+			sql.append(") ");
+			sql.append(")");	
+			
+			final Query query = getEntityManager().createNativeQuery(sql.toString());
+			query.setParameter("numFactura", numFactura);
+			query.setParameter("anyoFactura", anyoFactura);
+			query.executeUpdate();
+		} catch (Exception e) {
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "marcarDosierOK", e.getClass().getSimpleName(), e.getMessage());	
+			throw new ApplicationException(e.getMessage());
+		}
+	}	
+	
+	@Override
+	@Transactional	
+	public void generaAlertaDosierOK(String codigoUsuario, String numFactura, String anyoFactura) {
 		try {
 			StringBuilder sql = new StringBuilder();
 			
@@ -374,7 +419,7 @@ public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeVa
 			query.setParameter("anyoFactura", anyoFactura);
 			query.executeUpdate();
 		} catch (Exception e) {
-			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "marcarDosierOK", e.getClass().getSimpleName(), e.getMessage());	
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "generaAlertaDosierOK", e.getClass().getSimpleName(), e.getMessage());	
 			throw new ApplicationException(e.getMessage());
 		}
 	}

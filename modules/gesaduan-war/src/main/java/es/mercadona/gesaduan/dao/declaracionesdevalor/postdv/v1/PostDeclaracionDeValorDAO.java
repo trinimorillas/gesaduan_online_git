@@ -7,5 +7,6 @@ import es.mercadona.gesaduan.jpa.declaracionesdevalor.postdv.v1.DeclaracionesDeV
 public interface PostDeclaracionDeValorDAO {	
 	public DeclaracionesDeValorPostPK postCabecera(DeclaracionesDeValorPostJPA input);
 	public void generarAlerta(String codigoUsuario, String numFactura, String anyoFactura);
-	public void marcarDosierOK(String codigoUsuario, String numFactura, String anyoFactura);
+	public void marcarDosierOK(String numFactura, String anyoFactura);
+	public void generaAlertaDosierOK(String codigoUsuario, String numFactura, String anyoFactura);
 }
