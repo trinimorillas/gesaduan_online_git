@@ -1,5 +1,6 @@
 package es.mercadona.gesaduan.dao.declaracionesdevalorapi.getdeclarationvaluedetail.v1.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -360,9 +361,11 @@ public class GetValueDeclarationDetailDAOImpl extends BaseDAO<DeclaracionesDeVal
 
 					final Query queryTaric = getEntityManager().createNativeQuery(sqlTaric.toString());
 					queryTaric.setParameter("productPublicId", linea.getProductPublicId());
-					Long taric = (Long) queryTaric.getSingleResult();
-					if (taric != null) {
-						linea.setActualTaricId(taric);
+					List<BigDecimal> tarics = queryTaric.getResultList();
+					if (tarics != null && !tarics.isEmpty()) {
+						for (BigDecimal taric : tarics) {
+							linea.setActualTaricId(Long.parseLong(String.valueOf(taric)));
+						}
 					}
 				}
 				lineas.add(linea);
