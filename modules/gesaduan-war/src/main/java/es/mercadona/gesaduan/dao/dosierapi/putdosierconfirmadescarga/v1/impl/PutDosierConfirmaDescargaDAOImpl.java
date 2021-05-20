@@ -46,13 +46,13 @@ public class PutDosierConfirmaDescargaDAOImpl extends DaoBaseImpl<Long, DosierJP
 			actualizarEstadoDescargaDosierExp(input);
 			
 			// Agencia importadora en dosier
-			actualizarEstadoDescargaDosierExp(input);	
+			actualizarEstadoDescargaDosierImp(input);	
 			
 			// Agencia exportadora en dosier
 			actualizarEstadoDescargaDVExp(input);
 			
 			// Agencia importadora en dosier
-			actualizarEstadoDescargaDVExp(input);				
+			actualizarEstadoDescargaDVImp(input);				
 			
 			
 			result = new OutputPutDosierConfirmaDescargaDTO();
