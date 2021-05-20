@@ -183,7 +183,8 @@ public class GetDocumentApiDAOImpl extends DaoBaseImpl<DocumentoDataPK, Document
 			select.append("LEFT JOIN D_DOSIER DOS ON DOS.NUM_DOSIER = D.NUM_DOSIER AND DOS.NUM_ANYO= D.NUM_ANYO_DOSIER ");
 			select.append("WHERE ");
 			select.append("D.NUM_DOSIER = ?dossierNumber AND ");
-			select.append("D.NUM_ANYO_DOSIER = ?dossierYear ");
+			select.append("D.NUM_ANYO_DOSIER = ?dossierYear AND ");
+			select.append("D.MCA_ULTIMA_VIGENTE = 'S' ");			
 			select.append("ORDER BY D.COD_N_DECLARACION_VALOR,D.NUM_ANYO,D.COD_N_VERSION ");
 			
 			sql.append(select);
@@ -371,7 +372,8 @@ public class GetDocumentApiDAOImpl extends DaoBaseImpl<DocumentoDataPK, Document
 			select.append("INNER JOIN O_DECLARACION_VALOR_CAB DV ON DV.COD_N_DECLARACION_VALOR = DECLARACION_VALOR AND DV.NUM_ANYO= ANYO AND DV.COD_N_VERSION= VERSION_N ");
 			select.append("WHERE ");
 			select.append("DV.NUM_DOSIER = ?dossierNumber AND ");
-			select.append("DV.NUM_ANYO_DOSIER = ?dossierYear ");
+			select.append("DV.NUM_ANYO_DOSIER = ?dossierYear AND ");
+			select.append("DV.MCA_ULTIMA_VIGENTE = 'S' ");				
 			select.append("ORDER BY DECLARACION_VALOR,ANYO,VERSION_N,CODIGO_TARIC,TIPO_LINEA,CODIGO ");
 			
 			sql.append(select);

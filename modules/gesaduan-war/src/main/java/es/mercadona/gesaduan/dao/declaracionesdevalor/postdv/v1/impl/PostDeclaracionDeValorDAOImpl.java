@@ -86,7 +86,6 @@ public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeVa
 					// Si la declaracion es correcta marca las alertas como solucionadas
 					if ("S".equals(dv.getMcaDvCorrecta())) {
 						alertasSolucionadas(input.getCodDeclaracionValor(),input.getAnyo());
-						
 					}
 
 					entityM.merge(dv);
@@ -115,9 +114,9 @@ public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeVa
 			
 			updateContenedor(input);
 			
-			generarAlerta(input.getUsuarioCreacion(), Long.toBinaryString(pk.getCodDeclaracionValor()), Integer.toString(pk.getAnyo()));
-			marcarDosierOK(Long.toBinaryString(pk.getCodDeclaracionValor()), Integer.toString(pk.getAnyo()));
-			generaAlertaDosierOK(input.getUsuarioCreacion(),Long.toBinaryString(pk.getCodDeclaracionValor()), Integer.toString(pk.getAnyo()));
+			generarAlerta(input.getUsuarioCreacion(), Long.toString(pk.getCodDeclaracionValor()), Integer.toString(pk.getAnyo()));
+			marcarDosierOK(Long.toString(pk.getCodDeclaracionValor()), Integer.toString(pk.getAnyo()));
+			generaAlertaDosierOK(input.getUsuarioCreacion(),Long.toString(pk.getCodDeclaracionValor()), Integer.toString(pk.getAnyo()));
 			
 		} catch (Exception e) {
 			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "postCabecera", e.getClass().getSimpleName(), e.getMessage());
@@ -338,6 +337,7 @@ public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeVa
 			query.setParameter("codigoUsuario", codigoUsuario);
 			query.setParameter("numFactura", numFactura);
 			query.setParameter("anyoFactura", anyoFactura);
+			query.executeUpdate();
 		} catch (Exception e) {
 			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "generarAlerta", e.getClass().getSimpleName(), e.getMessage());	
 			throw new ApplicationException(e.getMessage());
