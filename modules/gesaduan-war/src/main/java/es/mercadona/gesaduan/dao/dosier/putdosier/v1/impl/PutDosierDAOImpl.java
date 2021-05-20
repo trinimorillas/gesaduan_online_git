@@ -677,7 +677,7 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 			sql.append("FROM S_NOTIF_ALERTA_EXPED_DV N ");
 			sql.append("WHERE (N.COD_V_ELEMENTO = TO_CHAR(DVL.COD_N_MERCA) ");
 			sql.append("OR (SUBSTR(N.COD_V_ELEMENTO,1,INSTR(N.COD_V_ELEMENTO,'-')-1) IS NOT NULL ");
-			sql.append("AND N.COD_V_ELEMENTO = TO_CHAR(SUBSTR(N.COD_V_ELEMENTO,1,INSTR(N.COD_V_ELEMENTO,'-')-1)) ");
+			sql.append("AND TO_CHAR(SUBSTR(N.COD_V_ELEMENTO,1,INSTR(N.COD_V_ELEMENTO,'-')-1)) = DVL.COD_N_MERCA ");
 			sql.append(") ");
 			sql.append(") ");
 			sql.append("AND N.COD_N_DECLARACION_VALOR = DVL.COD_N_DECLARACION_VALOR ");

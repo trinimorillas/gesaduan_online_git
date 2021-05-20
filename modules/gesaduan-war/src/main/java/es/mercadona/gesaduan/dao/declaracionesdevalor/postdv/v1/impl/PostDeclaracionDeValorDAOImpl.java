@@ -184,7 +184,7 @@ public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeVa
 	}
 	
 	@Transactional	
-	private void alertasSolucionadas (Integer codDeclaracionValor, Integer anyo) {		
+	private void alertasSolucionadas (Integer codDeclaracionValor, Integer anyo) {
 		StringBuilder sql = new StringBuilder();
 		
 		try {		
@@ -274,6 +274,7 @@ public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeVa
 								lineaJPA.setCodigoTaric(lineaEdit.getCodigoTaric());
 							}
 
+							lineaJPA.setMarcaError(lineaEdit.getMarcaError());
 							lineaJPA.setFechaCreacion(fechaInicio);
 							lineaJPA.setFechaModificacion(fechaInicio);
 							lineaJPA.setCodAplicacion("GESADUAN");
