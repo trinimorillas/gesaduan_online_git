@@ -433,8 +433,7 @@ public class GetValueDeclarationDetailDAOImpl extends BaseDAO<DeclaracionesDeVal
 			sql.append("AND DV.NUM_ANYO_DOSIER = DO.NUM_ANYO) ");
 			sql.append("WHERE DV.COD_N_DECLARACION_VALOR = ?valueDeclarationNumber ");
 			sql.append("AND DV.NUM_ANYO = ?valueDeclarationYear ");
-			sql.append("AND DV.MCA_DESCARGA = 'S' ");
-			sql.append("AND DV.FEC_DT_DESCARGA IS NOT NULL ");
+			sql.append("AND DV.MCA_ULTIMA_VIGENTE = 'S' ");
 			sql.append("UNION ");
 			sql.append("SELECT DISTINCT 'Envío notificación dosier', NOTIF.FEC_DT_ENVIO, DV.COD_N_VERSION, ");
 			sql.append("NULL, DV.MCA_DV_CORRECTA AS CORRECTA ");
@@ -458,7 +457,7 @@ public class GetValueDeclarationDetailDAOImpl extends BaseDAO<DeclaracionesDeVal
 			sql.append("AND DV.NUM_ANYO = ?valueDeclarationYear ");
 			sql.append("AND DV.FEC_DT_DESCARGA_IMPORTADOR IS NOT NULL ");
 			sql.append(")");
-			sql.append("ORDER BY VERSION, FECHA ASC ");
+			sql.append("ORDER BY FECHA, VERSION ASC ");
 			sql.append(")");
 			sql.append("WHERE PRIMERA = 1");
 
