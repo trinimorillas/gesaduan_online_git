@@ -137,7 +137,7 @@
 				<textElement>
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[(new Boolean($P{tipoOrigen}.trim().compareToIgnoreCase("PROVEEDOR")==0)? $P{numPedido} + ":"  : "" )]]></textFieldExpression>
+				<textFieldExpression><![CDATA[(new Boolean($P{tipoOrigen}.trim().compareToIgnoreCase("PROVEEDOR")==0)? $P{numPedido}  : "" )]]></textFieldExpression>
 			</textField>			
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="FixRelativeToBottom" x="590" y="20" width="220" height="12" uuid="3855f02f-9df1-4a23-9f72-96bb4041407d">

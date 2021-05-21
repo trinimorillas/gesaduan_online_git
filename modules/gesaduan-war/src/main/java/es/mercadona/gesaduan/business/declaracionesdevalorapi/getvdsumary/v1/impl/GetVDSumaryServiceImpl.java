@@ -9,8 +9,8 @@ import es.mercadona.gesaduan.dao.declaracionesdevalor.getdvsumario.v1.GetDVSumar
 import es.mercadona.gesaduan.dao.declaracionesdevalorapi.getvdsumary.v1.GetVDSumaryDAO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvsumario.v1.InputDeclaracionesDeValorDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvsumario.v1.restfull.OutputDeclaracionesDeValorDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.InputValueDeclarationSumaryDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.resfull.OutputValueDeclarationSumaryDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.InputVDSumaryDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.resfull.OutputVDSumaryDTO;
 
 
 public class GetVDSumaryServiceImpl implements GetVDSumaryService {
@@ -19,7 +19,7 @@ public class GetVDSumaryServiceImpl implements GetVDSumaryService {
 	private GetVDSumaryDAO getVDSumaryDAO;
 
 	@Override
-	public OutputValueDeclarationSumaryDTO getValueDeclarationList(InputValueDeclarationSumaryDTO data) {
+	public OutputVDSumaryDTO getValueDeclarationList(InputVDSumaryDTO data) {
 		return getVDSumaryDAO.getValueDeclarationList(data);
 	}
 
