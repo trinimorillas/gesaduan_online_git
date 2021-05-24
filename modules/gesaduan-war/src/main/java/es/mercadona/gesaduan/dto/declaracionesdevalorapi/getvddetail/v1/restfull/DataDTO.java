@@ -1,4 +1,4 @@
-package es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull;
+package es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v1.restfull;
 
 import java.util.List;
 
@@ -12,6 +12,7 @@ public class DataDTO extends AbstractDTO {
 	private VDHeaderDTO header;
 	private List<VDHistoricalDTO> historical;
 	private List<VDLineDTO> lineList;
+	
 	/**
 	 * @return the commonData
 	 */

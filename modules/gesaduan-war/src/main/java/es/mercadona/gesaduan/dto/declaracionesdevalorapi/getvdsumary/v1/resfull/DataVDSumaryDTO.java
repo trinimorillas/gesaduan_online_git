@@ -23,7 +23,7 @@ public class DataVDSumaryDTO extends AbstractDTO implements Serializable {
 	/**
 	 * @return the isValueDeclarationOk
 	 */
-	public boolean isValueDeclarationOk() {
+	public boolean isIsValueDeclarationOk() {
 		return isValueDeclarationOk;
 	}
 	/**
@@ -35,7 +35,7 @@ public class DataVDSumaryDTO extends AbstractDTO implements Serializable {
 	/**
 	 * @return the isAutomaticLoading
 	 */
-	public boolean isAutomaticLoading() {
+	public boolean isIsAutomaticLoading() {
 		return isAutomaticLoading;
 	}
 	/**

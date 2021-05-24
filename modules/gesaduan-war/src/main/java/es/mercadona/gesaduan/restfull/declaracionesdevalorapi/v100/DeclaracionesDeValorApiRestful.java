@@ -31,21 +31,20 @@ import es.mercadona.fwk.core.io.ResourceService;
 import es.mercadona.fwk.core.io.exceptions.IllegalResourceNameException;
 import es.mercadona.fwk.core.io.exceptions.ResourceNotFoundException;
 import es.mercadona.fwk.restful.service.annotate.RESTful;
+import es.mercadona.gesaduan.business.declaracionesdevalorapi.getvddetail.v1.GetVDDetailService;
 import es.mercadona.gesaduan.business.declaracionesdevalorapi.getvddocument.v1.GetVDDocumentService;
-import es.mercadona.gesaduan.business.declaracionesdevalorapi.getvaluedeclarationdetail.v1.GetValueDeclarationDetailService;
 import es.mercadona.gesaduan.business.declaracionesdevalorapi.getvdsumary.v1.GetVDSumaryService;
 import es.mercadona.gesaduan.business.declaracionesdevalorapi.putvdconfirmdownload.v1.PutVDConfirmDownloadService;
 import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dto.common.error.ErrorDTO;
 import es.mercadona.gesaduan.dto.common.error.OutputResponseErrorDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v1.InputVDDetailDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v1.restfull.OutputVDDetailDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddocument.v1.InputValueDeclarationDocumentDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddocument.v1.OutputDeclaracionesDeValorDocCabDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvaluedeclarationdetail.v1.InputValueDeclarationDetailDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvaluedeclarationdetail.v1.restfull.OutputValueDeclarationDetailDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.InputVDSumaryDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.resfull.OutputVDSumaryDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.putvdconfirmdownload.v1.InputDataDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.putvdconfirmdownload.v1.InputPutVDConfirmDownloadDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.putvdconfirmdownload.v1.restfull.OutputPutVDConfirmDownloadDTO;
 import es.mercadona.gesaduan.exception.EnumGesaduanException;
 import es.mercadona.gesaduan.exception.GesaduanException;
@@ -59,7 +58,7 @@ public class DeclaracionesDeValorApiRestful {
 	private org.slf4j.Logger logger;
 
 	@Inject
-	private GetValueDeclarationDetailService getValueDeclarationDetailService;
+	private GetVDDetailService getValueDeclarationDetailService;
 	@Inject
 	private ResourceService resourceService;
 	@Inject
@@ -108,18 +107,33 @@ public class DeclaracionesDeValorApiRestful {
 	}
 
 	@GET
-	@Path("valueDeclaration/{valueDeclarationCode}")
+	@Path("value-declarations/{valueDeclarationId}")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getDeclaracionDeValorDetalle(@NotNull @PathParam("valueDeclarationCode") String valueDeclaration,
-			@NotNull @DefaultValue("es_ES") @QueryParam("localeId") String localeId,
-			@NotNull @QueryParam("userCode") String userCode) {
-		OutputValueDeclarationDetailDTO result;
+	public Response getDeclaracionDeValorDetalle(@NotNull @PathParam("valueDeclarationId") String valueDeclarationId,
+			@DefaultValue("es_ES") @QueryParam("locale") String locale,
+			@NotNull @QueryParam("userId") String userId) {
+		OutputVDDetailDTO result;
 
 		try {
-			InputValueDeclarationDetailDTO input = new InputValueDeclarationDetailDTO();
-			input.setValueDeclarationCode(valueDeclaration);
-			input.setLocaleId(localeId);
+			
+			InputVDDetailDTO input = new InputVDDetailDTO();			
+			
+			if (userId == null ) {
+				throw new GesaduanException(EnumGesaduanException.PARAMETROS_OBLIGATORIOS);
+			}
+
+			String[] valueDeclarationIdArr = valueDeclarationId.split("-");
+			
+			String valueDeclarationNumber = valueDeclarationIdArr[0];
+			String valueDeclarationYear = valueDeclarationIdArr[1];				
+			String valueDeclarationVersion = valueDeclarationIdArr[2];				
+			
+			input.setValueDeclarationNumber(valueDeclarationNumber);
+			input.setValueDeclarationYear(valueDeclarationYear);
+			input.setValueDeclarationVersion(valueDeclarationVersion);			
+			input.setLocale(locale);			
+			input.setUserId(userId);
 
 			result = getValueDeclarationDetailService.getValueDeclarationDetail(input);
 

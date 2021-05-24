@@ -8,7 +8,7 @@ public class DataVDSumarySourceDTO extends AbstractDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	private String  id;
+	private String  publicId;
 	private String  name;
 	private String  regionId;
 	private String  typeId;
@@ -16,14 +16,14 @@ public class DataVDSumarySourceDTO extends AbstractDTO implements Serializable {
 	/**
 	 * @return the id
 	 */
-	public String getId() {
-		return id;
+	public String getPublicId() {
+		return publicId;
 	}
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(String id) {
-		this.id = id;
+	public void setPublicId(String publicId) {
+		this.publicId = publicId;
 	}
 	/**
 	 * @return the name

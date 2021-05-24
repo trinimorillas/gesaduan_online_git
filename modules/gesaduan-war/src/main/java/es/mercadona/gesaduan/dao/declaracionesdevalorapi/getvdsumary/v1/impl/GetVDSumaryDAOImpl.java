@@ -15,9 +15,12 @@ import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dao.BaseDAO;
 import es.mercadona.gesaduan.dao.declaracionesdevalorapi.getvdsumary.v1.GetVDSumaryDAO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.InputVDSumaryDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.resfull.DataVDDatesDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.resfull.DataVDSumaryDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.resfull.DataVDSumaryOrderDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.resfull.DataVDSumarySourceDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.resfull.DataVDeclarationIdsDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.resfull.DataVDossierIdsDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.resfull.OutputVDSumaryDTO;
 import es.mercadona.gesaduan.jpa.declaracionesdevalor.DeclaracionesDeValorJPA;
 
@@ -405,42 +408,52 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 					
 					valueDeclaractionSumary.setAutomaticLoading(tmp[1] != null && tmp[1].equals("S"));
 					
+					DataVDeclarationIdsDTO valueDeclarationIds = new DataVDeclarationIdsDTO();
 					
+					valueDeclarationIds.setValueDeclarationNumber(String.valueOf(tmp[2]));
+					valueDeclarationIds.setValueDeclarationYear(String.valueOf(tmp[3]));
+					valueDeclarationIds.setValueDeclarationVersion(String.valueOf(tmp[4]));	
 					
-					valueDeclaractionSumary.setValueDeclarationNumber(Integer.parseInt(String.valueOf(tmp[2])));
-					valueDeclaractionSumary.setValueDeclarationYear(Integer.parseInt(String.valueOf(tmp[3])));
-					valueDeclaractionSumary.setValueDeclarationVersion(Integer.parseInt(String.valueOf(tmp[4])));				
+					valueDeclaractionSumary.setValueDeclarationIds(valueDeclarationIds);
+					
+					DataVDossierIdsDTO dossierIds = new DataVDossierIdsDTO();
 					
 					if (tmp[5] != null) {
-						valueDeclaractionSumary.setDossierNumber(Integer.parseInt(String.valueOf(tmp[5])));
+						dossierIds.setDossierNumber(String.valueOf(tmp[5]));
 					}
 					if (tmp[6] != null) {
-						valueDeclaractionSumary.setDossierYear(Integer.parseInt(String.valueOf(tmp[6])));
+						dossierIds.setDossierYear(String.valueOf(tmp[6]));
 					}
+					
+					valueDeclaractionSumary.setDossiersIds(dossierIds);
 					
 					valueDeclaractionSumary.setTotalAmount(Double.parseDouble(String.valueOf(tmp[7])));
 					valueDeclaractionSumary.setTotalAmountCurrency("EUR");
 					
-					valueDeclaractionSumary.setDispatchDate(String.valueOf(tmp[8]));
+					DataVDDatesDTO dates = new DataVDDatesDTO();
 					
-					valueDeclaractionSumary.setValueDeclarationGenerationDate(String.valueOf(tmp[9]));
+					dates.setDispatchDate(String.valueOf(tmp[8]));
 					
-					valueDeclaractionSumary.setValueDeclarationDownloadDate(String.valueOf(tmp[10]));
-					valueDeclaractionSumary.setExportDownloadDate(String.valueOf(tmp[11]));
-					valueDeclaractionSumary.setImportDownloadDate(String.valueOf(tmp[12]));
+					dates.setValueDeclarationGenerationDate(String.valueOf(tmp[9]));
+					
+					dates.setValueDeclarationDownloadDate(String.valueOf(tmp[10]));
+					dates.setExportDownloadDate(String.valueOf(tmp[11]));
+					dates.setImportDownloadDate(String.valueOf(tmp[12]));
+					
+					valueDeclaractionSumary.setDates(dates);
 					
 					if (tmp[17] != null) {
 						valueDeclaractionSumary.setDispatchCode(String.valueOf(tmp[17]));
 					}
 					
-					valueDeclaractionSumary.setValueDeclarationStatus(calculaEstado(tmp[1].toString(),tmp[0].toString(),data.getValueDeclarationStateId()));
+					valueDeclaractionSumary.setValueDeclarationStatus(calculaEstado(tmp[1].toString(),tmp[0].toString(),data.getValueDeclarationStatus()));
 
 					// Obtiene la lista de pedidos
 					valueDeclaractionSumary.setInternalOrderList(getPedidos(tmp[2].toString(),tmp[3].toString(),tmp[4].toString(),tmp[17])); 					
 					
 					DataVDSumarySourceDTO valueDeclaractionSource = new DataVDSumarySourceDTO();
 					
-					valueDeclaractionSource.setId(String.valueOf(tmp[13]));
+					valueDeclaractionSource.setPublicId(String.valueOf(tmp[13]));
 					valueDeclaractionSource.setName(String.valueOf(tmp[14]));
 					valueDeclaractionSource.setRegionId(String.valueOf(tmp[15]));
 					valueDeclaractionSource.setTypeId(String.valueOf(tmp[16]));				
