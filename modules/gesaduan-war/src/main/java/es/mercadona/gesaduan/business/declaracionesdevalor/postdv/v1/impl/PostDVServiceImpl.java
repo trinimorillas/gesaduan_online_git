@@ -57,7 +57,7 @@ public class PostDVServiceImpl implements PostDVService {
 			if (input.getData().getHeader().getValueDeclarationData().getDispatchCode() != null) {
 				declaracionJPA.setExpedicion(input.getData().getHeader().getValueDeclarationData().getDispatchCode());
 			}
-			if (declaracionJPA.getExpedicion() != null) {
+			if (input.getData().getHeader().getInternalOrderList() != null) {
 				if (!input.getData().getHeader().getInternalOrderList().isEmpty()) {
 					declaracionJPA.setPedido(input.getData().getHeader().getInternalOrderList().get(0).getInternalOrderId());
 				}
