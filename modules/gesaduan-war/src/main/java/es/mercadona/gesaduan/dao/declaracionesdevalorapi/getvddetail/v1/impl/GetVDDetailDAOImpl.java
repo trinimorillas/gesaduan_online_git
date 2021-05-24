@@ -193,7 +193,7 @@ public class GetVDDetailDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 										
 					data.setCommonData(commonData);
 					// Pedidos
-					header.setInternalOrderList(getPedidos(input.getValueDeclarationNumber(), input.getValueDeclarationYear(), input.getValueDeclarationVersion(), valueDeclarationData.getDispatchCode()));
+					header.setInternalOrderList(getPedidos(input.getValueDeclarationNumber(), input.getValueDeclarationYear(), input.getValueDeclarationVersion(), source.getTypeId()));
 					data.setHeader(header);
 					// Lineas
 					data.setLineList(getLines(input.getValueDeclarationNumber(), input.getValueDeclarationYear(), input.getValueDeclarationVersion(), input.getLocale(), source.getPublicId()));
@@ -209,21 +209,21 @@ public class GetVDDetailDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 		return result;
 	}
 
-	private List<InternalOrderListDTO> getPedidos(String valueDeclarationCode, String valueDeclarationYear, String valueDeclarationVersion, String expedicion) {
+	private List<InternalOrderListDTO> getPedidos(String valueDeclarationCode, String valueDeclarationYear, String valueDeclarationVersion, String typeId) {
 		StringBuilder sqlPedido = new StringBuilder();
 		
-		if (expedicion != null) {
-			sqlPedido.append("SELECT COD_V_PEDIDO ");			
+		if (typeId.equals("PROVEEDOR")) {
+			sqlPedido.append("SELECT COD_V_PEDIDO ");
 			sqlPedido.append("FROM O_DECLARACION_VALOR_CAB ");
 			sqlPedido.append("WHERE COD_N_DECLARACION_VALOR = ?valueDeclarationNumber ");
 			sqlPedido.append("AND NUM_ANYO = ?valueDeclarationYear ");
-			sqlPedido.append("AND COD_N_VERSION = ?valueDeclarationVersion");			
-		} else {
-			sqlPedido.append("SELECT COD_V_PEDIDO ");			
+			sqlPedido.append("AND COD_N_VERSION = ?valueDeclarationVersion");
+		} else if (typeId.equals("BLOQUE")) {
+			sqlPedido.append("SELECT COD_V_PEDIDO ");
 			sqlPedido.append("FROM S_DECLARACION_VALOR_PEDIDO ");
 			sqlPedido.append("WHERE COD_N_DECLARACION_VALOR = ?valueDeclarationNumber ");
 			sqlPedido.append("AND NUM_ANYO_DV = ?valueDeclarationYear ");
-			sqlPedido.append("AND COD_N_VERSION_DV = ?valueDeclarationVersion");						
+			sqlPedido.append("AND COD_N_VERSION_DV = ?valueDeclarationVersion");
 		}
 
 		final Query queryPedido = getEntityManager().createNativeQuery(sqlPedido.toString());
