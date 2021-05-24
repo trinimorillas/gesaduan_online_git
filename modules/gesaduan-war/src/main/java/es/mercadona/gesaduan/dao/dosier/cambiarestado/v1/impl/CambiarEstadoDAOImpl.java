@@ -8,14 +8,14 @@ import javax.transaction.Transactional;
 
 import es.mercadona.fwk.core.exceptions.ApplicationException;
 import es.mercadona.fwk.data.DaoBaseImpl;
-import es.mercadona.gesaduan.business.dosierapi.getdocument.v1.GetDocumentService;
+import es.mercadona.gesaduan.business.dosierapi.getdossierdocument.v1.GetDocumentService;
 import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dao.dosier.cambiarestado.v1.CambiarEstadoDAO;
 import es.mercadona.gesaduan.dao.dosier.cambiarestado.v1.GuardarPDFDAO;
 import es.mercadona.gesaduan.dto.dosier.cambiarestado.v1.resfull.DatosCambiarEstadoDTO;
 import es.mercadona.gesaduan.dto.dosier.cambiarestado.v1.resfull.OutputCambiarEstadoDTO;
-import es.mercadona.gesaduan.dto.dosierapi.getdocument.v1.InputDossierDocumentDTO;
-import es.mercadona.gesaduan.dto.dosierapi.getdocument.v1.OutputDossierDocHeadDTO;
+import es.mercadona.gesaduan.dto.dosierapi.getdossierdocument.v1.InputDossierDocumentDTO;
+import es.mercadona.gesaduan.dto.dosierapi.getdossierdocument.v1.OutputDossierDocHeadDTO;
 import es.mercadona.gesaduan.jpa.dosier.DosierJPA;
 import es.mercadona.gesaduan.jpa.dosier.getdocumento.v1.DocumentoDataJPA;
 

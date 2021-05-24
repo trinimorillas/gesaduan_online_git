@@ -5,66 +5,62 @@ import java.util.List;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.AbstractDTO;
 
 public class DataDTO extends AbstractDTO {
+	
 	private static final long serialVersionUID = 1L;
-	private ValueDeclarationCommonDataDTO valueDeclarationCommonData;
-	private ValueDeclarationHeaderDTO valueDeclarationHeader;
-	private List<ValueDeclarationHistoricalDTO> valueDeclarationHistorical;
-	private List<ValueDeclarationLineDTO> valueDeclarationLine;
-
+	
+	private VDCommonDataDTO commonData;
+	private VDHeaderDTO header;
+	private List<VDHistoricalDTO> historical;
+	private List<VDLineDTO> lineList;
 	/**
-	 * @return the valueDeclarationCommonData
+	 * @return the commonData
 	 */
-	public ValueDeclarationCommonDataDTO getValueDeclarationCommonData() {
-		return valueDeclarationCommonData;
+	public VDCommonDataDTO getCommonData() {
+		return commonData;
+	}
+	/**
+	 * @param commonData the commonData to set
+	 */
+	public void setCommonData(VDCommonDataDTO commonData) {
+		this.commonData = commonData;
+	}
+	/**
+	 * @return the header
+	 */
+	public VDHeaderDTO getHeader() {
+		return header;
+	}
+	/**
+	 * @param header the header to set
+	 */
+	public void setHeader(VDHeaderDTO header) {
+		this.header = header;
+	}
+	/**
+	 * @return the historical
+	 */
+	public List<VDHistoricalDTO> getHistorical() {
+		return historical;
+	}
+	/**
+	 * @param historical the historical to set
+	 */
+	public void setHistorical(List<VDHistoricalDTO> historical) {
+		this.historical = historical;
+	}
+	/**
+	 * @return the lineList
+	 */
+	public List<VDLineDTO> getLineList() {
+		return lineList;
+	}
+	/**
+	 * @param lineList the lineList to set
+	 */
+	public void setLineList(List<VDLineDTO> lineList) {
+		this.lineList = lineList;
 	}
 
-	/**
-	 * @param valueDeclarationCommonData the valueDeclarationCommonData to set
-	 */
-	public void setValueDeclarationCommonData(ValueDeclarationCommonDataDTO valueDeclarationCommonData) {
-		this.valueDeclarationCommonData = valueDeclarationCommonData;
-	}
-
-	/**
-	 * @return the valueDeclarationHeader
-	 */
-	public ValueDeclarationHeaderDTO getValueDeclarationHeader() {
-		return valueDeclarationHeader;
-	}
-
-	/**
-	 * @param valueDeclarationHeader the valueDeclarationHeader to set
-	 */
-	public void setValueDeclarationHeader(ValueDeclarationHeaderDTO valueDeclarationHeader) {
-		this.valueDeclarationHeader = valueDeclarationHeader;
-	}
-
-	/**
-	 * @return the valueDeclarationHistorical
-	 */
-	public List<ValueDeclarationHistoricalDTO> getValueDeclarationHistorical() {
-		return valueDeclarationHistorical;
-	}
-
-	/**
-	 * @param valueDeclarationHistorical the valueDeclarationHistorical to set
-	 */
-	public void setValueDeclarationHistorical(List<ValueDeclarationHistoricalDTO> valueDeclarationHistorical) {
-		this.valueDeclarationHistorical = valueDeclarationHistorical;
-	}
-
-	/**
-	 * @return the valueDeclarationLineDTO
-	 */
-	public List<ValueDeclarationLineDTO> getValueDeclarationLine() {
-		return valueDeclarationLine;
-	}
-
-	/**
-	 * @param valueDeclarationLineDTO the valueDeclarationLineDTO to set
-	 */
-	public void setValueDeclarationLineDTO(List<ValueDeclarationLineDTO> valueDeclarationLine) {
-		this.valueDeclarationLine = valueDeclarationLine;
-	}
+	
 
 }

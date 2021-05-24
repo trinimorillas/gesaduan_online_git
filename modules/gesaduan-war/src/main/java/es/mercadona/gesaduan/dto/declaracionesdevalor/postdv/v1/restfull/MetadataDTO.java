@@ -5,35 +5,34 @@ import es.mercadona.gesaduan.dto.declaracionesdevalor.AbstractDTO;
 public class MetadataDTO extends AbstractDTO {
 
 	private static final long serialVersionUID = 1L;
-	private String userCode;
-	private String localeId;
-
+	
+	private String userId;
+	private String locale;
+	
 	/**
-	 * @return the userCode
+	 * @return the userId
 	 */
-	public String getUserCode() {
-		return userCode;
+	public String getUserId() {
+		return userId;
+	}
+	/**
+	 * @param userId the userId to set
+	 */
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	/**
+	 * @return the locale
+	 */
+	public String getLocale() {
+		return locale;
+	}
+	/**
+	 * @param locale the locale to set
+	 */
+	public void setLocale(String locale) {
+		this.locale = locale;
 	}
 
-	/**
-	 * @param userCode the userCode to set
-	 */
-	public void setUserCode(String userCode) {
-		this.userCode = userCode;
-	}
-
-	/**
-	 * @return the localeId
-	 */
-	public String getLocaleId() {
-		return localeId;
-	}
-
-	/**
-	 * @param localeId the localeId to set
-	 */
-	public void setLocaleId(String localeId) {
-		this.localeId = localeId;
-	}
 
 }

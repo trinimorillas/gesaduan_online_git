@@ -31,21 +31,21 @@ import es.mercadona.fwk.core.io.ResourceService;
 import es.mercadona.fwk.core.io.exceptions.IllegalResourceNameException;
 import es.mercadona.fwk.core.io.exceptions.ResourceNotFoundException;
 import es.mercadona.fwk.restful.service.annotate.RESTful;
-import es.mercadona.gesaduan.business.declaracionesdevalorapi.getdvdocumento.v1.GetDVDocumentoService;
-import es.mercadona.gesaduan.business.declaracionesdevalorapi.getvaluedeclarationdetail.v1.GetValueDeclarationDetailService;
+import es.mercadona.gesaduan.business.declaracionesdevalorapi.getvddetail.v1.GetVDDetailService;
+import es.mercadona.gesaduan.business.declaracionesdevalorapi.getvddocument.v1.GetVDDocumentService;
 import es.mercadona.gesaduan.business.declaracionesdevalorapi.getvdsumary.v1.GetVDSumaryService;
-import es.mercadona.gesaduan.business.declaracionesdevalorapi.putfacturaconfirmadescarga.v1.PutFacturaConfirmaDescargaService;
+import es.mercadona.gesaduan.business.declaracionesdevalorapi.putvdconfirmdownload.v1.PutVDConfirmDownloadService;
 import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dto.common.error.ErrorDTO;
 import es.mercadona.gesaduan.dto.common.error.OutputResponseErrorDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.InputValueDeclarationDocumentDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getdvdocumento.v1.OutputDeclaracionesDeValorDocCabDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvaluedeclarationdetail.v1.InputValueDeclarationDetailDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvaluedeclarationdetail.v1.restfull.OutputValueDeclarationDetailDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.InputValueDeclarationSumaryDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.resfull.OutputValueDeclarationSumaryDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.putfacturaconfirmadescarga.v1.InputPutFacturaConfirmaDescargaDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.putfacturaconfirmadescarga.v1.restfull.OutputPutFacturaConfirmaDescargaDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v1.InputVDDetailDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v1.restfull.OutputVDDetailDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddocument.v1.InputValueDeclarationDocumentDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddocument.v1.OutputDeclaracionesDeValorDocCabDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.InputVDSumaryDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.resfull.OutputVDSumaryDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.putvdconfirmdownload.v1.InputDataDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.putvdconfirmdownload.v1.restfull.OutputPutVDConfirmDownloadDTO;
 import es.mercadona.gesaduan.exception.EnumGesaduanException;
 import es.mercadona.gesaduan.exception.GesaduanException;
 
@@ -58,15 +58,15 @@ public class DeclaracionesDeValorApiRestful {
 	private org.slf4j.Logger logger;
 
 	@Inject
-	private GetValueDeclarationDetailService getValueDeclarationDetailService;
+	private GetVDDetailService getValueDeclarationDetailService;
 	@Inject
 	private ResourceService resourceService;
 	@Inject
-	private GetDVDocumentoService getDocumentoDVService;
+	private GetVDDocumentService getDocumentoDVService;
 	@Inject
 	private GetVDSumaryService getVDSumaryService;
 	@Inject
-	private PutFacturaConfirmaDescargaService putFacturaConfirmaDescargaService;
+	private PutVDConfirmDownloadService putFacturaConfirmaDescargaService;
 
 	private static final String MIMETYPE_PDF = "application/pdf";
 	private static final String MIMETYPE_CSV = "text/csv";
@@ -76,21 +76,22 @@ public class DeclaracionesDeValorApiRestful {
 	private static final String LOG_FILE = "DeclaracionesDeValorApiRestful(GESADUAN)"; 	
 	
 	@POST
-	@Path("valueDeclaration/sumary")
+	@Path("value-declarations/summary/list")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getValueDeclarationSumary(@NotNull @DefaultValue("es-ES") @QueryParam("localeId") String localeId,
-			@NotNull @QueryParam("userCode") String userCode,
+	public Response getValueDeclarationSumary(
+			@DefaultValue("es-ES") @QueryParam("locale") String locale,
+			@NotNull @QueryParam("userId") String userId,
 			@DefaultValue("1") @QueryParam("firstPage") Integer firstPage,
 			@DefaultValue("10") @QueryParam("sizePage") Integer sizePage,
 			@DefaultValue("-valueDeclarationNumber") @QueryParam("order") String order,
-			InputValueDeclarationSumaryDTO data) {
+			InputVDSumaryDTO data) {
 
-		OutputValueDeclarationSumaryDTO response = null;
+		OutputVDSumaryDTO response = null;
 
 		try {
-			data.setLocaleId(localeId);
-			data.setUserCode(userCode);
+			data.setLocale(locale);
+			data.setUserId(userId);
 			data.setFirstPage(firstPage);
 			data.setSizePage(sizePage);
 			data.setOrder(order);
@@ -106,18 +107,33 @@ public class DeclaracionesDeValorApiRestful {
 	}
 
 	@GET
-	@Path("valueDeclaration/{valueDeclarationCode}")
+	@Path("value-declarations/{valueDeclarationId}")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getDeclaracionDeValorDetalle(@NotNull @PathParam("valueDeclarationCode") String valueDeclaration,
-			@NotNull @DefaultValue("es_ES") @QueryParam("localeId") String localeId,
-			@NotNull @QueryParam("userCode") String userCode) {
-		OutputValueDeclarationDetailDTO result;
+	public Response getDeclaracionDeValorDetalle(@NotNull @PathParam("valueDeclarationId") String valueDeclarationId,
+			@DefaultValue("es_ES") @QueryParam("locale") String locale,
+			@NotNull @QueryParam("userId") String userId) {
+		OutputVDDetailDTO result;
 
 		try {
-			InputValueDeclarationDetailDTO input = new InputValueDeclarationDetailDTO();
-			input.setValueDeclarationCode(valueDeclaration);
-			input.setLocaleId(localeId);
+			
+			InputVDDetailDTO input = new InputVDDetailDTO();			
+			
+			if (userId == null ) {
+				throw new GesaduanException(EnumGesaduanException.PARAMETROS_OBLIGATORIOS);
+			}
+
+			String[] valueDeclarationIdArr = valueDeclarationId.split("-");
+			
+			String valueDeclarationNumber = valueDeclarationIdArr[0];
+			String valueDeclarationYear = valueDeclarationIdArr[1];				
+			String valueDeclarationVersion = valueDeclarationIdArr[2];				
+			
+			input.setValueDeclarationNumber(valueDeclarationNumber);
+			input.setValueDeclarationYear(valueDeclarationYear);
+			input.setValueDeclarationVersion(valueDeclarationVersion);			
+			input.setLocale(locale);			
+			input.setUserId(userId);
 
 			result = getValueDeclarationDetailService.getValueDeclarationDetail(input);
 
@@ -142,10 +158,11 @@ public class DeclaracionesDeValorApiRestful {
 
 
 	@GET
-	@Path("valueDeclaration/{valueDeclarationId}/document")
+	@Path("value-declarations/{valueDeclarationId}/document")
 	@Consumes(MediaType.WILDCARD)
 	@Produces({ MIMETYPE_PDF, MIMETYPE_CSV, MediaType.APPLICATION_JSON })
-	public Response getDeclaracionesDeValorDocumento(@NotNull @PathParam("valueDeclarationId") String valueDeclarationId,
+	public Response getDeclaracionesDeValorDocumento(
+			@NotNull @PathParam("valueDeclarationId") String valueDeclarationId,
 			@Context HttpServletRequest request, 
 			@DefaultValue("es-ES") @QueryParam("locale") String locale,
 			@NotNull @QueryParam("userId") String userId,
@@ -265,22 +282,32 @@ public class DeclaracionesDeValorApiRestful {
 	}
 
 	@PUT
-	@Path("valueDeclaration/{codigoFactura}/confirmar-descarga")
+	@Path("value-declarations/{valueDeclarationId}/confirm-download")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response putFacturaConfirmaDescarga(@NotNull @PathParam("codigoFactura") String codigoFactura,
-			@NotNull @QueryParam("codigoProveedor") String codigoProveedor,
-			@NotNull InputPutFacturaConfirmaDescargaDTO inputData) {
-		OutputPutFacturaConfirmaDescargaDTO response = null;
+	public Response putFacturaConfirmaDescarga(@NotNull @PathParam("valueDeclarationId") String valueDeclarationId,
+			@DefaultValue("es-ES") @QueryParam("locale") String locale,			
+			@NotNull @QueryParam("supplierId") String supplierId,
+			@NotNull InputDataDTO inputData) {
+		OutputPutVDConfirmDownloadDTO response = null;
 
 		try {
-			if (inputData.getMetadatos().getCodigoUsuario() == null || inputData.getMetadatos().getLocale() == null
-					|| inputData.getDatos().getEstaDescargado() == null) {
+			if (inputData.getUserId() == null 
+					|| inputData.getIsDownloaded() == null) {
 				throw new GesaduanException(EnumGesaduanException.PARAMETROS_OBLIGATORIOS);
 			}
 
-			inputData.getDatos().setCodigoFactura(codigoFactura);
-			inputData.getDatos().setCodigoProveedor(codigoProveedor);
+			String[] valueDeclarationIdArr = valueDeclarationId.split("-");
+			
+			String valueDeclarationNumber = valueDeclarationIdArr[0];
+			String valueDeclarationYear = valueDeclarationIdArr[1];				
+			String valueDeclarationVersion = valueDeclarationIdArr[2];				
+			
+			inputData.setValueDeclarationNumber(valueDeclarationNumber);
+			inputData.setValueDeclarationYear(valueDeclarationYear);
+			inputData.setValueDeclarationVersion(valueDeclarationVersion);			
+			inputData.setSupplierId(supplierId);
+			inputData.setLocale(locale);
 
 			response = putFacturaConfirmaDescargaService.updateEstadoDescarga(inputData);
 

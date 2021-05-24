@@ -3,24 +3,28 @@ package es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.AbstractDTO;
 
 public class SourceDTO extends AbstractDTO {
+	
 	private static final long serialVersionUID = 1L;
-	private String id;
+	
+	private String publicId;
 	private String name;
 	private String regionId;
 	private String typeId;
 
+
+
 	/**
-	 * @return the id
+	 * @return the publicId
 	 */
-	public String getId() {
-		return id;
+	public String getPublicId() {
+		return publicId;
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param publicId the publicId to set
 	 */
-	public void setId(String id) {
-		this.id = id;
+	public void setPublicId(String publicId) {
+		this.publicId = publicId;
 	}
 
 	/**

@@ -14,9 +14,9 @@ import es.mercadona.gesaduan.business.declaracionesdevalor.postdv.v1.PostDVServi
 import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dao.declaracionesdevalor.postdv.v1.PostDeclaracionDeValorDAO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull.DVInsertPKDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull.InputPutValueDeclarationDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull.OutputPostDeclaracionesDeValorDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull.ValueDeclarationLineDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.InputPutVDDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull.OutputPutVDDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull.VDLineDTO;
 import es.mercadona.gesaduan.jpa.declaracionesdevalor.postdv.v1.DeclaracionesDeValorPostJPA;
 import es.mercadona.gesaduan.jpa.declaracionesdevalor.postdv.v1.DeclaracionesDeValorPostPK;
 import es.mercadona.gesaduan.jpa.declaracionesdevalor.postdv.v1.LineaDeclaracionJPA;
@@ -33,88 +33,93 @@ public class PostDVServiceImpl implements PostDVService {
 
 	@Transactional
 	@Override
-	public OutputPostDeclaracionesDeValorDTO createValueDeclaration(InputPutValueDeclarationDTO input) {
-		OutputPostDeclaracionesDeValorDTO result = new OutputPostDeclaracionesDeValorDTO();
+	public OutputPutVDDTO createValueDeclaration(InputPutVDDTO input) {
+		OutputPutVDDTO result = new OutputPutVDDTO();
 		DeclaracionesDeValorPostJPA declaracionJPA = new DeclaracionesDeValorPostJPA();
 		DVInsertPKDTO pkResult = new DVInsertPKDTO();
 		List<LineaDeclaracionJPA> listaLineas = new ArrayList<LineaDeclaracionJPA>();		
 
 		try {
 			// Cabecera
-			if (input.getData().getValueDeclarationHeader().getValueDeclarationNumber() != null) {
-				declaracionJPA.setCodDeclaracionValor(Integer.parseInt(input.getData().getValueDeclarationHeader().getValueDeclarationNumber()));
+			if (input.getData().getHeader().getValueDeclarationData().getValueDeclarationIds().getValueDeclarationNumber() != null) {
+				declaracionJPA.setCodDeclaracionValor(Integer.parseInt(input.getData().getHeader().getValueDeclarationData().getValueDeclarationIds().getValueDeclarationNumber()));
 			}
-			if (input.getData().getValueDeclarationHeader().getValueDeclarationYear() == null) {
+			if (input.getData().getHeader().getValueDeclarationData().getValueDeclarationIds().getValueDeclarationYear() == null) {
 				declaracionJPA.setAnyo(Calendar.getInstance().get(Calendar.YEAR));
 			} else {
-				declaracionJPA.setAnyo(Integer.parseInt(input.getData().getValueDeclarationHeader().getValueDeclarationYear()));
+				declaracionJPA.setAnyo(Integer.parseInt(input.getData().getHeader().getValueDeclarationData().getValueDeclarationIds().getValueDeclarationYear()));
 			}
-			if (input.getData().getValueDeclarationHeader().getValueDeclarationVersion() == null) {
+			if (input.getData().getHeader().getValueDeclarationData().getValueDeclarationIds().getValueDeclarationVersion() == null) {
 				declaracionJPA.setVersion(1);
 			} else {
-				declaracionJPA.setVersion(Integer.parseInt(input.getData().getValueDeclarationHeader().getValueDeclarationVersion()));
+				declaracionJPA.setVersion(Integer.parseInt(input.getData().getHeader().getValueDeclarationData().getValueDeclarationIds().getValueDeclarationVersion()));
 			}
-			if (input.getData().getValueDeclarationHeader().getDispatchId() != null) {
-				declaracionJPA.setExpedicion(input.getData().getValueDeclarationHeader().getDispatchId());
+			if (input.getData().getHeader().getValueDeclarationData().getDispatchCode() != null) {
+				declaracionJPA.setExpedicion(input.getData().getHeader().getValueDeclarationData().getDispatchCode());
 			}
-			if (input.getData().getValueDeclarationHeader().getInternalOrderList() != null && !input.getData().getValueDeclarationHeader().getInternalOrderList().isEmpty()) {
-				declaracionJPA.setPedido(input.getData().getValueDeclarationHeader().getInternalOrderList().get(0).getInternalOrderId());
-			}
-			if (input.getData().getValueDeclarationHeader().getSource() != null) {
-				if (input.getData().getValueDeclarationHeader().getSource().getId() != null) {
-					declaracionJPA.setProveedor(input.getData().getValueDeclarationHeader().getSource().getId());
-				}
-				if (input.getData().getValueDeclarationHeader().getSource().getRegionId() != null) {
-					declaracionJPA.setProvinciaCarga(Integer.parseInt(input.getData().getValueDeclarationHeader().getSource().getRegionId()));
+
+			if (input.getData().getHeader().getInternalOrderList() != null) {
+				if (!input.getData().getHeader().getInternalOrderList().isEmpty()) {
+					declaracionJPA.setPedido(input.getData().getHeader().getInternalOrderList().get(0).getInternalOrderId());
 				}
 			}
-			if (input.getData().getValueDeclarationHeader().getTarget() != null) { 
-				if (input.getData().getValueDeclarationHeader().getTarget().getId() != null) {
-					declaracionJPA.setCodAlmacen(input.getData().getValueDeclarationHeader().getTarget().getId());
+			if (input.getData().getHeader().getSource() != null) {
+				if (input.getData().getHeader().getSource().getPublicId() != null) {
+					declaracionJPA.setProveedor(input.getData().getHeader().getSource().getPublicId());
+				}
+				if (input.getData().getHeader().getSource().getRegionId() != null) {
+					declaracionJPA.setProvinciaCarga(Integer.parseInt(input.getData().getHeader().getSource().getRegionId()));
 				}
 			}
-			if (input.getData().getValueDeclarationHeader().getIncoterm() != null) {
-				declaracionJPA.setCondicionesEntrega(input.getData().getValueDeclarationHeader().getIncoterm());
+			if (input.getData().getHeader().getTarget() != null) { 
+				if (input.getData().getHeader().getTarget().getId() != null) {
+					declaracionJPA.setCodAlmacen(input.getData().getHeader().getTarget().getId());
+				}
+			}
+			if (input.getData().getHeader().getValueDeclarationData().getIncotermId() != null) {
+				declaracionJPA.setCondicionesEntrega(input.getData().getHeader().getValueDeclarationData().getIncotermId());
 			}
 			declaracionJPA.setMcaFactura("F");
-			declaracionJPA.setMcaUltimaVigente(input.getData().getValueDeclarationCommonData().isLastCurrent() ? "S" : "N");
-			declaracionJPA.setMcaCargaAuto(input.getData().getValueDeclarationCommonData().isManualLoading() ? "N" : "S");
-			declaracionJPA.setMcaDvCorrecta(input.getData().getValueDeclarationCommonData().isValueDeclarationOk() ? "S" : "N");
-			declaracionJPA.setMcaEnvio(input.getData().getValueDeclarationCommonData().isNotified() ? "S" : "N");
-			if (input.getData().getValueDeclarationCommonData().getValueDeclarationDownloadDate() != null) {
+			declaracionJPA.setMcaUltimaVigente(input.getData().getCommonData().isIsLastCurrent() ? "S" : "N");
+			declaracionJPA.setMcaCargaAuto(input.getData().getCommonData().isIsAutomaticLoading() ? "S" : "N");
+			declaracionJPA.setMcaDvCorrecta(input.getData().getCommonData().isIsValueDeclarationOk() ? "S" : "N");
+			declaracionJPA.setMcaEnvio(input.getData().getCommonData().isIsNotified() ? "S" : "N");
+			if (input.getData().getCommonData().getValueDeclarationDownloadDate() != null) {
 				declaracionJPA.setMcaDescarga("S");
 			} else {
 				declaracionJPA.setMcaDescarga("N");
 			}
-			if (input.getData().getValueDeclarationHeader().getDeliveryNoteDate() != null) {
-				declaracionJPA.setFechaAlbaran(toDate(input.getData().getValueDeclarationHeader().getDeliveryNoteDate()));
+			if (input.getData().getHeader().getValueDeclarationData().getDeliveryNoteDate() != null) {
+				declaracionJPA.setFechaAlbaran(toDate(input.getData().getHeader().getValueDeclarationData().getDeliveryNoteDate()));
 			}
-			if (input.getData().getValueDeclarationHeader().getDispatchDate() != null) {
-				declaracionJPA.setFechaEnvio(toDate(input.getData().getValueDeclarationHeader().getDispatchDate()));
+			if (input.getData().getHeader().getValueDeclarationData().getDispatchDate() != null) {
+				declaracionJPA.setFechaEnvio(toDate(input.getData().getHeader().getValueDeclarationData().getDispatchDate()));
 			}
-			if (input.getData().getValueDeclarationHeader().getValueDeclarationDate() != null) {
-				declaracionJPA.setFechaCreacion(toDate(input.getData().getValueDeclarationHeader().getValueDeclarationDate()));
+			if (input.getData().getHeader().getValueDeclarationData().getValueDeclarationGenerationDate() != null) {
+				declaracionJPA.setFechaCreacion(toDate(input.getData().getHeader().getValueDeclarationData().getValueDeclarationGenerationDate()));
 			} else {
 				declaracionJPA.setFechaCreacion(new Date());
 			}
-			if (input.getData().getValueDeclarationCommonData().getValueDeclarationDownloadDate() != null) {
-				declaracionJPA.setFechaDescarga(toDate(input.getData().getValueDeclarationCommonData().getValueDeclarationDownloadDate()));
+			if (input.getData().getCommonData().getValueDeclarationDownloadDate() != null) {
+				declaracionJPA.setFechaDescarga(toDate(input.getData().getCommonData().getValueDeclarationDownloadDate()));
 			}
-			if (input.getData().getValueDeclarationHeader().getDossierNumber() != null) {
-				declaracionJPA.setNumDosier(Long.parseLong(input.getData().getValueDeclarationHeader().getDossierNumber()));
-			}
-			if (input.getData().getValueDeclarationHeader().getDossierYear() != null) {
-				declaracionJPA.setAnyoDosier(Integer.parseInt(input.getData().getValueDeclarationHeader().getDossierYear()));
+			if (input.getData().getHeader().getValueDeclarationData().getDossierIds() != null) {
+				if (input.getData().getHeader().getValueDeclarationData().getDossierIds().getDossierNumber() != null) {
+					declaracionJPA.setNumDosier(Long.parseLong(input.getData().getHeader().getValueDeclarationData().getDossierIds().getDossierNumber()));
+				}
+				if (input.getData().getHeader().getValueDeclarationData().getDossierIds().getDossierYear() != null) {
+					declaracionJPA.setAnyoDosier(Integer.parseInt(input.getData().getHeader().getValueDeclarationData().getDossierIds().getDossierYear()));
+				}
 			}
 			declaracionJPA.setFechaCreacionRegistro(new Date());
-			declaracionJPA.setUsuarioCreacion(input.getMetadata().getUserCode());
+			declaracionJPA.setUsuarioCreacion(input.getMetadata().getUserId());
 			declaracionJPA.setApp("GESADUAN");
 			
 			// Líneas
-			List<ValueDeclarationLineDTO> listado = input.getData().getValueDeclarationLine();
+			List<VDLineDTO> listado = input.getData().getLineList();
 
 			if (listado != null && !listado.isEmpty()) {
-				for (ValueDeclarationLineDTO tmp : listado) {
+				for (VDLineDTO tmp : listado) {
 					LineaDeclaracionJPA linea = new LineaDeclaracionJPA();
 					
 					if (tmp.getProductPublicId() != null) {
@@ -123,8 +128,8 @@ public class PostDVServiceImpl implements PostDVService {
 					if (tmp.getTaricId() != null) {
 						linea.setCodigoTaric(tmp.getTaricId());
 					}
-					if (tmp.getRea() != null) {
-						linea.setCodigoRea(tmp.getRea());
+					if (tmp.getSsrId() != null) {
+						linea.setCodigoRea(tmp.getSsrId());
 					}
 					if (tmp.getProductAlternativeName() != null) {
 						linea.setNombreAlternativo(tmp.getProductAlternativeName());
@@ -168,15 +173,15 @@ public class PostDVServiceImpl implements PostDVService {
 					if (tmp.getSourceCountryId() != null) {
 						linea.setPaisOrigen(tmp.getSourceCountryId());
 					}
-					if (tmp.getIsLpc() != null) {
-						linea.setEsListoParaComer(tmp.getIsLpc() ? "S" : "N");
+					if (tmp.getIsReadyToEat() != null) {
+						linea.setEsListoParaComer(tmp.getIsReadyToEat() ? "S" : "N");
 					}
 					if (tmp.getHasError() != null) {
 						linea.setMarcaError(tmp.getHasError());
 					}
 					linea.setFechaCreacion(new Date());
 					linea.setCodAplicacion("GESADUAN");
-					linea.setUsuarioCreacion(input.getMetadata().getUserCode());
+					linea.setUsuarioCreacion(input.getMetadata().getUserId());
 
 					listaLineas.add(linea);
 				}

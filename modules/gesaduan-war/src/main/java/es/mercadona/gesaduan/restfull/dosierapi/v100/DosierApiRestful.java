@@ -31,14 +31,13 @@ import es.mercadona.fwk.core.io.ResourceService;
 import es.mercadona.fwk.core.io.exceptions.IllegalResourceNameException;
 import es.mercadona.fwk.core.io.exceptions.ResourceNotFoundException;
 import es.mercadona.fwk.restful.service.annotate.RESTful;
-import es.mercadona.gesaduan.business.declaracionesdevalor.putdvestadodescarga.v1.PutDVEstadoDescargaService;
-import es.mercadona.gesaduan.business.dosierapi.getdocument.v1.GetDocumentService;
+import es.mercadona.gesaduan.business.dosierapi.getdossierdocument.v1.GetDocumentService;
 import es.mercadona.gesaduan.business.dosierapi.putdosierconfirmadescarga.v1.PutDosierConfirmaDescargaService;
 import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dto.common.error.ErrorDTO;
 import es.mercadona.gesaduan.dto.common.error.OutputResponseErrorDTO;
-import es.mercadona.gesaduan.dto.dosierapi.getdocument.v1.InputDossierDocumentDTO;
-import es.mercadona.gesaduan.dto.dosierapi.getdocument.v1.OutputDossierDocHeadDTO;
+import es.mercadona.gesaduan.dto.dosierapi.getdossierdocument.v1.InputDossierDocumentDTO;
+import es.mercadona.gesaduan.dto.dosierapi.getdossierdocument.v1.OutputDossierDocHeadDTO;
 import es.mercadona.gesaduan.dto.dosierapi.putdosierconfirmadescarga.v1.InputDataDTO;
 import es.mercadona.gesaduan.dto.dosierapi.putdosierconfirmadescarga.v1.restfull.OutputPutDosierConfirmaDescargaDTO;
 import es.mercadona.gesaduan.exception.EnumGesaduanException;
@@ -57,8 +56,6 @@ public class DosierApiRestful {
 	@Inject
 	private GetDocumentService getDocumentService;
 	@Inject
-	private PutDVEstadoDescargaService putDVEstadoDescargaService;
-	@Inject
 	private PutDosierConfirmaDescargaService putDosierConfirmaDescargaService;
 
 	private static final String MIMETYPE_PDF = "application/pdf";
@@ -70,7 +67,7 @@ public class DosierApiRestful {
 	
 	
 	@GET
-	@Path("dossier/{dossierId}/document")
+	@Path("dossiers/{dossierId}/document")
 	@Consumes(MediaType.WILDCARD)
 	@Produces({ MIMETYPE_PDF, MIMETYPE_CSV, MediaType.APPLICATION_JSON })
 	public Response getDosierDocumento(
@@ -193,7 +190,7 @@ public class DosierApiRestful {
 
 
 	@PUT
-	@Path("dossier/{dossierId}/confirm-download")
+	@Path("dossiers/{dossierId}/confirm-download")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response putDosierConfirmaDescarga(
