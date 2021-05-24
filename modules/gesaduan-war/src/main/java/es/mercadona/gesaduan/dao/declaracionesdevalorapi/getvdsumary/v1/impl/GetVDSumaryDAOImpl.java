@@ -431,10 +431,7 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 						valueDeclaractionSumary.setDispatchCode(String.valueOf(tmp[17]));
 					}
 					
-					valueDeclaractionSumary.setValueDeclarationStatus(calculaEstado(tmp[1].toString(),tmp[0].toString(),data.getValueDeclarationStateId()));
-
-					// Obtiene la lista de pedidos
-					valueDeclaractionSumary.setInternalOrderList(getPedidos(tmp[2].toString(),tmp[3].toString(),tmp[4].toString(),tmp[17])); 					
+					valueDeclaractionSumary.setValueDeclarationStatus(calculaEstado(tmp[1].toString(),tmp[0].toString(),data.getValueDeclarationStateId())); 					
 					
 					DataValueDeclarationSumarySourceDTO valueDeclaractionSource = new DataValueDeclarationSumarySourceDTO();
 					
@@ -444,6 +441,9 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 					valueDeclaractionSource.setTypeId(String.valueOf(tmp[16]));				
 					
 					valueDeclaractionSumary.setSource(valueDeclaractionSource);
+					
+					// Obtiene la lista de pedidos
+					valueDeclaractionSumary.setInternalOrderList(getPedidos(tmp[2].toString(),tmp[3].toString(),tmp[4].toString(),tmp[16].toString()));
 					
 					resultList.add(valueDeclaractionSumary);
 				}
@@ -462,22 +462,22 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 	}
 
 	
-	private List<DataValueDeclarationSumaryOrderDTO> getPedidos(String valueDeclarationCode, String valueDeclarationYear, String valueDeclarationVersion, Object expedicion) {
+	private List<DataValueDeclarationSumaryOrderDTO> getPedidos(String valueDeclarationCode, String valueDeclarationYear, String valueDeclarationVersion, String typeId) {
 
 		StringBuilder sqlPedido = new StringBuilder();
 		
-		if (expedicion != null) {
-			sqlPedido.append("SELECT COD_V_PEDIDO ");			
+		if (typeId.equals("PROVEEDOR")) {
+			sqlPedido.append("SELECT COD_V_PEDIDO ");
 			sqlPedido.append("FROM O_DECLARACION_VALOR_CAB ");
 			sqlPedido.append("WHERE COD_N_DECLARACION_VALOR = ?valueDeclarationNumber ");
 			sqlPedido.append("AND NUM_ANYO = ?valueDeclarationYear ");
-			sqlPedido.append("AND COD_N_VERSION = ?valueDeclarationVersion");			
-		} else {
-			sqlPedido.append("SELECT COD_V_PEDIDO ");			
+			sqlPedido.append("AND COD_N_VERSION = ?valueDeclarationVersion");
+		} else if (typeId.equals("BLOQUE")) {
+			sqlPedido.append("SELECT COD_V_PEDIDO ");
 			sqlPedido.append("FROM S_DECLARACION_VALOR_PEDIDO ");
 			sqlPedido.append("WHERE COD_N_DECLARACION_VALOR = ?valueDeclarationNumber ");
 			sqlPedido.append("AND NUM_ANYO_DV = ?valueDeclarationYear ");
-			sqlPedido.append("AND COD_N_VERSION_DV = ?valueDeclarationVersion");						
+			sqlPedido.append("AND COD_N_VERSION_DV = ?valueDeclarationVersion");
 		}
 
 		final Query queryPedido = getEntityManager().createNativeQuery(sqlPedido.toString());
