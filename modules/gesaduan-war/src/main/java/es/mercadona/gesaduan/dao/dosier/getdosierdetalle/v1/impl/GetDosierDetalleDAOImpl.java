@@ -195,47 +195,47 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 			if (datos.getDatos().getOrden() != null)
 				orden = datos.getDatos().getOrden();
 
-			final StringBuilder sql = new StringBuilder();
+			final StringBuilder select = new StringBuilder();
 			
-			sql.append("SELECT DISTINCT F.COD_N_DECLARACION_VALOR, F.NUM_ANYO, F.COD_N_VERSION, F.MCA_DV_CORRECTA, ");
-			sql.append("DECODE(F.COD_V_EXPEDICION, NULL, TO_CHAR(F.FEC_DT_EXPEDICION, 'DD/MM/YYYY'), TO_CHAR(F.FEC_D_ALBARAN, 'DD/MM/YYYY')) AS FEC_DT_EXPEDICION, ");
-			sql.append("DECODE(F.COD_N_PROVEEDOR, NULL, NULL, F.COD_N_PROVEEDOR) AS CODIGO_ORIGEN, ");
-			sql.append("DECODE(P.TXT_RAZON_SOCIAL, NULL, BL.TXT_NOMBRE, P.TXT_RAZON_SOCIAL) AS NOMBRE_ORIGEN, ");
-			sql.append("F.COD_N_PROVINCIA_CARGA, ");
-			sql.append("DECODE(F.COD_V_EXPEDICION, NULL, 'BLOQUE', 'PROVEEDOR') AS TIPO_ORIGEN ");
-			sql.append("FROM O_DECLARACION_VALOR_CAB F ");
-			sql.append("INNER JOIN O_CONTENEDOR_EXPEDIDO CE ON (CE.COD_N_DECLARACION_VALOR = F.COD_N_DECLARACION_VALOR AND CE.NUM_ANYO_DV = F.NUM_ANYO ");
-			sql.append("AND CE.COD_N_VERSION_DV = F.COD_N_VERSION) ");
-			sql.append("LEFT JOIN D_EQUIPO_TRANSPORTE ET ON (ET.COD_N_EQUIPO = CE.COD_N_EQUIPO) ");
-			sql.append("LEFT JOIN D_PLAN_EMBARQUE PE ON (PE.COD_N_EMBARQUE = ET.COD_N_EMBARQUE) ");
-			sql.append("LEFT JOIN D_PROVEEDOR_R P ON (P.COD_N_PROVEEDOR = F.COD_N_PROVEEDOR) ");
-			sql.append("LEFT JOIN D_BLOQUE_LOGISTICO_R BL ON (BL.COD_N_BLOQUE_LOGISTICO = F.COD_N_BLOQUE_LOGISTICO) ");
-			sql.append("WHERE F.NUM_DOSIER = ?numDosier ");
-			sql.append("AND F.NUM_ANYO_DOSIER = ?anyoDosier ");
-			sql.append("AND F.MCA_ULTIMA_VIGENTE = 'S' ");			
+			select.append("SELECT DISTINCT F.COD_N_DECLARACION_VALOR, F.NUM_ANYO, F.COD_N_VERSION, F.MCA_DV_CORRECTA, ");
+			select.append("DECODE(F.COD_V_EXPEDICION, NULL, TO_CHAR(F.FEC_DT_EXPEDICION, 'DD/MM/YYYY'), TO_CHAR(F.FEC_D_ALBARAN, 'DD/MM/YYYY')) AS FEC_DT_EXPEDICION, ");
+			select.append("DECODE(F.COD_N_PROVEEDOR, NULL, NULL, F.COD_N_PROVEEDOR) AS CODIGO_ORIGEN, ");
+			select.append("DECODE(P.TXT_RAZON_SOCIAL, NULL, BL.TXT_NOMBRE, P.TXT_RAZON_SOCIAL) AS NOMBRE_ORIGEN, ");
+			select.append("F.COD_N_PROVINCIA_CARGA, ");
+			select.append("DECODE(F.COD_V_EXPEDICION, NULL, 'BLOQUE', 'PROVEEDOR') AS TIPO_ORIGEN ");
+			select.append("FROM O_DECLARACION_VALOR_CAB F ");
+			select.append("INNER JOIN O_CONTENEDOR_EXPEDIDO CE ON (CE.COD_N_DECLARACION_VALOR = F.COD_N_DECLARACION_VALOR AND CE.NUM_ANYO_DV = F.NUM_ANYO ");
+			select.append("AND CE.COD_N_VERSION_DV = F.COD_N_VERSION) ");
+			select.append("LEFT JOIN D_EQUIPO_TRANSPORTE ET ON (ET.COD_N_EQUIPO = CE.COD_N_EQUIPO) ");
+			select.append("LEFT JOIN D_PLAN_EMBARQUE PE ON (PE.COD_N_EMBARQUE = ET.COD_N_EMBARQUE) ");
+			select.append("LEFT JOIN D_PROVEEDOR_R P ON (P.COD_N_PROVEEDOR = F.COD_N_PROVEEDOR) ");
+			select.append("LEFT JOIN D_BLOQUE_LOGISTICO_R BL ON (BL.COD_N_BLOQUE_LOGISTICO = F.COD_N_BLOQUE_LOGISTICO) ");
+			select.append("WHERE F.NUM_DOSIER = ?numDosier ");
+			select.append("AND F.NUM_ANYO_DOSIER = ?anyoDosier ");
+			select.append("AND F.MCA_ULTIMA_VIGENTE = 'S' ");			
 			
 			if (orden.equals("-codigoDV"))
-				sql.append("ORDER BY F.COD_N_DECLARACION_VALOR DESC");
+				select.append("ORDER BY F.COD_N_DECLARACION_VALOR DESC");
 			else if (orden.equals("+codigoDV"))
-				sql.append("ORDER BY F.COD_N_DECLARACION_VALOR ASC");
+				select.append("ORDER BY F.COD_N_DECLARACION_VALOR ASC");
 			else if (orden.equals("-anyoDV"))
-				sql.append("ORDER BY F.NUM_ANYO DESC");
+				select.append("ORDER BY F.NUM_ANYO DESC");
 			else if (orden.equals("+anyoDV"))
-				sql.append("ORDER BY F.NUM_ANYO ASC");			
+				select.append("ORDER BY F.NUM_ANYO ASC");			
 			else if (orden.equals("-fechaExpedicion"))
-				sql.append("ORDER BY FEC_DT_EXPEDICION DESC");
+				select.append("ORDER BY FEC_DT_EXPEDICION DESC");
 			else if (orden.equals("+fechaExpedicion"))
-				sql.append("ORDER BY FEC_DT_EXPEDICION ASC");			
+				select.append("ORDER BY FEC_DT_EXPEDICION ASC");			
 			else if (orden.equals("-codigoOrigen"))
-				sql.append("ORDER BY CODIGO_ORIGEN DESC");
+				select.append("ORDER BY CODIGO_ORIGEN DESC");
 			else if (orden.equals("+codigoOrigen"))
-				sql.append("ORDER BY CODIGO_ORIGEN ASC");			
+				select.append("ORDER BY CODIGO_ORIGEN ASC");			
 			else if (orden.equals("-nombreOrigen"))
-				sql.append("ORDER BY NOMBRE_ORIGEN DESC");
+				select.append("ORDER BY NOMBRE_ORIGEN DESC");
 			else if (orden.equals("+nombreOrigen"))
-				sql.append("ORDER BY NOMBRE_ORIGEN ASC");
+				select.append("ORDER BY NOMBRE_ORIGEN ASC");
 			
-			final Query query = getEntityManager().createNativeQuery(sql.toString());
+			final Query query = getEntityManager().createNativeQuery(select.toString());
 			
 			query.setParameter("numDosier", numDosier);
 			query.setParameter("anyoDosier", anyoDosier);	
@@ -262,15 +262,18 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 					dv.setOrigen(origen);
 					listaDV.add(dv);
 					
-					final StringBuilder sqlPedido = new StringBuilder();
+					final StringBuilder selectPedido = new StringBuilder();
 					
-					String selectPedido = "SELECT DVP.COD_V_PEDIDO ";
-					String fromPedido   = "FROM S_DECLARACION_VALOR_PEDIDO DVP ";
-					String wherePedido  = "WHERE DVP.COD_N_DECLARACION_VALOR = ?codigoFactura AND DVP.NUM_ANYO_DV = ?anyoFactura";
+					selectPedido.append("SELECT DVP.COD_V_PEDIDO ");
+					selectPedido.append("FROM S_DECLARACION_VALOR_PEDIDO DVP ");
+					selectPedido.append("INNER JOIN O_DECLARACION_VALOR_CAB DV ON (DV.COD_N_DECLARACION_VALOR = DVP.COD_N_DECLARACION_VALOR "); 
+					selectPedido.append("AND DV.NUM_ANYO = DVP.NUM_ANYO_DV ");
+					selectPedido.append("AND DV.COD_N_VERSION = DVP.COD_N_VERSION_DV) ");
+					selectPedido.append("WHERE DVP.COD_N_DECLARACION_VALOR = ?codigoFactura ");
+					selectPedido.append("AND DVP.NUM_ANYO_DV = ?anyoFactura ");
+					selectPedido.append("AND DV.MCA_ULTIMA_VIGENTE = 'S' ");
 
-					sqlPedido.append(selectPedido).append(fromPedido).append(wherePedido);
-
-					final Query queryPedido = getEntityManager().createNativeQuery(sqlPedido.toString());
+					final Query queryPedido = getEntityManager().createNativeQuery(selectPedido.toString());
 					queryPedido.setParameter("codigoFactura", dv.getCodigoDV());
 					queryPedido.setParameter("anyoFactura", dv.getAnyoDV());
 
