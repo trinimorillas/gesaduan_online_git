@@ -16,6 +16,7 @@ import es.mercadona.gesaduan.dao.BaseDAO;
 import es.mercadona.gesaduan.dao.declaracionesdevalorapi.getvdsumary.v1.GetVDSumaryDAO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.InputVDSumaryDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.resfull.DataVDDatesDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.resfull.DataVDPaginationDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.resfull.DataVDSumaryDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.resfull.DataVDSumaryOrderDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.resfull.DataVDSumarySourceDTO;
@@ -391,8 +392,8 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 			
 			Integer totalResults = Integer.parseInt(String.valueOf(queryCount.getSingleResult()));
 			
-			Map<String, String> mapaMetaData = new HashMap<>();
-			mapaMetaData.put("totalItemsCount", totalResults.toString());
+			Map<String, String> mapMetaData = new HashMap<>();
+			mapMetaData.put("totalItemsCount", totalResults.toString());
 					
 			
 			List<Object[]> listado = query.getResultList();
@@ -466,8 +467,18 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 				}
 			}
 			
-			result.setMetadata(mapaMetaData);
+			DataVDPaginationDTO pagination = new DataVDPaginationDTO();
+			
+			pagination.setRequestedPage(0L);
+			pagination.setRequestedSize(0L);
+			pagination.setRetrievedResults(0L);
+			pagination.setTotalResults(0L);
+			pagination.setNextPage("");
+			pagination.setPreviousPage("");			
+			
+			result.setMetadata(mapMetaData);
 			result.setData(resultList);
+			result.setPagination(pagination);
 		
 		} catch (Exception e) {
 			this.logger.error(Constantes.FORMATO_ERROR_LOG,NOMBRE_CLASE,"getValueDeclarationList",e.getClass().getSimpleName(),e.getMessage());	
