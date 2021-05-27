@@ -12,6 +12,7 @@ public class OutputVDSumaryDTO extends AbstractDTO implements Serializable{
 
 	private Map<String,String> metadata;
 	private List<DataVDSumaryDTO> data;
+	private DataVDPaginationDTO pagination;
 	
 	/**
 	 * @return the metadata
@@ -36,6 +37,18 @@ public class OutputVDSumaryDTO extends AbstractDTO implements Serializable{
 	 */
 	public void setData(List<DataVDSumaryDTO> data) {
 		this.data = data;
+	}
+	/**
+	 * @return the paginacion
+	 */
+	public DataVDPaginationDTO getPagination() {
+		return pagination;
+	}
+	/**
+	 * @param paginacion the paginacion to set
+	 */
+	public void setPagination(DataVDPaginationDTO pagination) {
+		this.pagination = pagination;
 	}
 	
 
