@@ -271,4 +271,38 @@ public class DeleteEquipoTransporteDAOImpl extends DaoBaseImpl<Long, EquipoTrans
 		return listaCarga;
 	}
 	
+	
+	@Transactional	
+	@Override	
+	public void borraRelacionEquipoDosier(Long codigoEquipo) {
+		try {		
+			
+			StringBuilder delete = new StringBuilder();
+			
+			delete.append("DELETE FROM S_DOSIER_EQUIPO DE "); 
+			delete.append("WHERE COD_N_EQUIPO = ?codigoEquipo "); 
+			delete.append("AND EXISTS ( "); 
+			delete.append("    SELECT 1 "); 
+			delete.append("    FROM D_DOSIER D "); 
+			delete.append("    WHERE D.NUM_DOSIER = DE.NUM_DOSIER "); 
+			delete.append("    AND D.NUM_ANYO = DE.NUM_ANYO "); 
+			delete.append("    AND D.COD_N_ESTADO = 3 "); 
+			delete.append(")"); 
+			delete.append("AND NOT EXISTS ( "); 
+			delete.append("    SELECT 1 "); 
+			delete.append("    FROM D_DOSIER D "); 
+			delete.append("    WHERE D.NUM_DOSIER = DE.NUM_DOSIER "); 
+			delete.append("    AND D.NUM_ANYO = DE.NUM_ANYO "); 
+			delete.append("    AND D.COD_N_ESTADO = 1 "); 
+			delete.append(")");
+			
+			final Query query = getEntityManager().createNativeQuery(delete.toString());				
+			query.setParameter("codigoEquipo", codigoEquipo);			
+			query.executeUpdate();		
+		} catch(Exception ex) {
+			this.logger.error("({}-{}) ERROR - {} {}","DeleteEquipoTransporteDAOImpl(GESADUAN)","borraRelacionDosier",ex.getClass().getSimpleName(),ex.getMessage());	
+			throw new ApplicationException(ex.getMessage());			
+		}
+	}	
+	
 }

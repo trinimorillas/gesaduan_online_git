@@ -31,6 +31,7 @@ public class DeleteEquipoTransporteServiceImpl implements DeleteEquipoTransporte
 			deletePlanEmbarqueService.reordenarDivisiones();
 			deleteEquipoTransporteDao.actualizarNumeroEquipos(datos.getDatos().getCodigoEquipo());
 			deleteEquipoTransporteDao.eliminarCargasAbortadas(listaCarga);
+			deleteEquipoTransporteDao.borraRelacionEquipoDosier(datos.getDatos().getCodigoEquipo());			
 			deleteEquipoTransporteDao.borrarEquipoTransporte(datos.getDatos());
 		}
 	}

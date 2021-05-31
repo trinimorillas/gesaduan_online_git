@@ -14,4 +14,5 @@ public interface DeleteEquipoTransporteDAO {
 	public void eliminarCargasAbortadas(List<CargaDTO> listaCarga);	
 	public List<CargaDTO> getCargasEquipo(Long codigoEquipo);	
 	public Integer getEstadoActual(Long codigoEquipo);
+	public void borraRelacionEquipoDosier(Long codigoEquipo);
 }
