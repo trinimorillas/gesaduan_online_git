@@ -41,8 +41,10 @@ public class DeletePlanEmbarqueDAOImpl extends DaoBaseImpl<Long, PlanEmbarquesJP
 	@Override
 	public void borrarPlanEmbarque(InputPlanEmbarqueDeleteDTO input) {
 		
-		Long codigoEmbarque = input.getCodigoEmbarque();		
+		Long codigoEmbarque = input.getCodigoEmbarque();	
+		eliminarRelacionEquipoDosier(codigoEmbarque);
 		eliminarEquipo(codigoEmbarque);
+		eliminaRelacionEmbarqueDosier(codigoEmbarque);
 		eliminarPlanEmbarque(codigoEmbarque);
 
 	}
@@ -142,6 +144,84 @@ public class DeletePlanEmbarqueDAOImpl extends DaoBaseImpl<Long, PlanEmbarquesJP
 		}			
 		
 	}
+	
+	@Override
+	public void eliminarRelacionEquipoDosier(Long codigoEmbarque) {
+		
+		try {			
+		
+			StringBuilder delete = new StringBuilder();
+			
+			delete.append("DELETE FROM S_DOSIER_EQUIPO ");  
+			delete.append("WHERE COD_N_EQUIPO IN ( ");  
+			delete.append("    SELECT COD_N_EQUIPO ");  
+			delete.append("    FROM D_EQUIPO_TRANSPORTE ET ");  
+			delete.append("    WHERE ET.COD_N_EMBARQUE = ?codigoEmbarque ");  
+			delete.append("    AND EXISTS ( ");  
+			delete.append("        SELECT 1 ");  
+			delete.append("        FROM S_DOSIER_EQUIPO DE ");  
+			delete.append("        INNER JOIN D_DOSIER D ON (D.NUM_DOSIER = DE.NUM_DOSIER AND D.NUM_ANYO = DE.NUM_ANYO) ");  
+			delete.append("        WHERE DE.COD_N_EQUIPO = ET.COD_N_EQUIPO ");  
+			delete.append("        AND D.COD_N_ESTADO = 3 ");  
+			delete.append("    ) ");  
+			delete.append("    AND NOT EXISTS ( ");  
+			delete.append("        SELECT 1 ");  
+			delete.append("        FROM S_DOSIER_EQUIPO DE ");  
+			delete.append("        INNER JOIN D_DOSIER D ON (D.NUM_DOSIER = DE.NUM_DOSIER AND D.NUM_ANYO = DE.NUM_ANYO) ");  
+			delete.append("        WHERE DE.COD_N_EQUIPO = ET.COD_N_EQUIPO ");  
+			delete.append("        AND D.COD_N_ESTADO = 1 ");  
+			delete.append("    ) ");  
+			delete.append(")");
+			
+			final Query query = getEntityManager().createNativeQuery(delete.toString());				
+			query.setParameter("codigoEmbarque", codigoEmbarque);			
+			query.executeUpdate();	
+		
+		} catch(Exception ex) {
+			this.logger.error("({}-{}) ERROR - {} {}","DeletePlanEmbarqueDAOImpl(GESADUAN)","eliminarRelacionEquipoDosier",ex.getClass().getSimpleName(),ex.getMessage());	
+			throw new ApplicationException(ex.getMessage());			
+		}			
+		
+	}	
+	
+	@Override
+	public void eliminaRelacionEmbarqueDosier(Long codigoEmbarque) {
+		
+		try {			
+			
+			
+			StringBuilder delete = new StringBuilder();
+			
+			delete.append("DELETE FROM D_DOSIER_DOCUMENTO DD ");  
+			delete.append("WHERE EXISTS ( ");  
+			delete.append("    SELECT 1 ");  
+			delete.append("    FROM D_DOSIER D ");  
+			delete.append("    WHERE D.NUM_DOSIER = DD.NUM_DOSIER ");  
+			delete.append("    AND D.NUM_ANYO = DD.NUM_ANYO ");  
+			delete.append("    AND D.COD_N_EMBARQUE = ?codigoEmbarque ");  
+			delete.append(")");  
+			
+			final Query query = getEntityManager().createNativeQuery(delete.toString());				
+			query.setParameter("codigoEmbarque", codigoEmbarque);			
+			query.executeUpdate();				
+			
+		
+			StringBuilder delete2 = new StringBuilder();
+			
+			delete2.append("DELETE FROM D_DOSIER ");  
+			delete2.append("WHERE COD_N_EMBARQUE = ?codigoEmbarque "); 
+			delete2.append("  AND COD_N_ESTADO = 3");  
+			
+			final Query query2 = getEntityManager().createNativeQuery(delete2.toString());				
+			query2.setParameter("codigoEmbarque", codigoEmbarque);			
+			query2.executeUpdate();	
+		
+		} catch(Exception ex) {
+			this.logger.error("({}-{}) ERROR - {} {}","DeletePlanEmbarqueDAOImpl(GESADUAN)","eliminaRelacionEmbarqueDosier",ex.getClass().getSimpleName(),ex.getMessage());	
+			throw new ApplicationException(ex.getMessage());			
+		}			
+		
+	}		
 	
 	@Override
 	public void eliminarPlanEmbarque(Long codigoEmbarque) {
