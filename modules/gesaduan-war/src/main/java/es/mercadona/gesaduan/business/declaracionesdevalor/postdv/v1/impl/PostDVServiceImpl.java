@@ -37,7 +37,7 @@ public class PostDVServiceImpl implements PostDVService {
 		OutputPutVDDTO result = new OutputPutVDDTO();
 		DeclaracionesDeValorPostJPA declaracionJPA = new DeclaracionesDeValorPostJPA();
 		DVInsertPKDTO pkResult = new DVInsertPKDTO();
-		List<LineaDeclaracionJPA> listaLineas = new ArrayList<LineaDeclaracionJPA>();		
+		List<LineaDeclaracionJPA> listaLineas = new ArrayList<LineaDeclaracionJPA>();
 
 		try {
 			// Cabecera
@@ -65,7 +65,8 @@ public class PostDVServiceImpl implements PostDVService {
 			}
 			if (input.getData().getHeader().getSource() != null) {
 				if (input.getData().getHeader().getSource().getPublicId() != null) {
-					declaracionJPA.setProveedor(input.getData().getHeader().getSource().getPublicId());
+					//declaracionJPA.setProveedor(input.getData().getHeader().getSource().getPublicId());
+					declaracionJPA.setProveedor(postDVCabeceraDAO.getProveedor(input.getData().getHeader().getSource().getPublicId()));
 				}
 				if (input.getData().getHeader().getSource().getRegionId() != null) {
 					declaracionJPA.setProvinciaCarga(Integer.parseInt(input.getData().getHeader().getSource().getRegionId()));

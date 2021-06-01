@@ -298,7 +298,7 @@ public class GetDocumentApiDAOImpl extends DaoBaseImpl<DocumentoDataPK, Document
 			select.append(",DECODE(P.TXT_DENOMINA_ALTERNATIVA, NULL, DP.TXT_DESCRIPCION, P.TXT_DENOMINA_ALTERNATIVA) AS PRODUCTO ");
 			select.append(",P.TXT_MARCA MARCA ");
 			select.append(",L.COD_N_TARIC CODIGO_TARIC ");
-			select.append(",'LINEA' TIPO_LINEA ");
+			select.append(",'PRODUCTO' TIPO_LINEA ");
 			select.append(",L.COD_V_REA CODIGO_REA ");
 			select.append(",I.TXT_NOMBRE PAIS_ORIGEN ");
 			select.append(",L.MCA_PRODUCTO_LPC LPC ");
