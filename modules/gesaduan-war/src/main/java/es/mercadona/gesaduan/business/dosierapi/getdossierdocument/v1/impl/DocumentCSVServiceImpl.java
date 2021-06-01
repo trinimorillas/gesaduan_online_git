@@ -107,27 +107,28 @@ public class DocumentCSVServiceImpl implements DocumentCSVService {
 			
 			for (OutputDeclaracionesDeValorDocLinDTO linea : outDocumentoDTO.getLineas()) {
 				
-				lineasStr.append("LIN").append("|");
+				lineasStr.append("\"LIN").append("\"|");
 				lineasStr.append(linea.getCodigoDeclaracion()).append("|");				
 				lineasStr.append(linea.getAnyoDeclaracion()).append("|");
 				lineasStr.append(linea.getVersionDeclaracion()).append("|");
-				lineasStr.append(linea.getTipoLinea()).append("|");
+				lineasStr.append("\"" + linea.getTipoLinea()).append("\"|");
 				lineasStr.append(linea.getCodigoTaric()).append("|");
 				lineasStr.append(linea.getCodigoProducto()).append("|");
-				lineasStr.append(linea.getNombreProducto()).append("|");
-				lineasStr.append(linea.getMarca()).append("|");
-				lineasStr.append(linea.getCodigoRea()).append("|");
-				lineasStr.append(linea.getPaisOrigen()).append("|");
-				lineasStr.append(linea.getLpc()).append("|");
+				lineasStr.append("\"" + linea.getNombreProducto()).append("\"|");
+				lineasStr.append("\"" + linea.getMarca()).append("\"|");
+				lineasStr.append("\"" + linea.getCodigoRea()).append("\"|");
+				lineasStr.append("\"" + linea.getPaisOrigen()).append("\"|");
+				lineasStr.append("\"" + linea.getLpc()).append("\"|");
 				lineasStr.append(linea.getNumeroBultos()).append("|");
-				lineasStr.append(linea.getTipoBultos()).append("|");
+				lineasStr.append("\"" + linea.getTipoBultos()).append("\"|");
+				lineasStr.append(linea.getPesoNeto()).append("|");
 				lineasStr.append(linea.getPesoBruto()).append("|");
 				lineasStr.append(linea.getCantidad()).append("|");
 				lineasStr.append(linea.getVolumen()).append("|");
 				lineasStr.append(linea.getAlcohol()).append("|");
 				lineasStr.append(linea.getPlato()).append("|");
 				lineasStr.append(linea.getPrecio()).append("|");
-				lineasStr.append(linea.getImporte()).append("\r\n");				
+				lineasStr.append(linea.getImporte()).append("\r\n");	
 				
 			}
 			

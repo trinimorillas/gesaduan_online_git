@@ -92,20 +92,21 @@ public class VDDocumentCSVServiceImpl implements VDDocumentCSVService {
 			
 			for (OutputDeclaracionesDeValorDocLinDTO linea : outDVDocumentoDTO.getLineas()) {
 				
-				lineasStrDV.append("LIN").append("|");
+				lineasStrDV.append("\"LIN").append("\"|");
 				lineasStrDV.append(linea.getCodigoDeclaracion()).append("|");				
 				lineasStrDV.append(linea.getAnyoDeclaracion()).append("|");
 				lineasStrDV.append(linea.getVersionDeclaracion()).append("|");
-				lineasStrDV.append(linea.getTipoLinea()).append("|");
+				lineasStrDV.append("\"" + linea.getTipoLinea()).append("\"|");
 				lineasStrDV.append(linea.getCodigoTaric()).append("|");
 				lineasStrDV.append(linea.getCodigoProducto()).append("|");
-				lineasStrDV.append(linea.getNombreProducto()).append("|");
-				lineasStrDV.append(linea.getMarca()).append("|");
-				lineasStrDV.append(linea.getCodigoRea()).append("|");
-				lineasStrDV.append(linea.getPaisOrigen()).append("|");
-				lineasStrDV.append(linea.getLpc()).append("|");
+				lineasStrDV.append("\"" + linea.getNombreProducto()).append("\"|");
+				lineasStrDV.append("\"" + linea.getMarca()).append("\"|");
+				lineasStrDV.append("\"" + linea.getCodigoRea()).append("\"|");
+				lineasStrDV.append("\"" + linea.getPaisOrigen()).append("\"|");
+				lineasStrDV.append("\"" + linea.getLpc()).append("\"|");
 				lineasStrDV.append(linea.getNumeroBultos()).append("|");
-				lineasStrDV.append(linea.getTipoBultos()).append("|");
+				lineasStrDV.append("\"" + linea.getTipoBultos()).append("\"|");
+				lineasStrDV.append(linea.getPesoNeto()).append("|");
 				lineasStrDV.append(linea.getPesoBruto()).append("|");
 				lineasStrDV.append(linea.getCantidad()).append("|");
 				lineasStrDV.append(linea.getVolumen()).append("|");
