@@ -9,4 +9,5 @@ public interface PostDeclaracionDeValorDAO {
 	public void generarAlerta(String codigoUsuario, String numFactura, String anyoFactura);
 	public void marcarDosierOK(String numFactura, String anyoFactura);
 	public void generaAlertaDosierOK(String codigoUsuario, String numFactura, String anyoFactura);
+	public String getProveedor(String publicId);
 }

@@ -426,6 +426,7 @@ public class GetVDDetailDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 			sql.append("FROM O_DECLARACION_VALOR_CAB DV ");
 			sql.append("WHERE DV.COD_N_DECLARACION_VALOR = ?valueDeclarationNumber ");
 			sql.append("AND DV.NUM_ANYO = ?valueDeclarationYear ");
+			sql.append("AND (DV.FEC_D_ALBARAN IS NOT NULL OR DV.FEC_DT_EXPEDICION IS NOT NULL) ");
 			sql.append("UNION ");
 			sql.append("SELECT DISTINCT 'Envío notificación', NOTIF.FEC_DT_ENVIO, DV.COD_N_VERSION, ");
 			sql.append("NULL, DV.MCA_DV_CORRECTA AS CORRECTA ");

@@ -424,5 +424,27 @@ public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeVa
 			throw new ApplicationException(e.getMessage());
 		}
 	}
+	
+	@Override
+	@Transactional	
+	public String getProveedor(String publicId) {
+		String result;
+		try {
+			StringBuilder sql = new StringBuilder();
+			
+			sql.append("SELECT COD_N_PROVEEDOR "); 
+			sql.append("FROM D_PROVEEDOR_R ");
+			sql.append("WHERE COD_N_PROVEEDOR = ?publicId OR COD_N_LEGACY_PROVEEDOR = ?publicId"); 
+			
+			final Query query = getEntityManager().createNativeQuery(sql.toString());
+			query.setParameter("publicId", publicId);
+			result = String.valueOf(query.getSingleResult());
+		} catch (Exception e) {
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "getProveedor", e.getClass().getSimpleName(), e.getMessage());	
+			throw new ApplicationException(e.getMessage());
+		}
+		
+		return result;
+	}
 
 }
