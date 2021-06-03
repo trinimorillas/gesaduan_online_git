@@ -265,7 +265,9 @@ public class GetVDDetailDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 		sqlLineas.append("LEFT JOIN S_DENOMINACION_PRODUCTO_I18N_R DEN ON DVL.COD_N_MERCA = DEN.COD_N_PRODUCTO AND DEN.COD_V_LOCALE = ?locale ");
 		sqlLineas.append("LEFT JOIN S_EAN_PRODUCTO_PROVEEDOR_R EAN ON EAN.COD_N_PRODUCTO = DVL.COD_N_MERCA AND EAN.COD_N_LEGACY_PROVEEDOR = ?sourceId ");
 		sqlLineas.append("WHERE DVL.COD_N_DECLARACION_VALOR = ?valueDeclarationNumber AND DVL.NUM_ANYO = ?valueDeclarationYear ");
-		sqlLineas.append("AND DVL.COD_N_VERSION = ?valueDeclarationVersion");
+		sqlLineas.append("AND DVL.COD_N_VERSION = ?valueDeclarationVersion ");
+		sqlLineas.append("AND (EXISTS (SELECT 1 FROM O_EXPEDICION_LIN EL WHERE EL.COD_V_EXPEDICION = DVL.COD_V_EXPEDICION AND EL.FEC_D_ALBARAN = DVL.FEC_D_ALBARAN AND ");
+		sqlLineas.append("EL.COD_N_MERCA = DVL.COD_N_MERCA AND EL.COD_V_EAN = EAN.COD_V_EAN13) OR EAN.COD_V_EAN13 IS NULL)");		
 
 		final Query queryLineas = getEntityManager().createNativeQuery(sqlLineas.toString());
 		queryLineas.setParameter("valueDeclarationNumber", valueDeclarationCode);

@@ -401,7 +401,7 @@ public class GetDocumentApiDAOImpl extends DaoBaseImpl<DocumentoDataPK, Document
 					outDVDocumentoLinDTO.setPaisOrigen(emptyStringOrValue(tmp[9]));
 					outDVDocumentoLinDTO.setLpc(emptyStringOrValue(tmp[10]));					
 					outDVDocumentoLinDTO.setNumeroBultos(formatNumber(tipoDocumento,String.valueOf(tmp[11])));
-					outDVDocumentoLinDTO.setTipoBultos(emptyStringOrFormatNumber(tipoDocumento,tmp[12]));
+					outDVDocumentoLinDTO.setTipoBultos(emptyStringOrValue(tmp[12]));
 					outDVDocumentoLinDTO.setPesoBruto(formatNumber(tipoDocumento,String.valueOf(tmp[13])));
 					outDVDocumentoLinDTO.setPesoNeto(formatNumber(tipoDocumento,String.valueOf(tmp[14])));
 					outDVDocumentoLinDTO.setCantidad(formatNumber(tipoDocumento,String.valueOf(tmp[15])));

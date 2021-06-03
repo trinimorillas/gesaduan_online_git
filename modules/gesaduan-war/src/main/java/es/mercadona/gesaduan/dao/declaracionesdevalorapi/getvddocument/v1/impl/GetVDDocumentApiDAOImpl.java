@@ -328,7 +328,7 @@ public class GetVDDocumentApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, Docu
 					outputDVDocLinDTO.setPaisOrigen(emptyStringOrValue(tmp[9]));
 					outputDVDocLinDTO.setLpc(emptyStringOrValue(tmp[10]));	
 					outputDVDocLinDTO.setNumeroBultos(formatNumber(tipoDocumento,String.valueOf(tmp[11])));
-					outputDVDocLinDTO.setTipoBultos(emptyStringOrFormatNumber(tipoDocumento,tmp[12]));
+					outputDVDocLinDTO.setTipoBultos(emptyStringOrValue(tmp[12]));
 					outputDVDocLinDTO.setPesoBruto(formatNumber(tipoDocumento,String.valueOf(tmp[13])));
 					outputDVDocLinDTO.setPesoNeto(formatNumber(tipoDocumento,String.valueOf(tmp[14])));
 					outputDVDocLinDTO.setCantidad(formatNumber(tipoDocumento,String.valueOf(tmp[15])));
