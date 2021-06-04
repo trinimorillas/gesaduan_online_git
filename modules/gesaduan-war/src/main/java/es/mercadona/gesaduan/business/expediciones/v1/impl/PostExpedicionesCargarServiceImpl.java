@@ -94,7 +94,7 @@ public class PostExpedicionesCargarServiceImpl implements PostExpedicionesCargar
 					dvJPA.setFechaCreacionRegistro(new Date());
 					dvJPA.setFechaModificacionRegistro(new Date());
 					dvJPA.setApp("GESADUAN");
-					dvJPA.setMcaCargaAuto("N");
+					dvJPA.setMcaCargaAuto("E");
 					dvJPA.setMcaDescarga("N");
 					dvJPA.setMcaDvCorrecta("N");
 					dvJPA.setMcaEnvio("N");

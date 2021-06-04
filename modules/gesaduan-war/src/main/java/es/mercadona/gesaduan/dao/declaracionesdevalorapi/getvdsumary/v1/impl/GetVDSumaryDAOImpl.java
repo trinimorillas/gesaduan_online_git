@@ -549,6 +549,8 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 					}else if(mcaDVCorrecta.equals("N")) {
 						resultado = "KO";
 					}
+				} else if(mcaCargaAuto.equals("E")) {
+					resultado = "PENDIENTE";
 				}
 			}else {
 				if(filtroEstado.equals("CM")) {
