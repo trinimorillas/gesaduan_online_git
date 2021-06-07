@@ -62,34 +62,41 @@ public class DocumentCSVServiceImpl implements DocumentCSVService {
 		StringBuilder cabeceraStr = new StringBuilder();
 		
 		// prepara cabecera
-		cabeceraStr.append("\"CAB").append("\"|");
+		cabeceraStr.append(addComillas("CAB")).append("|");
 		cabeceraStr.append(outDVDocumentoDTO.getCodigoDeclaracion()).append("|");
 		cabeceraStr.append(outDVDocumentoDTO.getAnyoDeclaracion()).append("|");
 		cabeceraStr.append(outDVDocumentoDTO.getVersionDeclaracion()).append("|");
-		cabeceraStr.append("\"" + outDVDocumentoDTO.getFechaDeclaracion()).append("\"|");
-		cabeceraStr.append("\"" + outDVDocumentoDTO.getNumPedido()).append("\"|"); /* nunmero de pedido ??? */
-		cabeceraStr.append("\"" + outDVDocumentoDTO.getNombreOrigen()).append("\"|");
-		cabeceraStr.append("\"" + outDVDocumentoDTO.getProvinciaOrigen()).append("\"|");
-		cabeceraStr.append("\"" + outDVDocumentoDTO.getCondicionesEntrega()).append("\"|");
-		cabeceraStr.append("\"" + outDVDocumentoDTO.getExportadorNombre()).append("\"|");		
-		cabeceraStr.append("\"" + outDVDocumentoDTO.getExportadorDireccion()).append("\"|");
-		cabeceraStr.append("\"" + outDVDocumentoDTO.getExportadorCP()).append("\"|");
-		cabeceraStr.append("\"" + outDVDocumentoDTO.getExportadorPoblacion()).append("\"|");
-		cabeceraStr.append("\"" + outDVDocumentoDTO.getExportadorProvincia()).append("\"|");
-		cabeceraStr.append("\"" + outDVDocumentoDTO.getExportadorNIF()).append("\"|");
-		cabeceraStr.append("\"" + outDVDocumentoDTO.getImportadorNombre()).append("\"|");
-		cabeceraStr.append("\"" + outDVDocumentoDTO.getImportadorDireccion()).append("\"|");
-		cabeceraStr.append("\"" + outDVDocumentoDTO.getImportadorCP()).append("\"|");
-		cabeceraStr.append("\"" + outDVDocumentoDTO.getImportadorPoblacion()).append("\"|");
-		cabeceraStr.append("\"" + outDVDocumentoDTO.getImportadorProvincia()).append("\"|");				
-		cabeceraStr.append("\"" + outDVDocumentoDTO.getImportadorNIF()).append("\"|");
-		cabeceraStr.append("\"" + outDVDocumentoDTO.getTxtInfoREA()).append("\"|");
-		cabeceraStr.append("\"" + outDVDocumentoDTO.getTxtInfoLPC()).append("\"|");			
-		cabeceraStr.append("\"" + outDVDocumentoDTO.getTxtInfoGeneral()).append("\"|");
-		cabeceraStr.append("\"F").append("\"|");
-		cabeceraStr.append("\"" + outDVDocumentoDTO.getNumDosier()).append("\"|");
-		cabeceraStr.append("\"" + outDVDocumentoDTO.getAnyoDosier()).append("\"|");
-		cabeceraStr.append("\"" + outDVDocumentoDTO.getFechaDosier()).append("\"\r\n");
+		cabeceraStr.append(addComillas(outDVDocumentoDTO.getFechaDeclaracion())).append("|");
+		cabeceraStr.append(addComillas(outDVDocumentoDTO.getNumPedido())).append("|");
+		cabeceraStr.append(addComillas(outDVDocumentoDTO.getNombreOrigen())).append("|");
+		cabeceraStr.append(addComillas(outDVDocumentoDTO.getProvinciaOrigen())).append("|");
+		cabeceraStr.append(addComillas(outDVDocumentoDTO.getCondicionesEntrega())).append("|");
+		cabeceraStr.append(addComillas(outDVDocumentoDTO.getExportadorNombre())).append("|");
+		cabeceraStr.append(addComillas(outDVDocumentoDTO.getExportadorDireccion())).append("|");
+		cabeceraStr.append(addComillas(outDVDocumentoDTO.getExportadorCP())).append("|");
+		cabeceraStr.append(addComillas(outDVDocumentoDTO.getExportadorPoblacion())).append("|");
+		cabeceraStr.append(addComillas(outDVDocumentoDTO.getExportadorProvincia())).append("|");
+		cabeceraStr.append(addComillas(outDVDocumentoDTO.getExportadorNIF())).append("|");
+		cabeceraStr.append(addComillas(outDVDocumentoDTO.getImportadorNombre())).append("|");
+		cabeceraStr.append(addComillas(outDVDocumentoDTO.getImportadorDireccion())).append("|");
+		cabeceraStr.append(addComillas(outDVDocumentoDTO.getImportadorCP())).append("|");
+		cabeceraStr.append(addComillas(outDVDocumentoDTO.getImportadorPoblacion())).append("|");
+		cabeceraStr.append(addComillas(outDVDocumentoDTO.getImportadorProvincia())).append("|");
+		cabeceraStr.append(addComillas(outDVDocumentoDTO.getImportadorNIF())).append("|");
+		cabeceraStr.append(addComillas(outDVDocumentoDTO.getTxtInfoREA())).append("|");
+		cabeceraStr.append(addComillas(outDVDocumentoDTO.getTxtInfoLPC())).append("|");
+		cabeceraStr.append(addComillas(outDVDocumentoDTO.getTxtInfoGeneral())).append("|");		
+		cabeceraStr.append(addComillas("F")).append("|");		
+		
+		if (!outDVDocumentoDTO.getNumDosier().equals("null")) {
+			cabeceraStr.append(outDVDocumentoDTO.getNumDosier()).append("|");
+			cabeceraStr.append(outDVDocumentoDTO.getAnyoDosier()).append("|");
+			cabeceraStr.append(addComillas(outDVDocumentoDTO.getFechaDosier())).append("\r\n");
+		} else {
+			cabeceraStr.append("").append("|");
+			cabeceraStr.append("").append("|");
+			cabeceraStr.append(addComillas("")).append("\r\n");			
+		}
 		
 		return cabeceraStr.toString();
 
@@ -106,25 +113,25 @@ public class DocumentCSVServiceImpl implements DocumentCSVService {
 			
 			for (OutputDeclaracionesDeValorDocLinDTO linea : outDocumentoDTO.getLineas()) {
 				
-				lineasStr.append("\"LIN").append("\"|");
+				lineasStr.append(addComillas("LIN")).append("|");
 				lineasStr.append(linea.getCodigoDeclaracion()).append("|");				
 				lineasStr.append(linea.getAnyoDeclaracion()).append("|");
 				lineasStr.append(linea.getVersionDeclaracion()).append("|");
-				lineasStr.append("\"" + linea.getTipoLinea()).append("\"|");
+				lineasStr.append(addComillas(linea.getTipoLinea())).append("|");
 				lineasStr.append(linea.getCodigoTaric()).append("|");
 				if (linea.getTipoLinea().equals("PRODUCTO")) {
 					lineasStr.append(linea.getCodigoProducto()).append("|");
-					lineasStr.append("\"" + linea.getNombreProducto()).append("\"|");
+					lineasStr.append(addComillas(linea.getNombreProducto())).append("|");
 				} else {
 					lineasStr.append("").append("|");
-					lineasStr.append("").append("|");
-				}
-				lineasStr.append("\"" + linea.getMarca()).append("\"|");
-				lineasStr.append("\"" + linea.getCodigoRea()).append("\"|");
-				lineasStr.append("\"" + linea.getPaisOrigen()).append("\"|");
-				lineasStr.append("\"" + linea.getLpc()).append("\"|");
+					lineasStr.append(addComillas("")).append("|");
+				}				
+				lineasStr.append(addComillas(linea.getMarca())).append("|");
+				lineasStr.append(addComillas(linea.getCodigoRea())).append("|");
+				lineasStr.append(addComillas(linea.getPaisOrigen())).append("|");
+				lineasStr.append(addComillas(linea.getLpc())).append("|");
 				lineasStr.append(linea.getNumeroBultos()).append("|");
-				lineasStr.append("\"" + linea.getTipoBultos()).append("\"|");
+				lineasStr.append(addComillas(linea.getTipoBultos())).append("|");
 				lineasStr.append(linea.getPesoNeto()).append("|");
 				lineasStr.append(linea.getPesoBruto()).append("|");
 				lineasStr.append(linea.getCantidad()).append("|");
@@ -132,7 +139,7 @@ public class DocumentCSVServiceImpl implements DocumentCSVService {
 				lineasStr.append(linea.getAlcohol()).append("|");
 				lineasStr.append(linea.getPlato()).append("|");
 				lineasStr.append(linea.getPrecio()).append("|");
-				lineasStr.append(linea.getImporte()).append("\r\n");	
+				lineasStr.append(linea.getImporte()).append("\r\n");		
 				
 			}
 			
@@ -143,5 +150,13 @@ public class DocumentCSVServiceImpl implements DocumentCSVService {
 
 	}	
 	
+	private String addComillas (String value) {
+		
+		StringBuilder valueTemp = new StringBuilder();
+		
+		valueTemp.append("\"").append(value).append("\"");
+		
+		return valueTemp.toString();
+	}	
 	
 }
