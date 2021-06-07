@@ -72,8 +72,8 @@ public class VDDocumentCSVServiceImpl implements VDDocumentCSVService {
 		cabeceraStrDV.append(addComillas(outDVDocumentoDTO.getImportadorNIF())).append("|");
 		cabeceraStrDV.append(addComillas(outDVDocumentoDTO.getTxtInfoREA())).append("|");
 		cabeceraStrDV.append(addComillas(outDVDocumentoDTO.getTxtInfoLPC())).append("|");
-		cabeceraStrDV.append(addComillas(outDVDocumentoDTO.getTxtInfoGeneral())).append("|");		
-		cabeceraStrDV.append(addComillas(outDVDocumentoDTO.getTxtInfoGeneral())).append("|");
+		cabeceraStrDV.append(addComillas(outDVDocumentoDTO.getTxtInfoGeneral())).append("|");	
+		cabeceraStrDV.append(addComillas("F")).append("|");			
 		
 		if (!outDVDocumentoDTO.getNumDosier().equals("null")) {
 			cabeceraStrDV.append(outDVDocumentoDTO.getNumDosier()).append("|");
@@ -99,7 +99,7 @@ public class VDDocumentCSVServiceImpl implements VDDocumentCSVService {
 			
 			for (OutputDeclaracionesDeValorDocLinDTO linea : outDVDocumentoDTO.getLineas()) {
 				
-				lineasStrDV.append(addComillas("LIN")).append("\"|");
+				lineasStrDV.append(addComillas("LIN")).append("|");
 				lineasStrDV.append(linea.getCodigoDeclaracion()).append("|");				
 				lineasStrDV.append(linea.getAnyoDeclaracion()).append("|");
 				lineasStrDV.append(linea.getVersionDeclaracion()).append("|");
