@@ -84,7 +84,8 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 			select.append(",DV.COD_N_PROVINCIA_CARGA PROVINCIA_ORIGEN ");
 			select.append(",DECODE(DV.COD_N_PROVEEDOR,NULL,'BLOQUE','PROVEEDOR') TIPO_ORIGEN ");
 			select.append(",DV.COD_V_EXPEDICION ");
-			select.append(",DV.COD_N_PROVEEDOR ");			
+			select.append(",DV.COD_N_PROVEEDOR ");	
+			select.append(",DECODE(P.COD_N_LEGACY_PROVEEDOR, NULL, NULL, P.COD_N_LEGACY_PROVEEDOR) COD_ORIGEN_ORDER ");	
 			
 			selectCount.append("SELECT COUNT(DISTINCT CONCAT(DV.COD_N_DECLARACION_VALOR,DV.NUM_ANYO)) ");			
 			
@@ -245,10 +246,10 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 				else if(orden.equals("-valueDeclarationGenerationDate"))
 					selectOrder.append(" ORDER BY DV.FEC_DT_CREACION DESC");
 				
-				else if(orden.equals("+supplierLegacyId"))
-					selectOrder.append(" ORDER BY CASE WHEN REPLACE(TRANSLATE(TRIM(DV.COD_N_PROVEEDOR), '0123456789', '0'), '0', '') IS NULL THEN TO_NUMBER(DV.COD_N_PROVEEDOR) END, DV.COD_N_PROVEEDOR");
-				else if(orden.equals("-supplierLegacyId"))
-					selectOrder.append(" ORDER BY CASE WHEN REPLACE(TRANSLATE(TRIM(DV.COD_N_PROVEEDOR), '0123456789', '0'), '0', '') IS NULL THEN TO_NUMBER(DV.COD_N_PROVEEDOR) END DESC, DV.COD_N_PROVEEDOR DESC");
+				else if(orden.equals("+supplierId"))
+					selectOrder.append(" ORDER BY CASE WHEN REPLACE(TRANSLATE(TRIM(COD_ORIGEN_ORDER), '0123456789', '0'), '0', '') IS NULL THEN TO_NUMBER(COD_ORIGEN_ORDER) END, COD_ORIGEN_ORDER");
+				else if(orden.equals("-supplierId"))
+					selectOrder.append(" ORDER BY CASE WHEN REPLACE(TRANSLATE(TRIM(COD_ORIGEN_ORDER), '0123456789', '0'), '0', '') IS NULL THEN TO_NUMBER(COD_ORIGEN_ORDER) END DESC, COD_ORIGEN_ORDER DESC");
 				
 				else if(orden.equals("+sourceName"))
 					selectOrder.append(" ORDER BY NOMBRE_ORIGEN ASC ");
