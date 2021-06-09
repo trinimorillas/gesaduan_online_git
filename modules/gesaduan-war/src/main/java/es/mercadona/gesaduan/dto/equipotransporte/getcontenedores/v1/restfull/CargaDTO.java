@@ -9,6 +9,7 @@ public class CargaDTO extends AbstractDTO {
 	private static final long serialVersionUID = 1L;
 
 	private String codigoCarga;
+	private Integer codigoTipoCarga;
 	private Integer codigoSuministro;
 	private String nombreSuministro;
 	private String codigoAlmacenOrigen;
@@ -26,6 +27,20 @@ public class CargaDTO extends AbstractDTO {
 
 	public void setCodigoCarga(String codigoCarga) {
 		this.codigoCarga = codigoCarga;
+	}
+
+	/**
+	 * @return the codigoTipoCarga
+	 */
+	public Integer getCodigoTipoCarga() {
+		return codigoTipoCarga;
+	}
+
+	/**
+	 * @param codigoTipoCarga the codigoTipoCarga to set
+	 */
+	public void setCodigoTipoCarga(Integer codigoTipoCarga) {
+		this.codigoTipoCarga = codigoTipoCarga;
 	}
 
 	public Integer getCodigoSuministro() {

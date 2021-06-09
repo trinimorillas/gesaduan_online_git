@@ -14,28 +14,40 @@ public class CambiarEstadoServiceImpl implements CambiarEstadoService {
 
 	@Inject
 	private CambiarEstadoDAO cambiarEstadoDao;
-	
+
 	@Override
 	public OutputCambiarEstadoDTO cambiarEstado(InputDatosCambiarEstadoDTO input) throws GesaduanException {
-		
+
 		DosierJPA dosierJPA = new DosierJPA();
 		DosierPkJPA dosierPkJPA = new DosierPkJPA();
-		
+
 		dosierPkJPA.setNumDosier(input.getDatos().getNumDosier());
 		dosierPkJPA.setAnyoDosier(input.getDatos().getAnyoDosier());
 		dosierJPA.setId(dosierPkJPA);
-		dosierJPA.setUsuarioModificacion(input.getMetadatos().getCodigoUsuario());		
+		dosierJPA.setUsuarioModificacion(input.getMetadatos().getCodigoUsuario());
+
+		Boolean tieneErrores = cambiarEstadoDao.tieneErrorDosier(dosierJPA);
+		if (!tieneErrores) { // Generar fichero PDF
+			cambiarEstadoDao.generarPDF(dosierJPA);
+		}
 		
-		// actualiza contenedores asociados al dosier
+		// Borrar alertas y notificaciones
+		cambiarEstadoDao.eliminarAlertas(dosierJPA);
+		
+		// Actualiza contenedores asociados al dosier
 		cambiarEstadoDao.actualizaContenedores(dosierJPA);
-		
-		// actualiza el estado de la documentacion equipos
+
+		// Actualiza el estado de la documentacion equipos
 		cambiarEstadoDao.actualizaEquipos(dosierJPA);
+
+		// Elimina asociación con los equipos
+		/* cambiarEstadoDao.eliminaRelacionEquipo(dosierJPA); */
 		
-		// elimina asociación con los equipos
-		// cambiarEstadoDao.eliminaRelacionEquipo(dosierJPA);
-		
-		// cambia el estado del dosier
+		if (!tieneErrores) {// Insertar alerta dosier inválido
+			cambiarEstadoDao.insertarAlerta(dosierJPA, input.getMetadatos().getCodigoUsuario());
+		}
+
+		// Cambia el estado del dosier
 		return cambiarEstadoDao.cambiarEstado(dosierJPA);
 	}
 

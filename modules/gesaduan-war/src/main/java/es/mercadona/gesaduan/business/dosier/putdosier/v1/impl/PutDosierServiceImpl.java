@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 import es.mercadona.gesaduan.business.dosier.putdosier.v1.PutDosierService;
 import es.mercadona.gesaduan.dao.dosier.putdosier.v1.PutDosierDAO;
@@ -24,22 +25,20 @@ public class PutDosierServiceImpl implements PutDosierService {
 	@Inject
 	private PutDosierDAO putDosierDao;
 	
-	
+	@Transactional
 	@Override
-	public OutputDosierPutDTO putDosier(InputDatosPutDTO input) {
-		
+	public OutputDosierPutDTO putDosier(InputDatosPutDTO input) {		
 		OutputDosierPutDTO result = new OutputDosierPutDTO();
 		DatosDosierPutDTO datos = new DatosDosierPutDTO();		
 		List<DosierPutDTO> listaDosieres = new ArrayList<>();
 		List<InputDosierDTO> dosieres = input.getDatos().getDosier();
-		String codigoUsario = input.getMetadatos().getCodigoUsuario();	
-		Long nuevoNumDosier = null;
+		String codigoUsario = input.getMetadatos().getCodigoUsuario();						
 		
-		DosierPkJPA dosierPk = putDosierDao.getNewDosierPk();		
-		
-		for (InputDosierDTO dosier: dosieres) {
+		for (InputDosierDTO dosier: dosieres) {			
+			// Actualiza y obtiene un nuevo numero de dosier
+			putDosierDao.updateNumDosier();
+			DosierPkJPA dosierPk = putDosierDao.getNewDosierPk();
 			
-			nuevoNumDosier = dosierPk.getNumDosier();
 			DosierJPA dosierJPA = new DosierJPA();
 			dosierJPA.setId(dosierPk);
 			
@@ -51,8 +50,8 @@ public class PutDosierServiceImpl implements PutDosierService {
 			// Crea el dosier
 			putDosierDao.crearDosier(dosierJPA);
 			
-			// Crea la realacion con equipo
-			putRelacionEquipoDosier(dosierJPA ,dosier.getEquipo());
+			// Crea la relacion con equipo
+			putRelacionEquipoDosier(dosierJPA, dosier.getEquipo());
 			
 			DosierPutDTO dosierOutPut = new DosierPutDTO();
 			
@@ -61,52 +60,44 @@ public class PutDosierServiceImpl implements PutDosierService {
 			
 			listaDosieres.add(dosierOutPut);
 			
-			dosierPk.setNumDosier(dosierPk.getNumDosier() + 1);
+			// Crea las facturas
+			crearFacturas(dosierJPA);
 			
-		}
-		
-		// actualiza C_VARIABLE con el último numero de dosier
-		if (nuevoNumDosier != null) {
-			putDosierDao.updateNumDosier(nuevoNumDosier);
+			putDosierDao.validarFacturas(dosierPk, input.getMetadatos().getCodigoUsuario());						
 		}
 		
 		if (listaDosieres.isEmpty()) listaDosieres = null;
 		datos.setDosier(listaDosieres);
-		result.setDatos(datos);
-		
+		result.setDatos(datos);		
 		
 		return result;	
 	}
 	
-	private void putRelacionEquipoDosier(DosierJPA dosierJPA ,List<InputDosierEquipoDTO> equipos) {
-		
+	private void putRelacionEquipoDosier(DosierJPA dosierJPA, List<InputDosierEquipoDTO> equipos) {		
 		// Se crea un nuevo dosier
-		for (InputDosierEquipoDTO equipo: equipos) {
-			
+		for (InputDosierEquipoDTO equipo: equipos) {			
 			DosierEquipoJPA dosierEquipoJPA = new DosierEquipoJPA();
-			
 			dosierEquipoJPA.setNumDosier(dosierJPA.getId().getNumDosier());
 			dosierEquipoJPA.setAnyoDosier(dosierJPA.getId().getAnyoDosier());
 			dosierEquipoJPA.setCodigoEquipo(equipo.getCodigoEquipo());
 			dosierEquipoJPA.setMatricula(equipo.getMatricula());
 			dosierEquipoJPA.setUsuarioCreacion(dosierJPA.getUsuarioCreacion());
 			
-			// Crea la realacion con equipo			
+			// Crea la relacion con equipo			
 			putDosierDao.crearRelacionDosierEquipo(dosierEquipoJPA);
 			
-			// Crea la realacion con contenedor
+			// Crea la relacion con contenedor
 			if (equipo.getContenedor().isEmpty()) {				
 				putRelacionDosierContenedorDeEquipo(dosierEquipoJPA);
 			} else {
-				putRelacionDosierContenedor(dosierEquipoJPA ,equipo.getContenedor());
+				putRelacionDosierContenedor(dosierEquipoJPA, equipo.getContenedor());
 			}
 			
-			// actualiza estado de la documentacion del equipo 
+			// Actualiza estado de la documentacion del equipo 
 			putDosierDao.actualizaEstadoDocumentacionEquipo(dosierEquipoJPA);			
-			
 		}
-
 	}
+
 
 	private void putRelacionDosierContenedorDeEquipo(DosierEquipoJPA dosierEquipoJPA) {
 		DosierContenedorJPA dosierContenedorJPA = new DosierContenedorJPA();
@@ -119,8 +110,7 @@ public class PutDosierServiceImpl implements PutDosierService {
 		putDosierDao.crearRelacionDosierContenedorDeEquipo(dosierContenedorJPA);
 	}	
 	
-	private void putRelacionDosierContenedor(DosierEquipoJPA dosierEquipoJPA ,List<InputDosierEquipoContenedorDTO> contenedores) {
-		
+	private void putRelacionDosierContenedor(DosierEquipoJPA dosierEquipoJPA ,List<InputDosierEquipoContenedorDTO> contenedores) {		
 		// Se crea un nuevo dosier
 		for (InputDosierEquipoContenedorDTO contenedor: contenedores) {
 			
@@ -134,10 +124,39 @@ public class PutDosierServiceImpl implements PutDosierService {
 			dosierContenedorJPA.setFechaExpedicion(contenedor.getFechaExpedicion());			
 			dosierContenedorJPA.setUsuarioCreacion(dosierEquipoJPA.getUsuarioCreacion());
 			
-			putDosierDao.crearRelacionDosierContenedor(dosierContenedorJPA);
-			
+			putDosierDao.crearRelacionDosierContenedor(dosierContenedorJPA);			
 		}
+	}
+	
+	private void crearFacturas(DosierJPA dosierJPA) {
+		// Obtener numero de categorias
+		int numCategorias = putDosierDao.getNumCategorias(dosierJPA);
+		
+		// Crear tantas facturas como número de categorías distintas haya
+		for (int i = 0; i < numCategorias; i++) {
+			putDosierDao.crearFacturas(dosierJPA);
+		}
+		
+		// Insertar pedidos asociados a cada una de las facturas creadas
+		putDosierDao.actualizarContenedores(dosierJPA);
+		
+		// Insertar lineas facturas
+		putDosierDao.insertarLineasFacturas(dosierJPA);
+		
+		// Modificar facturas existentes incluidas en el dosier
+		// putDosierDao.updateFacturas(dosierEquipoJPA);
+		
+		// Modificar los contenedores ficticios de las cargas de Grupaje o Directo, para indicar su factura
+		// putDosierDao.updateContenedoresFicticios(dosierEquipoJPA, dosierJPA.getUsuarioCreacion());
+		
+		// Insertar la relación de las facturas con sus pedidos asociados para cargas de Tienda o Traspaso
+		putDosierDao.relFacturaPedidoCargaTT(dosierJPA);
+		
+		// Insertar la relación de las facturas con sus pedidos asociados para cargas de Directo o Grupaje
+		// putDosierDao.relFacturaPedidoCargaDG(dosierEquipoJPA, dosierJPA.getUsuarioCreacion());
+	}
+	
 
-	}		
+	
 
 }

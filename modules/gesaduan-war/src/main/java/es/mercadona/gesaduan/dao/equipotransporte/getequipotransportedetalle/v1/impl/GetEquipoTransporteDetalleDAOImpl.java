@@ -41,7 +41,7 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 			
 			final StringBuilder sql = new StringBuilder();
 	
-			String select = "SELECT ";		
+			String select = "SELECT DISTINCT ";		
 			String campos = "ET.COD_N_EQUIPO, ET.COD_N_EMBARQUE, ET.TXT_MATRICULA, PR.COD_N_PROVEEDOR, PR.TXT_RAZON_SOCIAL, T.COD_N_TEMPERATURA, " +
 					"T.TXT_TEMPERATURA, ET.NUM_CAPACIDAD, ET.NUM_OCUPACION, ET.COD_N_ESTADO, EE.TXT_NOMBRE_ESTADO, TO_CHAR(ET.FEC_DT_CARGA,'DD/MM/YYYY'), " +
 					"TO_CHAR(ET.FEC_DT_CARGA, 'HH24:MI:SS'), ET.TXT_OBSERVACIONES, ET.COD_V_USUARIO_CREACION, ET.COD_N_ESTADO_DOCUMENTACION, EDE.TXT_NOMBRE_ESTADO, " +
@@ -254,7 +254,7 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 			String select = "SELECT ";
 			String campos = "DISTINCT CA.COD_V_CARGA, CE.NUM_CONTENEDOR, TS.COD_N_TIPO_SUMINISTRO, TS.TXT_NOMBRE_TIPO_SUMINISTRO, PP.COD_N_PROVEEDOR, PP.TXT_RAZON_SOCIAL, CA.COD_V_ALMACEN_ORIGEN, " +
 							"CA.COD_V_CENTRO_DESTINO, TO_CHAR(CE.FEC_DT_EXPEDICION, 'DD/MM/YYYY HH24:MI:SS'), TO_CHAR(CA.FEC_D_ENTREGA, 'DD/MM/YYYY'), TO_CHAR(CA.FEC_DT_SERVICIO, 'DD/MM/YYYY'), CC.COD_N_CATEGORIA, CC.TXT_NOMBRE_CATEGORIA, " +
-							"CA.MCA_CONTIENE_LPC, CE.NUM_DOSIER, CE.NUM_ANYO ";
+							"CA.MCA_CONTIENE_LPC, CE.NUM_DOSIER, CE.NUM_ANYO, CA.COD_N_TIPO_CARGA ";
 			String from   = "FROM D_EQUIPO_TRANSPORTE ET " +
 							"INNER JOIN S_EQUIPO_CARGA EC ON (EC.COD_N_EQUIPO = ET.COD_N_EQUIPO) " +
 							"INNER JOIN D_CARGA CA ON ( " +
@@ -353,6 +353,7 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 					if (tmp[13] != null) contenedor.setMarcaLpC(String.valueOf(tmp[13]));
 					if (tmp[14] != null) contenedor.setNumDosier(Integer.parseInt(String.valueOf(tmp[14])));
 					if (tmp[15] != null) contenedor.setAnyoDosier(Integer.parseInt(String.valueOf(tmp[15])));
+					if (tmp[16] != null) contenedor.setCodigoTipoCarga(Integer.parseInt(String.valueOf(tmp[16])));
 					contenedor.setPedido(getPedidos(String.valueOf(tmp[0]), String.valueOf(tmp[6])));
 					listaContenedor.add(contenedor);
 				}

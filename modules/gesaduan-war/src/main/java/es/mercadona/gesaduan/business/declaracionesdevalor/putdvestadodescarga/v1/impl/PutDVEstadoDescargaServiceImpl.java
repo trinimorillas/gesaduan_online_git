@@ -8,19 +8,13 @@ import es.mercadona.gesaduan.dto.declaracionesdevalor.putdvinddescarga.v1.Declar
 import es.mercadona.gesaduan.dto.declaracionesdevalor.putdvinddescarga.v1.restfull.OutputDeclaracionesDeValorEstadoDescargaDTO;
 
 public class PutDVEstadoDescargaServiceImpl implements PutDVEstadoDescargaService {
-	
+
 	@Inject
-	private PutDVEstadoDescargaDAO DeclaracionesDeValorEstadoDescargaDao;
+	private PutDVEstadoDescargaDAO declaracionesDeValorEstadoDescargaDao;
 
 	@Override
 	public OutputDeclaracionesDeValorEstadoDescargaDTO updateEstadoDescarga(DeclaracionesDeValorEstadoDescargaServiceDTO input) {
-
-		OutputDeclaracionesDeValorEstadoDescargaDTO result = this.DeclaracionesDeValorEstadoDescargaDao.actualizarEstadoDescarga(input);
-		
-		return result;
-		
+		return declaracionesDeValorEstadoDescargaDao.actualizarEstadoDescarga(input);
 	}
-
-	
 
 }

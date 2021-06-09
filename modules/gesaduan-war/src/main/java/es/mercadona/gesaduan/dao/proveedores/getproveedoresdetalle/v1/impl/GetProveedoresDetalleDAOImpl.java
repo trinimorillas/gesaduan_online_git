@@ -63,18 +63,18 @@ public class GetProveedoresDetalleDAOImpl extends BaseDAO<ProveedoresJPA> implem
 			String esAgencia;
 			final StringBuilder sql = new StringBuilder();
 			
-			sql.append(" SELECT PROV.COD_N_LEGACY_PROVEEDOR,");
-			sql.append(" PROV.TXT_RAZON_SOCIAL,");
-			sql.append(" PROV.TXT_DISTRITO,");
-			sql.append(" PROV.COD_N_PROVEEDOR,");
-			sql.append(" PROV.FEC_D_ACTIVACION,");
-			sql.append(" PROV.TXT_NOMBRE_CALLE,");
-			sql.append(" PROV.TXT_NUMERO_CALLE,");
-			sql.append(" PROV.TXT_CODIGO_POSTAL,");
-			sql.append(" PROV.TXT_LOCALIDAD,");
-			sql.append(" PROV.MCA_AGENTE_ADUANA");
-			sql.append(" FROM D_PROVEEDOR_R PROV");
-			sql.append(" WHERE PROV.COD_N_PROVEEDOR = ?codigoProveedor");
+			sql.append("SELECT PROV.COD_N_LEGACY_PROVEEDOR, ");
+			sql.append("PROV.TXT_RAZON_SOCIAL, ");
+			sql.append("PROV.TXT_DISTRITO, ");
+			sql.append("PROV.COD_N_PROVEEDOR, ");
+			sql.append("PROV.FEC_D_ACTIVACION, ");
+			sql.append("PROV.TXT_NOMBRE_CALLE, ");
+			sql.append("PROV.TXT_NUMERO_CALLE, ");
+			sql.append("PROV.TXT_CODIGO_POSTAL, ");
+			sql.append("PROV.TXT_LOCALIDAD, ");
+			sql.append("PROV.MCA_AGENTE_ADUANA ");
+			sql.append("FROM D_PROVEEDOR_R PROV ");
+			sql.append("WHERE PROV.COD_N_PROVEEDOR = ?codigoProveedor OR PROV.COD_N_LEGACY_PROVEEDOR = ?codigoProveedor");
 			
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
 			

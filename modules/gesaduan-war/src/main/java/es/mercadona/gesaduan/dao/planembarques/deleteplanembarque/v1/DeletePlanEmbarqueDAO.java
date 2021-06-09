@@ -12,8 +12,10 @@ public interface DeletePlanEmbarqueDAO {
 	public void eliminarRelacionCargaEquipo(Long codigoEmbarque);
 	public void reordenarDivisiones();	
 	public void eliminarEquipo(Long codigoEmbarque);
+	public void eliminarRelacionEquipoDosier(Long codigoEmbarque);	
 	public List<CargaDTO> getCargasPlanEmbarque(Long codigoEmbarque);
 	public void eliminarCargasAbortadas(List<CargaDTO> listaCarga);	
 	public void eliminarPlanEmbarque(Long codigoEmbarque);
+	public void eliminaRelacionEmbarqueDosier(Long codigoEmbarque);
 	public void eliminarRelacionContenedorEquipo(InputDatosDeletePlanEmbarqueDTO datos);
 }

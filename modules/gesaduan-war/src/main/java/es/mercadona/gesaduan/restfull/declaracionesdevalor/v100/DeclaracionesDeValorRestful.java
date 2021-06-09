@@ -1,12 +1,10 @@
 package es.mercadona.gesaduan.restfull.declaracionesdevalor.v100;
 
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -39,14 +37,15 @@ import es.mercadona.gesaduan.business.declaracionesdevalor.getdvdocumento.v1.Get
 import es.mercadona.gesaduan.business.declaracionesdevalor.getdvsumario.v1.GetDVSumarioService;
 import es.mercadona.gesaduan.business.declaracionesdevalor.postdv.v1.PostDVService;
 import es.mercadona.gesaduan.business.declaracionesdevalor.putdvestadodescarga.v1.PutDVEstadoDescargaService;
+import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dto.common.error.ErrorDTO;
 import es.mercadona.gesaduan.dto.common.error.OutputResponseErrorDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvdetalle.v1.InputDeclaracionesDeValorDetalleDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvdetalle.v1.restfull.OutputDeclaracionesDeValorDetalleDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvsumario.v1.InputDeclaracionesDeValorDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.getdvsumario.v1.restfull.OutputDeclaracionesDeValorDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull.InputPostDeclaracionesDeValorDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull.OutputPostDeclaracionesDeValorDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.InputPutVDDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull.OutputPutVDDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.putdvinddescarga.v1.DeclaracionesDeValorEstadoDescargaServiceDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.putdvinddescarga.v1.restfull.InputDatosComunesDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.putdvinddescarga.v1.restfull.OutputDeclaracionesDeValorEstadoDescargaDTO;
@@ -244,14 +243,13 @@ public class DeclaracionesDeValorRestful {
 	@Path("declaraciones-valor")
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response postDeclaracionesDeValor(
-			@NotNull InputPostDeclaracionesDeValorDTO valoresDeEntrada) {
-
-		OutputPostDeclaracionesDeValorDTO response = null;
-		try {
-			response = postDVService.createDeclaracionesDeValor(valoresDeEntrada);
+	public Response postDeclaracionesDeValor(@NotNull InputPutVDDTO input) {
+		OutputPutVDDTO response = null;
+		
+		try {			
+			response = postDVService.createValueDeclaration(input);
 		} catch (Exception e) {
-			this.logger.error("({}-{}) ERROR - {} {}",LOG_FILE,"postDeclaracionesDeValor",e.getClass().getSimpleName(),e.getMessage());	
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, "postDeclaracionesDeValor", e.getClass().getSimpleName(),e.getMessage());	
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
 		}
 

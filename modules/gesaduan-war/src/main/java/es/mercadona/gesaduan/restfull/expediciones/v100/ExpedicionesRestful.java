@@ -71,9 +71,9 @@ public class ExpedicionesRestful {
 			
 			if(pk.getCodDeclaracionValor() != null) {
 				
-				dv.setNumeroDecalaracion(pk.getCodDeclaracionValor());
-				dv.setAnyo(pk.getAnyo());
-				dv.setVersion(pk.getVersion());	
+				dv.setValueDeclarationNumber(pk.getCodDeclaracionValor());
+				dv.setValueDeclarationYear(pk.getAnyo());
+				dv.setValueDeclarationVersion(pk.getVersion());	
 				
 				response.setNumeroDeclaracion(dv);
 				
