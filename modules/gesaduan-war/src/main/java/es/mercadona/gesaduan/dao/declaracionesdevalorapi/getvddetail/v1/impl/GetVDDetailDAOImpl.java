@@ -278,7 +278,7 @@ public class GetVDDetailDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 		sqlLineas.append("  DVL.COD_V_PAIS, "); 
 		sqlLineas.append("  DVL.MCA_PRODUCTO_LPC, "); 
 		sqlLineas.append("  DVL.MCA_ERROR, ");
-		sqlLineas.append("  ROW_NUMBER() OVER(PARTITION BY DVL.COD_N_MERCA ORDER BY EAN.COD_V_EAN13) NUMERO ");		
+		sqlLineas.append("  ROW_NUMBER() OVER(PARTITION BY DVL.COD_N_MERCA,DVL.TXT_NOMBRE_BULTO_DV ORDER BY EAN.COD_V_EAN13) NUMERO ");		
 		sqlLineas.append("FROM O_DECLARACION_VALOR_LIN DVL ");
 		sqlLineas.append("LEFT JOIN D_PRODUCTO_R PROD ON DVL.COD_N_MERCA = PROD.COD_N_PRODUCTO ");
 		sqlLineas.append("LEFT JOIN S_DENOMINACION_PRODUCTO_I18N_R DEN ON DVL.COD_N_MERCA = DEN.COD_N_PRODUCTO AND DEN.COD_V_LOCALE = ?locale ");
