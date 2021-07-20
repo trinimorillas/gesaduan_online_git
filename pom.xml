@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>es.mercadona.gesaduan</groupId>
   <artifactId>gesaduan</artifactId>
-  <version>0.0.1</version>
+  <version>2.2.5.1</version>
 
   <packaging>pom</packaging>
 
