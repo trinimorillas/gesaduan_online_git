@@ -243,12 +243,20 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 			
 			if(data.getDownloadStatus() != null && !data.getDownloadStatus().equals("T")) {
 				if (data.getDownloadStatus().equals("D")) {
-					query1.append(" AND DV.FEC_DT_DESCARGA IS NOT NULL ");				
-					query2.append(" AND ((DO.COD_V_AGENCIA_EXPORTACION=?agencyLegacyId AND DV.FEC_DT_DESCARGA_EXPORTADOR IS NOT NULL) OR (DO.COD_V_AGENCIA_IMPORTACION=?agencyLegacyId AND DV.FEC_DT_DESCARGA_IMPORTADOR IS NOT NULL)) ");					
+					query1.append(" AND DV.FEC_DT_DESCARGA IS NOT NULL ");		
+					if(data.getAgencyId() != null) {
+						query2.append(" AND ((DO.COD_V_AGENCIA_EXPORTACION=?agencyLegacyId AND DV.FEC_DT_DESCARGA_EXPORTADOR IS NOT NULL) OR (DO.COD_V_AGENCIA_IMPORTACION=?agencyLegacyId AND DV.FEC_DT_DESCARGA_IMPORTADOR IS NOT NULL)) ");
+					} else {
+						query2.append(" AND ((DV.FEC_DT_DESCARGA_EXPORTADOR IS NOT NULL) OR (DV.FEC_DT_DESCARGA_IMPORTADOR IS NOT NULL)) ");
+					}
 				}
 				if (data.getDownloadStatus().equals("N")) {
 					query1.append(" AND DV.FEC_DT_DESCARGA IS NULL ");
-					query2.append(" AND ((DO.COD_V_AGENCIA_EXPORTACION=?agencyLegacyId AND DV.FEC_DT_DESCARGA_EXPORTADOR IS NULL) OR (DO.COD_V_AGENCIA_IMPORTACION=?agencyLegacyId AND DV.FEC_DT_DESCARGA_IMPORTADOR IS NULL)) ");					
+					if(data.getAgencyId() != null) {
+						query2.append(" AND ((DO.COD_V_AGENCIA_EXPORTACION=?agencyLegacyId AND DV.FEC_DT_DESCARGA_EXPORTADOR IS NULL) OR (DO.COD_V_AGENCIA_IMPORTACION=?agencyLegacyId AND DV.FEC_DT_DESCARGA_IMPORTADOR IS NULL)) ");
+					} else {
+						query2.append(" AND ((DV.FEC_DT_DESCARGA_EXPORTADOR IS NULL) AND (DV.FEC_DT_DESCARGA_IMPORTADOR IS NULL)) ");
+					}
 				}
 			}		
 			
@@ -277,11 +285,15 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 				if(data.getDateFilterType().equals("FD")) {
 					if(data.getStartDate() != null) {
 						query1.append(" AND (TRUNC(DV.FEC_DT_DESCARGA)>=TO_DATE(?dateFrom,'DD/MM/YYYY')) ");
-						query2.append(" AND ((DO.COD_V_AGENCIA_EXPORTACION=?agencyLegacyId AND TRUNC(DV.FEC_DT_DESCARGA_EXPORTADOR)>=TO_DATE(?dateFrom,'DD/MM/YYYY')) OR (DO.COD_V_AGENCIA_IMPORTACION=?agencyLegacyId AND TRUNC(DV.FEC_DT_DESCARGA_IMPORTADOR)>=TO_DATE(?dateFrom,'DD/MM/YYYY'))) ");						
+						if(data.getAgencyId() != null) {
+							query2.append(" AND ((DO.COD_V_AGENCIA_EXPORTACION=?agencyLegacyId AND TRUNC(DV.FEC_DT_DESCARGA_EXPORTADOR)>=TO_DATE(?dateFrom,'DD/MM/YYYY')) OR (DO.COD_V_AGENCIA_IMPORTACION=?agencyLegacyId AND TRUNC(DV.FEC_DT_DESCARGA_IMPORTADOR)>=TO_DATE(?dateFrom,'DD/MM/YYYY'))) ");
+						}
 					}
 					if(data.getEndDate() != null) {
 						query1.append(" AND (TRUNC(DV.FEC_DT_DESCARGA)<=TO_DATE(?dateTo,'DD/MM/YYYY')) ");
-						query2.append(" AND ((DO.COD_V_AGENCIA_EXPORTACION=?agencyLegacyId AND TRUNC(DV.FEC_DT_DESCARGA_EXPORTADOR) <= TO_DATE(?dateTo,'DD/MM/YYYY')) OR (DO.COD_V_AGENCIA_IMPORTACION=?agencyLegacyId AND TRUNC(DV.FEC_DT_DESCARGA_IMPORTADOR)<=TO_DATE(?dateTo,'DD/MM/YYYY'))) ");						
+						if(data.getAgencyId() != null) {
+							query2.append(" AND ((DO.COD_V_AGENCIA_EXPORTACION=?agencyLegacyId AND TRUNC(DV.FEC_DT_DESCARGA_EXPORTADOR) <= TO_DATE(?dateTo,'DD/MM/YYYY')) OR (DO.COD_V_AGENCIA_IMPORTACION=?agencyLegacyId AND TRUNC(DV.FEC_DT_DESCARGA_IMPORTADOR)<=TO_DATE(?dateTo,'DD/MM/YYYY'))) ");
+						}
 					}				
 				}
 				
@@ -341,8 +353,10 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 			}
 			
 			ambasQuery.append(query1);
-			ambasQuery.append(" UNION ");			
-			ambasQuery.append(query2);			
+			if(data.getWarehouseId() == null && data.getSupplierId() == null) {
+				ambasQuery.append(" UNION ");			
+				ambasQuery.append(query2);			
+			}
 			ambasQuery.append(")");
 			
 			select.append(ambasQuery.toString());
@@ -355,51 +369,61 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 			final Query queryCount = getEntityManager().createNativeQuery(selectCount.toString());
 			
 			if(data.getAgencyId() != null) {
+				this.logger.error("### agencyLegacyId: " + data.getAgencyId());			
 				query.setParameter("agencyLegacyId", data.getAgencyId() );
 				queryCount.setParameter("agencyLegacyId", data.getAgencyId() );
 			}
 			
 			if(data.getValueDeclarationNumber() != null) {
+				this.logger.error("### valueDeclarationNumber: " + data.getValueDeclarationNumber());				
 				query.setParameter("valueDeclarationNumber", data.getValueDeclarationNumber());
 				queryCount.setParameter("valueDeclarationNumber", data.getValueDeclarationNumber());				
 			}
 			
 			if(data.getValueDeclarationYear() != null) {
+				this.logger.error("### valueDeclarationYear: " + data.getValueDeclarationYear());				
 				query.setParameter("valueDeclarationYear", data.getValueDeclarationYear());
 				queryCount.setParameter("valueDeclarationYear", data.getValueDeclarationYear());				
 			}
 			
 			if(data.getDossierNumber() != null) {
+				this.logger.error("### dossierNumber: " + data.getDossierNumber());				
 				query.setParameter("dossierNumber", data.getDossierNumber());
 				queryCount.setParameter("dossierNumber", data.getDossierNumber());				
 			}
 			
 			if(data.getDossierYear() != null) {
+				this.logger.error("### dossierYear: " + data.getDossierYear());				
 				query.setParameter("dossierYear", data.getDossierYear());
 				queryCount.setParameter("dossierYear", data.getDossierYear());				
 			}		
 					
 			if(data.getInternalOrderId() != null) {
+				this.logger.error("### internalOrderId: " + data.getInternalOrderId());				
 				query.setParameter("internalOrderId", data.getInternalOrderId());
 				queryCount.setParameter("internalOrderId", data.getInternalOrderId());				
 			}
 			
 			if(data.getSupplierId() != null) {
+				this.logger.error("### supplierLegacyId: " + data.getSupplierId());				
 				query.setParameter("supplierLegacyId", data.getSupplierId());
 				queryCount.setParameter("supplierLegacyId", data.getSupplierId());				
 			}
 			
 			if(data.getSourceName() != null) {
+				this.logger.error("### sourceName: " + data.getSourceName());				
 				query.setParameter("sourceName", data.getSourceName());
 				queryCount.setParameter("sourceName", data.getSourceName());				
 			}		
 			
 			if(data.getWarehouseId() != null) {
+				this.logger.error("### warehouseLegacyId: " + data.getWarehouseId());				
 				query.setParameter("warehouseLegacyId", data.getWarehouseId());
 				queryCount.setParameter("warehouseLegacyId", data.getWarehouseId());				
 			}
 			
 			if(data.getTargetName() != null) {
+				this.logger.error("### targetName: " + data.getTargetName());				
 				query.setParameter("targetName", data.getTargetName());
 				queryCount.setParameter("targetName", data.getTargetName());				
 			}
@@ -409,29 +433,38 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 				query.setParameter("isOK", "S");
 				queryCount.setParameter("automaticLoad", "N");
 				queryCount.setParameter("isOK", "S");				
+				this.logger.error("### automaticLoad: N");
+				this.logger.error("### isOK: S");				
 			}
 			if("VI".equals(data.getValueDeclarationStatus())){
 				query.setParameter("automaticLoad", "S");
 				query.setParameter("isOK", "N");
 				queryCount.setParameter("automaticLoad", "S");
 				queryCount.setParameter("isOK", "N");				
+				this.logger.error("### automaticLoad: S");
+				this.logger.error("### isOK: N");				
 			}	
 			if("VP".equals(data.getValueDeclarationStatus())){
 				query.setParameter("automaticLoad", "N");
 				query.setParameter("isOK", "N");
 				queryCount.setParameter("automaticLoad", "N");
 				queryCount.setParameter("isOK", "N");				
+				this.logger.error("### automaticLoad: N");
+				this.logger.error("### isOK: N");				
 			}		
 			if("VC".equals(data.getValueDeclarationStatus())){
 				/* El filtro VC es usado por PROV para recuperar todas las DV correctas independientemente de si son cargas manuales o automáticas. */
 				query.setParameter("isOK", "S");
 				query.setParameter("isOK", "S");				
+				this.logger.error("### isOK: S");				
 			}
 			if("VO".equals(data.getValueDeclarationStatus())){
 				query.setParameter("automaticLoad", "S");
 				query.setParameter("isOK", "S");
 				queryCount.setParameter("automaticLoad", "S");
 				queryCount.setParameter("isOK", "S");				
+				this.logger.error("### automaticLoad: S");
+				this.logger.error("### isOK: S");				
 			}			
 		
 			String dateMask = "dd/M/yyyy";		
@@ -442,6 +475,7 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 				String dateFrom = simpleDateFormat.format(dateFromTemp) ;
 		        query.setParameter("dateFrom", dateFrom);
 		        queryCount.setParameter("dateFrom", dateFrom);		        
+				this.logger.error("### dateFrom: " + dateFrom);		        
 			}
 				
 			if(data.getEndDate() != null) {
@@ -449,18 +483,12 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 				String dateTo = simpleDateFormat.format(dateToTemp) ;
 		        query.setParameter("dateTo", dateTo);
 		        queryCount.setParameter("dateTo", dateTo);		        
+				this.logger.error("### dateTo: " + dateTo);		        
 			}
 					
 			query.setParameter("lastInForce", "S");
 			queryCount.setParameter("lastInForce", "S");		
-			
-			this.logger.error("### agencyId: " + data.getAgencyId());			
-			this.logger.error("### valueDeclarationStatus: " + data.getValueDeclarationStatus());
-			this.logger.error("### dossierYear: " + data.getDossierYear());
-			this.logger.error("### dateFilterType: " + data.getDateFilterType());
-			this.logger.error("### downloadStatus: " + select.toString());
-			this.logger.error("### valueDeclarationYear: " + data.getValueDeclarationYear());			
-			
+			this.logger.error("### lastInForce: S");			
 			
 			if(paginaInicio != null) {
 				if(paginaTamanyo != null) {
