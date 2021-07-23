@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -21,6 +22,9 @@ import es.mercadona.gesaduan.jpa.declaracionesdevalor.postdv.v1.DeclaracionesDeV
 @Stateless
 public class PutVDConfirmDownloadDAOImpl extends DaoBaseImpl<DeclaracionesDeValorPostPK, DeclaracionesDeValorPostJPA> implements PutVDConfirmDownloadDAO {
 
+	@Inject
+	private org.slf4j.Logger logger;	
+	
 	@PersistenceContext
 	private EntityManager entityM;
 	
@@ -40,7 +44,6 @@ public class PutVDConfirmDownloadDAOImpl extends DaoBaseImpl<DeclaracionesDeValo
 		OutputPutVDConfirmDownloadDTO result = null;
 
 		try {
-			final StringBuilder sqlFactura = new StringBuilder();
 			
 			Boolean estaDescargado = input.getIsDownloaded();
 			
@@ -51,20 +54,7 @@ public class PutVDConfirmDownloadDAOImpl extends DaoBaseImpl<DeclaracionesDeValo
 				descargado = "N";
 			}
 
-			sqlFactura.append("SELECT COD_N_PROVEEDOR ");
-			sqlFactura.append("FROM O_DECLARACION_VALOR_CAB DV ");
-			sqlFactura.append("WHERE DV.COD_N_DECLARACION_VALOR = ?valueDeclarationNumber ");
-			sqlFactura.append("AND DV.NUM_ANYO = ?valueDeclarationYear ");
-			sqlFactura.append("AND DV.COD_N_VERSION = ?valueDeclarationVersion");
-
-			final Query queryFactura = getEntityManager().createNativeQuery(sqlFactura.toString());
-
-			queryFactura.setParameter("valueDeclarationNumber", input.getValueDeclarationNumber());
-			queryFactura.setParameter("valueDeclarationYear", input.getValueDeclarationYear());
-			queryFactura.setParameter("valueDeclarationVersion", input.getValueDeclarationVersion());
-			Integer resultado = queryFactura.executeUpdate();
-
-			if(resultado == 1) {
+			if(esCompraSobreMuelle (input)) {
 				final StringBuilder sqlExisteProveedor = new StringBuilder();
 				sqlExisteProveedor.append("UPDATE O_DECLARACION_VALOR_CAB SET ");
 				sqlExisteProveedor.append("MCA_DESCARGA = ?isDownloaded, ");
@@ -147,4 +137,37 @@ public class PutVDConfirmDownloadDAOImpl extends DaoBaseImpl<DeclaracionesDeValo
 		return result;
 	}	
 
+	private boolean esCompraSobreMuelle (InputDataDTO input) {
+		
+		boolean retorno = false;
+		
+		try {
+		
+			final StringBuilder sqlFactura = new StringBuilder();
+			
+			sqlFactura.append("SELECT COD_N_PROVEEDOR ");
+			sqlFactura.append("FROM O_DECLARACION_VALOR_CAB DV ");
+			sqlFactura.append("WHERE DV.COD_N_DECLARACION_VALOR = ?valueDeclarationNumber ");
+			sqlFactura.append("AND DV.NUM_ANYO = ?valueDeclarationYear ");
+			sqlFactura.append("AND DV.COD_N_VERSION = ?valueDeclarationVersion");
+	
+			final Query queryFactura = getEntityManager().createNativeQuery(sqlFactura.toString());
+	
+			queryFactura.setParameter("valueDeclarationNumber", input.getValueDeclarationNumber());
+			queryFactura.setParameter("valueDeclarationYear", input.getValueDeclarationYear());
+			queryFactura.setParameter("valueDeclarationVersion", input.getValueDeclarationVersion());
+			
+			Object codProveedor = queryFactura.getSingleResult();
+			
+			if (codProveedor != null) {
+				retorno = true;
+			}
+						
+		} catch (Exception e) {			
+			throw new ApplicationException(e.getMessage());
+		}		
+		
+		return retorno;
+	}
+	
 }
