@@ -186,12 +186,10 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 			}	
 			
 			if(data.getDossierNumber() != null) {
-				query1.append(" AND DV.NUM_DOSIER  = ?dossierNumber ");
 				query2.append(" AND DV.NUM_DOSIER  = ?dossierNumber ");
 			}		
 			
 			if(data.getDossierYear() != null) {
-				query1.append(" AND DV.NUM_ANYO_DOSIER  = ?dossierYear ");
 				query2.append(" AND DV.NUM_ANYO_DOSIER  = ?dossierYear ");				
 			}	
 			
