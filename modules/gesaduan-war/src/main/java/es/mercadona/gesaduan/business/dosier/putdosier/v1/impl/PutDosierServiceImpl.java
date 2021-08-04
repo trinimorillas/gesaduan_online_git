@@ -143,6 +143,9 @@ public class PutDosierServiceImpl implements PutDosierService {
 		// Insertar lineas facturas
 		putDosierDao.insertarLineasFacturas(dosierJPA);
 		
+		// Modificar peso bruto
+		putDosierDao.modificarPesoBruto(dosierJPA);
+		
 		// Modificar facturas existentes incluidas en el dosier
 		// putDosierDao.updateFacturas(dosierEquipoJPA);
 		
