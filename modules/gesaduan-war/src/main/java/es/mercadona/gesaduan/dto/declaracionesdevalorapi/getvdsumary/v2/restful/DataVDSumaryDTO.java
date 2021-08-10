@@ -1,4 +1,4 @@
-package es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1.resfull;
+package es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v2.restful;
 
 import java.io.Serializable;
 import java.util.List;
@@ -13,7 +13,8 @@ public class DataVDSumaryDTO extends AbstractDTO implements Serializable {
 	private boolean isAutomaticLoading ;
 	private DataVDeclarationIdsDTO valueDeclarationIds;
 	private DataVDossierIdsDTO dossiersIds;	
-	private String valueDeclarationStatus;	
+	private String valueDeclarationStatus;
+	private String valueDeclarationType;
 	private Double totalAmount;
 	private String totalAmountCurrency;
 	private DataVDDatesDTO dates;
@@ -155,5 +156,17 @@ public class DataVDSumaryDTO extends AbstractDTO implements Serializable {
 	/**
 	 * @return the valueDeclarationType
 	 */
+	/**
+	 * @return the valueDeclarationType
+	 */
+	public String getValueDeclarationType() {
+		return valueDeclarationType;
+	}
+	/**
+	 * @param valueDeclarationType the valueDeclarationType to set
+	 */
+	public void setValueDeclarationType(String valueDeclarationType) {
+		this.valueDeclarationType = valueDeclarationType;
+	}
 	
 }
