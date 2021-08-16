@@ -55,33 +55,38 @@ public class GetVDDetailDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 			sql.append("WHERE LIN.COD_N_DECLARACION_VALOR = DVC.COD_N_DECLARACION_VALOR AND LIN.COD_N_VERSION = DVC.COD_N_VERSION AND LIN.NUM_ANYO = DVC.NUM_ANYO), 0.0) AS TOTALDV, ");
 			sql.append("TO_CHAR(DVC.FEC_DT_CREACION, 'DD/MM/YYYY HH24:MI:SS'), DVC.COD_V_EXPEDICION, DVC.TXT_CONDICIONES_ENTREGA, ");
 			sql.append("TO_CHAR(DVC.FEC_D_ALBARAN, 'DD/MM/YYYY HH24:MI:SS'), TO_CHAR(DVC.FEC_D_ENVIO, 'DD/MM/YYYY HH24:MI:SS'), ");
-			sql.append("DV.COD_V_TIPO_FACTURA, ");			
-			sql.append("CASE DV.COD_V_TIPO_FACTURA ");
-			sql.append("WHEN 'CSM'  THEN P.COD_N_LEGACY_PROVEEDOR ");
-			sql.append("WHEN 'PED'  THEN DVC.COD_N_BLOQUE_LOGISTICO ");
-			sql.append("WHEN 'DEV'  THEN DVC.COD_V_TIENDA ");
+			sql.append("DVC.COD_V_TIPO_FACTURA, ");			
+			sql.append("CASE DVC.COD_V_TIPO_FACTURA ");
+			sql.append("WHEN 'CSM' THEN P.COD_N_LEGACY_PROVEEDOR ");
+			sql.append("WHEN 'PED' THEN TO_CHAR(DVC.COD_N_BLOQUE_LOGISTICO) ");
+			sql.append("WHEN 'DEV' THEN DVC.COD_V_TIENDA ");
 			sql.append("ELSE NULL END COD_ORIGEN, ");			
-			sql.append("CASE DV.COD_V_TIPO_FACTURA ");
+			sql.append("CASE DVC.COD_V_TIPO_FACTURA ");
 			sql.append("WHEN 'CSM' THEN P.TXT_RAZON_SOCIAL ");
-			sql.append("WHEN 'PED'  THEN BL.TXT_NOMBRE ");
-			sql.append("WHEN 'DEV'  THEN CE.TXT_RAZON_SOCIAL ");
+			sql.append("WHEN 'PED' THEN BL.TXT_NOMBRE ");
+			sql.append("WHEN 'DEV' THEN C.TXT_RAZON_SOCIAL ");
 			sql.append("ELSE NULL END NOMBRE_ORIGEN, ");
 			sql.append("DVC.COD_N_PROVINCIA_CARGA COD_PROVINCIA_ORIGEN, ");			
-			sql.append("CASE DV.COD_V_TIPO_FACTURA ");
+			sql.append("CASE DVC.COD_V_TIPO_FACTURA ");
 			sql.append("WHEN 'CSM' THEN 'PROVEEDOR' ");
-			sql.append("WHEN 'PED'  THEN 'BLOQUE' ");
-			sql.append("WHEN 'DEV'  THEN 'TIENDA' ");
+			sql.append("WHEN 'PED' THEN 'BLOQUE' ");
+			sql.append("WHEN 'DEV' THEN 'TIENDA' ");
 			sql.append("ELSE NULL END TIPO_ORIGEN, ");
-			sql.append("CASE DV.COD_V_TIPO_FACTURA ");
+			sql.append("CASE DVC.COD_V_TIPO_FACTURA ");
+			sql.append("WHEN 'CSM' THEN CENTRO.COD_V_CENTRO ");
+			sql.append("WHEN 'PED' THEN TO_CHAR(PU.COD_N_PUERTO) ");
+			sql.append("WHEN 'DEV' THEN TO_CHAR(BL.COD_N_BLOQUE_LOGISTICO) ");
+			sql.append("ELSE NULL END COD_DESTINO, ");
+			sql.append("CASE DVC.COD_V_TIPO_FACTURA ");
 			sql.append("WHEN 'CSM' THEN CENTRO.TXT_NOMBRE_LARGO ");
-			sql.append("WHEN 'PED'  THEN PU.TXT_NOMBRE_PUERTO ");
-			sql.append("WHEN 'DEV'  THEN BL.TXT_NOMBRE ");
+			sql.append("WHEN 'PED' THEN PU.TXT_NOMBRE_PUERTO ");
+			sql.append("WHEN 'DEV' THEN BL.TXT_NOMBRE ");
 			sql.append("ELSE NULL END NOMBRE_DESTINO,  ");			
-			sql.append("CASE DV.COD_V_TIPO_FACTURA ");
+			sql.append("CASE DVC.COD_V_TIPO_FACTURA ");
 			sql.append("WHEN 'CSM' THEN 'ALMACEN' ");
-			sql.append("WHEN 'PED'  THEN 'PUERTO' ");
-			sql.append("WHEN 'DEV'  THEN 'BLOQUE' ");
-			sql.append("ELSE NULL END TIPO_DESTINO, ");
+			sql.append("WHEN 'PED' THEN 'PUERTO' ");
+			sql.append("WHEN 'DEV' THEN 'BLOQUE' ");
+			sql.append("ELSE NULL END TIPO_DESTINO ");
 			
 			sql.append("FROM O_DECLARACION_VALOR_CAB DVC ");
 			sql.append("LEFT JOIN D_PROVEEDOR_R P ON P.COD_N_PROVEEDOR = DVC.COD_N_PROVEEDOR ");
@@ -96,7 +101,7 @@ public class GetVDDetailDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 			query.setParameter("valueDeclarationNumber", input.getValueDeclarationNumber());
 			query.setParameter("valueDeclarationYear", input.getValueDeclarationYear());
 			query.setParameter("valueDeclarationVersion", input.getValueDeclarationVersion());
-			query.setParameter("valueDeclarationVersion", input.getValueDeclarationVersion());
+	
 
 			List<Object[]> listado = query.getResultList();
 
@@ -158,22 +163,27 @@ public class GetVDDetailDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 					}
 					
 					valueDeclarationData.setDossierIds(dossierIds);
-
-					if (tmp[13] != null) {
-						valueDeclarationData.setValueDeclarationGenerationDate(String.valueOf(tmp[13]));
-					}					
+		
 					
 					if (tmp[12] != null) {
 						valueDeclarationData.setTotalAmount(Double.parseDouble(String.valueOf(tmp[12])));
 					}
+					
+					if (tmp[13] != null) {
+						valueDeclarationData.setValueDeclarationGenerationDate(String.valueOf(tmp[13]));
+					}	
+					
 					valueDeclarationData.setTotalAmountCurrency("EUR");
 
 					if (tmp[14] != null) {
 						valueDeclarationData.setDispatchCode(String.valueOf(tmp[14]));
 					}
+					
+					
 					if (tmp[15] != null) {
 						valueDeclarationData.setIncotermId(String.valueOf(tmp[15]));
 					}
+					
 					if (tmp[16] != null) {
 						valueDeclarationData.setDeliveryNoteDate(String.valueOf(tmp[16]));
 					}
@@ -183,34 +193,38 @@ public class GetVDDetailDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 
 					header.setValueDeclarationData(valueDeclarationData);
 					
+					if (tmp[18] != null) {
+						valueDeclarationData.setValueDeclarationType(String.valueOf(tmp[18]));
+					}
+					
 					// ORIGEN
 					SourceDTO source = new SourceDTO();
 					
-					if (tmp[18] != null) {
-						source.setPublicId(String.valueOf(tmp[18]));
-					}
 					if (tmp[19] != null) {
-						source.setName(String.valueOf(tmp[19]));
+						source.setPublicId(String.valueOf(tmp[19]));
 					}
 					if (tmp[20] != null) {
-						source.setRegionId(String.valueOf(tmp[20]));
+						source.setName(String.valueOf(tmp[20]));
 					}
 					if (tmp[21] != null) {
-						source.setTypeId(String.valueOf(tmp[21]));
+						source.setRegionId(String.valueOf(tmp[21]));
+					}
+					if (tmp[22] != null) {
+						source.setTypeId(String.valueOf(tmp[22]));
 					}
 					header.setSource(source);
 
 					// DESTINO
 					TargetDTO target = new TargetDTO();
 					
-					if (tmp[22] != null) {
-						target.setId(String.valueOf(tmp[22]));
-					}
 					if (tmp[23] != null) {
-						target.setName(String.valueOf(tmp[23]));
+						target.setId(String.valueOf(tmp[23]));
 					}
 					if (tmp[24] != null) {
-						target.setTypeId(String.valueOf(tmp[24]));
+						target.setName(String.valueOf(tmp[24]));
+					}
+					if (tmp[25] != null) {
+						target.setTypeId(String.valueOf(tmp[25]));
 					}
 					header.setTarget(target);
 										
@@ -234,39 +248,52 @@ public class GetVDDetailDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 	}
 
 	private List<InternalOrderListDTO> getPedidos(String valueDeclarationCode, String valueDeclarationYear, String valueDeclarationVersion, String typeId) {
-		StringBuilder sqlPedido = new StringBuilder();
 		
-		if (typeId.equals("PROVEEDOR")) {
-			sqlPedido.append("SELECT COD_V_PEDIDO ");
-			sqlPedido.append("FROM O_DECLARACION_VALOR_CAB ");
-			sqlPedido.append("WHERE COD_N_DECLARACION_VALOR = ?valueDeclarationNumber ");
-			sqlPedido.append("AND NUM_ANYO = ?valueDeclarationYear ");
-			sqlPedido.append("AND COD_N_VERSION = ?valueDeclarationVersion");
-		} else if (typeId.equals("BLOQUE")) {
-			sqlPedido.append("SELECT COD_V_PEDIDO ");
-			sqlPedido.append("FROM S_DECLARACION_VALOR_PEDIDO ");
-			sqlPedido.append("WHERE COD_N_DECLARACION_VALOR = ?valueDeclarationNumber ");
-			sqlPedido.append("AND NUM_ANYO_DV = ?valueDeclarationYear ");
-			sqlPedido.append("AND COD_N_VERSION_DV = ?valueDeclarationVersion");
-		}
-
-		final Query queryPedido = getEntityManager().createNativeQuery(sqlPedido.toString());
-		queryPedido.setParameter("valueDeclarationNumber", valueDeclarationCode);
-		queryPedido.setParameter("valueDeclarationYear", valueDeclarationYear);
-		queryPedido.setParameter("valueDeclarationVersion", valueDeclarationVersion);
-
-		List<String> listadoPedido = queryPedido.getResultList();
 		List<InternalOrderListDTO> pedidos = null;
 
-		if (listadoPedido != null && !listadoPedido.isEmpty()) {
-			pedidos = new ArrayList<>();
-			for (String pedido : listadoPedido) {
-				InternalOrderListDTO internalOrderList = new InternalOrderListDTO();
-				if (pedido != null) {
-					internalOrderList.setInternalOrderId(pedido);
-				}
-				pedidos.add(internalOrderList);
+		try {
+			
+			StringBuilder sqlPedido = new StringBuilder();
+			
+			if (typeId.equals("PROVEEDOR")) {
+				sqlPedido.append("SELECT COD_V_PEDIDO ");
+				sqlPedido.append("FROM O_DECLARACION_VALOR_CAB ");
+				sqlPedido.append("WHERE COD_N_DECLARACION_VALOR = ?valueDeclarationNumber ");
+				sqlPedido.append("AND NUM_ANYO = ?valueDeclarationYear ");
+				sqlPedido.append("AND COD_N_VERSION = ?valueDeclarationVersion");
+			} else if (typeId.equals("BLOQUE")) {
+				sqlPedido.append("SELECT COD_V_PEDIDO ");
+				sqlPedido.append("FROM S_DECLARACION_VALOR_PEDIDO ");
+				sqlPedido.append("WHERE COD_N_DECLARACION_VALOR = ?valueDeclarationNumber ");
+				sqlPedido.append("AND NUM_ANYO_DV = ?valueDeclarationYear ");
+				sqlPedido.append("AND COD_N_VERSION_DV = ?valueDeclarationVersion");
+			} 
+			else {
+				return pedidos;
 			}
+	
+			final Query queryPedido = getEntityManager().createNativeQuery(sqlPedido.toString());
+			queryPedido.setParameter("valueDeclarationNumber", valueDeclarationCode);
+			queryPedido.setParameter("valueDeclarationYear", valueDeclarationYear);
+			queryPedido.setParameter("valueDeclarationVersion", valueDeclarationVersion);
+	
+			List<String> listadoPedido = queryPedido.getResultList();
+
+	
+			if (listadoPedido != null && !listadoPedido.isEmpty()) {
+				pedidos = new ArrayList<>();
+				for (String pedido : listadoPedido) {
+					InternalOrderListDTO internalOrderList = new InternalOrderListDTO();
+					if (pedido != null) {
+						internalOrderList.setInternalOrderId(pedido);
+					}
+					pedidos.add(internalOrderList);
+				}
+			}
+			
+		} catch (Exception e) {
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, "getPedidos", e.getClass().getSimpleName(), e.getMessage());	
+			throw new ApplicationException(e.getMessage());
 		}
 
 		return pedidos;
@@ -274,270 +301,284 @@ public class GetVDDetailDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 
 	private List<VDLineDTO> getLines(String valueDeclarationCode, String valueDeclarationYear, String valueDeclarationVersion, String locale, String sourceId) {
 		
-		StringBuilder sqlLineas = new StringBuilder();
-		
-		sqlLineas.append("SELECT * "); 		
-		sqlLineas.append("FROM ( ");		
-		sqlLineas.append("SELECT "); 
-		sqlLineas.append("  DVL.COD_N_MERCA, "); 
-		sqlLineas.append("  DVL.COD_N_TARIC,  "); 
-		sqlLineas.append("  DVL.COD_V_REA,  "); 
-		sqlLineas.append("  EAN.COD_V_EAN13, ");
-		sqlLineas.append("  DECODE(PROD.TXT_DENOMINA_ALTERNATIVA, NULL, DEN.TXT_DESCRIPCION, PROD.TXT_DENOMINA_ALTERNATIVA), ");
-		sqlLineas.append("  DECODE(PROD.TXT_DENOMINA_ALTERNATIVA, NULL, DEN.TXT_DESCRIPCION, PROD.TXT_DENOMINA_ALTERNATIVA) AS PRODUCTO, ");
-		sqlLineas.append("  DECODE(PROD.TXT_FORMATO_ALTERNATIVO, NULL, CONCAT(CONCAT(PROD.NUM_FORMATO_VENTA, ' '), PROD.TXT_UNIDAD_MEDIDA), PROD.TXT_FORMATO_ALTERNATIVO), ");
-		sqlLineas.append("  DECODE(PROD.TXT_FORMATO_ALTERNATIVO, NULL, CONCAT(CONCAT(PROD.NUM_FORMATO_VENTA, ' '), PROD.TXT_UNIDAD_MEDIDA), PROD.TXT_FORMATO_ALTERNATIVO) AS FORMATO, ");
-		sqlLineas.append("  PROD.TXT_MARCA, "); 
-		sqlLineas.append("  NULL, "); 
-		sqlLineas.append("  DVL.TXT_NOMBRE_BULTO_DV, "); 
-		sqlLineas.append("  DVL.NUM_BULTOS, "); 
-		sqlLineas.append("  DVL.NUM_PESO_NETO, "); 
-		sqlLineas.append("  DVL.NUM_PESO_BRUTO, ");
-		sqlLineas.append("  DVL.NUM_VOLUMEN, "); 
-		sqlLineas.append("  DVL.NUM_CANTIDAD, "); 
-		sqlLineas.append("  DVL.NUM_PRECIO_UNIDAD, "); 
-		sqlLineas.append("  DVL.NUM_IMPORTE_TOTAL, ");
-		sqlLineas.append("  DVL.NUM_GRADO_ALCOHOL, "); 
-		sqlLineas.append("  DVL.NUM_GRADO_PLATO, "); 
-		sqlLineas.append("  DVL.COD_V_PAIS, "); 
-		sqlLineas.append("  DVL.MCA_PRODUCTO_LPC, "); 
-		sqlLineas.append("  DVL.MCA_ERROR, ");
-		sqlLineas.append("  ROW_NUMBER() OVER(PARTITION BY DVL.COD_N_MERCA,DVL.TXT_NOMBRE_BULTO_DV ORDER BY EAN.COD_V_EAN13) NUMERO ");		
-		sqlLineas.append("FROM O_DECLARACION_VALOR_LIN DVL ");
-		sqlLineas.append("LEFT JOIN D_PRODUCTO_R PROD ON DVL.COD_N_MERCA = PROD.COD_N_PRODUCTO ");
-		sqlLineas.append("LEFT JOIN S_DENOMINACION_PRODUCTO_I18N_R DEN ON DVL.COD_N_MERCA = DEN.COD_N_PRODUCTO AND DEN.COD_V_LOCALE = ?locale ");
-		sqlLineas.append("LEFT JOIN S_EAN_PRODUCTO_PROVEEDOR_R EAN ON EAN.COD_N_PRODUCTO = DVL.COD_N_MERCA AND EAN.COD_N_LEGACY_PROVEEDOR = ?sourceId ");
-		sqlLineas.append("LEFT JOIN O_EXPEDICION_LIN EL ON (EL.COD_V_EXPEDICION = DVL.COD_V_EXPEDICION AND EL.COD_N_MERCA = DVL.COD_N_MERCA AND EL.COD_V_EAN = EAN.COD_V_EAN13) ");
-		sqlLineas.append("WHERE  ");
-		sqlLineas.append("  DVL.COD_N_DECLARACION_VALOR = ?valueDeclarationNumber AND  "); 
-		sqlLineas.append("  DVL.NUM_ANYO = ?valueDeclarationYear AND "); 
-		sqlLineas.append("  DVL.COD_N_VERSION = ?valueDeclarationVersion "); 
-		sqlLineas.append(") WHERE NUMERO = 1");			
-
-		final Query queryLineas = getEntityManager().createNativeQuery(sqlLineas.toString());
-		queryLineas.setParameter("valueDeclarationNumber", valueDeclarationCode);
-		queryLineas.setParameter("valueDeclarationYear", valueDeclarationYear);
-		queryLineas.setParameter("valueDeclarationVersion", valueDeclarationVersion);
-		queryLineas.setParameter("locale", locale);
-		queryLineas.setParameter("sourceId", sourceId);
-
-		List<Object[]> listadoLineas = queryLineas.getResultList();
 		List<VDLineDTO> lineas = null;
-
-		if (listadoLineas != null && !listadoLineas.isEmpty()) {
-			lineas = new ArrayList<>();
-			for (Object[] tmp : listadoLineas) {
-				VDLineDTO linea = new VDLineDTO();
-				if (tmp[0] != null) {
-					linea.setProductPublicId(Integer.parseInt(String.valueOf(tmp[0])));
-				}
-				if (tmp[1] != null) {
-					linea.setTaricId(Long.parseLong(String.valueOf(tmp[1])));
-				}
-				if (tmp[2] != null) {
-					linea.setSsrId(String.valueOf(tmp[2]));
-				}
-				if (tmp[3] != null) {
-					linea.setGtin(String.valueOf(tmp[3]));
-				}
-				if (tmp[4] != null) {
-					linea.setProductName(String.valueOf(tmp[4]));
-				}
-				if (tmp[5] != null) {
-					linea.setProductAlternativeName(String.valueOf(tmp[5]));
-				}
-				if (tmp[6] != null) {
-					linea.setStandardSalesFormat(String.valueOf(tmp[6]));
-				}
-				if (tmp[7] != null) {
-					linea.setAlternativeSalesFormatDescription(String.valueOf(tmp[7]));
-				}
-				if (tmp[8] != null) {
-					linea.setBrandName(String.valueOf(tmp[8]));
-				}
-				if (tmp[9] != null) {
-					linea.setPackageTypeId(String.valueOf(tmp[9]));
-				}
-				if (tmp[10] != null) {
-					linea.setPackageName(String.valueOf(tmp[10]));
-				}
-				if (tmp[11] != null) {
-					linea.setPackageQuantity(Integer.parseInt(String.valueOf(tmp[11])));
-				}
-				if (tmp[12] != null) {
-					linea.setLineNetWeight(Double.parseDouble(String.valueOf(tmp[12])));
-				}
-				if (tmp[12] != null) {
-					linea.setLineNetWeightUnit("KG");
-				}
-				if (tmp[13] != null) {
-					linea.setLineGrossWeight(Double.parseDouble(String.valueOf(tmp[13])));
-				}
-				if (tmp[13] != null) {
-					linea.setLineGrossWeightUnit("KG");
-				}
-				if (tmp[14] != null) {
-					linea.setVolume(Double.parseDouble(String.valueOf(tmp[14])));
-				}
-				if (tmp[14] != null) {
-					linea.setVolumeUnit("L");
-				}
-				if (tmp[15] != null) {
-					linea.setFormatQuantity(Double.parseDouble(String.valueOf(tmp[15])));
-				}
-				if (tmp[16] != null) {
-					linea.setUnitPrice(Double.parseDouble(String.valueOf(tmp[16])));
-				}
-				if (tmp[16] != null) {
-					linea.setUnitPriceCurrency("EUR");
-				}
-				if (tmp[17] != null) {
-					linea.setTotalLineAmount(Double.parseDouble(String.valueOf(tmp[17])));
-				}
-				if (tmp[17] != null) {
-					linea.setTotalLineAmountCurrency("EUR");
-				}
-				if (tmp[18] != null) {
-					linea.setAlcoholPercentage(Double.parseDouble(String.valueOf(tmp[18])));
-				}
-				if (tmp[18] != null) {
-					linea.setAlcoholPercentageUnit(null);
-				}
-				if (tmp[19] != null) {
-					linea.setPlateGrade(Double.parseDouble(String.valueOf(tmp[19])));
-				}
-				if (tmp[19] != null) {
-					linea.setPlateGradeUnit(null);
-				}
-				if (tmp[20] != null) {
-					linea.setSourceCountryId(String.valueOf(tmp[20]));
-				}
-				if (tmp[21] != null) {
-					if ("S".equals(tmp[21])) {
-						linea.setIsReadyToEat(true);
-					} else {
-						linea.setIsReadyToEat(false);
+		
+		try {
+		
+			StringBuilder sqlLineas = new StringBuilder();
+			
+			sqlLineas.append("SELECT * "); 		
+			sqlLineas.append("FROM ( ");		
+			sqlLineas.append("SELECT "); 
+			sqlLineas.append("  DVL.COD_N_MERCA, "); 
+			sqlLineas.append("  DVL.COD_N_TARIC,  "); 
+			sqlLineas.append("  DVL.COD_V_REA,  "); 
+			sqlLineas.append("  EAN.COD_V_EAN13, ");
+			sqlLineas.append("  DECODE(PROD.TXT_DENOMINA_ALTERNATIVA, NULL, DEN.TXT_DESCRIPCION, PROD.TXT_DENOMINA_ALTERNATIVA), ");
+			sqlLineas.append("  DECODE(PROD.TXT_DENOMINA_ALTERNATIVA, NULL, DEN.TXT_DESCRIPCION, PROD.TXT_DENOMINA_ALTERNATIVA) AS PRODUCTO, ");
+			sqlLineas.append("  DECODE(PROD.TXT_FORMATO_ALTERNATIVO, NULL, CONCAT(CONCAT(PROD.NUM_FORMATO_VENTA, ' '), PROD.TXT_UNIDAD_MEDIDA), PROD.TXT_FORMATO_ALTERNATIVO), ");
+			sqlLineas.append("  DECODE(PROD.TXT_FORMATO_ALTERNATIVO, NULL, CONCAT(CONCAT(PROD.NUM_FORMATO_VENTA, ' '), PROD.TXT_UNIDAD_MEDIDA), PROD.TXT_FORMATO_ALTERNATIVO) AS FORMATO, ");
+			sqlLineas.append("  PROD.TXT_MARCA, "); 
+			sqlLineas.append("  NULL, "); 
+			sqlLineas.append("  DVL.TXT_NOMBRE_BULTO_DV, "); 
+			sqlLineas.append("  DVL.NUM_BULTOS, "); 
+			sqlLineas.append("  DVL.NUM_PESO_NETO, "); 
+			sqlLineas.append("  DVL.NUM_PESO_BRUTO, ");
+			sqlLineas.append("  DVL.NUM_VOLUMEN, "); 
+			sqlLineas.append("  DVL.NUM_CANTIDAD, "); 
+			sqlLineas.append("  DVL.NUM_PRECIO_UNIDAD, "); 
+			sqlLineas.append("  DVL.NUM_IMPORTE_TOTAL, ");
+			sqlLineas.append("  DVL.NUM_GRADO_ALCOHOL, "); 
+			sqlLineas.append("  DVL.NUM_GRADO_PLATO, "); 
+			sqlLineas.append("  DVL.COD_V_PAIS, "); 
+			sqlLineas.append("  DVL.MCA_PRODUCTO_LPC, "); 
+			sqlLineas.append("  DVL.MCA_ERROR, ");
+			sqlLineas.append("  ROW_NUMBER() OVER(PARTITION BY DVL.COD_N_MERCA,DVL.TXT_NOMBRE_BULTO_DV ORDER BY EAN.COD_V_EAN13) NUMERO ");		
+			sqlLineas.append("FROM O_DECLARACION_VALOR_LIN DVL ");
+			sqlLineas.append("LEFT JOIN D_PRODUCTO_R PROD ON DVL.COD_N_MERCA = PROD.COD_N_PRODUCTO ");
+			sqlLineas.append("LEFT JOIN S_DENOMINACION_PRODUCTO_I18N_R DEN ON DVL.COD_N_MERCA = DEN.COD_N_PRODUCTO AND DEN.COD_V_LOCALE = ?locale ");
+			sqlLineas.append("LEFT JOIN S_EAN_PRODUCTO_PROVEEDOR_R EAN ON EAN.COD_N_PRODUCTO = DVL.COD_N_MERCA AND EAN.COD_N_LEGACY_PROVEEDOR = ?sourceId ");
+			sqlLineas.append("LEFT JOIN O_EXPEDICION_LIN EL ON (EL.COD_V_EXPEDICION = DVL.COD_V_EXPEDICION AND EL.COD_N_MERCA = DVL.COD_N_MERCA AND EL.COD_V_EAN = EAN.COD_V_EAN13) ");
+			sqlLineas.append("WHERE  ");
+			sqlLineas.append("  DVL.COD_N_DECLARACION_VALOR = ?valueDeclarationNumber AND  "); 
+			sqlLineas.append("  DVL.NUM_ANYO = ?valueDeclarationYear AND "); 
+			sqlLineas.append("  DVL.COD_N_VERSION = ?valueDeclarationVersion "); 
+			sqlLineas.append(") WHERE NUMERO = 1");			
+	
+			final Query queryLineas = getEntityManager().createNativeQuery(sqlLineas.toString());
+			queryLineas.setParameter("valueDeclarationNumber", valueDeclarationCode);
+			queryLineas.setParameter("valueDeclarationYear", valueDeclarationYear);
+			queryLineas.setParameter("valueDeclarationVersion", valueDeclarationVersion);
+			queryLineas.setParameter("locale", locale);
+			queryLineas.setParameter("sourceId", sourceId);
+	
+			List<Object[]> listadoLineas = queryLineas.getResultList();
+		
+	
+			if (listadoLineas != null && !listadoLineas.isEmpty()) {
+				lineas = new ArrayList<>();
+				for (Object[] tmp : listadoLineas) {
+					VDLineDTO linea = new VDLineDTO();
+					if (tmp[0] != null) {
+						linea.setProductPublicId(Integer.parseInt(String.valueOf(tmp[0])));
 					}
-				}
-				if (tmp[22] != null) {
-					linea.setHasError(String.valueOf(tmp[22]));
-				}
-				if (linea.getTaricId() == null) {
-					StringBuilder sqlTaric = new StringBuilder();
-					sqlTaric.append("SELECT TP.COD_N_TARIC FROM S_TARIC_PRODUCTO TP WHERE TP.COD_N_PRODUCTO = ?productPublicId");
-
-					final Query queryTaric = getEntityManager().createNativeQuery(sqlTaric.toString());
-					queryTaric.setParameter("productPublicId", linea.getProductPublicId());
-					List<BigDecimal> tarics = queryTaric.getResultList();
-					if (tarics != null && !tarics.isEmpty()) {
-						for (BigDecimal taric : tarics) {
-							linea.setActualTaricId(Long.parseLong(String.valueOf(taric)));
+					if (tmp[1] != null) {
+						linea.setTaricId(Long.parseLong(String.valueOf(tmp[1])));
+					}
+					if (tmp[2] != null) {
+						linea.setSsrId(String.valueOf(tmp[2]));
+					}
+					if (tmp[3] != null) {
+						linea.setGtin(String.valueOf(tmp[3]));
+					}
+					if (tmp[4] != null) {
+						linea.setProductName(String.valueOf(tmp[4]));
+					}
+					if (tmp[5] != null) {
+						linea.setProductAlternativeName(String.valueOf(tmp[5]));
+					}
+					if (tmp[6] != null) {
+						linea.setStandardSalesFormat(String.valueOf(tmp[6]));
+					}
+					if (tmp[7] != null) {
+						linea.setAlternativeSalesFormatDescription(String.valueOf(tmp[7]));
+					}
+					if (tmp[8] != null) {
+						linea.setBrandName(String.valueOf(tmp[8]));
+					}
+					if (tmp[9] != null) {
+						linea.setPackageTypeId(String.valueOf(tmp[9]));
+					}
+					if (tmp[10] != null) {
+						linea.setPackageName(String.valueOf(tmp[10]));
+					}
+					if (tmp[11] != null) {
+						linea.setPackageQuantity(Integer.parseInt(String.valueOf(tmp[11])));
+					}
+					if (tmp[12] != null) {
+						linea.setLineNetWeight(Double.parseDouble(String.valueOf(tmp[12])));
+					}
+					if (tmp[12] != null) {
+						linea.setLineNetWeightUnit("KG");
+					}
+					if (tmp[13] != null) {
+						linea.setLineGrossWeight(Double.parseDouble(String.valueOf(tmp[13])));
+					}
+					if (tmp[13] != null) {
+						linea.setLineGrossWeightUnit("KG");
+					}
+					if (tmp[14] != null) {
+						linea.setVolume(Double.parseDouble(String.valueOf(tmp[14])));
+					}
+					if (tmp[14] != null) {
+						linea.setVolumeUnit("L");
+					}
+					if (tmp[15] != null) {
+						linea.setFormatQuantity(Double.parseDouble(String.valueOf(tmp[15])));
+					}
+					if (tmp[16] != null) {
+						linea.setUnitPrice(Double.parseDouble(String.valueOf(tmp[16])));
+					}
+					if (tmp[16] != null) {
+						linea.setUnitPriceCurrency("EUR");
+					}
+					if (tmp[17] != null) {
+						linea.setTotalLineAmount(Double.parseDouble(String.valueOf(tmp[17])));
+					}
+					if (tmp[17] != null) {
+						linea.setTotalLineAmountCurrency("EUR");
+					}
+					if (tmp[18] != null) {
+						linea.setAlcoholPercentage(Double.parseDouble(String.valueOf(tmp[18])));
+					}
+					if (tmp[18] != null) {
+						linea.setAlcoholPercentageUnit(null);
+					}
+					if (tmp[19] != null) {
+						linea.setPlateGrade(Double.parseDouble(String.valueOf(tmp[19])));
+					}
+					if (tmp[19] != null) {
+						linea.setPlateGradeUnit(null);
+					}
+					if (tmp[20] != null) {
+						linea.setSourceCountryId(String.valueOf(tmp[20]));
+					}
+					if (tmp[21] != null) {
+						if ("S".equals(tmp[21])) {
+							linea.setIsReadyToEat(true);
+						} else {
+							linea.setIsReadyToEat(false);
 						}
 					}
+					if (tmp[22] != null) {
+						linea.setHasError(String.valueOf(tmp[22]));
+					}
+					if (linea.getTaricId() == null) {
+						StringBuilder sqlTaric = new StringBuilder();
+						sqlTaric.append("SELECT TP.COD_N_TARIC FROM S_TARIC_PRODUCTO TP WHERE TP.COD_N_PRODUCTO = ?productPublicId");
+	
+						final Query queryTaric = getEntityManager().createNativeQuery(sqlTaric.toString());
+						queryTaric.setParameter("productPublicId", linea.getProductPublicId());
+						List<BigDecimal> tarics = queryTaric.getResultList();
+						if (tarics != null && !tarics.isEmpty()) {
+							for (BigDecimal taric : tarics) {
+								linea.setActualTaricId(Long.parseLong(String.valueOf(taric)));
+							}
+						}
+					}
+					lineas.add(linea);
 				}
-				lineas.add(linea);
 			}
+			
+		} catch (Exception e) {
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, "getLineas", e.getClass().getSimpleName(), e.getMessage());	
+			throw new ApplicationException(e.getMessage());
 		}
 
 		return lineas;
 	}
 	
-	private List<VDItemDTO> getItems(String valueDeclarationCode, String valueDeclarationYear, String valueDeclarationVersion) {
-		
-		StringBuilder sqlItems = new StringBuilder();
-		
-		sqlItems.append("SELECT * "); 		
-		sqlItems.append("FROM ( ");		
-		sqlItems.append("SELECT "); 
-		sqlItems.append("  DVE.COD_V_ITEM, "); 
-		sqlItems.append("  DVE.COD_V_TIPO_ITEM_DEV,  "); 
-		sqlItems.append("  DVE.COD_N_TARIC,  "); 
-		sqlItems.append("  DVE.TXT_DENOMINACION, ");
-		sqlItems.append("  DVE.NUM_CANTIDAD, ");
-		sqlItems.append("  DVE.COD_V_UM_CANTIDAD, ");
-		sqlItems.append("  DVE.NUM_PESO_NETO, ");
-		sqlItems.append("  DVE.COD_V_UM_PESO_NETO, ");
-		sqlItems.append("  DVE.NUM_PESO_BRUTO, "); 
-		sqlItems.append("  DVE.COD_V_UM_PESO_BRUTO, "); 
-		sqlItems.append("  DVE.NUM_PRECIO_UNIDAD, "); 
-		sqlItems.append("  DVE.COD_V_UM_PRECIO, "); 
-		sqlItems.append("  DVE.NUM_IMPORTE, "); 
-		sqlItems.append("  DVE.COD_V_UM_IMPORTE ");
-		sqlItems.append("FROM O_DECLARACION_VALOR_ENV DVE ");
-		sqlItems.append("WHERE  ");
-		sqlItems.append("  DVE.COD_N_DECLARACION_VALOR = ?valueDeclarationNumber AND  "); 
-		sqlItems.append("  DVE.NUM_ANYO = ?valueDeclarationYear AND "); 
-		sqlItems.append("  DVE.COD_N_VERSION = ?valueDeclarationVersion) "); 	
+	private List<VDItemDTO> getItems(String valueDeclarationCode, String valueDeclarationYear, String valueDeclarationVersion) {		
 
-		final Query queryItems = getEntityManager().createNativeQuery(sqlItems.toString());
-		queryItems.setParameter("valueDeclarationNumber", valueDeclarationCode);
-		queryItems.setParameter("valueDeclarationYear", valueDeclarationYear);
-		queryItems.setParameter("valueDeclarationVersion", valueDeclarationVersion);
-
-		List<Object[]> listadoItems = queryItems.getResultList();
 		List<VDItemDTO> items = null;
-
-		if (listadoItems != null && !listadoItems.isEmpty()) {
-			items = new ArrayList<>();
-			for (Object[] tmp : listadoItems) {
-				VDItemDTO item = new VDItemDTO();
-				if (tmp[0] != null) {
-					item.setItemId(Long.parseLong(String.valueOf(tmp[0])));
-				}
-				if (tmp[1] != null) {
-					item.setTypeItemId(Long.parseLong(String.valueOf(tmp[1])));
-				}
-				if (tmp[2] != null) {
-					item.setTaricId(Long.parseLong(String.valueOf(tmp[2])));
-				}
-				if (tmp[3] != null) {
-					item.setItemName(String.valueOf(tmp[3]));
-				}
-				if (tmp[4] != null) {
-					item.setQuantity(Long.parseLong(String.valueOf(tmp[4])));
-				}
-				if (tmp[5] != null) {
-					item.setQuantityUnit(String.valueOf(tmp[5]));
-				}
-				if (tmp[6] != null) {
-					item.setLineNetWeight(Double.parseDouble(String.valueOf(tmp[6])));
-				}
-				if (tmp[7] != null) {
-					item.setLineNetWeightUnit(String.valueOf(tmp[7]));
-				}
-				if (tmp[8] != null) {
-					item.setLineGrossWeight(Double.parseDouble(String.valueOf(tmp[8])));
-				}
-				if (tmp[9] != null) {
-					item.setLineGrossWeightUnit(String.valueOf(tmp[9]));
-				}
-				if (tmp[10] != null) {
-					item.setUnitPrice(Double.parseDouble(String.valueOf(tmp[10])));
-				}
-				if (tmp[11] != null) {
-					item.setUnitPriceCurrency(String.valueOf(tmp[11]));
-				}
-				if (tmp[12] != null) {
-					item.setTotalLineAmount(Double.parseDouble(String.valueOf(tmp[12])));
-				}
-				if (tmp[13] != null) {
-					item.setTotalLineAmountCurrency(String.valueOf(tmp[13]));
-				}
-				if (item.getTaricId() == null) {
-					StringBuilder sqlTaric = new StringBuilder();
-					sqlTaric.append("SELECT TE.COD_N_TARIC FROM S_TARIC_ENVASE TE WHERE TE.COD_V_ENVASE = ?itemId ");
-
-					final Query queryTaric = getEntityManager().createNativeQuery(sqlTaric.toString());
-					queryTaric.setParameter("itemId", item.getItemId());
-					List<BigDecimal> tarics = queryTaric.getResultList();
-					if (tarics != null && !tarics.isEmpty()) {
-						for (BigDecimal taric : tarics) {
-							item.setActualTaricId(Long.parseLong(String.valueOf(taric)));
+		
+		try {
+		
+			StringBuilder sqlItems = new StringBuilder();
+			
+			sqlItems.append("SELECT * "); 		
+			sqlItems.append("FROM ( ");		
+			sqlItems.append("SELECT "); 
+			sqlItems.append("  DVE.COD_V_ENVASE, "); 
+			sqlItems.append("  DVE.COD_N_TARIC,  "); 
+			sqlItems.append("  DVE.TXT_DENOMINACION, ");
+			sqlItems.append("  DVE.NUM_CANTIDAD, ");
+			sqlItems.append("  DVE.COD_V_UM_CANTIDAD, ");
+			sqlItems.append("  DVE.NUM_PESO_NETO, ");
+			sqlItems.append("  DVE.COD_V_UM_PESO_NETO, ");
+			sqlItems.append("  DVE.NUM_PESO_BRUTO, "); 
+			sqlItems.append("  DVE.COD_V_UM_PESO_BRUTO, "); 
+			sqlItems.append("  DVE.NUM_PRECIO_UNIDAD, "); 
+			sqlItems.append("  DVE.COD_V_UM_PRECIO, "); 
+			sqlItems.append("  DVE.NUM_IMPORTE, "); 
+			sqlItems.append("  DVE.COD_V_UM_IMPORTE ");
+			sqlItems.append("FROM O_DECLARACION_VALOR_ENV DVE ");
+			sqlItems.append("WHERE  ");
+			sqlItems.append("  DVE.COD_N_DECLARACION_VALOR = ?valueDeclarationNumber AND  "); 
+			sqlItems.append("  DVE.NUM_ANYO = ?valueDeclarationYear AND "); 
+			sqlItems.append("  DVE.COD_N_VERSION = ?valueDeclarationVersion) "); 	
+	
+			final Query queryItems = getEntityManager().createNativeQuery(sqlItems.toString());
+			queryItems.setParameter("valueDeclarationNumber", valueDeclarationCode);
+			queryItems.setParameter("valueDeclarationYear", valueDeclarationYear);
+			queryItems.setParameter("valueDeclarationVersion", valueDeclarationVersion);
+	
+			List<Object[]> listadoItems = queryItems.getResultList();
+			
+	
+			if (listadoItems != null && !listadoItems.isEmpty()) {
+				items = new ArrayList<>();
+				for (Object[] tmp : listadoItems) {
+					VDItemDTO item = new VDItemDTO();
+					if (tmp[0] != null) {
+						item.setItemId(Long.parseLong(String.valueOf(tmp[0])));
+					}
+					if (tmp[1] != null) {
+						item.setTaricId(Long.parseLong(String.valueOf(tmp[1])));
+					}
+					if (tmp[2] != null) {
+						item.setItemName(String.valueOf(tmp[2]));
+					}
+					if (tmp[3] != null) {
+						item.setQuantity(Long.parseLong(String.valueOf(tmp[3])));
+					}
+					if (tmp[4] != null) {
+						item.setQuantityUnit(String.valueOf(tmp[4]));
+					}
+					if (tmp[5] != null) {
+						item.setLineNetWeight(Double.parseDouble(String.valueOf(tmp[5])));
+					}
+					if (tmp[6] != null) {
+						item.setLineNetWeightUnit(String.valueOf(tmp[6]));
+					}
+					if (tmp[7] != null) {
+						item.setLineGrossWeight(Double.parseDouble(String.valueOf(tmp[7])));
+					}
+					if (tmp[8] != null) {
+						item.setLineGrossWeightUnit(String.valueOf(tmp[8]));
+					}
+					if (tmp[9] != null) {
+						item.setUnitPrice(Double.parseDouble(String.valueOf(tmp[9])));
+					}
+					if (tmp[10] != null) {
+						item.setUnitPriceCurrency(String.valueOf(tmp[10]));
+					}
+					if (tmp[11] != null) {
+						item.setTotalLineAmount(Double.parseDouble(String.valueOf(tmp[11])));
+					}
+					if (tmp[12] != null) {
+						item.setTotalLineAmountCurrency(String.valueOf(tmp[12]));
+					}
+					if (item.getTaricId() == null) {
+						StringBuilder sqlTaric = new StringBuilder();
+						sqlTaric.append("SELECT TE.COD_N_TARIC FROM S_TARIC_ENVASE TE WHERE TE.COD_V_ENVASE = ?itemId ");
+	
+						final Query queryTaric = getEntityManager().createNativeQuery(sqlTaric.toString());
+						queryTaric.setParameter("itemId", item.getItemId());
+						List<BigDecimal> tarics = queryTaric.getResultList();
+						if (tarics != null && !tarics.isEmpty()) {
+							for (BigDecimal taric : tarics) {
+								item.setActualTaricId(Long.parseLong(String.valueOf(taric)));
+							}
 						}
 					}
+					items.add(item);
 				}
-				items.add(item);
 			}
+		
+		} catch (Exception e) {
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, LOG_FILE, "getItems", e.getClass().getSimpleName(), e.getMessage());	
+			throw new ApplicationException(e.getMessage());
 		}
 
 		return items;
