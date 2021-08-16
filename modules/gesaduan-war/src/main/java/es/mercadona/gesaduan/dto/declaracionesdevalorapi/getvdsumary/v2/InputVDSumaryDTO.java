@@ -1,4 +1,4 @@
-package es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v1;
+package es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v2;
 
 import java.io.Serializable;
 
@@ -18,6 +18,7 @@ public class InputVDSumaryDTO extends AbstractDTO implements Serializable{
 	private Integer valueDeclarationYear;
 	private Integer dossierNumber;
 	private Integer dossierYear;
+	private String valueDeclarationType;
 	private String internalOrderId;
 	private String supplierId;
 	private String sourceName;
@@ -275,4 +276,16 @@ public class InputVDSumaryDTO extends AbstractDTO implements Serializable{
 	/**
 	 * @return the valueDeclarationType
 	 */
+	/**
+	 * @return the valueDeclarationType
+	 */
+	public String getValueDeclarationType() {
+		return valueDeclarationType;
+	}
+	/**
+	 * @param valueDeclarationType the valueDeclarationType to set
+	 */
+	public void setValueDeclarationType(String valueDeclarationType) {
+		this.valueDeclarationType = valueDeclarationType;
+	}
 }
