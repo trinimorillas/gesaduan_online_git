@@ -12,6 +12,7 @@ public class DataDTO extends AbstractDTO {
 	private VDHeaderDTO header;
 	private List<VDHistoricalDTO> historical;
 	private List<VDLineDTO> lineList;
+	private List<VDItemDTO> itemList;
 	/**
 	 * @return the commonData
 	 */
@@ -59,6 +60,18 @@ public class DataDTO extends AbstractDTO {
 	 */
 	public void setLineList(List<VDLineDTO> lineList) {
 		this.lineList = lineList;
+	}
+	/**
+	 * @return the itemList
+	 */
+	public List<VDItemDTO> getItemList() {
+		return itemList;
+	}
+	/**
+	 * @param itemList the itemList to set
+	 */
+	public void setItemList(List<VDItemDTO> itemList) {
+		this.itemList = itemList;
 	}
 
 	

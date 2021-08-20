@@ -90,7 +90,7 @@ public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeVa
 
 					entityM.merge(dv);
 					entityM.flush();
-
+					
 					pk.setCodDeclaracionValor(dv.getCodDeclaracionValor());
 					pk.setAnyo(dv.getAnyo());
 					pk.setVersion(dv.getVersion());
@@ -111,12 +111,17 @@ public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeVa
 			if (input.getExpedicion() == null) {
 				insertarPedidos(input);
 			}
-			
-			updateContenedor(input);
-			
-			generarAlerta(input.getUsuarioCreacion(), Long.toString(pk.getCodDeclaracionValor()), Integer.toString(pk.getAnyo()));
-			marcarDosierOK(Long.toString(pk.getCodDeclaracionValor()), Integer.toString(pk.getAnyo()));
-			generaAlertaDosierOK(input.getUsuarioCreacion(),Long.toString(pk.getCodDeclaracionValor()), Integer.toString(pk.getAnyo()));
+			//aqui
+			if("PED".equals(input.getCodTypeVD())) {
+				updateContenedor(input);
+				generarAlerta(input.getUsuarioCreacion(), Long.toString(pk.getCodDeclaracionValor()), Integer.toString(pk.getAnyo()));
+				marcarDosierOK(Long.toString(pk.getCodDeclaracionValor()), Integer.toString(pk.getAnyo()));
+				generaAlertaDosierOK(input.getUsuarioCreacion(),Long.toString(pk.getCodDeclaracionValor()), Integer.toString(pk.getAnyo()));
+				
+			} else if("DEV".equals(input.getCodTypeVD())) {
+				generarAlertaFactura(input.getAnyo(), input.getCodDeclaracionValor());
+				marcarFacturaOk(input);
+			}		
 			
 		} catch (Exception e) {
 			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "postCabecera", e.getClass().getSimpleName(), e.getMessage());
@@ -345,9 +350,55 @@ public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeVa
 		}
 	}
 	
-	
 	@Override
+	@Transactional	
+	public void generarAlertaFactura(Integer valueDeclarationYear, Integer valueDeclarationNumber) {
+		StringBuilder sql = new StringBuilder();
+		
+		try {		
+			sql.append("INSERT INTO S_NOTIF_ALERTA_EXPED_DV (COD_N_ALERTA, COD_V_ELEMENTO, COD_V_EXPEDICION, FEC_D_ALBARAN,  ");
+			sql.append("COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION,  ");
+			sql.append("MCA_CORREO_ENVIADO,MCA_SMS_ENVIADO, MCA_RESUELTA, FEC_D_CREACION, COD_V_APLICACION, COD_V_USUARIO_CREACION) ");
+			sql.append("SELECT 54, COD_N_DECLARACION_VALOR, '-', SYSDATE,  ");
+			sql.append("COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION, ");
+			sql.append("'N', 'N', 'N', SYSDATE, 'GESADUAN', 'user' ");
+			sql.append("FROM ( ");
+			sql.append("SELECT DV.COD_N_DECLARACION_VALOR, DV.NUM_ANYO, DV.COD_N_VERSION, ");
+			sql.append("ROW_NUMBER() OVER(PARTITION BY DV.COD_N_DECLARACION_VALOR,DV.NUM_ANYO,DV.COD_N_VERSION ORDER BY DV.COD_N_VERSION) NUMERO ");
+			sql.append("FROM O_DECLARACION_VALOR_CAB DV ");
+			sql.append("WHERE DV.COD_N_DECLARACION_VALOR = ?valueDeclarationNumber ");
+			sql.append("AND DV.NUM_ANYO = ?valueDeclarationYear ");
+			sql.append("AND DV.MCA_ULTIMA_VIGENTE = 'S' ");
+			sql.append("AND DV.COD_V_TIPO_FACTURA = 'DEV' ");
+			sql.append("AND (DV.FEC_DT_DESCARGA_EXPORTADOR IS NOT NULL OR DV.FEC_DT_DESCARGA_IMPORTADOR IS NOT NULL) ");
+			sql.append("AND NOT EXISTS (");
+			sql.append("SELECT 1 ");
+			sql.append("FROM S_NOTIF_ALERTA_EXPED_DV NA ");
+			sql.append("WHERE NA.COD_N_DECLARACION_VALOR = DV.COD_N_DECLARACION_VALOR ");
+			sql.append("AND NA.NUM_ANYO = DV.NUM_ANYO ");
+			sql.append("AND NA.COD_N_VERSION = DV.COD_N_VERSION ");
+			sql.append("AND NA.COD_N_ALERTA = 54) ");
+			sql.append(") TABLA ");
+			sql.append("WHERE NUMERO = 1 ");
+			sql.append("AND EXISTS ( ");
+			sql.append("SELECT 1 ");
+			sql.append("FROM D_ALERTA ");
+			sql.append("WHERE MCA_ACTIVA = 'S' ");
+			sql.append("AND COD_N_ALERTA = 54 ");
+			sql.append(")");		
+			
+			final Query query = getEntityManager().createNativeQuery(sql.toString());
+			query.setParameter("valueDeclarationNumber", valueDeclarationNumber);
+			query.setParameter("valueDeclarationYear", valueDeclarationYear);
+			query.executeUpdate();
+		} catch (Exception e) {
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "generarAlertaFactura", e.getClass().getSimpleName(), e.getMessage());	
+			throw new ApplicationException(e.getMessage());
+		}
+	}
 	
+	
+	@Override	
 	@Transactional	
 	public void marcarDosierOK(String numFactura, String anyoFactura) {
 		try {
@@ -378,6 +429,41 @@ public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeVa
 			query.executeUpdate();
 		} catch (Exception e) {
 			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "marcarDosierOK", e.getClass().getSimpleName(), e.getMessage());	
+			throw new ApplicationException(e.getMessage());
+		}
+	}
+	
+	@Override	
+	@Transactional	
+	public void marcarFacturaOk(DeclaracionesDeValorPostJPA dvJpa) {
+		
+		
+		String valueDeclarationNumber = String.valueOf(dvJpa.getCodDeclaracionValor());
+		String valueDeclarationYear = String.valueOf(dvJpa.getAnyo());
+		String valueDeclarationVersion = String.valueOf(dvJpa.getVersion());
+		String userId = String.valueOf(dvJpa.getUsuarioEdit());
+		String notificacion = "53";
+
+		try {
+			StringBuilder sql = new StringBuilder();
+			
+			sql.append("INSERT INTO S_NOTIF_ALERTA_EXPED_DV (COD_N_ALERTA, COD_V_ELEMENTO, COD_V_EXPEDICION, FEC_D_ALBARAN, ");
+			sql.append("COD_N_DECLARACION_VALOR, NUM_ANYO, COD_N_VERSION, MCA_CORREO_ENVIADO, ");
+			sql.append("MCA_SMS_ENVIADO, MCA_RESUELTA, FEC_D_CREACION, COD_V_APLICACION, COD_V_USUARIO_CREACION) ");
+			sql.append("VALUES (?notificacion, ?valueDeclarationNumber, '-', SYSDATE, ");
+			sql.append("?valueDeclarationNumber, ?valueDeclarationYear, ?valueDeclarationNumber + 1, ");
+			sql.append(" 'N', 'N', 'N', SYSDATE, 'GESADUAN', ?userId) ");
+			
+			final Query query = getEntityManager().createNativeQuery(sql.toString());
+			query.setParameter("valueDeclarationNumber", valueDeclarationNumber);
+			query.setParameter("valueDeclarationYear", valueDeclarationYear);
+			query.setParameter("valueDeclarationVersion", valueDeclarationVersion);
+			query.setParameter("userId", userId);
+			query.setParameter("notificacion", notificacion);
+			
+			query.executeUpdate();
+		} catch (Exception e) {
+			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "marcarFacturaOk", e.getClass().getSimpleName(), e.getMessage());	
 			throw new ApplicationException(e.getMessage());
 		}
 	}	
@@ -424,6 +510,8 @@ public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeVa
 			throw new ApplicationException(e.getMessage());
 		}
 	}
+	
+	
 	
 	@Override
 	@Transactional	
