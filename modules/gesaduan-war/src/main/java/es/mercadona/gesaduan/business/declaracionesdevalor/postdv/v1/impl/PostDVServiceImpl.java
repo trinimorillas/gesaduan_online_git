@@ -13,12 +13,14 @@ import es.mercadona.fwk.core.exceptions.ApplicationException;
 import es.mercadona.gesaduan.business.declaracionesdevalor.postdv.v1.PostDVService;
 import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dao.declaracionesdevalor.postdv.v1.PostDeclaracionDeValorDAO;
-import es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull.DVInsertPKDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.InputPutVDDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull.DVInsertPKDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull.OutputPutVDDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull.VDItemDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalor.postdv.v1.restfull.VDLineDTO;
 import es.mercadona.gesaduan.jpa.declaracionesdevalor.postdv.v1.DeclaracionesDeValorPostJPA;
 import es.mercadona.gesaduan.jpa.declaracionesdevalor.postdv.v1.DeclaracionesDeValorPostPK;
+import es.mercadona.gesaduan.jpa.declaracionesdevalor.postdv.v1.ItemDeclaracionJPA;
 import es.mercadona.gesaduan.jpa.declaracionesdevalor.postdv.v1.LineaDeclaracionJPA;
 
 public class PostDVServiceImpl implements PostDVService {
@@ -38,6 +40,7 @@ public class PostDVServiceImpl implements PostDVService {
 		DeclaracionesDeValorPostJPA declaracionJPA = new DeclaracionesDeValorPostJPA();
 		DVInsertPKDTO pkResult = new DVInsertPKDTO();
 		List<LineaDeclaracionJPA> listaLineas = new ArrayList<LineaDeclaracionJPA>();
+		List<ItemDeclaracionJPA> listaItems = new ArrayList<>();
 
 		try {
 			// Cabecera
@@ -54,6 +57,11 @@ public class PostDVServiceImpl implements PostDVService {
 			} else {
 				declaracionJPA.setVersion(Integer.parseInt(input.getData().getHeader().getValueDeclarationData().getValueDeclarationIds().getValueDeclarationVersion()));
 			}
+			
+			if(input.getData().getHeader().getValueDeclarationData().getValueDeclarationType() != null) {
+				declaracionJPA.setCodTypeVD(input.getData().getHeader().getValueDeclarationData().getValueDeclarationType());
+			}
+			
 			if (input.getData().getHeader().getValueDeclarationData().getDispatchCode() != null) {
 				declaracionJPA.setExpedicion(input.getData().getHeader().getValueDeclarationData().getDispatchCode());
 			}
@@ -189,6 +197,65 @@ public class PostDVServiceImpl implements PostDVService {
 			}
 			
 			declaracionJPA.setLineasProductos(listaLineas);
+			
+			//Envases
+			
+			List<VDItemDTO> listadoItems = input.getData().getItemList();
+
+			if (listadoItems != null && !listadoItems.isEmpty()) {
+				for (VDItemDTO tmp : listadoItems) {
+					ItemDeclaracionJPA item = new ItemDeclaracionJPA();
+					
+					if (tmp.getItemId() != null) {
+						item.setCodigoEnvase(String.valueOf(tmp.getItemId()));
+					}					
+					if (tmp.getTaricId() != null) {
+						item.setCodigoTaric(tmp.getTaricId());
+					}
+					if (tmp.getItemName() != null) {
+						item.setTxtDenominacion(String.valueOf(tmp.getItemName()));
+					}
+					if (tmp.getQuantity() != null) {
+						item.setNumCantidad(tmp.getQuantity());
+					}
+					if (tmp.getQuantityUnit() != null) {
+						item.setCodUMCantidad(String.valueOf(tmp.getQuantityUnit()));
+					}
+					if (tmp.getLineNetWeight() != null) {
+						item.setPesoNeto(tmp.getLineNetWeight());
+					}
+					if (tmp.getLineNetWeightUnit() != null) {
+						item.setCodUMPesoNeto(String.valueOf(tmp.getLineNetWeightUnit()));
+					}
+					if (tmp.getLineGrossWeight() != null) {
+						item.setPesoBruto(tmp.getLineGrossWeight());
+					}
+					if (tmp.getLineGrossWeightUnit() != null) {
+						item.setCodUMPesoBruto(String.valueOf(tmp.getLineGrossWeightUnit()));
+					}
+					if (tmp.getUnitPrice() != null) {
+						item.setPrecioUnidad(tmp.getUnitPrice());
+					}
+					if (tmp.getUnitPriceCurrency() != null) {
+						item.setCodUMPrecio(String.valueOf(tmp.getUnitPriceCurrency()));
+					}
+					if (tmp.getTotalLineAmount() != null) {
+						item.setImporte(tmp.getTotalLineAmount());
+					}
+					if (tmp.getTotalLineAmountCurrency() != null) {
+						item.setCodUMImporte(String.valueOf(tmp.getTotalLineAmountCurrency()));
+					}					
+					
+					item.setFechaCreacion(new Date());
+					item.setCodAplicacion("GESADUAN");
+					item.setUsuarioCreacion(input.getMetadata().getUserId());
+
+					listaItems.add(item);
+				}
+			}
+			
+			declaracionJPA.setItems(listaItems);	
+			
 			
 			DeclaracionesDeValorPostPK dvpk = postDVCabeceraDAO.postCabecera(declaracionJPA);
 			

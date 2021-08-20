@@ -47,6 +47,13 @@ public class DeclaracionesDeValorPostJPA implements Serializable{
 			fetch = FetchType.LAZY			
 			)
 	private List<LineaDeclaracionJPA> lineasProductos;
+	
+	@OneToMany(
+			mappedBy = "codigoDv",
+			cascade = {CascadeType.ALL}, 
+			fetch = FetchType.LAZY			
+			)
+	private List<ItemDeclaracionJPA> items;
 			
 	@Column(name = "COD_V_EXPEDICION")
 	private String expedicion;
@@ -143,6 +150,18 @@ public class DeclaracionesDeValorPostJPA implements Serializable{
 	@Column (name = "FEC_DT_DESCARGA_IMPORTADOR")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date fechaDescargaImportador;
+	
+	@Column (name = "COD_V_TIPO_FACTURA")
+	private String codTypeVD;
+	
+	@Column (name = "COD_V_TIENDA")
+	private String codTienda;
+	
+	@Column (name = "NUM_DEVOLUCION")
+	private Integer numDevolucion;
+	
+	@Column (name = "NUM_ANYO_DEVOLUCION")
+	private Integer anyoDevolucion;
 
 	public Integer getCodDeclaracionValor() {
 		return codDeclaracionValor;
@@ -175,6 +194,14 @@ public class DeclaracionesDeValorPostJPA implements Serializable{
 
 	public void setLineasProductos(List<LineaDeclaracionJPA> lineasProductos) {
 		this.lineasProductos = lineasProductos;
+	}
+	
+	public List<ItemDeclaracionJPA> getItems() {
+		return items;
+	}
+
+	public void setItems(List<ItemDeclaracionJPA> items) {
+		this.items = items;
 	}
 
 	public String getExpedicion() {
@@ -456,5 +483,62 @@ public class DeclaracionesDeValorPostJPA implements Serializable{
 	public void setFechaDescargaImportador(Date fechaDescargaImportador) {
 		this.fechaDescargaImportador = fechaDescargaImportador;
 	}
+
+	/**
+	 * @return the codTypeVD
+	 */
+	public String getCodTypeVD() {
+		return codTypeVD;
+	}
+
+	/**
+	 * @param codTypeVD the codTypeVD to set
+	 */
+	public void setCodTypeVD(String codTypeVD) {
+		this.codTypeVD = codTypeVD;
+	}
+
+	/**
+	 * @return the codTienda
+	 */
+	public String getCodTienda() {
+		return codTienda;
+	}
+
+	/**
+	 * @param codTienda the codTienda to set
+	 */
+	public void setCodTienda(String codTienda) {
+		this.codTienda = codTienda;
+	}
+
+	/**
+	 * @return the numDevolucion
+	 */
+	public Integer getNumDevolucion() {
+		return numDevolucion;
+	}
+
+	/**
+	 * @param numDevolucion the numDevolucion to set
+	 */
+	public void setNumDevolucion(Integer numDevolucion) {
+		this.numDevolucion = numDevolucion;
+	}
+
+	/**
+	 * @return the anyoDevolucion
+	 */
+	public Integer getAnyoDevolucion() {
+		return anyoDevolucion;
+	}
+
+	/**
+	 * @param anyoDevolucion the anyoDevolucion to set
+	 */
+	public void setAnyoDevolucion(Integer anyoDevolucion) {
+		this.anyoDevolucion = anyoDevolucion;
+	}
+	
 
 }
