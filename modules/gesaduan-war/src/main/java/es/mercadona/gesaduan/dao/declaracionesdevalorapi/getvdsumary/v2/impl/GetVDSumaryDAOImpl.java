@@ -350,8 +350,13 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 						}
 					}				
 				}
-				
-			}				
+			}	
+			
+			if(data.getValueDeclarationType() != null) {
+				query1.append(" AND DV.COD_V_TIPO_FACTURA = ?valueDeclarationType ");
+				query2.append(" AND DV.COD_V_TIPO_FACTURA = ?valueDeclarationType ");
+				query3.append(" AND DV.COD_V_TIPO_FACTURA = ?valueDeclarationType ");
+			}
 			
 			String orden = data.getOrder();
 			if(orden != null) {
@@ -364,6 +369,11 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 					selectOrder.append(" ORDER BY NUM_ANYO ASC");
 				else if(orden.equals("-valueDeclarationYear"))
 					selectOrder.append(" ORDER BY NUM_ANYO DESC");
+				
+				else if(orden.equals("+valueDeclarationType"))
+					selectOrder.append(" ORDER BY COD_V_TIPO_FACTURA ASC");
+				else if(orden.equals("-valueDeclarationType"))
+					selectOrder.append(" ORDER BY COD_V_TIPO_FACTURA DESC");
 				
 				else if(orden.equals("+dossierNumber"))
 					selectOrder.append(" ORDER BY NUM_DOSIER ASC");
@@ -440,6 +450,12 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 				this.logger.error("### valueDeclarationYear: " + data.getValueDeclarationYear());				
 				query.setParameter("valueDeclarationYear", data.getValueDeclarationYear());
 				queryCount.setParameter("valueDeclarationYear", data.getValueDeclarationYear());				
+			}
+			
+			if(data.getValueDeclarationType() != null) {
+				this.logger.error("### valueDeclarationType: " + data.getValueDeclarationType());				
+				query.setParameter("valueDeclarationType", data.getValueDeclarationType());
+				queryCount.setParameter("valueDeclarationType", data.getValueDeclarationType());				
 			}
 			
 			if(data.getDossierNumber() != null) {
