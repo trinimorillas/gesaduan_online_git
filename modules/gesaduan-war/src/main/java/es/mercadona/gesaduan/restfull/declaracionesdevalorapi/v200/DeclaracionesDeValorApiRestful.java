@@ -34,6 +34,7 @@ import es.mercadona.fwk.restful.service.annotate.RESTful;
 import es.mercadona.gesaduan.business.declaracionesdevalorapi.getvddetail.v2.GetVDDetailService;
 import es.mercadona.gesaduan.business.declaracionesdevalorapi.getvddocument.v1.GetVDDocumentService;
 import es.mercadona.gesaduan.business.declaracionesdevalorapi.getvdsumary.v2.GetVDSumaryService;
+import es.mercadona.gesaduan.business.declaracionesdevalorapi.putreturns.v1.PutReturnsService;
 import es.mercadona.gesaduan.business.declaracionesdevalorapi.putvdconfirmdownload.v1.PutVDConfirmDownloadService;
 import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dto.common.error.ErrorDTO;
@@ -44,6 +45,8 @@ import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddocument.v1.InputV
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddocument.v1.OutputDeclaracionesDeValorDocCabDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v2.InputVDSumaryDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v2.restful.OutputVDSumaryDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.putreturns.v1.InputPutReturnsDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.putreturns.v1.restfull.OutputPutReturnsDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.putvdconfirmdownload.v1.InputDataDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.putvdconfirmdownload.v1.restfull.OutputPutVDConfirmDownloadDTO;
 import es.mercadona.gesaduan.exception.EnumGesaduanException;
@@ -67,6 +70,8 @@ public class DeclaracionesDeValorApiRestful {
 	private GetVDSumaryService getVDSumaryService;
 	@Inject
 	private PutVDConfirmDownloadService putFacturaConfirmaDescargaService;
+	@Inject
+	private PutReturnsService putReturnsService;
 
 	private static final String MIMETYPE_PDF = "application/pdf";
 	private static final String MIMETYPE_CSV = "text/csv";
@@ -329,9 +334,55 @@ public class DeclaracionesDeValorApiRestful {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
 		}
 	}
+	
+	@PUT
+	@Path("value-declarations/returns")
+	@Consumes(MediaType.WILDCARD)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response putReturns(@NotNull InputPutReturnsDTO input) {
+		OutputPutReturnsDTO response = null;
+
+		try {
+			getParameterNullLong(input.getData().getHeader().getReturnIds().getReturnNumber());
+			getParameterNullInteger(input.getData().getHeader().getReturnIds().getReturnYear());
+			getParameterNullString(input.getData().getHeader().getReturnDate());
+			getParameterNullString(input.getData().getHeader().getSource().getId());
+			getParameterNullString(input.getData().getHeader().getSource().getName());
+			getParameterNullString(input.getData().getHeader().getSource().getRegionId());
+			getParameterNullInteger(input.getData().getHeader().getTarget().getId());
+			getParameterNullString(input.getData().getHeader().getTarget().getName());
+			
+			if (input.getData().getItemList() == null || input.getData().getItemList().isEmpty()) {
+				throw new GesaduanException(EnumGesaduanException.PARAMETROS_OBLIGATORIOS);
+			} else {
+				for (int i = 0; i < input.getData().getItemList().size(); i++) {
+					getParameterNullString(input.getData().getItemList().get(i).getItemId());
+					getParameterNullString(input.getData().getItemList().get(i).getItemTypeId());
+					getParameterNullString(input.getData().getItemList().get(i).getItemName());
+					getParameterNullInteger(input.getData().getItemList().get(i).getPackageQuantity());
+					getParameterNullDouble(input.getData().getItemList().get(i).getQuantity());
+					getParameterNullString(input.getData().getItemList().get(i).getQuantityUnit());
+					getParameterNullDouble(input.getData().getItemList().get(i).getNetWeight());
+					getParameterNullString(input.getData().getItemList().get(i).getNetWeightUnit());
+					getParameterNullDouble(input.getData().getItemList().get(i).getGrossWeight());
+					getParameterNullString(input.getData().getItemList().get(i).getGrossWeightUnit());
+					getParameterNullDouble(input.getData().getItemList().get(i).getUnitPrice());
+					getParameterNullString(input.getData().getItemList().get(i).getUnitPriceCurrency());
+					getParameterNullDouble(input.getData().getItemList().get(i).getTotalAmount());
+					getParameterNullString(input.getData().getItemList().get(i).getTotalAmountCurrency());
+				}
+			}
+
+			response = putReturnsService.putReturns(input);
+		} catch (Exception e) {
+			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE, "putReturns", e.getClass().getSimpleName(), e.getMessage());	
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
+		}
+		
+		return Response.ok(response, MediaType.APPLICATION_JSON).build();
+	}
 
 	private OutputResponseErrorDTO getError(Exception ex) {
-
 		OutputResponseErrorDTO error = new OutputResponseErrorDTO();
 		ErrorDTO errorDesc = new ErrorDTO();
 
@@ -344,7 +395,30 @@ public class DeclaracionesDeValorApiRestful {
 		error.setError(errorDesc);
 
 		return error;
-
+	}
+	
+	private void getParameterNullString (String parameter) {
+		if (parameter == null) {
+			throw new GesaduanException(EnumGesaduanException.PARAMETROS_OBLIGATORIOS);
+		}
+	}
+	
+	private void getParameterNullInteger (Integer parameter) {
+		if (parameter == null) {
+			throw new GesaduanException(EnumGesaduanException.PARAMETROS_OBLIGATORIOS);
+		}
+	}
+	
+	private void getParameterNullDouble (Double parameter) {
+		if (parameter == null) {
+			throw new GesaduanException(EnumGesaduanException.PARAMETROS_OBLIGATORIOS);
+		}
+	}
+	
+	private void getParameterNullLong (Long parameter) {
+		if (parameter == null) {
+			throw new GesaduanException(EnumGesaduanException.PARAMETROS_OBLIGATORIOS);
+		}
 	}
 
 }
