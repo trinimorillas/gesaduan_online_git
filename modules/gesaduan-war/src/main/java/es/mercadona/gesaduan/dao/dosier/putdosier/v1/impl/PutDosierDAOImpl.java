@@ -40,7 +40,7 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 	
 	@Transactional
 	@Override
-	public void crearDosier(DosierJPA dosierJPA) {		
+	public void crearDosier(DosierJPA dosierJPA) {
 		try {		
 			String gesaduan = "GESADUAN";
 			Date fechaHoy = new Date();
@@ -59,17 +59,13 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 	@Transactional
 	@Override
 	public void crearRelacionDosierEquipo(DosierEquipoJPA dosierEquipoJPA) {
-		
 		try {
-
 			String gesaduan = "GESADUAN";
 			Date fechaHoy = new Date();
 			dosierEquipoJPA.setFechaCreacion(fechaHoy);
 			dosierEquipoJPA.setCodigoAplicacion(gesaduan);
 			entityM.persist(dosierEquipoJPA);
-			entityM.flush();			
-			
-			
+			entityM.flush();
 		} catch(Exception ex) {
 			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "crearRelacionDosierEquipo", ex.getClass().getSimpleName(), ex.getMessage());	
 			throw new ApplicationException(ex.getMessage());			
@@ -243,9 +239,9 @@ public class PutDosierDAOImpl extends DaoBaseImpl<Long, DosierJPA> implements Pu
 			StringBuilder sql = new StringBuilder();
 		
 			sql.append("INSERT INTO O_DECLARACION_VALOR_CAB (COD_N_DECLARACION_VALOR,NUM_ANYO,COD_N_VERSION,COD_N_PROVINCIA_CARGA,TXT_CONDICIONES_ENTREGA, ");
-			sql.append("MCA_FACTURA_DV,MCA_ULTIMA_VIGENTE,MCA_CARGA_AUTOMATICA,MCA_DV_CORRECTA,MCA_ENVIO,MCA_DESCARGA,FEC_DT_CREACION,FEC_D_CREACION, ");
+			sql.append("MCA_FACTURA_DV,MCA_ULTIMA_VIGENTE,MCA_CARGA_AUTOMATICA,MCA_DV_CORRECTA,MCA_ENVIO,MCA_DESCARGA,COD_V_TIPO_FACTURA,FEC_DT_CREACION,FEC_D_CREACION, ");
 			sql.append("COD_V_APLICACION,COD_V_USUARIO_CREACION,COD_N_BLOQUE_LOGISTICO,COD_N_PUERTO_DESEMBARQUE,COD_N_CATEGORIA,FEC_DT_EXPEDICION,NUM_DOSIER,NUM_ANYO_DOSIER) ");
-			sql.append("SELECT DECLARACION_VALOR_SEQ.NEXTVAL,NUM_ANYO,1,COD_N_PROVINCIA,'EXW','F','S','S','N','N','N',SYSDATE,SYSDATE,'GESADUAN', ?codigoUsuario, ");
+			sql.append("SELECT DECLARACION_VALOR_SEQ.NEXTVAL,NUM_ANYO,1,COD_N_PROVINCIA,'EXW','F','S','S','N','N','N','PED',SYSDATE,SYSDATE,'GESADUAN', ?codigoUsuario, ");
 			sql.append("COD_N_BLOQUE_LOGISTICO,COD_N_PUERTO_DESEMBARQUE,COD_N_CATEGORIA,FEC_DT_EXPEDICION,NUM_DOSIER,NUM_ANYO ");
 			sql.append("FROM ");
 			sql.append("(SELECT DISTINCT BL.COD_N_PROVINCIA,PE.COD_N_BLOQUE_ORIGEN AS COD_N_BLOQUE_LOGISTICO, PE.COD_N_PUERTO_DESEMBARQUE, ");
