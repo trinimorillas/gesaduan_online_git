@@ -501,7 +501,8 @@ public class GetVDDetailDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 			sqlItems.append("  DVE.NUM_PRECIO_UNIDAD, "); 
 			sqlItems.append("  DVE.COD_V_UM_PRECIO, "); 
 			sqlItems.append("  DVE.NUM_IMPORTE, "); 
-			sqlItems.append("  DVE.COD_V_UM_IMPORTE ");
+			sqlItems.append("  DVE.COD_V_UM_IMPORTE, ");
+			sqlItems.append("  DVE.NUM_BULTOS ");
 			sqlItems.append("FROM O_DECLARACION_VALOR_ENV DVE ");
 			sqlItems.append("WHERE  ");
 			sqlItems.append("  DVE.COD_N_DECLARACION_VALOR = ?valueDeclarationNumber AND  "); 
@@ -559,6 +560,10 @@ public class GetVDDetailDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 					if (tmp[12] != null) {
 						item.setTotalLineAmountCurrency(String.valueOf(tmp[12]));
 					}
+					if (tmp[13] != null) {
+						item.setPackageQuantity(Long.parseLong(String.valueOf(tmp[13])));
+					}
+					
 					if (item.getTaricId() == null) {
 						StringBuilder sqlTaric = new StringBuilder();
 						sqlTaric.append("SELECT TE.COD_N_TARIC FROM S_TARIC_ENVASE TE WHERE TE.COD_V_ENVASE = ?itemId ");

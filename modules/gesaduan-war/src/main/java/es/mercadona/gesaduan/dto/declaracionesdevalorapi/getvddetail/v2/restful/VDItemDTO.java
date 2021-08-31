@@ -10,6 +10,7 @@ public class VDItemDTO extends AbstractDTO {
 	private Long taricId;
 	private Long actualTaricId;
 	private String itemName;
+	private Long packageQuantity;
 	private Long quantity;
 	private String quantityUnit;
 	private Double lineNetWeight;
@@ -199,6 +200,12 @@ public class VDItemDTO extends AbstractDTO {
 	 */
 	public void setTotalLineAmountCurrency(String totalLineAmountCurrency) {
 		this.totalLineAmountCurrency = totalLineAmountCurrency;
+	}
+	public Long getPackageQuantity() {
+		return packageQuantity;
+	}
+	public void setPackageQuantity(Long packageQuantity) {
+		this.packageQuantity = packageQuantity;
 	}
 	
 	
