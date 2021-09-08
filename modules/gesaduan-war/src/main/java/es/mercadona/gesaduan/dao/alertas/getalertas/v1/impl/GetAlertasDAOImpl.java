@@ -185,7 +185,7 @@ public class GetAlertasDAOImpl extends BaseDAO<AlertasJPA> implements GetAlertas
 				where += "AND UPPER(MCA_RESUELTA) LIKE UPPER(?estado) ";
 			}
 
-			where += "AND COD_V_TIPO_ELEMENTO NOT IN ('DOSIER', 'DV') ";
+			where += "AND COD_V_TIPO_ELEMENTO NOT IN ('DOSIER', 'DV', 'DEVOL') ";
 
 			if (orden.equals("-fecha"))
 				order += "ORDER BY FEC_D_CREACION DESC";
