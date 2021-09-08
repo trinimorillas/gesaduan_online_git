@@ -25,7 +25,8 @@ public enum EnumGesaduanException {
 	NUM_PEDIDO_DISTINTO("El número de pedido del Excel no coincide con el número de pedido de la pestaña de resultados", null, "GES-00019", EnumStringException.EXPEDICION.getDescripcion(), EnumStringException.CARGAR_EXPEDICION.getDescripcion()),
 	VERSION_DISTINTA_EXCEL("La versión del Excel no coincide con la versión indicada en la base de datos", null, "GES-00020", EnumStringException.EXPEDICION.getDescripcion(), EnumStringException.CARGAR_EXPEDICION.getDescripcion()),
 	CARGA_CONTENEDOR_FACTURADO("El equipo origen tiene alguna carga en un contenedor ya facturado, no es posible moverla en este estado", null, "GES-00021", EnumStringException.EQUIPO_TRANSPORTE.getDescripcion(), EnumStringException.MOVER_CARGAS.getDescripcion()),
-	PUERTO_MCA_PREFERENTE_NULO("Se debe informar el parámetro 'mcaPreferente'", null, "GES-00022", EnumStringException.PROVEEDORES.getDescripcion(), EnumStringException.PUERTO_AGENCIA.getDescripcion());
+	PUERTO_MCA_PREFERENTE_NULO("Se debe informar el parámetro 'mcaPreferente'", null, "GES-00022", EnumStringException.PROVEEDORES.getDescripcion(), EnumStringException.PUERTO_AGENCIA.getDescripcion()),
+	DV_INCORRECTA("La DV no es correcta", null, "GES-00023", EnumStringException.DECLARACION_VALOR.getDescripcion(), EnumStringException.DECLARACION_VALOR.getDescripcion());
 
     private String descripcion;
     private String descripcionSingular;    

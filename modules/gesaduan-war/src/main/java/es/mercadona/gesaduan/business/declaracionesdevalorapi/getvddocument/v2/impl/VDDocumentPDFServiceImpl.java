@@ -1,5 +1,4 @@
-package es.mercadona.gesaduan.business.declaracionesdevalorapi.getvddocument.v1.impl;
-
+package es.mercadona.gesaduan.business.declaracionesdevalorapi.getvddocument.v2.impl;
 
 import java.io.File;
 import java.util.HashMap;
@@ -21,16 +20,16 @@ import es.mercadona.fwk.reporting.DataRecordType;
 import es.mercadona.fwk.reporting.Report;
 import es.mercadona.fwk.reporting.ReportTemplate;
 import es.mercadona.fwk.reporting.ReportingService;
-import es.mercadona.gesaduan.business.declaracionesdevalorapi.getvddocument.v1.VDDocumentPDFService;
+import es.mercadona.gesaduan.business.declaracionesdevalorapi.getvddocument.v2.VDDocumentPDFService;
 import es.mercadona.gesaduan.common.Constantes;
-import es.mercadona.gesaduan.dao.declaracionesdevalorapi.getvddocument.v1.GetVDDocumentApiDAO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddocument.v1.InputValueDeclarationDocumentDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddocument.v1.OutputDeclaracionesDeValorDocCabDTO;
+import es.mercadona.gesaduan.dao.declaracionesdevalorapi.getvddocument.v2.GetVDDocApiDAO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddocument.v2.InputValueDeclarationDocumentDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddocument.v2.OutputDeclaracionesDeValorDocCabDTO;
 
 public class VDDocumentPDFServiceImpl implements VDDocumentPDFService {
 
 	@Inject
-	private GetVDDocumentApiDAO getDVDocumentoOnlineDAO;
+	private GetVDDocApiDAO getDVDocumentoOnlineDAO;
 	
 	@Inject
 	private FileSystemService fileSystemService;
@@ -45,51 +44,42 @@ public class VDDocumentPDFServiceImpl implements VDDocumentPDFService {
 
 	@Override
 	public OutputDeclaracionesDeValorDocCabDTO preparaDocumentoPDF(InputValueDeclarationDocumentDTO input) {
-
 		// Obtiene los datos del informe (estructura del informe)
 		OutputDeclaracionesDeValorDocCabDTO outDVDocumentoDTO = getDVDocumentoOnlineDAO.getDatosDocumento(input);		
 				
-		// prepara el informe
+		// Prepara el informe
 		outDVDocumentoDTO.setFicheroPDF(preparaDocumento(outDVDocumentoDTO));
 		
-		// devuelve el objeto con el fichero del informe en bytes 		
+		// Devuelve el objeto con el fichero del informe en bytes 		
 		return outDVDocumentoDTO;
-
 	}
 	
 	private byte[] preparaDocumento(OutputDeclaracionesDeValorDocCabDTO outDVDocumentoDTO) {
-		
-		// prepara el informe
-		String documentoStr = "";
+		// Prepara el informe
 		byte[] ficheroByte =  null;
 		
 		try {
-		
 		    Locale locale = new Locale("es_ES");
 	
 		    // Prepara report
             // --------------------------------------
 
-		    final Report report = this.reportingService.newReport("InformeDeclaracionValor.jrxml", locale);	
-		    
-		    final Map<String, Object> mapParams = new HashMap<>();	    
+		    final Report report = this.reportingService.newReport("InformeDeclaracionValor.jrxml", locale);		    
+		    final Map<String, Object> mapParams = new HashMap<>();
 		    
 		    // Prepara textos traducciones
 		    preparaTextosReport(mapParams);
 		    
 		    // Prepara parametros de cabecera
 		    preparaParametrosReport(outDVDocumentoDTO, mapParams);
-	
 		    report.setParameters(mapParams);
-		    
             report.bindData(outDVDocumentoDTO.getLineas(),DataRecordType.Bean);
             		    
 		    // Prepara Subreport 
             // --------------------------------------
                         
 		    ReportTemplate subreportTemplate = null;
-	        switch(outDVDocumentoDTO.getTipoInforme())
-	        {
+	        switch (outDVDocumentoDTO.getTipoInforme()) {
 	            case "BASE":
 	            	subreportTemplate = this.reportingService.getReportTemplate("InformeDeclaracionValorLinBase.jrxml");
 	                break;
@@ -106,9 +96,8 @@ public class VDDocumentPDFServiceImpl implements VDDocumentPDFService {
 		    final Map<String, Object> subreportMapParams = new HashMap<>();
 		    
 		    // Prepara textos traducciones
-		    preparaTextosSubReport(subreportMapParams);		    
-	        	        
-		    report.addSubReport("SUBREPORT", subreportTemplate ,subreportMapParams,outDVDocumentoDTO.getLineas(), DataRecordType.Bean);
+		    preparaTextosSubReport(subreportMapParams);
+		    report.addSubReport("SUBREPORT", subreportTemplate, subreportMapParams, outDVDocumentoDTO.getLineas(), DataRecordType.Bean);
 			
 		    // Prepra un fichero temporal para genera el PDF
 		    final CustomFileAttributes tempFileInfo = new CustomFileAttributes();
@@ -122,9 +111,7 @@ public class VDDocumentPDFServiceImpl implements VDDocumentPDFService {
 		    
 		    // Obtiene un fichero 
 		    File file = fsi.getFile();
-			
 		    ficheroByte = FileUtils.readFileToByteArray(file);
-	    
 		} catch (Exception e) {
 			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE, "preparaDocumento", e.getClass().getSimpleName(), e.getMessage());	
 			throw new ApplicationException(e.getMessage());			
@@ -134,12 +121,12 @@ public class VDDocumentPDFServiceImpl implements VDDocumentPDFService {
 	}
 
 	private void preparaParametrosReport(OutputDeclaracionesDeValorDocCabDTO outDVDocumentoDTO,final Map<String, Object> mapParams) {
-		
 		mapParams.put("codigoDeclaracion", outDVDocumentoDTO.getCodigoDeclaracion());
 		mapParams.put("anyoDeclaracion", outDVDocumentoDTO.getAnyoDeclaracion());
 		mapParams.put("fechaDeclaracion", outDVDocumentoDTO.getFechaDeclaracion());
 		mapParams.put("numDosier", outDVDocumentoDTO.getNumDosier());
-		mapParams.put("anyoDosier", outDVDocumentoDTO.getAnyoDosier());		
+		mapParams.put("anyoDosier", outDVDocumentoDTO.getAnyoDosier());
+		mapParams.put("tipoFactura", outDVDocumentoDTO.getTipoFactura());
 		mapParams.put("fechaDosier", outDVDocumentoDTO.getFechaDosier());
 		mapParams.put("numPedido", outDVDocumentoDTO.getNumPedido());		
 		mapParams.put("tipoOrigen", outDVDocumentoDTO.getTipoOrigen());		
@@ -160,12 +147,10 @@ public class VDDocumentPDFServiceImpl implements VDDocumentPDFService {
 		mapParams.put("importadorNIF", outDVDocumentoDTO.getImportadorNIF());
 		mapParams.put("txtInfoREA", outDVDocumentoDTO.getTxtInfoREA());
 		mapParams.put("txtInfoLPC", outDVDocumentoDTO.getTxtInfoLPC());
-		mapParams.put("txtInfoGeneral", outDVDocumentoDTO.getTxtInfoGeneral());				
-		
+		mapParams.put("txtInfoGeneral", outDVDocumentoDTO.getTxtInfoGeneral());
 	}
 
 	private void preparaTextosReport(final Map<String, Object> mapParams) {
-		
 		mapParams.put("report.title","Titulo Reporte");
 		mapParams.put("report.subtitle","Informe.");
 
@@ -175,8 +160,9 @@ public class VDDocumentPDFServiceImpl implements VDDocumentPDFService {
 		mapParams.put("header.fechaDeclaracion","FECHA FACTURA");
 		mapParams.put("header.dosier","DOSIER - Nº");
 		mapParams.put("header.fechaDosier","FECHA DOSIER");
-		mapParams.put("header.pedido","Nº Pedido");		
+		mapParams.put("header.pedido","Nº Pedido");
 		mapParams.put("header.proveedor","Proveedor");
+		mapParams.put("header.tienda","Tienda");
 		mapParams.put("header.bloqueLogistico","Bloque Logístico");		
 		mapParams.put("header.provinciaCarga","Provincia de carga (Origen)");
 		mapParams.put("header.condicionesEntrega","Condiciones de entrega");
@@ -187,14 +173,12 @@ public class VDDocumentPDFServiceImpl implements VDDocumentPDFService {
 		mapParams.put("label.capacidad","CAP");
 		mapParams.put("label.nombre","Nombre");
 		mapParams.put("label.planta","P");
-		mapParams.put("report.footer.page","Pagina {0} de"); 		
-		
+		mapParams.put("report.footer.page","Pagina {0} de");
 	}	
 	
 	private void preparaTextosSubReport(final Map<String, Object> mapParams) {
-		
 		mapParams.put("column.codigo","Código");
-		mapParams.put("column.producto","Producto");
+		mapParams.put("column.producto","Nombre");
 		mapParams.put("column.marca","Marca");
 		mapParams.put("column.lpc","LpC");
 		mapParams.put("column.bultos","Bultos");
@@ -202,6 +186,7 @@ public class VDDocumentPDFServiceImpl implements VDDocumentPDFService {
 		mapParams.put("column.pesoNeto","P.Neto");
 		mapParams.put("column.pesoBruto","P.Bruto");
 		mapParams.put("column.cantidad","Cantidad");
+		mapParams.put("column.tipoItem","Tipo Item");
 		mapParams.put("column.volumen","Vol.");
 		mapParams.put("column.alcohol","Alc.");
 		mapParams.put("column.plato","Plato");
@@ -213,7 +198,6 @@ public class VDDocumentPDFServiceImpl implements VDDocumentPDFService {
 		mapParams.put("column.euro","(eur)");
 		mapParams.put("column.codigoREA","Cód. REA");
 		mapParams.put("column.paisOrigen","País de origen");
-		
 	}			
 
 }
