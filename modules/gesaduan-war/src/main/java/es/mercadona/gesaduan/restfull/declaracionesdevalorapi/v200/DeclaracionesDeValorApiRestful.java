@@ -32,23 +32,23 @@ import es.mercadona.fwk.core.io.exceptions.IllegalResourceNameException;
 import es.mercadona.fwk.core.io.exceptions.ResourceNotFoundException;
 import es.mercadona.fwk.restful.service.annotate.RESTful;
 import es.mercadona.gesaduan.business.declaracionesdevalorapi.getvddetail.v2.GetVDDetailService;
-import es.mercadona.gesaduan.business.declaracionesdevalorapi.getvddocument.v1.GetVDDocumentService;
+import es.mercadona.gesaduan.business.declaracionesdevalorapi.getvddocument.v2.GetVDDocumentService;
 import es.mercadona.gesaduan.business.declaracionesdevalorapi.getvdsumary.v2.GetVDSumaryService;
-import es.mercadona.gesaduan.business.declaracionesdevalorapi.putreturns.v1.PutReturnsService;
-import es.mercadona.gesaduan.business.declaracionesdevalorapi.putvdconfirmdownload.v1.PutVDConfirmDownloadService;
+import es.mercadona.gesaduan.business.declaracionesdevalorapi.putreturns.v2.PutReturnsService;
+import es.mercadona.gesaduan.business.declaracionesdevalorapi.putvdconfirmdownload.v2.PutDVConfirmDownloadService;
 import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dto.common.error.ErrorDTO;
 import es.mercadona.gesaduan.dto.common.error.OutputResponseErrorDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.InputVDDetailDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restful.OutputVDDetailDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddocument.v1.InputValueDeclarationDocumentDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddocument.v1.OutputDeclaracionesDeValorDocCabDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddocument.v2.InputValueDeclarationDocumentDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddocument.v2.OutputDeclaracionesDeValorDocCabDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v2.InputVDSumaryDTO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v2.restful.OutputVDSumaryDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.putreturns.v1.InputPutReturnsDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.putreturns.v1.restfull.OutputPutReturnsDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.putvdconfirmdownload.v1.InputDataDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.putvdconfirmdownload.v1.restfull.OutputPutVDConfirmDownloadDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.putreturns.v2.InputPutReturnsDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.putreturns.v2.restfull.OutputPutReturnsDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.putvdconfirmdownload.v2.InputDataDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.putvdconfirmdownload.v2.restfull.OutputPutVDConfirmDownloadDTO;
 import es.mercadona.gesaduan.exception.EnumGesaduanException;
 import es.mercadona.gesaduan.exception.GesaduanException;
 
@@ -69,7 +69,7 @@ public class DeclaracionesDeValorApiRestful {
 	@Inject
 	private GetVDSumaryService getVDSumaryService;
 	@Inject
-	private PutVDConfirmDownloadService putFacturaConfirmaDescargaService;
+	private PutDVConfirmDownloadService putFacturaConfirmaDescargaService;
 	@Inject
 	private PutReturnsService putReturnsService;
 
@@ -213,12 +213,10 @@ public class DeclaracionesDeValorApiRestful {
 			inputVDDocumentDTO.setDocumentType(documentType);
 
 			OutputDeclaracionesDeValorDocCabDTO outputDVDocumentoDTO = null;
-
 			outputDVDocumentoDTO = getDocumentoDVService.preparaDocumento(inputVDDocumentDTO);
 
-			// devuelve el fichero y controla los posibles errores
+			// Devuelve el fichero y controla los posibles errores
 			if (outputDVDocumentoDTO != null) {
-
 				byte[] file = null;
 
 				if (documentType.equalsIgnoreCase("pdf")) {
@@ -230,56 +228,44 @@ public class DeclaracionesDeValorApiRestful {
 				}
 
 				if (file != null) {
-
 					Resource resource = resourceService.createResource(file, fileBaseName, fileExtension);
-
 					rb = Response.ok(resource.getInputStream(), mimeType);
 					rb.header("Content-Disposition", "attachment; filename=" + fileBaseName + fileExtension);
 					rb.header("file-md5", resource.getMd5());
-
 				} else {
 					OutputResponseErrorDTO error = new OutputResponseErrorDTO();
 					ErrorDTO errorDesc = new ErrorDTO();
 					List<String> partsError = new ArrayList<>();
 
 					partsError.add("Recurso no encontrado");
-
 					errorDesc.setCodigo("400");
-					errorDesc.setDescripcion(
-							"Formato de envío inválido o error funcional en: ".concat(this.getClass().getSimpleName()));
+					errorDesc.setDescripcion("Formato de envío inválido o error funcional en: ".concat(this.getClass().getSimpleName()));
 					errorDesc.setDetalles(partsError);
-
 					error.setError(errorDesc);
 
 					return Response.status(Status.BAD_REQUEST).entity(error).build();
 				}
-
 			} else {
-
 				OutputResponseErrorDTO error = new OutputResponseErrorDTO();
 				ErrorDTO errorDesc = new ErrorDTO();
 				List<String> partsError = new ArrayList<>();
 
 				partsError.add("Recurso no encontrado");
-
 				errorDesc.setCodigo("400");
-				errorDesc.setDescripcion(
-						"Formato de envío inválido o error funcional en: ".concat(this.getClass().getSimpleName()));
+				errorDesc.setDescripcion("Formato de envío inválido o error funcional en: ".concat(this.getClass().getSimpleName()));
 				errorDesc.setDetalles(partsError);
-
 				error.setError(errorDesc);
 
 				return Response.status(Status.BAD_REQUEST).entity(error).build();
 			}
-
 		} catch (ResourceNotFoundException e) {
-			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE,"getDeclaracionesDeValorDocumento-1",e.getClass().getSimpleName(),e.getMessage());			
+			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE, "getDeclaracionesDeValorDocumento-1", e.getClass().getSimpleName(), e.getMessage());			
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
 		} catch (IllegalResourceNameException e) {
-			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE,"getDeclaracionesDeValorDocumento-2",e.getClass().getSimpleName(),e.getMessage());			
+			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE, "getDeclaracionesDeValorDocumento-2", e.getClass().getSimpleName(), e.getMessage());			
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
 		} catch (Exception e) {
-			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE,"getDeclaracionesDeValorDocumento-3",e.getClass().getSimpleName(),e.getMessage());			
+			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE, "getDeclaracionesDeValorDocumento-3", e.getClass().getSimpleName(), e.getMessage());			
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(getError(e)).build();
 		}
 

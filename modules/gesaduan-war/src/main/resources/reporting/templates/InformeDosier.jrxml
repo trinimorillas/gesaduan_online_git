@@ -11,72 +11,65 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<!-- parametros de textos -->
-	<parameter name="report.title" class="java.lang.String"/>	
-	<parameter name="report.subtitle" class="java.lang.String"/>	
-	<parameter name="header.declaracionValor" class="java.lang.String"/>	
-	<parameter name="header.declaracionValor2" class="java.lang.String"/>	
-	<parameter name="header.fechaDV" class="java.lang.String"/>	
+	<parameter name="report.title" class="java.lang.String"/>
+	<parameter name="report.subtitle" class="java.lang.String"/>
+	<parameter name="header.declaracionValor" class="java.lang.String"/>
+	<parameter name="header.declaracionValor2" class="java.lang.String"/>
+	<parameter name="header.fechaDV" class="java.lang.String"/>
 	<parameter name="header.fechaDeclaracion" class="java.lang.String"/>
-	<parameter name="header.dosier" class="java.lang.String"/>	
-	<parameter name="header.fechaDosier" class="java.lang.String"/>	
-	<parameter name="header.pedido" class="java.lang.String"/>			
-	<parameter name="header.proveedor" class="java.lang.String"/>	
-	<parameter name="header.bloqueLogistico" class="java.lang.String"/>			
-	<parameter name="header.provinciaCarga" class="java.lang.String"/>	
-	<parameter name="header.condicionesEntrega" class="java.lang.String"/>	
-	<parameter name="header.exportador" class="java.lang.String"/>	
-	<parameter name="header.destinatario" class="java.lang.String"/>	
-	<parameter name="header.nif" class="java.lang.String"/>	
-	<parameter name="label.capacidad" class="java.lang.String"/>	
-	<parameter name="label.nombre" class="java.lang.String"/>	
-	<parameter name="label.planta" class="java.lang.String"/>	
-	<parameter name="report.footer.page" class="java.lang.String"/>	
-	<!-- parametros subreport -->		
+	<parameter name="header.dosier" class="java.lang.String"/>
+	<parameter name="header.fechaDosier" class="java.lang.String"/>
+	<parameter name="header.pedido" class="java.lang.String"/>
+	<parameter name="header.tienda" class="java.lang.String"/>
+	<parameter name="header.proveedor" class="java.lang.String"/>
+	<parameter name="header.bloqueLogistico" class="java.lang.String"/>
+	<parameter name="header.provinciaCarga" class="java.lang.String"/>
+	<parameter name="header.condicionesEntrega" class="java.lang.String"/>
+	<parameter name="header.exportador" class="java.lang.String"/>
+	<parameter name="header.destinatario" class="java.lang.String"/>
+	<parameter name="header.nif" class="java.lang.String"/>
+	<parameter name="label.capacidad" class="java.lang.String"/>
+	<parameter name="label.nombre" class="java.lang.String"/>
+	<parameter name="label.planta" class="java.lang.String"/>
+	<parameter name="report.footer.page" class="java.lang.String"/>
 	<parameter name="SUBREPORT_DS" class="net.sf.jasperreports.engine.JRDataSource"/>
 	<parameter name="SUBREPORT_TMPL" class="net.sf.jasperreports.engine.JasperReport"/>
-	<parameter name="SUBREPORT_PARAM" class="java.util.HashMap"/>	
-	<!-- parametros de cabecera -->	
-	<field name="codigoDeclaracion" class="java.lang.String"/>	
-	<field name="anyoDeclaracion" class="java.lang.String"/>	
+	<parameter name="SUBREPORT_PARAM" class="java.util.HashMap"/>
+	<field name="codigoDeclaracion" class="java.lang.String"/>
+	<field name="anyoDeclaracion" class="java.lang.String"/>
 	<field name="fechaDeclaracion" class="java.lang.String"/>
-	<field name="numDosier" class="java.lang.String"/>	
-	<field name="anyoDosier" class="java.lang.String"/>	
+	<field name="numDosier" class="java.lang.String"/>
+	<field name="anyoDosier" class="java.lang.String"/>
 	<field name="fechaDosier" class="java.lang.String"/>
-	<field name="numPedido" class="java.lang.String"/>		
-	<field name="tipoOrigen" class="java.lang.String"/>		
-	<field name="nombreOrigen" class="java.lang.String"/>	
-	<field name="provinciaOrigen" class="java.lang.String"/>	
-	<field name="condicionesEntrega" class="java.lang.String"/>	
-	<field name="exportadorNombre" class="java.lang.String"/>	
-	<field name="exportadorDireccion" class="java.lang.String"/>	
-	<field name="exportadorCP" class="java.lang.String"/>	
-	<field name="exportadorPoblacion" class="java.lang.String"/>	
-	<field name="exportadorProvincia" class="java.lang.String"/>	
-	<field name="exportadorNIF" class="java.lang.String"/>	
-	<field name="importadorNombre" class="java.lang.String"/>	
-	<field name="importadorDireccion" class="java.lang.String"/>	
-	<field name="importadorCP" class="java.lang.String"/>	
-	<field name="importadorPoblacion" class="java.lang.String"/>	
-	<field name="importadorProvincia" class="java.lang.String"/>	
-	<field name="importadorNIF" class="java.lang.String"/>	
-	<field name="txtInfoREA" class="java.lang.String"/>	
-	<field name="txtInfoLPC" class="java.lang.String"/>	
+	<field name="numPedido" class="java.lang.String"/>
+	<field name="tipoOrigen" class="java.lang.String"/>
+	<field name="tipoFactura" class="java.lang.String"/>
+	<field name="nombreOrigen" class="java.lang.String"/>
+	<field name="provinciaOrigen" class="java.lang.String"/>
+	<field name="condicionesEntrega" class="java.lang.String"/>
+	<field name="exportadorNombre" class="java.lang.String"/>
+	<field name="exportadorDireccion" class="java.lang.String"/>
+	<field name="exportadorCP" class="java.lang.String"/>
+	<field name="exportadorPoblacion" class="java.lang.String"/>
+	<field name="exportadorProvincia" class="java.lang.String"/>
+	<field name="exportadorNIF" class="java.lang.String"/>
+	<field name="importadorNombre" class="java.lang.String"/>
+	<field name="importadorDireccion" class="java.lang.String"/>
+	<field name="importadorCP" class="java.lang.String"/>
+	<field name="importadorPoblacion" class="java.lang.String"/>
+	<field name="importadorProvincia" class="java.lang.String"/>
+	<field name="importadorNIF" class="java.lang.String"/>
+	<field name="txtInfoREA" class="java.lang.String"/>
+	<field name="txtInfoLPC" class="java.lang.String"/>
 	<field name="txtInfoGeneral" class="java.lang.String"/>
-	<field name="lineasDataSource" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>	
-
+	<field name="lineasDataSource" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
 	<variable name="V_CURRENT_PAGE_NUMBER" class="java.lang.Integer" resetType="Page">
 		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
-	</variable>	
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
-	<pageHeader>
-	</pageHeader>
-	<columnHeader>
-	</columnHeader>
 	<detail>
-
 		<band height="65" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -100,7 +93,7 @@
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[(new Boolean($F{tipoOrigen}.trim().compareToIgnoreCase("PROVEEDOR")==0)? $P{header.pedido} + ":"  : "" )]]></textFieldExpression>
-			</textField>			
+			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="FixRelativeToBottom" x="510" y="20" width="80" height="12" forecolor="#039760" uuid="6617b785-fda7-46a6-9058-ce8d2a2fe6d0">
 					<property name="local_mesure_unitheight" value="pixel"/>
@@ -111,7 +104,7 @@
 				<textElement>
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[(new Boolean($F{tipoOrigen}.trim().compareToIgnoreCase("PROVEEDOR")==0)? $P{header.proveedor} + ":"  : $P{header.bloqueLogistico} + ":" )]]></textFieldExpression>
+				<textFieldExpression><![CDATA[(new Boolean($F{tipoOrigen}.trim().compareToIgnoreCase("CSM")==0) ? $P{header.proveedor} : (new Boolean($F{tipoFactura}.trim().compareToIgnoreCase("DEV")==0) ? $P{header.tienda} : $P{header.bloqueLogistico})) + ":"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="FixRelativeToBottom" x="630" y="33" width="150" height="12" uuid="6580f936-9db6-4ab2-8d4f-482dbbac63b2">
@@ -144,7 +137,7 @@
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[(new Boolean($F{tipoOrigen}.trim().compareToIgnoreCase("PROVEEDOR")==0)? $F{numPedido} : "" )]]></textFieldExpression>
-			</textField>			
+			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="FixRelativeToBottom" x="590" y="20" width="220" height="12" uuid="3855f02f-9df1-4a23-9f72-96bb4041407d">
 					<property name="local_mesure_unitheight" value="pixel"/>
@@ -182,10 +175,9 @@
 				<textFieldExpression><![CDATA[$P{header.condicionesEntrega} + ":"]]></textFieldExpression>
 			</textField>
 		</band>
-
 		<band height="130" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
-			<property name="com.jaspersoft.studio.unit.height" value="px"/>		
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="Float" x="1" y="82" width="40" height="12" uuid="85eb17a1-5eb8-4c39-b8ab-29c2d69cc16a">
 					<property name="local_mesure_unitheight" value="pixel"/>
@@ -240,7 +232,7 @@
 			</textField>
 			<textField>
 				<reportElement x="0" y="3" width="100" height="14" uuid="3776188c-80f4-4f5b-bcfc-8d38e1d61eb4">
-					<property name="local_mesure_unity" value="pixel"/> 
+					<property name="local_mesure_unity" value="pixel"/>
 				</reportElement>
 				<box leftPadding="3"/>
 				<textElement markup="html">
@@ -250,17 +242,17 @@
 			</textField>
 			<textField>
 				<reportElement x="100" y="3" width="130" height="14" uuid="3776188c-80f4-4f5b-bcfc-8d38e1d61eb4">
-					<property name="local_mesure_unity" value="pixel"/> 
+					<property name="local_mesure_unity" value="pixel"/>
 				</reportElement>
 				<box leftPadding="3"/>
 				<textElement markup="html">
 					<font fontName="SansSerif" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{anyoDeclaracion} + " - " + $F{codigoDeclaracion}]]></textFieldExpression>
-			</textField>			
+			</textField>
 			<textField>
 				<reportElement x="260" y="3" width="100" height="14" uuid="3776188c-80f4-4f5b-bcfc-8d38e1d61eb4">
-					<property name="local_mesure_unity" value="pixel"/> 
+					<property name="local_mesure_unity" value="pixel"/>
 				</reportElement>
 				<box leftPadding="3"/>
 				<textElement markup="html">
@@ -270,34 +262,34 @@
 			</textField>
 			<textField>
 				<reportElement x="360" y="3" width="120" height="14" uuid="3776188c-80f4-4f5b-bcfc-8d38e1d61eb4">
-					<property name="local_mesure_unity" value="pixel"/> 
+					<property name="local_mesure_unity" value="pixel"/>
 				</reportElement>
 				<box leftPadding="3"/>
 				<textElement markup="html">
 					<font fontName="SansSerif" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{anyoDosier} + " - " + $F{numDosier}]]></textFieldExpression>
-			</textField>			
+			</textField>
 			<textField>
 				<reportElement x="260" y="15" width="100" height="14" uuid="3776188c-80f4-4f5b-bcfc-8d38e1d61eb4">
-					<property name="local_mesure_unity" value="pixel"/> 
+					<property name="local_mesure_unity" value="pixel"/>
 				</reportElement>
 				<box leftPadding="3"/>
 				<textElement markup="html">
 					<font fontName="SansSerif" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{header.fechaDosier}]]></textFieldExpression>
-			</textField>			
+			</textField>
 			<textField>
 				<reportElement x="360" y="15" width="120" height="14" uuid="3776188c-80f4-4f5b-bcfc-8d38e1d61eb4">
-					<property name="local_mesure_unity" value="pixel"/> 
+					<property name="local_mesure_unity" value="pixel"/>
 				</reportElement>
 				<box leftPadding="3"/>
 				<textElement markup="html">
 					<font fontName="SansSerif" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{fechaDosier}]]></textFieldExpression>
-			</textField>				
+			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="Float" x="41" y="82" width="190" height="12" uuid="600377c9-aff9-41be-81e5-a6eecb25dd68">
 					<property name="local_mesure_unitheight" value="pixel"/>
@@ -414,7 +406,6 @@
 				<textFieldExpression><![CDATA[$P{header.nif} + ": " + $F{exportadorNIF}]]></textFieldExpression>
 			</textField>
 		</band>
-
 		<band height="20" splitType="Stretch">
 			<subreport>
 				<reportElement positionType="Float" x="0" y="0" width="800" height="20" uuid="24be4ab8-100a-49fe-969d-520ccfa4cca9">
@@ -426,7 +417,6 @@
 				<subreportExpression><![CDATA[$P{SUBREPORT_TMPL}]]></subreportExpression>
 			</subreport>
 		</band>
-
 		<band height="45" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -443,13 +433,11 @@
 				<textFieldExpression><![CDATA[$F{txtInfoGeneral} + (!$F{txtInfoREA}.isEmpty()? "<br/>"  + $F{txtInfoREA}  : "") + (!$F{txtInfoLPC}.isEmpty()? "<br/>"  + $F{txtInfoLPC}  : "")]]></textFieldExpression>
 			</textField>
 		</band>
-
 		<band height="2" splitType="Stretch">
 			<break>
 				<reportElement x="0" y="1" width="100" height="1" uuid="755a0af8-0baf-476f-875e-7887d1ae607b"/>
 			</break>
 		</band>
-		
 	</detail>
 	<pageFooter>
 		<band height="20" splitType="Stretch">
@@ -469,5 +457,4 @@
 			</textField>
 		</band>
 	</pageFooter>
-
 </jasperReport>

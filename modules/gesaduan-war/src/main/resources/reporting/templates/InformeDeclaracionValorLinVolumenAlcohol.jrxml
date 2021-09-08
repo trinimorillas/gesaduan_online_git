@@ -14,8 +14,7 @@
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
-	<import value="net.sf.jasperreports.engine.data.*"/>	
-	<!-- styles  -->	
+	<import value="net.sf.jasperreports.engine.data.*"/>
 	<style name="StyleDetalle">
 		<conditionalStyle>
 			<conditionExpression><![CDATA[new Boolean($F{codigoProducto}.trim().compareToIgnoreCase("TOTAL")==0)]]></conditionExpression>
@@ -26,46 +25,46 @@
 			<style mode="Opaque" backcolor="#F5F5F5" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 		</conditionalStyle>
 	</style>
-	<!-- parametros de textos  -->
-	<parameter name="column.codigo" class="java.lang.String"/>	
-	<parameter name="column.producto" class="java.lang.String"/>	
-	<parameter name="column.marca" class="java.lang.String"/>	
-	<parameter name="column.lpc" class="java.lang.String"/>	
-	<parameter name="column.bultos" class="java.lang.String"/>	
-	<parameter name="column.tipo" class="java.lang.String"/>	
-	<parameter name="column.pesoNeto" class="java.lang.String"/>	
-	<parameter name="column.pesoBruto" class="java.lang.String"/>	
-	<parameter name="column.cantidad" class="java.lang.String"/>	
-	<parameter name="column.volumen" class="java.lang.String"/>	
-	<parameter name="column.alcohol" class="java.lang.String"/>	
-	<parameter name="column.plato" class="java.lang.String"/>	
-	<parameter name="column.precio" class="java.lang.String"/>	
-	<parameter name="column.importe" class="java.lang.String"/>	
-	<parameter name="column.kg" class="java.lang.String"/>	
-	<parameter name="column.l" class="java.lang.String"/>	
-	<parameter name="column.g" class="java.lang.String"/>	
-	<parameter name="column.euro" class="java.lang.String"/>	
-	<parameter name="column.codigoREA" class="java.lang.String"/>	
-	<parameter name="column.paisOrigen" class="java.lang.String"/>	
-	<!-- campos columnas  -->
-	<field name="codigoProducto" class="java.lang.String"/>	
-	<field name="nombreProducto" class="java.lang.String"/>		
-	<field name="marca" class="java.lang.String"/>	
-	<field name="codigoTaric" class="java.lang.String"/>	
-	<field name="tipoLinea" class="java.lang.String"/>	
-	<field name="codigoRea" class="java.lang.String"/>	
-	<field name="paisOrigen" class="java.lang.String"/>	
-	<field name="lpc" class="java.lang.String"/>	
-	<field name="numeroBultos" class="java.lang.String"/>	
-	<field name="tipoBultos" class="java.lang.String"/>	
-	<field name="pesoBruto" class="java.lang.String"/>	
-	<field name="pesoNeto" class="java.lang.String"/>	
-	<field name="cantidad" class="java.lang.String"/>	
-	<field name="volumen" class="java.lang.String"/>	
-	<field name="alcohol" class="java.lang.String"/>	
-	<field name="plato" class="java.lang.String"/>	
-	<field name="precio" class="java.lang.String"/>	
-	<field name="importe" class="java.lang.String"/>	
+	<parameter name="column.codigo" class="java.lang.String"/>
+	<parameter name="column.tipoItem" class="java.lang.String"/>
+	<parameter name="column.producto" class="java.lang.String"/>
+	<parameter name="column.marca" class="java.lang.String"/>
+	<parameter name="column.lpc" class="java.lang.String"/>
+	<parameter name="column.bultos" class="java.lang.String"/>
+	<parameter name="column.tipo" class="java.lang.String"/>
+	<parameter name="column.pesoNeto" class="java.lang.String"/>
+	<parameter name="column.pesoBruto" class="java.lang.String"/>
+	<parameter name="column.cantidad" class="java.lang.String"/>
+	<parameter name="column.volumen" class="java.lang.String"/>
+	<parameter name="column.alcohol" class="java.lang.String"/>
+	<parameter name="column.plato" class="java.lang.String"/>
+	<parameter name="column.precio" class="java.lang.String"/>
+	<parameter name="column.importe" class="java.lang.String"/>
+	<parameter name="column.kg" class="java.lang.String"/>
+	<parameter name="column.l" class="java.lang.String"/>
+	<parameter name="column.g" class="java.lang.String"/>
+	<parameter name="column.euro" class="java.lang.String"/>
+	<parameter name="column.codigoREA" class="java.lang.String"/>
+	<parameter name="column.paisOrigen" class="java.lang.String"/>
+	<field name="codigoProducto" class="java.lang.String"/>
+	<field name="tipoItem" class="java.lang.String"/>
+	<field name="nombreProducto" class="java.lang.String"/>
+	<field name="marca" class="java.lang.String"/>
+	<field name="codigoTaric" class="java.lang.String"/>
+	<field name="tipoLinea" class="java.lang.String"/>
+	<field name="codigoRea" class="java.lang.String"/>
+	<field name="paisOrigen" class="java.lang.String"/>
+	<field name="lpc" class="java.lang.String"/>
+	<field name="numeroBultos" class="java.lang.String"/>
+	<field name="tipoBultos" class="java.lang.String"/>
+	<field name="pesoBruto" class="java.lang.String"/>
+	<field name="pesoNeto" class="java.lang.String"/>
+	<field name="cantidad" class="java.lang.String"/>
+	<field name="volumen" class="java.lang.String"/>
+	<field name="alcohol" class="java.lang.String"/>
+	<field name="plato" class="java.lang.String"/>
+	<field name="precio" class="java.lang.String"/>
+	<field name="importe" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -74,8 +73,10 @@
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="45" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="b94b37e4-8b01-4b24-b0d5-6c5548c30706">
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="35" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="b94b37e4-8b01-4b24-b0d5-6c5548c30706">
 					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box topPadding="1" leftPadding="3" rightPadding="2">
 					<topPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
@@ -192,8 +193,11 @@
 				<textFieldExpression><![CDATA[$P{column.tipo}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="45" y="0" width="105" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="cd42ae37-ff5b-431f-a585-cb383efc04db">
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="70" y="0" width="95" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="cd42ae37-ff5b-431f-a585-cb383efc04db">
 					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box topPadding="1" leftPadding="3" rightPadding="2">
 					<topPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
@@ -297,10 +301,11 @@
 				<textFieldExpression><![CDATA[$P{column.importe} + "<br/>(€)"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="150" y="0" width="65" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="519075c6-4769-4b39-8d58-438483a974ed">
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="165" y="0" width="50" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="519075c6-4769-4b39-8d58-438483a974ed">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<box topPadding="1" leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
@@ -313,15 +318,38 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{column.marca}]]></textFieldExpression>
 			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="35" y="0" width="35" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="89f83aae-0292-4036-b2ac-3b459673c514">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="3" rightPadding="2">
+					<topPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
+					<leftPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
+					<bottomPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
+					<rightPen lineWidth="0.6" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{column.tipoItem}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="20" splitType="Prevent">
+		<band height="25" splitType="Prevent">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="0" y="0" width="45" height="20" uuid="55148a93-4218-431a-9160-34c0fe2f0332">
+				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="0" y="0" width="35" height="20" uuid="55148a93-4218-431a-9160-34c0fe2f0332">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="2" bottomPadding="4" rightPadding="2">
 					<topPen lineWidth="0.5" lineColor="#C0C0C0"/>
@@ -335,9 +363,12 @@
 				<textFieldExpression><![CDATA[$F{codigoProducto}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="45" y="0" width="105" height="20" uuid="01b545d9-504e-4f23-bea7-262cb28ab3a5">
+				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="70" y="0" width="95" height="20" uuid="01b545d9-504e-4f23-bea7-262cb28ab3a5">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="2" bottomPadding="4" rightPadding="2">
 					<topPen lineWidth="0.5" lineColor="#C0C0C0"/>
@@ -531,8 +562,12 @@
 				<textFieldExpression><![CDATA[$F{importe}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="150" y="0" width="65" height="20" uuid="008a946a-4cf8-4a1d-9f82-6935cebe8632">
+				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="165" y="0" width="50" height="20" uuid="008a946a-4cf8-4a1d-9f82-6935cebe8632">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="5" bottomPadding="4" rightPadding="2">
 					<topPen lineWidth="0.5" lineColor="#C0C0C0"/>
@@ -544,6 +579,27 @@
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{marca}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="35" y="0" width="35" height="20" uuid="691b3e3c-a622-4811-85b2-433e2c1093b0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box topPadding="4" leftPadding="2" bottomPadding="4" rightPadding="2">
+					<topPen lineWidth="0.5" lineColor="#C0C0C0"/>
+					<leftPen lineWidth="0.5" lineColor="#C0C0C0"/>
+					<bottomPen lineWidth="0.5" lineColor="#C0C0C0"/>
+					<rightPen lineWidth="0.5" lineColor="#C0C0C0"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tipoLinea}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
