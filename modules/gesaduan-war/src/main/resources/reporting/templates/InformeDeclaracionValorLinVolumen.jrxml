@@ -88,9 +88,10 @@
 				<textFieldExpression><![CDATA[$P{column.codigo}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
-				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="295" y="0" width="30" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="db515830-8937-45e6-ba39-1da1d2b4102f">
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="325" y="0" width="30" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="db515830-8937-45e6-ba39-1da1d2b4102f">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<box topPadding="1" leftPadding="5" rightPadding="2">
 					<topPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
@@ -104,10 +105,11 @@
 				<textFieldExpression><![CDATA[$P{column.lpc}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="325" y="0" width="45" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="b19ce459-4fcc-4192-bcc8-d14a0ea1417a">
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="355" y="0" width="35" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="b19ce459-4fcc-4192-bcc8-d14a0ea1417a">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<box topPadding="1" leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
@@ -175,9 +177,11 @@
 				<textFieldExpression><![CDATA[$P{column.pesoBruto} + "<br/>" + $P{column.kg}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="370" y="0" width="70" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="1a30f911-989c-4fbd-9734-0697f4a1622e">
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="390" y="0" width="50" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="1a30f911-989c-4fbd-9734-0697f4a1622e">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box topPadding="1" leftPadding="3" rightPadding="2">
 					<topPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
@@ -191,7 +195,7 @@
 				<textFieldExpression><![CDATA[$P{column.tipo}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="90" y="0" width="155" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="cd42ae37-ff5b-431f-a585-cb383efc04db">
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="105" y="0" width="155" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="cd42ae37-ff5b-431f-a585-cb383efc04db">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -263,7 +267,7 @@
 				<textFieldExpression><![CDATA[$P{column.importe} + "<br/>(€)"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="245" y="0" width="50" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="519075c6-4769-4b39-8d58-438483a974ed">
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="260" y="0" width="65" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="519075c6-4769-4b39-8d58-438483a974ed">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -281,12 +285,14 @@
 				<textFieldExpression><![CDATA[$P{column.marca}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="45" y="0" width="45" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="fca06958-119c-4c2d-a23d-ef65e6768060">
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" mode="Opaque" x="45" y="0" width="60" height="24" forecolor="#FFFFFF" backcolor="#039760" uuid="fca06958-119c-4c2d-a23d-ef65e6768060">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box topPadding="1" leftPadding="3" rightPadding="2">
 					<topPen lineWidth="0.6" lineStyle="Solid" lineColor="#039760"/>
@@ -302,7 +308,7 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="25" splitType="Prevent">
+		<band height="20" splitType="Prevent">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isStretchWithOverflow="true">
@@ -321,7 +327,7 @@
 				<textFieldExpression><![CDATA[$F{codigoProducto}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="90" y="0" width="155" height="20" uuid="01b545d9-504e-4f23-bea7-262cb28ab3a5">
+				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="105" y="0" width="155" height="20" uuid="01b545d9-504e-4f23-bea7-262cb28ab3a5">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -342,8 +348,10 @@
 (!$F{paisOrigen}.isEmpty()? "<br/><br/>" +$P{column.paisOrigen} + ": " + $F{paisOrigen}  : "")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="295" y="0" width="30" height="20" uuid="2ce86d30-8950-46d9-bd3e-53d5ac900916">
+				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="325" y="0" width="30" height="20" uuid="2ce86d30-8950-46d9-bd3e-53d5ac900916">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="5" bottomPadding="4" rightPadding="2">
 					<topPen lineWidth="0.5" lineColor="#C0C0C0"/>
@@ -357,10 +365,13 @@
 				<textFieldExpression><![CDATA[$F{lpc}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="325" y="0" width="45" height="20" uuid="2e13f8b1-622c-4a28-81ff-143a7b3049e4">
+				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="355" y="0" width="35" height="20" uuid="2e13f8b1-622c-4a28-81ff-143a7b3049e4">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="2" bottomPadding="4" rightPadding="4">
 					<topPen lineWidth="0.5" lineColor="#C0C0C0"/>
@@ -374,8 +385,12 @@
 				<textFieldExpression><![CDATA[$F{numeroBultos}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="370" y="0" width="70" height="20" uuid="cf25f62c-0c62-4e8b-9e0d-46ca7660081f">
+				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="390" y="0" width="50" height="20" uuid="cf25f62c-0c62-4e8b-9e0d-46ca7660081f">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="2" bottomPadding="4" rightPadding="2">
 					<topPen lineWidth="0.5" lineColor="#C0C0C0"/>
@@ -488,7 +503,7 @@
 				<textFieldExpression><![CDATA[$F{importe}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="245" y="0" width="50" height="20" uuid="008a946a-4cf8-4a1d-9f82-6935cebe8632">
+				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="260" y="0" width="65" height="20" uuid="008a946a-4cf8-4a1d-9f82-6935cebe8632">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -506,13 +521,15 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{marca}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="45" y="0" width="45" height="20" uuid="423aa2ad-ac65-496d-9bbc-e182c4371233">
+			<textField isStretchWithOverflow="true" pattern="">
+				<reportElement style="StyleDetalle" stretchType="RelativeToTallestObject" x="45" y="0" width="60" height="20" uuid="423aa2ad-ac65-496d-9bbc-e182c4371233">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="2" bottomPadding="4" rightPadding="2">
 					<topPen lineWidth="0.5" lineColor="#C0C0C0"/>
