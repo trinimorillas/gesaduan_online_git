@@ -57,23 +57,30 @@ public class EnvaseDeclaracionPK implements Serializable {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		EnvaseDeclaracionPK other = (EnvaseDeclaracionPK) obj;
 		if (itemId == null) {
-			if (other.itemId != null)
+			if (other.itemId != null) {
 				return false;
-		} else if (!itemId.equals(other.itemId))
+			}
+		} else if (!itemId.equals(other.itemId)) {
 			return false;
+		}
 		if (valueDeclaration == null) {
-			if (other.valueDeclaration != null)
+			if (other.valueDeclaration != null) {
 				return false;
-		} else if (!valueDeclaration.equals(other.valueDeclaration))
+			}
+		} else if (!valueDeclaration.equals(other.valueDeclaration)) {
 			return false;
+		}
 		return true;
 	}
 

@@ -407,113 +407,156 @@ public class EnvaseDeclaracionJPA implements Serializable {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		EnvaseDeclaracionJPA other = (EnvaseDeclaracionJPA) obj;
 		if (app == null) {
-			if (other.app != null)
+			if (other.app != null) {
 				return false;
-		} else if (!app.equals(other.app))
+			}
+		} else if (!app.equals(other.app)) {
 			return false;
+		}
 		if (creationDate == null) {
-			if (other.creationDate != null)
+			if (other.creationDate != null) {
 				return false;
-		} else if (!creationDate.equals(other.creationDate))
+			}
+		} else if (!creationDate.equals(other.creationDate)) {
 			return false;
+		}
 		if (grossWeight == null) {
-			if (other.grossWeight != null)
+			if (other.grossWeight != null) {
 				return false;
-		} else if (!grossWeight.equals(other.grossWeight))
+			}
+		} else if (!grossWeight.equals(other.grossWeight)) {
 			return false;
+		}
 		if (grossWeightUnit == null) {
-			if (other.grossWeightUnit != null)
+			if (other.grossWeightUnit != null) {
 				return false;
-		} else if (!grossWeightUnit.equals(other.grossWeightUnit))
+			}
+		} else if (!grossWeightUnit.equals(other.grossWeightUnit)) {
 			return false;
+		}
 		if (itemId == null) {
-			if (other.itemId != null)
+			if (other.itemId != null) {
 				return false;
-		} else if (!itemId.equals(other.itemId))
+			}
+		} else if (!itemId.equals(other.itemId)) {
 			return false;
+		}
 		if (itemName == null) {
-			if (other.itemName != null)
+			if (other.itemName != null) {
 				return false;
-		} else if (!itemName.equals(other.itemName))
+			}
+		} else if (!itemName.equals(other.itemName)) {
 			return false;
+		}
 		if (itemTaric == null) {
-			if (other.itemTaric != null)
+			if (other.itemTaric != null) {
 				return false;
-		} else if (!itemTaric.equals(other.itemTaric))
+			}
+		} else if (!itemTaric.equals(other.itemTaric)) {
 			return false;
+		}
 		if (mcaError == null) {
-			if (other.mcaError != null)
+			if (other.mcaError != null) {
 				return false;
-		} else if (!mcaError.equals(other.mcaError))
+			}
+		} else if (!mcaError.equals(other.mcaError)) {
 			return false;
+		}
 		if (netWeight == null) {
-			if (other.netWeight != null)
+			if (other.netWeight != null) {
 				return false;
-		} else if (!netWeight.equals(other.netWeight))
+			}
+		} else if (!netWeight.equals(other.netWeight)) {
 			return false;
+		}
 		if (netWeightUnit == null) {
-			if (other.netWeightUnit != null)
+			if (other.netWeightUnit != null) {
 				return false;
-		} else if (!netWeightUnit.equals(other.netWeightUnit))
+			}
+		} else if (!netWeightUnit.equals(other.netWeightUnit)) {
 			return false;
+		}
 		if (packageName == null) {
-			if (other.packageName != null)
+			if (other.packageName != null) {
 				return false;
-		} else if (!packageName.equals(other.packageName))
+			}
+		} else if (!packageName.equals(other.packageName)) {
 			return false;
+		}
 		if (packageQuantity == null) {
-			if (other.packageQuantity != null)
+			if (other.packageQuantity != null) {
 				return false;
-		} else if (!packageQuantity.equals(other.packageQuantity))
+			}
+		} else if (!packageQuantity.equals(other.packageQuantity)) {
 			return false;
+		}
 		if (quantity == null) {
-			if (other.quantity != null)
+			if (other.quantity != null) {
 				return false;
-		} else if (!quantity.equals(other.quantity))
+			}
+		} else if (!quantity.equals(other.quantity)) {
 			return false;
+		}
 		if (quantityUnit == null) {
-			if (other.quantityUnit != null)
+			if (other.quantityUnit != null) {
 				return false;
-		} else if (!quantityUnit.equals(other.quantityUnit))
+			}
+		} else if (!quantityUnit.equals(other.quantityUnit)) {
 			return false;
+		}
 		if (totalAmount == null) {
-			if (other.totalAmount != null)
+			if (other.totalAmount != null) {
 				return false;
-		} else if (!totalAmount.equals(other.totalAmount))
+			}
+		} else if (!totalAmount.equals(other.totalAmount)) {
 			return false;
+		}
 		if (totalAmountCurrency == null) {
-			if (other.totalAmountCurrency != null)
+			if (other.totalAmountCurrency != null) {
 				return false;
-		} else if (!totalAmountCurrency.equals(other.totalAmountCurrency))
+			}
+		} else if (!totalAmountCurrency.equals(other.totalAmountCurrency)) {
 			return false;
+		}
 		if (unitPrice == null) {
-			if (other.unitPrice != null)
+			if (other.unitPrice != null) {
 				return false;
-		} else if (!unitPrice.equals(other.unitPrice))
+			}
+		} else if (!unitPrice.equals(other.unitPrice)) {
 			return false;
+		}
 		if (unitPriceCurrency == null) {
-			if (other.unitPriceCurrency != null)
+			if (other.unitPriceCurrency != null) {
 				return false;
-		} else if (!unitPriceCurrency.equals(other.unitPriceCurrency))
+			}
+		} else if (!unitPriceCurrency.equals(other.unitPriceCurrency)) {
 			return false;
+		}
 		if (userId == null) {
-			if (other.userId != null)
+			if (other.userId != null) {
 				return false;
-		} else if (!userId.equals(other.userId))
+			}
+		} else if (!userId.equals(other.userId)) {
 			return false;
+		}
 		if (valueDeclaration == null) {
-			if (other.valueDeclaration != null)
+			if (other.valueDeclaration != null) {
 				return false;
-		} else if (!valueDeclaration.equals(other.valueDeclaration))
+			}
+		} else if (!valueDeclaration.equals(other.valueDeclaration)) {
 			return false;
+		}
 		return true;
 	}
 

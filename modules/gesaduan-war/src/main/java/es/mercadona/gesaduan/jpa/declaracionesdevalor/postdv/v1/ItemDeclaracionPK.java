@@ -33,23 +33,30 @@ public class ItemDeclaracionPK implements Serializable{
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		ItemDeclaracionPK other = (ItemDeclaracionPK) obj;
 		if (codigoEnvase == null) {
-			if (other.codigoEnvase != null)
+			if (other.codigoEnvase != null) {
 				return false;
-		} else if (!codigoEnvase.equals(other.codigoEnvase))
+			}
+		} else if (!codigoEnvase.equals(other.codigoEnvase)) {
 			return false;
+		}
 		if (codigoDv == null) {
-			if (other.codigoDv != null)
+			if (other.codigoDv != null) {
 				return false;
-		} else if (!codigoDv.equals(other.codigoDv))
+			}
+		} else if (!codigoDv.equals(other.codigoDv)) {
 			return false;
+		}
 		return true;
 	}
 

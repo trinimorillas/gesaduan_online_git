@@ -33,6 +33,13 @@ public class PutDVConfirmDownloadDAOImpl extends DaoBaseImpl<ConfirmDownloadDVPK
 	protected EntityManager getEntityManager() {		
 		return this.entityM;
 	}
+	
+	private static final String VALUE_DECLARATION_NUMBER = "valueDeclarationNumber";
+	private static final String VALUE_DECLARATION_YEAR = "valueDeclarationYear";
+	private static final String VALUE_DECLARATION_VERSION = "valueDeclarationVersion";
+	private static final String IS_DOWNLOADED = "isDownloaded";
+	private static final String USER_ID = "userId";
+	private static final String SUPPLIER_ID = "supplierId";
 
 	@Transactional
 	@Override
@@ -40,11 +47,10 @@ public class PutDVConfirmDownloadDAOImpl extends DaoBaseImpl<ConfirmDownloadDVPK
 		OutputPutVDConfirmDownloadDTO result = null;
 
 		try {
-			
 			Boolean estaDescargado = input.getIsDownloaded();
 			
 			String descargado;
-			if (estaDescargado) {
+			if (Boolean.TRUE.equals(estaDescargado)) {
 				descargado = "S";
 			} else {
 				descargado = "N";
@@ -62,11 +68,11 @@ public class PutDVConfirmDownloadDAOImpl extends DaoBaseImpl<ConfirmDownloadDVPK
 				     
 				final Query queryExisteProveedor = getEntityManager().createNativeQuery(sqlExisteProveedor.toString());
 
-				queryExisteProveedor.setParameter("isDownloaded", descargado);
-				queryExisteProveedor.setParameter("userId", input.getUserId());
-				queryExisteProveedor.setParameter("valueDeclarationNumber", input.getValueDeclarationNumber());
-				queryExisteProveedor.setParameter("valueDeclarationYear", input.getValueDeclarationYear());
-				queryExisteProveedor.setParameter("valueDeclarationVersion", input.getValueDeclarationVersion());
+				queryExisteProveedor.setParameter(IS_DOWNLOADED, descargado);
+				queryExisteProveedor.setParameter(USER_ID, input.getUserId());
+				queryExisteProveedor.setParameter(VALUE_DECLARATION_NUMBER, input.getValueDeclarationNumber());
+				queryExisteProveedor.setParameter(VALUE_DECLARATION_YEAR, input.getValueDeclarationYear());
+				queryExisteProveedor.setParameter(VALUE_DECLARATION_VERSION, input.getValueDeclarationVersion());
 				queryExisteProveedor.executeUpdate();
 			} else {
 				// PROVEEDOR EXPORTADOR
@@ -83,12 +89,12 @@ public class PutDVConfirmDownloadDAOImpl extends DaoBaseImpl<ConfirmDownloadDVPK
 				     
 				final Query queryProveedorExportador = getEntityManager().createNativeQuery(sqlProveedorExportador.toString());
 				
-				queryProveedorExportador.setParameter("supplierId", input.getSupplierId());
-				queryProveedorExportador.setParameter("isDownloaded", descargado);
-				queryProveedorExportador.setParameter("userId", input.getUserId());
-				queryProveedorExportador.setParameter("valueDeclarationNumber", input.getValueDeclarationNumber());
-				queryProveedorExportador.setParameter("valueDeclarationYear", input.getValueDeclarationYear());
-				queryProveedorExportador.setParameter("valueDeclarationVersion", input.getValueDeclarationVersion());
+				queryProveedorExportador.setParameter(SUPPLIER_ID, input.getSupplierId());
+				queryProveedorExportador.setParameter(IS_DOWNLOADED, descargado);
+				queryProveedorExportador.setParameter(USER_ID, input.getUserId());
+				queryProveedorExportador.setParameter(VALUE_DECLARATION_NUMBER, input.getValueDeclarationNumber());
+				queryProveedorExportador.setParameter(VALUE_DECLARATION_YEAR, input.getValueDeclarationYear());
+				queryProveedorExportador.setParameter(VALUE_DECLARATION_VERSION, input.getValueDeclarationVersion());
 				
 				queryProveedorExportador.executeUpdate();
 				
@@ -106,12 +112,12 @@ public class PutDVConfirmDownloadDAOImpl extends DaoBaseImpl<ConfirmDownloadDVPK
 				     
 				final Query queryProveedorImportador = getEntityManager().createNativeQuery(sqlProveedorImportador.toString());
 				
-				queryProveedorImportador.setParameter("supplierId", input.getSupplierId());
-				queryProveedorImportador.setParameter("isDownloaded", descargado);
-				queryProveedorImportador.setParameter("userId", input.getUserId());
-				queryProveedorImportador.setParameter("valueDeclarationNumber", input.getValueDeclarationNumber());
-				queryProveedorImportador.setParameter("valueDeclarationYear", input.getValueDeclarationYear());
-				queryProveedorImportador.setParameter("valueDeclarationVersion", input.getValueDeclarationVersion());
+				queryProveedorImportador.setParameter(SUPPLIER_ID, input.getSupplierId());
+				queryProveedorImportador.setParameter(IS_DOWNLOADED, descargado);
+				queryProveedorImportador.setParameter(USER_ID, input.getUserId());
+				queryProveedorImportador.setParameter(VALUE_DECLARATION_NUMBER, input.getValueDeclarationNumber());
+				queryProveedorImportador.setParameter(VALUE_DECLARATION_YEAR, input.getValueDeclarationYear());
+				queryProveedorImportador.setParameter(VALUE_DECLARATION_VERSION, input.getValueDeclarationVersion());
 				
 				queryProveedorImportador.executeUpdate();
 			}
@@ -123,7 +129,7 @@ public class PutDVConfirmDownloadDAOImpl extends DaoBaseImpl<ConfirmDownloadDVPK
 			datosSalida.setVersion(input.getValueDeclarationVersion());
 			result.setDatos(datosSalida);
 			Map<String, String> metadatos = new HashMap<>();
-			metadatos.put("userId", input.getUserId());
+			metadatos.put(USER_ID, input.getUserId());
 			metadatos.put("locale", input.getLocale());
 			result.setMetadatos(metadatos);
 		} catch (Exception e) {			
@@ -134,11 +140,9 @@ public class PutDVConfirmDownloadDAOImpl extends DaoBaseImpl<ConfirmDownloadDVPK
 	}	
 
 	private boolean esCompraSobreMuelle (InputDataDTO input) {
-		
 		boolean retorno = false;
 		
 		try {
-		
 			final StringBuilder sqlFactura = new StringBuilder();
 			
 			sqlFactura.append("SELECT COD_N_PROVEEDOR ");
@@ -149,9 +153,9 @@ public class PutDVConfirmDownloadDAOImpl extends DaoBaseImpl<ConfirmDownloadDVPK
 	
 			final Query queryFactura = getEntityManager().createNativeQuery(sqlFactura.toString());
 	
-			queryFactura.setParameter("valueDeclarationNumber", input.getValueDeclarationNumber());
-			queryFactura.setParameter("valueDeclarationYear", input.getValueDeclarationYear());
-			queryFactura.setParameter("valueDeclarationVersion", input.getValueDeclarationVersion());
+			queryFactura.setParameter(VALUE_DECLARATION_NUMBER, input.getValueDeclarationNumber());
+			queryFactura.setParameter(VALUE_DECLARATION_YEAR, input.getValueDeclarationYear());
+			queryFactura.setParameter(VALUE_DECLARATION_VERSION, input.getValueDeclarationVersion());
 			
 			Object codProveedor = queryFactura.getSingleResult();
 			
