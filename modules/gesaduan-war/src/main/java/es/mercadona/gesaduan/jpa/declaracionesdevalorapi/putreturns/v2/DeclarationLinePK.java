@@ -73,28 +73,37 @@ public class DeclarationLinePK implements Serializable {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		DeclarationLinePK other = (DeclarationLinePK) obj;
 		if (itemId == null) {
-			if (other.itemId != null)
+			if (other.itemId != null) {
 				return false;
-		} else if (!itemId.equals(other.itemId))
+			}
+		} else if (!itemId.equals(other.itemId)) {
 			return false;
+		}
 		if (namePackage == null) {
-			if (other.namePackage != null)
+			if (other.namePackage != null) {
 				return false;
-		} else if (!namePackage.equals(other.namePackage))
+			}
+		} else if (!namePackage.equals(other.namePackage)) {
 			return false;
+		}
 		if (valueDeclaration == null) {
-			if (other.valueDeclaration != null)
+			if (other.valueDeclaration != null) {
 				return false;
-		} else if (!valueDeclaration.equals(other.valueDeclaration))
+			}
+		} else if (!valueDeclaration.equals(other.valueDeclaration)) {
 			return false;
+		}
 		return true;
 	}
 

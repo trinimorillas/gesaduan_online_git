@@ -73,28 +73,37 @@ public class ValueDeclarationPK implements Serializable {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		ValueDeclarationPK other = (ValueDeclarationPK) obj;
 		if (valueDeclarationNumber == null) {
-			if (other.valueDeclarationNumber != null)
+			if (other.valueDeclarationNumber != null) {
 				return false;
-		} else if (!valueDeclarationNumber.equals(other.valueDeclarationNumber))
+			}
+		} else if (!valueDeclarationNumber.equals(other.valueDeclarationNumber)) {
 			return false;
+		}
 		if (valueDeclarationVersion == null) {
-			if (other.valueDeclarationVersion != null)
+			if (other.valueDeclarationVersion != null) {
 				return false;
-		} else if (!valueDeclarationVersion.equals(other.valueDeclarationVersion))
+			}
+		} else if (!valueDeclarationVersion.equals(other.valueDeclarationVersion)) {
 			return false;
+		}
 		if (valueDeclarationYear == null) {
-			if (other.valueDeclarationYear != null)
+			if (other.valueDeclarationYear != null) {
 				return false;
-		} else if (!valueDeclarationYear.equals(other.valueDeclarationYear))
+			}
+		} else if (!valueDeclarationYear.equals(other.valueDeclarationYear)) {
 			return false;
+		}
 		return true;
 	}
 

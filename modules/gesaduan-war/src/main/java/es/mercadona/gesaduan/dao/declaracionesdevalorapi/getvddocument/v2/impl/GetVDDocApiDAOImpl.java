@@ -28,8 +28,6 @@ public class GetVDDocApiDAOImpl extends DaoBaseImpl<VDDocumentPK, VDDocumentJPA>
 	@Inject
 	private org.slf4j.Logger logger;
 
-	private static final String LOG_FILE = "GetDVDocumentoApiDAOImpl(GESADUAN)";
-
 	@Override
 	protected EntityManager getEntityManager() {
 		return this.entityM;
@@ -39,6 +37,11 @@ public class GetVDDocApiDAOImpl extends DaoBaseImpl<VDDocumentPK, VDDocumentJPA>
 	public void setEntityClass() {
 		entityClass = VDDocumentJPA.class;
 	}
+	
+	private static final String LOG_FILE = "GetDVDocumentoApiDAOImpl(GESADUAN)";
+	private static final String VALUE_DECLARATION_NUMBER = "valueDeclarationNumber";
+	private static final String VALUE_DECLARATION_YEAR = "valueDeclarationYear";
+	private static final String VALUE_DECLARATION_VERSION = "valueDeclarationVersion";
 
 	@Override
 	public OutputDeclaracionesDeValorDocCabDTO getDatosDocumento(InputValueDeclarationDocumentDTO input) {
@@ -174,9 +177,9 @@ public class GetVDDocApiDAOImpl extends DaoBaseImpl<VDDocumentPK, VDDocumentJPA>
 			sql.append("AND D.COD_N_VERSION = ?valueDeclarationVersion");
 
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
-			query.setParameter("valueDeclarationNumber", input.getValueDeclarationNumber());
-			query.setParameter("valueDeclarationYear", input.getValueDeclarationYear());
-			query.setParameter("valueDeclarationVersion", input.getValueDeclarationVersion());
+			query.setParameter(VALUE_DECLARATION_NUMBER, input.getValueDeclarationNumber());
+			query.setParameter(VALUE_DECLARATION_YEAR, input.getValueDeclarationYear());
+			query.setParameter(VALUE_DECLARATION_VERSION, input.getValueDeclarationVersion());
 
 			@SuppressWarnings("unchecked")
 			List<Object[]> listado = query.getResultList();
@@ -299,9 +302,9 @@ public class GetVDDocApiDAOImpl extends DaoBaseImpl<VDDocumentPK, VDDocumentJPA>
 			sql.append("ORDER BY CODIGO_TARIC, TIPO_LINEA, CODIGO");
 
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
-			query.setParameter("valueDeclarationNumber", input.getValueDeclarationNumber());
-			query.setParameter("valueDeclarationYear", input.getValueDeclarationYear());
-			query.setParameter("valueDeclarationVersion", input.getValueDeclarationVersion());
+			query.setParameter(VALUE_DECLARATION_NUMBER, input.getValueDeclarationNumber());
+			query.setParameter(VALUE_DECLARATION_YEAR, input.getValueDeclarationYear());
+			query.setParameter(VALUE_DECLARATION_VERSION, input.getValueDeclarationVersion());
 
 			@SuppressWarnings("unchecked")
 			List<Object[]> listado = query.getResultList();
@@ -413,9 +416,9 @@ public class GetVDDocApiDAOImpl extends DaoBaseImpl<VDDocumentPK, VDDocumentJPA>
 			sql.append("GROUP BY DECLARACION_VALOR, ANYO, VERSION_N");
 
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
-			query.setParameter("valueDeclarationNumber", input.getValueDeclarationNumber());
-			query.setParameter("valueDeclarationYear", input.getValueDeclarationYear());
-			query.setParameter("valueDeclarationVersion", input.getValueDeclarationVersion());
+			query.setParameter(VALUE_DECLARATION_NUMBER, input.getValueDeclarationNumber());
+			query.setParameter(VALUE_DECLARATION_YEAR, input.getValueDeclarationYear());
+			query.setParameter(VALUE_DECLARATION_VERSION, input.getValueDeclarationVersion());
 
 			@SuppressWarnings("unchecked")
 			List<Object[]> listado = query.getResultList();

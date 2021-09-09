@@ -439,7 +439,6 @@ public class ItemDeclaracionJPA implements Serializable {
 
 	public ItemDeclaracionJPA() {
 		super();
-		
 	}
 
 	/* (non-Javadoc)
@@ -479,125 +478,171 @@ public class ItemDeclaracionJPA implements Serializable {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		ItemDeclaracionJPA other = (ItemDeclaracionJPA) obj;
 		if (codAplicacion == null) {
-			if (other.codAplicacion != null)
+			if (other.codAplicacion != null) {
 				return false;
-		} else if (!codAplicacion.equals(other.codAplicacion))
+			}
+		} else if (!codAplicacion.equals(other.codAplicacion)) {
 			return false;
+		}
 		if (codUMCantidad == null) {
-			if (other.codUMCantidad != null)
+			if (other.codUMCantidad != null) {
 				return false;
-		} else if (!codUMCantidad.equals(other.codUMCantidad))
+			}
+		} else if (!codUMCantidad.equals(other.codUMCantidad)) {
 			return false;
+		}
 		if (codUMImporte == null) {
-			if (other.codUMImporte != null)
+			if (other.codUMImporte != null) {
 				return false;
-		} else if (!codUMImporte.equals(other.codUMImporte))
+			}
+		} else if (!codUMImporte.equals(other.codUMImporte)) {
 			return false;
+		}
 		if (codUMPesoBruto == null) {
-			if (other.codUMPesoBruto != null)
+			if (other.codUMPesoBruto != null) {
 				return false;
-		} else if (!codUMPesoBruto.equals(other.codUMPesoBruto))
+			}
+		} else if (!codUMPesoBruto.equals(other.codUMPesoBruto)) {
 			return false;
+		}
 		if (codUMPesoNeto == null) {
-			if (other.codUMPesoNeto != null)
+			if (other.codUMPesoNeto != null) {
 				return false;
-		} else if (!codUMPesoNeto.equals(other.codUMPesoNeto))
+			}
+		} else if (!codUMPesoNeto.equals(other.codUMPesoNeto)) {
 			return false;
+		}
 		if (codUMPrecio == null) {
-			if (other.codUMPrecio != null)
+			if (other.codUMPrecio != null) {
 				return false;
-		} else if (!codUMPrecio.equals(other.codUMPrecio))
+			}
+		} else if (!codUMPrecio.equals(other.codUMPrecio)) {
 			return false;
+		}
 		if (codigoDv == null) {
-			if (other.codigoDv != null)
+			if (other.codigoDv != null) {
 				return false;
-		} else if (!codigoDv.equals(other.codigoDv))
+			}
+		} else if (!codigoDv.equals(other.codigoDv)) {
 			return false;
+		}
 		if (codigoEnvase == null) {
-			if (other.codigoEnvase != null)
+			if (other.codigoEnvase != null) {
 				return false;
-		} else if (!codigoEnvase.equals(other.codigoEnvase))
+			}
+		} else if (!codigoEnvase.equals(other.codigoEnvase)) {
 			return false;
+		}
 		if (codigoTaric == null) {
-			if (other.codigoTaric != null)
+			if (other.codigoTaric != null) {
 				return false;
-		} else if (!codigoTaric.equals(other.codigoTaric))
+			}
+		} else if (!codigoTaric.equals(other.codigoTaric)) {
 			return false;
+		}
 		if (fechaCreacion == null) {
-			if (other.fechaCreacion != null)
+			if (other.fechaCreacion != null) {
 				return false;
-		} else if (!fechaCreacion.equals(other.fechaCreacion))
+			}
+		} else if (!fechaCreacion.equals(other.fechaCreacion)) {
 			return false;
+		}
 		if (fechaModificacion == null) {
-			if (other.fechaModificacion != null)
+			if (other.fechaModificacion != null) {
 				return false;
-		} else if (!fechaModificacion.equals(other.fechaModificacion))
+			}
+		} else if (!fechaModificacion.equals(other.fechaModificacion)) {
 			return false;
+		}
 		if (importe == null) {
-			if (other.importe != null)
+			if (other.importe != null) {
 				return false;
-		} else if (!importe.equals(other.importe))
+			}
+		} else if (!importe.equals(other.importe)) {
 			return false;
+		}
 		if (mcaError == null) {
-			if (other.mcaError != null)
+			if (other.mcaError != null) {
 				return false;
-		} else if (!mcaError.equals(other.mcaError))
+			}
+		} else if (!mcaError.equals(other.mcaError)) {
 			return false;
+		}
 		if (numBultos == null) {
-			if (other.numBultos != null)
+			if (other.numBultos != null) {
 				return false;
-		} else if (!numBultos.equals(other.numBultos))
+			}
+		} else if (!numBultos.equals(other.numBultos)) {
 			return false;
+		}
 		if (numCantidad == null) {
-			if (other.numCantidad != null)
+			if (other.numCantidad != null) {
 				return false;
-		} else if (!numCantidad.equals(other.numCantidad))
+			}
+		} else if (!numCantidad.equals(other.numCantidad)) {
 			return false;
+		}
 		if (pesoBruto == null) {
-			if (other.pesoBruto != null)
+			if (other.pesoBruto != null) {
 				return false;
-		} else if (!pesoBruto.equals(other.pesoBruto))
+			}
+		} else if (!pesoBruto.equals(other.pesoBruto)) {
 			return false;
+		}
 		if (pesoNeto == null) {
-			if (other.pesoNeto != null)
+			if (other.pesoNeto != null) {
 				return false;
-		} else if (!pesoNeto.equals(other.pesoNeto))
+			}
+		} else if (!pesoNeto.equals(other.pesoNeto)) {
 			return false;
+		}
 		if (precioUnidad == null) {
-			if (other.precioUnidad != null)
+			if (other.precioUnidad != null) {
 				return false;
-		} else if (!precioUnidad.equals(other.precioUnidad))
+			}
+		} else if (!precioUnidad.equals(other.precioUnidad)) {
 			return false;
+		}
 		if (txtDenominacion == null) {
-			if (other.txtDenominacion != null)
+			if (other.txtDenominacion != null) {
 				return false;
-		} else if (!txtDenominacion.equals(other.txtDenominacion))
+			}
+		} else if (!txtDenominacion.equals(other.txtDenominacion)) {
 			return false;
+		}
 		if (txtNombreBultoDV == null) {
-			if (other.txtNombreBultoDV != null)
+			if (other.txtNombreBultoDV != null) {
 				return false;
-		} else if (!txtNombreBultoDV.equals(other.txtNombreBultoDV))
+			}
+		} else if (!txtNombreBultoDV.equals(other.txtNombreBultoDV)) {
 			return false;
+		}
 		if (usuarioCreacion == null) {
-			if (other.usuarioCreacion != null)
+			if (other.usuarioCreacion != null) {
 				return false;
-		} else if (!usuarioCreacion.equals(other.usuarioCreacion))
+			}
+		} else if (!usuarioCreacion.equals(other.usuarioCreacion)) {
 			return false;
+		}
 		if (usuarioEdit == null) {
-			if (other.usuarioEdit != null)
+			if (other.usuarioEdit != null) {
 				return false;
-		} else if (!usuarioEdit.equals(other.usuarioEdit))
+			}
+		} else if (!usuarioEdit.equals(other.usuarioEdit)) {
 			return false;
+		}
 		return true;
 	}
-	
-	
+
 }

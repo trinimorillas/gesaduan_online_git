@@ -487,133 +487,184 @@ public class ValueDeclarationJPA implements Serializable {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		ValueDeclarationJPA other = (ValueDeclarationJPA) obj;
 		if (app == null) {
-			if (other.app != null)
+			if (other.app != null) {
 				return false;
-		} else if (!app.equals(other.app))
+			}
+		} else if (!app.equals(other.app)) {
 			return false;
+		}
 		if (creationDate == null) {
-			if (other.creationDate != null)
+			if (other.creationDate != null) {
 				return false;
-		} else if (!creationDate.equals(other.creationDate))
+			}
+		} else if (!creationDate.equals(other.creationDate)) {
 			return false;
+		}
 		if (deliveryConditions == null) {
-			if (other.deliveryConditions != null)
+			if (other.deliveryConditions != null) {
 				return false;
-		} else if (!deliveryConditions.equals(other.deliveryConditions))
+			}
+		} else if (!deliveryConditions.equals(other.deliveryConditions)) {
 			return false;
+		}
 		if (expeditionDate == null) {
-			if (other.expeditionDate != null)
+			if (other.expeditionDate != null) {
 				return false;
-		} else if (!expeditionDate.equals(other.expeditionDate))
+			}
+		} else if (!expeditionDate.equals(other.expeditionDate)) {
 			return false;
+		}
 		if (invoiceType == null) {
-			if (other.invoiceType != null)
+			if (other.invoiceType != null) {
 				return false;
-		} else if (!invoiceType.equals(other.invoiceType))
+			}
+		} else if (!invoiceType.equals(other.invoiceType)) {
 			return false;
+		}
 		if (itemLines == null) {
-			if (other.itemLines != null)
+			if (other.itemLines != null) {
 				return false;
-		} else if (!itemLines.equals(other.itemLines))
+			}
+		} else if (!itemLines.equals(other.itemLines)) {
 			return false;
+		}
 		if (mcaAutomaticLoading == null) {
-			if (other.mcaAutomaticLoading != null)
+			if (other.mcaAutomaticLoading != null) {
 				return false;
-		} else if (!mcaAutomaticLoading.equals(other.mcaAutomaticLoading))
+			}
+		} else if (!mcaAutomaticLoading.equals(other.mcaAutomaticLoading)) {
 			return false;
+		}
 		if (mcaDownload == null) {
-			if (other.mcaDownload != null)
+			if (other.mcaDownload != null) {
 				return false;
-		} else if (!mcaDownload.equals(other.mcaDownload))
+			}
+		} else if (!mcaDownload.equals(other.mcaDownload)) {
 			return false;
+		}
 		if (mcaFactura == null) {
-			if (other.mcaFactura != null)
+			if (other.mcaFactura != null) {
 				return false;
-		} else if (!mcaFactura.equals(other.mcaFactura))
+			}
+		} else if (!mcaFactura.equals(other.mcaFactura)) {
 			return false;
+		}
 		if (mcaLastCurrent == null) {
-			if (other.mcaLastCurrent != null)
+			if (other.mcaLastCurrent != null) {
 				return false;
-		} else if (!mcaLastCurrent.equals(other.mcaLastCurrent))
+			}
+		} else if (!mcaLastCurrent.equals(other.mcaLastCurrent)) {
 			return false;
+		}
 		if (mcaRightDV == null) {
-			if (other.mcaRightDV != null)
+			if (other.mcaRightDV != null) {
 				return false;
-		} else if (!mcaRightDV.equals(other.mcaRightDV))
+			}
+		} else if (!mcaRightDV.equals(other.mcaRightDV)) {
 			return false;
+		}
 		if (mcaShipping == null) {
-			if (other.mcaShipping != null)
+			if (other.mcaShipping != null) {
 				return false;
-		} else if (!mcaShipping.equals(other.mcaShipping))
+			}
+		} else if (!mcaShipping.equals(other.mcaShipping)) {
 			return false;
+		}
 		if (productLines == null) {
-			if (other.productLines != null)
+			if (other.productLines != null) {
 				return false;
-		} else if (!productLines.equals(other.productLines))
+			}
+		} else if (!productLines.equals(other.productLines)) {
 			return false;
+		}
 		if (recordCreationDate == null) {
-			if (other.recordCreationDate != null)
+			if (other.recordCreationDate != null) {
 				return false;
-		} else if (!recordCreationDate.equals(other.recordCreationDate))
+			}
+		} else if (!recordCreationDate.equals(other.recordCreationDate)) {
 			return false;
+		}
 		if (returnDate == null) {
-			if (other.returnDate != null)
+			if (other.returnDate != null) {
 				return false;
-		} else if (!returnDate.equals(other.returnDate))
+			}
+		} else if (!returnDate.equals(other.returnDate)) {
 			return false;
+		}
 		if (returnNumber == null) {
-			if (other.returnNumber != null)
+			if (other.returnNumber != null) {
 				return false;
-		} else if (!returnNumber.equals(other.returnNumber))
+			}
+		} else if (!returnNumber.equals(other.returnNumber)) {
 			return false;
+		}
 		if (returnYear == null) {
-			if (other.returnYear != null)
+			if (other.returnYear != null) {
 				return false;
-		} else if (!returnYear.equals(other.returnYear))
+			}
+		} else if (!returnYear.equals(other.returnYear)) {
 			return false;
+		}
 		if (sourceId == null) {
-			if (other.sourceId != null)
+			if (other.sourceId != null) {
 				return false;
-		} else if (!sourceId.equals(other.sourceId))
+			}
+		} else if (!sourceId.equals(other.sourceId)) {
 			return false;
+		}
 		if (sourceRegionId == null) {
-			if (other.sourceRegionId != null)
+			if (other.sourceRegionId != null) {
 				return false;
-		} else if (!sourceRegionId.equals(other.sourceRegionId))
+			}
+		} else if (!sourceRegionId.equals(other.sourceRegionId)) {
 			return false;
+		}
 		if (targetId == null) {
-			if (other.targetId != null)
+			if (other.targetId != null) {
 				return false;
-		} else if (!targetId.equals(other.targetId))
+			}
+		} else if (!targetId.equals(other.targetId)) {
 			return false;
+		}
 		if (userId == null) {
-			if (other.userId != null)
+			if (other.userId != null) {
 				return false;
-		} else if (!userId.equals(other.userId))
+			}
+		} else if (!userId.equals(other.userId)) {
 			return false;
+		}
 		if (valueDeclarationNumber == null) {
-			if (other.valueDeclarationNumber != null)
+			if (other.valueDeclarationNumber != null) {
 				return false;
-		} else if (!valueDeclarationNumber.equals(other.valueDeclarationNumber))
+			}
+		} else if (!valueDeclarationNumber.equals(other.valueDeclarationNumber)) {
 			return false;
+		}
 		if (valueDeclarationVersion == null) {
-			if (other.valueDeclarationVersion != null)
+			if (other.valueDeclarationVersion != null) {
 				return false;
-		} else if (!valueDeclarationVersion.equals(other.valueDeclarationVersion))
+			}
+		} else if (!valueDeclarationVersion.equals(other.valueDeclarationVersion)) {
 			return false;
+		}
 		if (valueDeclarationYear == null) {
-			if (other.valueDeclarationYear != null)
+			if (other.valueDeclarationYear != null) {
 				return false;
-		} else if (!valueDeclarationYear.equals(other.valueDeclarationYear))
+			}
+		} else if (!valueDeclarationYear.equals(other.valueDeclarationYear)) {
 			return false;
+		}
 		return true;
 	}
 

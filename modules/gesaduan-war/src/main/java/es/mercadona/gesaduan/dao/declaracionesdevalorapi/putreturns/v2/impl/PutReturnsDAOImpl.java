@@ -221,9 +221,9 @@ public class PutReturnsDAOImpl extends DaoBaseImpl<ValueDeclarationPK, ValueDecl
 			sql.append("AND COD_N_VERSION = ?valueDeclarationVersion");
 			
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
-			query.setParameter("valueDeclarationNumber", factura.getValueDeclarationNumber());
-			query.setParameter("valueDeclarationYear", factura.getValueDeclarationYear());
-			query.setParameter("valueDeclarationVersion", factura.getValueDeclarationVersion());
+			query.setParameter(VALUE_DECLARATION_NUMBER, factura.getValueDeclarationNumber());
+			query.setParameter(VALUE_DECLARATION_YEAR, factura.getValueDeclarationYear());
+			query.setParameter(VALUE_DECLARATION_VERSION, factura.getValueDeclarationVersion());
 			Integer result = Integer.parseInt(String.valueOf(query.getSingleResult()));
 			if (result > 0) {
 				existeAlerta = true;
