@@ -436,7 +436,7 @@
 				<textElement markup="html">
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[new Boolean($V{PAGE_NUMBER}.intValue() == $V{V_CURRENT_PAGE_NUMBER}.intValue())?
+				<textFieldExpression><![CDATA[new Boolean($V{PAGE_NUMBER}.intValue() == ($V{V_CURRENT_PAGE_NUMBER} == null ? 0 : $V{V_CURRENT_PAGE_NUMBER}.intValue()))?
 $P{txtInfoGeneral} +
 (!$P{txtInfoREA}.isEmpty()? "<br/>"  + $P{txtInfoREA}  : "") + 
 (!$P{txtInfoLPC}.isEmpty()? "<br/>"  + $P{txtInfoLPC}  : "") 
