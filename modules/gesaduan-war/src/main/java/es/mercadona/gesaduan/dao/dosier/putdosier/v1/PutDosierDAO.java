@@ -17,6 +17,7 @@ public interface PutDosierDAO {
 	public void crearFacturas(DosierJPA dosierJPA);
 	public void actualizarContenedores(DosierJPA dosierJPA);
 	public void insertarLineasFacturas(DosierJPA dosierJPA);
+	public void modificarPesoBruto(DosierJPA dosierJPA);
 	public void updateFacturas(DosierEquipoJPA dosierEquipo);
 	public void validarFacturas(DosierPkJPA dosierPkJPA, String codigoUsuario);
 	public void validarTaricProducto(DosierPkJPA dosier, String codigoUsuario);

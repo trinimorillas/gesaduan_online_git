@@ -8,14 +8,14 @@
 	<parent>
 		<groupId>es.mercadona.fwk</groupId>
 		<artifactId>fwk-parent-web-wls1221</artifactId>
-		<version>3.7.10</version>
-	</parent>
+		<version>3.8.1</version>
+	</parent>	
 
 	<groupId>es.mercadona.gesaduan</groupId>
 	<artifactId>gesaduan-war</artifactId>
 	<packaging>war</packaging>
 
-	<version>2.2.5.1</version>
+	<version>0.0.1</version>
 
 	<name>Módulo web (war) de la aplicación de Servicios gesaduan</name>
 
