@@ -1,5 +1,6 @@
 package es.mercadona.gesaduan.dao.declaracionesdevalorapi.putreturns.v2.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -75,7 +76,7 @@ public class PutReturnsDAOImpl extends DaoBaseImpl<ValueDeclarationPK, ValueDecl
 	
 	@Transactional
 	public Integer getProvincia(String codigoAlternativo) {
-		Integer result;
+		Integer result = null;
 		try {		
 			final StringBuilder sql = new StringBuilder();
 				
@@ -83,7 +84,15 @@ public class PutReturnsDAOImpl extends DaoBaseImpl<ValueDeclarationPK, ValueDecl
 			
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
 			query.setParameter("codigoAlternativo", codigoAlternativo);
-			result = Integer.parseInt(String.valueOf(query.getSingleResult()));
+			
+			@SuppressWarnings("unchecked")
+			List<BigDecimal> listado = query.getResultList();			
+	
+			if (listado != null && !listado.isEmpty()) {
+				for (BigDecimal tmp : listado) {
+					result = DaoUtil.getParameterResultInteger(tmp);
+				}
+			}
 		} catch (Exception ex) {
 			this.logger.error(Constantes.FORMATO_ERROR_LOG, NOMBRE_CLASE, "getDeclarationNumber", ex.getClass().getSimpleName(), ex.getMessage());	
 			throw new ApplicationException(ex.getMessage());			
@@ -143,7 +152,7 @@ public class PutReturnsDAOImpl extends DaoBaseImpl<ValueDeclarationPK, ValueDecl
 	
 	@Transactional
 	public Long getTaric(String codigoProducto, ValueDeclarationJPA factura) {
-		Long codigoTaric;
+		Long codigoTaric = null;
 		try {		
 			final StringBuilder sql = new StringBuilder();
 				
@@ -151,9 +160,17 @@ public class PutReturnsDAOImpl extends DaoBaseImpl<ValueDeclarationPK, ValueDecl
 			
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
 			query.setParameter("codigoProducto", codigoProducto);
-			codigoTaric = Long.parseLong(String.valueOf(query.getSingleResult()));
 			
-			if (query.getSingleResult() == null) {
+			@SuppressWarnings("unchecked")
+			List<Long> listado = query.getResultList();			
+	
+			if (listado != null && !listado.isEmpty()) {
+				for (Long tmp : listado) {
+					codigoTaric = DaoUtil.getParameterResultLong(tmp);
+				}
+			}
+			
+			if (codigoTaric == null) {
 				generarAlerta("52", codigoProducto, factura);
 			}
 		} catch(Exception ex) {
