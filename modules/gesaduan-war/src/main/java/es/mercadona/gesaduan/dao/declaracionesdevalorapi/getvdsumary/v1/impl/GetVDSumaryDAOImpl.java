@@ -147,7 +147,9 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 			if(data.getAgencyId() != null) {
 				query1.append("JOIN S_RELACION_PROVEEDOR_R RPP ON (RPP.COD_N_PROVEEDOR = P.COD_N_PROVEEDOR) ");
 				query1.append("JOIN D_PROVEEDOR_R AGENCIA ON (AGENCIA.COD_N_PROVEEDOR = RPP.COD_N_AGENCIA_ADUANA AND (RPP.FEC_D_FIN IS NULL OR TRUNC(RPP.FEC_D_FIN) >= TRUNC(SYSDATE))) ");
-				query2.append("JOIN D_DOSIER DO ON (DO.NUM_DOSIER = DV.NUM_DOSIER AND DO.NUM_ANYO = DV.NUM_ANYO_DOSIER) ");				
+				query2.append("JOIN D_DOSIER DO ON (DO.NUM_DOSIER = DV.NUM_DOSIER AND DO.NUM_ANYO = DV.NUM_ANYO_DOSIER) ");	
+				query2.append("LEFT JOIN D_PROVEEDOR_R AGEEXP ON (AGEEXP.COD_N_PROVEEDOR = DO.COD_V_AGENCIA_EXPORTACION) ");  
+				query2.append("LEFT JOIN D_PROVEEDOR_R AGEIMP ON (AGEIMP.COD_N_PROVEEDOR = DO.COD_V_AGENCIA_IMPORTACION) ");   
 			}
 			
 			// Si el parámetro internalOrderId no es nulo 
@@ -172,7 +174,8 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 			
 			if(data.getAgencyId() != null) {
 				query1.append(" AND (AGENCIA.COD_N_LEGACY_PROVEEDOR = ?agencyLegacyId OR AGENCIA.COD_N_PROVEEDOR = ?agencyLegacyId) ");	
-				query2.append(" AND (DO.COD_V_AGENCIA_EXPORTACION= ?agencyLegacyId OR DO.COD_V_AGENCIA_IMPORTACION = ?agencyLegacyId) ");
+				query2.append(" AND ((DO.COD_V_AGENCIA_EXPORTACION= ?agencyLegacyId OR AGEEXP.COD_N_LEGACY_PROVEEDOR = ?agencyLegacyId) OR ");
+				query2.append("      (DO.COD_V_AGENCIA_EXPORTACION= ?agencyLegacyId OR AGEIMP.COD_N_LEGACY_PROVEEDOR = ?agencyLegacyId)) ");				
 			}
 			
 			if(data.getValueDeclarationNumber() != null) {
@@ -243,7 +246,8 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 				if (data.getDownloadStatus().equals("D")) {
 					query1.append(" AND DV.FEC_DT_DESCARGA IS NOT NULL ");		
 					if(data.getAgencyId() != null) {
-						query2.append(" AND ((DO.COD_V_AGENCIA_EXPORTACION=?agencyLegacyId AND DV.FEC_DT_DESCARGA_EXPORTADOR IS NOT NULL) OR (DO.COD_V_AGENCIA_IMPORTACION=?agencyLegacyId AND DV.FEC_DT_DESCARGA_IMPORTADOR IS NOT NULL)) ");
+						query2.append(" AND (((DO.COD_V_AGENCIA_EXPORTACION = ?agencyLegacyId OR AGEEXP.COD_N_LEGACY_PROVEEDOR = ?agencyLegacyId) AND DV.FEC_DT_DESCARGA_EXPORTADOR IS NOT NULL) OR  ");
+						query2.append("      ((DO.COD_V_AGENCIA_IMPORTACION = ?agencyLegacyId OR AGEIMP.COD_N_LEGACY_PROVEEDOR = ?agencyLegacyId) AND DV.FEC_DT_DESCARGA_IMPORTADOR IS NOT NULL)) ");						
 					} else {
 						query2.append(" AND ((DV.FEC_DT_DESCARGA_EXPORTADOR IS NOT NULL) OR (DV.FEC_DT_DESCARGA_IMPORTADOR IS NOT NULL)) ");
 					}
@@ -251,7 +255,8 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 				if (data.getDownloadStatus().equals("N")) {
 					query1.append(" AND DV.FEC_DT_DESCARGA IS NULL ");
 					if(data.getAgencyId() != null) {
-						query2.append(" AND ((DO.COD_V_AGENCIA_EXPORTACION=?agencyLegacyId AND DV.FEC_DT_DESCARGA_EXPORTADOR IS NULL) OR (DO.COD_V_AGENCIA_IMPORTACION=?agencyLegacyId AND DV.FEC_DT_DESCARGA_IMPORTADOR IS NULL)) ");
+						query2.append(" AND (((DO.COD_V_AGENCIA_EXPORTACION = ?agencyLegacyId OR AGEEXP.COD_N_LEGACY_PROVEEDOR = ?agencyLegacyId) AND DV.FEC_DT_DESCARGA_EXPORTADOR IS NULL) OR ");
+						query2.append("      ((DO.COD_V_AGENCIA_IMPORTACION = ?agencyLegacyId OR AGEIMP.COD_N_LEGACY_PROVEEDOR = ?agencyLegacyId) AND DV.FEC_DT_DESCARGA_IMPORTADOR IS NULL)) ");						
 					} else {
 						query2.append(" AND ((DV.FEC_DT_DESCARGA_EXPORTADOR IS NULL) AND (DV.FEC_DT_DESCARGA_IMPORTADOR IS NULL)) ");
 					}
@@ -284,13 +289,15 @@ public class GetVDSumaryDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 					if(data.getStartDate() != null) {
 						query1.append(" AND (TRUNC(DV.FEC_DT_DESCARGA)>=TO_DATE(?dateFrom,'DD/MM/YYYY')) ");
 						if(data.getAgencyId() != null) {
-							query2.append(" AND ((DO.COD_V_AGENCIA_EXPORTACION=?agencyLegacyId AND TRUNC(DV.FEC_DT_DESCARGA_EXPORTADOR)>=TO_DATE(?dateFrom,'DD/MM/YYYY')) OR (DO.COD_V_AGENCIA_IMPORTACION=?agencyLegacyId AND TRUNC(DV.FEC_DT_DESCARGA_IMPORTADOR)>=TO_DATE(?dateFrom,'DD/MM/YYYY'))) ");
+							query2.append(" AND (((DO.COD_V_AGENCIA_EXPORTACION = ?agencyLegacyId OR AGEEXP.COD_N_LEGACY_PROVEEDOR = ?agencyLegacyId) AND TRUNC(DV.FEC_DT_DESCARGA_EXPORTADOR)>=TO_DATE(?dateFrom,'DD/MM/YYYY')) OR ");
+							query2.append("      ((DO.COD_V_AGENCIA_IMPORTACION = ?agencyLegacyId OR AGEIMP.COD_N_LEGACY_PROVEEDOR = ?agencyLegacyId) AND TRUNC(DV.FEC_DT_DESCARGA_IMPORTADOR)>=TO_DATE(?dateFrom,'DD/MM/YYYY'))) ");							
 						}
 					}
 					if(data.getEndDate() != null) {
 						query1.append(" AND (TRUNC(DV.FEC_DT_DESCARGA)<=TO_DATE(?dateTo,'DD/MM/YYYY')) ");
 						if(data.getAgencyId() != null) {
-							query2.append(" AND ((DO.COD_V_AGENCIA_EXPORTACION=?agencyLegacyId AND TRUNC(DV.FEC_DT_DESCARGA_EXPORTADOR) <= TO_DATE(?dateTo,'DD/MM/YYYY')) OR (DO.COD_V_AGENCIA_IMPORTACION=?agencyLegacyId AND TRUNC(DV.FEC_DT_DESCARGA_IMPORTADOR)<=TO_DATE(?dateTo,'DD/MM/YYYY'))) ");
+							query2.append(" AND (((DO.COD_V_AGENCIA_EXPORTACION = ?agencyLegacyId OR AGEEXP.COD_N_LEGACY_PROVEEDOR = ?agencyLegacyId) AND TRUNC(DV.FEC_DT_DESCARGA_EXPORTADOR)<=TO_DATE(?dateTo,'DD/MM/YYYY')) OR ");
+							query2.append("      ((DO.COD_V_AGENCIA_IMPORTACION = ?agencyLegacyId OR AGEIMP.COD_N_LEGACY_PROVEEDOR = ?agencyLegacyId) AND TRUNC(DV.FEC_DT_DESCARGA_IMPORTADOR)<=TO_DATE(?dateTo,'DD/MM/YYYY'))) ");							
 						}
 					}				
 				}
