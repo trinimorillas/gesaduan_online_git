@@ -410,7 +410,7 @@ public class GetDosierDetalleDAOImpl extends BaseDAO<DosierJPA> implements GetDo
 				for (Object[] tmp : listado) {			
 					ContenedorDTO contenedor = null;									
 					contenedor = new ContenedorDTO();
-					contenedor.setNumContenedor(Long.parseLong(String.valueOf(tmp[0])));
+					contenedor.setNumContenedor(String.valueOf(tmp[0]));
 					contenedor.setMatricula(String.valueOf(tmp[1]));
 					contenedor.setCodigoCarga(String.valueOf(tmp[2]));
 					contenedor.setCodigoTipoCarga(Integer.parseInt(String.valueOf(tmp[3])));

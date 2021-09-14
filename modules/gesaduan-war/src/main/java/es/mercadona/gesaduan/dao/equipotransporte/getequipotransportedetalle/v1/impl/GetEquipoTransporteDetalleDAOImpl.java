@@ -338,7 +338,7 @@ public class GetEquipoTransporteDetalleDAOImpl extends BaseDAO<EquipoTransporteJ
 					ContenedorDTO contenedor = new ContenedorDTO();
 					
 					if (tmp[0] != null) contenedor.setCodigoCarga(String.valueOf(tmp[0]));
-					if (tmp[1] != null) contenedor.setNumContenedor(Long.parseLong(String.valueOf(tmp[1])));
+					if (tmp[1] != null) contenedor.setNumContenedor(String.valueOf(tmp[1]));
 					if (tmp[2] != null) contenedor.setCodigoSuministro(Integer.parseInt(String.valueOf(tmp[2])));
 					if (tmp[3] != null) contenedor.setNombreSuministro(String.valueOf(tmp[3]));
 					if (tmp[4] != null) contenedor.setCodigoProveedor(Long.parseLong(String.valueOf(tmp[4])));
