@@ -1,26 +1,12 @@
 package es.mercadona.gesaduan.jpa.dosier;
 
 import java.io.Serializable;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import es.mercadona.gesaduan.jpa.cargas.v1.CargasPkJPA;
 
 public class DosierContenedorJPA implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private Long numContenedor;
+	private String numContenedor;
 	private String codigoAlmacen;
 	private String fechaExpedicion;
 	private String usuarioCreacion;
@@ -30,13 +16,13 @@ public class DosierContenedorJPA implements Serializable {
 	/**
 	 * @return the numContenedor
 	 */
-	public Long getNumContenedor() {
+	public String getNumContenedor() {
 		return numContenedor;
 	}
 	/**
 	 * @param numContenedor the numContenedor to set
 	 */
-	public void setNumContenedor(Long numContenedor) {
+	public void setNumContenedor(String numContenedor) {
 		this.numContenedor = numContenedor;
 	}
 	/**

@@ -225,7 +225,7 @@ public class GetContenedoresDAOImpl extends BaseDAO<EquipoTransporteJPA> impleme
 				listaContenedor = new ArrayList<>(); 
 				for (Object[] tmp : listado) {		
 					ContenedorDTO contenedor = new ContenedorDTO();
-					if (tmp[0] != null) contenedor.setNumContenedor(Long.parseLong(String.valueOf(tmp[0])));
+					if (tmp[0] != null) contenedor.setNumContenedor(String.valueOf(tmp[0]));
 					if (tmp[1] != null) contenedor.setMcaFacturado(String.valueOf(tmp[1]));
 					if (tmp[2] != null) contenedor.setFechaExpedicion(String.valueOf(tmp[2]));					
 					listaContenedor.add(contenedor);
