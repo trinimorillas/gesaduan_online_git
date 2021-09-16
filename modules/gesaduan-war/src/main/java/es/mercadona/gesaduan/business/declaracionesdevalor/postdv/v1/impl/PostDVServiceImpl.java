@@ -65,7 +65,6 @@ public class PostDVServiceImpl implements PostDVService {
 			}
 			if (input.getData().getHeader().getSource() != null) {
 				if (input.getData().getHeader().getSource().getPublicId() != null) {
-					//declaracionJPA.setProveedor(input.getData().getHeader().getSource().getPublicId());
 					declaracionJPA.setProveedor(postDVCabeceraDAO.getProveedor(input.getData().getHeader().getSource().getPublicId()));
 				}
 				if (input.getData().getHeader().getSource().getRegionId() != null) {
@@ -122,7 +121,9 @@ public class PostDVServiceImpl implements PostDVService {
 			if (listado != null && !listado.isEmpty()) {
 				for (VDLineDTO tmp : listado) {
 					LineaDeclaracionJPA linea = new LineaDeclaracionJPA();
-					
+					if (tmp.getLineNumber() != null) {
+						linea.setNumLinea(tmp.getLineNumber());
+					}
 					if (tmp.getProductPublicId() != null) {
 						linea.setCodMerca(tmp.getProductPublicId());
 					}

@@ -225,7 +225,7 @@ public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeVa
 
 			/* Comprobar lineas de las DV */
 			if (dvEdit.getLineasProductos() != null && !dvEdit.getLineasProductos().isEmpty()) {
-				List<LineaDeclaracionJPA> aux = new ArrayList();
+				List<LineaDeclaracionJPA> aux = new ArrayList<>();
 
 				for (LineaDeclaracionJPA lineaJPA : dvJpa.getLineasProductos()) {
 					DeclaracionesDeValorPostJPA pkLinea = new DeclaracionesDeValorPostJPA();
@@ -236,7 +236,7 @@ public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeVa
 					lineaJPA.setCodigoDv(pkLinea);
 
 					for (LineaDeclaracionJPA lineaEdit : dvEdit.getLineasProductos()) {
-						if (lineaEdit.getCodMerca().equals(lineaJPA.getCodMerca())) {
+						if (lineaEdit.getNumLinea().equals(lineaJPA.getNumLinea())) {
 							if (lineaEdit.getNombreTipoBulto() != null) {
 								lineaJPA.setNombreTipoBulto(lineaEdit.getNombreTipoBulto());
 							}
@@ -352,8 +352,6 @@ public class PostDeclaracionDeValorDAOImpl extends DaoBaseImpl<DeclaracionesDeVa
 	public void marcarDosierOK(String numFactura, String anyoFactura) {
 		try {
 			StringBuilder sql = new StringBuilder();
-			
-			
 			
 			sql.append("UPDATE D_DOSIER D ");
 			sql.append("SET D.MCA_ERROR = 'N'  ");

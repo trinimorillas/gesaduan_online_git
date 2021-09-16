@@ -1,4 +1,4 @@
-package es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restful;
+package es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restfull;
 
 import es.mercadona.gesaduan.dto.declaracionesdevalor.AbstractDTO;
 
@@ -16,7 +16,6 @@ public class VDDataDTO extends AbstractDTO {
 	private String incotermId;
 	private String deliveryNoteDate;
 	private String dispatchDate;
-	private String valueDeclarationType;
 
 	/**
 	 * @return the valueDeclarationIds
@@ -143,20 +142,6 @@ public class VDDataDTO extends AbstractDTO {
 	 */
 	public void setDispatchDate(String dispatchDate) {
 		this.dispatchDate = dispatchDate;
-	}
-
-	/**
-	 * @return the valueDeclarationType
-	 */
-	public String getValueDeclarationType() {
-		return valueDeclarationType;
-	}
-
-	/**
-	 * @param valueDeclarationType the valueDeclarationType to set
-	 */
-	public void setValueDeclarationType(String valueDeclarationType) {
-		this.valueDeclarationType = valueDeclarationType;
 	}
 
 }
