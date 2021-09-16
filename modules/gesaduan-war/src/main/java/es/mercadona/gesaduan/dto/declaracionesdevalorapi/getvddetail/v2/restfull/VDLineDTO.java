@@ -1,4 +1,4 @@
-package es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restful;
+package es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restfull;
 
 import es.mercadona.gesaduan.dto.declaracionesdevalor.AbstractDTO;
 
@@ -35,7 +35,7 @@ public class VDLineDTO extends AbstractDTO {
 	private String sourceCountryId;
 	private Boolean isReadyToEat;
 	private String hasError;
-	private Integer lineNumber;
+	private Long lineNumber;
 
 	/**
 	 * @return the productPublicId
@@ -476,14 +476,14 @@ public class VDLineDTO extends AbstractDTO {
 	/**
 	 * @return the lineNumber
 	 */
-	public Integer getLineNumber() {
+	public Long getLineNumber() {
 		return lineNumber;
 	}
 
 	/**
 	 * @param lineNumber the lineNumber to set
 	 */
-	public void setLineNumber(Integer lineNumber) {
+	public void setLineNumber(Long lineNumber) {
 		this.lineNumber = lineNumber;
 	}
 

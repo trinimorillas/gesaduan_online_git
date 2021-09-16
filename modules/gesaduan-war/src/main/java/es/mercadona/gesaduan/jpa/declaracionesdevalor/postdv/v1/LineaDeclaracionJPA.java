@@ -24,12 +24,8 @@ public class LineaDeclaracionJPA implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name = "COD_N_MERCA")
-	private Integer codMerca;
-
-	@Id
-	@Column(name = "TXT_NOMBRE_BULTO_DV")
-	private String nombreTipoBulto;
+	@Column(name = "NUM_LINEA")
+	private Long numLinea;
 
 	@Id
 	@ManyToOne(cascade = CascadeType.ALL)
@@ -43,7 +39,13 @@ public class LineaDeclaracionJPA implements Serializable {
 
 	@Column(name = "COD_V_REA")
 	private String codigoRea;
-	
+
+	@Column(name = "COD_N_MERCA")
+	private Integer codMerca;
+
+	@Column(name = "TXT_NOMBRE_BULTO_DV")
+	private String nombreTipoBulto;
+
 	@Column(name = "COD_V_EXPEDICION")
 	private String expedicion;
 
@@ -52,7 +54,7 @@ public class LineaDeclaracionJPA implements Serializable {
 
 	@Column(name = "TXT_MARCA")
 	private String marca;
-	
+
 	@Column(name = "MCA_ERROR")
 	private String marcaError;
 
@@ -115,6 +117,20 @@ public class LineaDeclaracionJPA implements Serializable {
 
 	public Integer getCodMerca() {
 		return codMerca;
+	}
+
+	/**
+	 * @return the lineNumber
+	 */
+	public Long getNumLinea() {
+		return numLinea;
+	}
+
+	/**
+	 * @param lineNumber the lineNumber to set
+	 */
+	public void setNumLinea(Long numLinea) {
+		this.numLinea = numLinea;
 	}
 
 	public void setCodMerca(Integer codMerca) {
@@ -335,7 +351,7 @@ public class LineaDeclaracionJPA implements Serializable {
 		this.marcaError = marcaError;
 	}
 
-	public LineaDeclaracionJPA(Integer codMerca, DeclaracionesDeValorPostJPA codigoDv, Long codigoTaric,
+	public LineaDeclaracionJPA(Long numLinea, Integer codMerca, DeclaracionesDeValorPostJPA codigoDv, Long codigoTaric,
 			String codigoRea, String expedicion, String nombreAlternativo, String marca,
 			String descFormatoVentaAlternativo, String nombreTipoBulto, Integer numeroDeBultos, Double pesoNetoLinea,
 			Double pesoBrutoLinea, Double volumenUnidad, Double cantidadFormato, Double precioUnidad,
@@ -343,6 +359,7 @@ public class LineaDeclaracionJPA implements Serializable {
 			Date fechaAlbaran, Date fechaCreacion, Date fechaModificacion, String codAplicacion, String usuarioCreacion,
 			String usuarioEdit) {
 		super();
+		this.numLinea = numLinea;
 		this.codMerca = codMerca;
 		this.codigoDv = codigoDv;
 		this.codigoTaric = codigoTaric;
@@ -373,12 +390,12 @@ public class LineaDeclaracionJPA implements Serializable {
 
 	public LineaDeclaracionJPA() {
 		super();
-		
+
 	}
 
 	@Override
 	public String toString() {
-		return "LineaDeclaracionJPA [codMerca=" + codMerca + ", codigoDv=" + codigoDv + ", codigoTaric=" + codigoTaric
+		return "LineaDeclaracionJPA [numLinea=" + numLinea + ", codMerca=" + codMerca + ", codigoDv=" + codigoDv + ", codigoTaric=" + codigoTaric
 				+ ", codigoRea=" + codigoRea + ", expedicion=" + expedicion + ", nombreAlternativo=" + nombreAlternativo
 				+ ", marca=" + marca + ", descFormatoVentaAlternativo=" + descFormatoVentaAlternativo
 				+ ", nombreTipoBulto=" + nombreTipoBulto + ", numeroDeBultos=" + numeroDeBultos + ", pesoNetoLinea="
@@ -409,6 +426,7 @@ public class LineaDeclaracionJPA implements Serializable {
 		result = prime * result + ((gradoAlcohol == null) ? 0 : gradoAlcohol.hashCode());
 		result = prime * result + ((gradoPlato == null) ? 0 : gradoPlato.hashCode());
 		result = prime * result + ((importeTotal == null) ? 0 : importeTotal.hashCode());
+		result = prime * result + ((numLinea == null) ? 0 : numLinea.hashCode());
 		result = prime * result + ((marca == null) ? 0 : marca.hashCode());
 		result = prime * result + ((nombreAlternativo == null) ? 0 : nombreAlternativo.hashCode());
 		result = prime * result + ((nombreTipoBulto == null) ? 0 : nombreTipoBulto.hashCode());
@@ -424,7 +442,6 @@ public class LineaDeclaracionJPA implements Serializable {
 		return result;
 	}
 
-	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -542,6 +559,13 @@ public class LineaDeclaracionJPA implements Serializable {
 		} else if (!importeTotal.equals(other.importeTotal)) {
 			return false;
 		}
+		if (numLinea == null) {
+			if (other.numLinea != null) {
+				return false;
+			}
+		} else if (!numLinea.equals(other.numLinea)) {
+			return false;
+		}
 		if (marca == null) {
 			if (other.marca != null) {
 				return false;
@@ -627,6 +651,6 @@ public class LineaDeclaracionJPA implements Serializable {
 			return false;
 		}
 		return true;
-	}	
-	
+	}
+
 }

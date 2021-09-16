@@ -1,4 +1,4 @@
-package es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restful;
+package es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restfull;
 
 import java.util.List;
 
@@ -12,7 +12,6 @@ public class DataDTO extends AbstractDTO {
 	private VDHeaderDTO header;
 	private List<VDHistoricalDTO> historical;
 	private List<VDLineDTO> lineList;
-	private List<VDItemDTO> itemList;
 
 	/**
 	 * @return the commonData
@@ -68,20 +67,6 @@ public class DataDTO extends AbstractDTO {
 	 */
 	public void setLineList(List<VDLineDTO> lineList) {
 		this.lineList = lineList;
-	}
-
-	/**
-	 * @return the itemList
-	 */
-	public List<VDItemDTO> getItemList() {
-		return itemList;
-	}
-
-	/**
-	 * @param itemList the itemList to set
-	 */
-	public void setItemList(List<VDItemDTO> itemList) {
-		this.itemList = itemList;
 	}
 
 }
