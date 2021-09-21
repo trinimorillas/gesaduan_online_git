@@ -300,7 +300,7 @@ public class GetVDDocumentApiDAOImpl extends DaoBaseImpl<DocumentoDVDataPK, Docu
 			select.append("DECLARACION_VALOR = ?valueDeclarationNumber AND ");
 			select.append("ANYO = ?valueDeclarationYear AND ");
 			select.append("VERSION_N = ?valueDeclarationVersion ");
-			select.append("ORDER BY CODIGO_TARIC,TIPO_LINEA,CODIGO ");
+			select.append("ORDER BY CODIGO_TARIC,TIPO_LINEA,CODIGO,TIPO,PAIS_ORIGEN ");
 			
 			sql.append(select);
 			

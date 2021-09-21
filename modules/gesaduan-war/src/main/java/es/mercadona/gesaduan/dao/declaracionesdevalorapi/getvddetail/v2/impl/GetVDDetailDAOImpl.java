@@ -289,7 +289,7 @@ public class GetVDDetailDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 		sqlLineas.append("  DVL.COD_N_DECLARACION_VALOR = ?valueDeclarationNumber AND  "); 
 		sqlLineas.append("  DVL.NUM_ANYO = ?valueDeclarationYear AND "); 
 		sqlLineas.append("  DVL.COD_N_VERSION = ?valueDeclarationVersion ");
-		sqlLineas.append("ORDER BY DVL.NUM_LINEA ASC ");
+		sqlLineas.append("ORDER BY DVL.COD_N_MERCA, DVL.TXT_NOMBRE_BULTO_DV, DVL.COD_V_PAIS ASC ");
 		sqlLineas.append(") WHERE NUMERO = 1");			
 
 		final Query queryLineas = getEntityManager().createNativeQuery(sqlLineas.toString());
