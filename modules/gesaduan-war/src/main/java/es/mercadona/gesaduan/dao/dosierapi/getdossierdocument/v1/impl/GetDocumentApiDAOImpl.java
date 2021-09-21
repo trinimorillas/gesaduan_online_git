@@ -374,7 +374,7 @@ public class GetDocumentApiDAOImpl extends DaoBaseImpl<DocumentoDataPK, Document
 			select.append("DV.NUM_DOSIER = ?dossierNumber AND ");
 			select.append("DV.NUM_ANYO_DOSIER = ?dossierYear AND ");
 			select.append("DV.MCA_ULTIMA_VIGENTE = 'S' ");				
-			select.append("ORDER BY DECLARACION_VALOR,ANYO,VERSION_N,CODIGO_TARIC,TIPO_LINEA,CODIGO ");
+			select.append("ORDER BY DECLARACION_VALOR,ANYO,VERSION_N,CODIGO_TARIC,TIPO_LINEA,CODIGO,TIPO,PAIS_ORIGEN ");
 			
 			sql.append(select);
 			
