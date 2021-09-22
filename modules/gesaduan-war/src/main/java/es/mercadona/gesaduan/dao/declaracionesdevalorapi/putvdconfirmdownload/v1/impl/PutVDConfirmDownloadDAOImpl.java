@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -20,10 +19,7 @@ import es.mercadona.gesaduan.jpa.declaracionesdevalor.postdv.v1.DeclaracionesDeV
 import es.mercadona.gesaduan.jpa.declaracionesdevalor.postdv.v1.DeclaracionesDeValorPostPK;
 
 @Stateless
-public class PutVDConfirmDownloadDAOImpl extends DaoBaseImpl<DeclaracionesDeValorPostPK, DeclaracionesDeValorPostJPA> implements PutVDConfirmDownloadDAO {
-
-	@Inject
-	private org.slf4j.Logger logger;	
+public class PutVDConfirmDownloadDAOImpl extends DaoBaseImpl<DeclaracionesDeValorPostPK, DeclaracionesDeValorPostJPA> implements PutVDConfirmDownloadDAO {	
 	
 	@PersistenceContext
 	private EntityManager entityM;
@@ -75,15 +71,18 @@ public class PutVDConfirmDownloadDAOImpl extends DaoBaseImpl<DeclaracionesDeValo
 			} else {
 				// PROVEEDOR EXPORTADOR
 				final StringBuilder sqlProveedorExportador = new StringBuilder();
-				sqlProveedorExportador.append("MERGE INTO O_DECLARACION_VALOR_CAB DV USING (");
+				sqlProveedorExportador.append("MERGE INTO O_DECLARACION_VALOR_CAB DV USING ( ");
 				sqlProveedorExportador.append("SELECT NUM_DOSIER, NUM_ANYO ");
-				sqlProveedorExportador.append("FROM D_DOSIER ");
-				sqlProveedorExportador.append("WHERE COD_V_AGENCIA_EXPORTACION = ?supplierId) DD ");
+				sqlProveedorExportador.append("FROM D_DOSIER DO ");
+				sqlProveedorExportador.append("LEFT JOIN D_PROVEEDOR_R P ON (P.COD_N_PROVEEDOR = DO.COD_V_AGENCIA_EXPORTACION) ");
+				sqlProveedorExportador.append("WHERE (DO.COD_V_AGENCIA_EXPORTACION = ?supplierId OR P.COD_N_LEGACY_PROVEEDOR = ?supplierId) ");
+				sqlProveedorExportador.append(") DD ");
 				sqlProveedorExportador.append("ON (DV.NUM_DOSIER = DD.NUM_DOSIER AND DV.NUM_ANYO = DD.NUM_ANYO) ");
-				sqlProveedorExportador.append("WHEN MATCHED THEN UPDATE SET ");
-				sqlProveedorExportador.append("FEC_DT_DESCARGA_EXPORTADOR = DECODE(?isDownloaded, 'S', SYSDATE, NULL), ");
-				sqlProveedorExportador.append("COD_V_USR_MODIFICACION = ?userId ");
-				sqlProveedorExportador.append("WHERE COD_N_DECLARACION_VALOR = ?valueDeclarationNumber AND NUM_ANYO = ?valueDeclarationYear AND COD_N_VERSION = ?valueDeclarationVersion");
+				sqlProveedorExportador.append("WHEN MATCHED THEN UPDATE ");
+				sqlProveedorExportador.append("SET FEC_DT_DESCARGA_EXPORTADOR = DECODE(?isDownloaded, 'S', systimestamp, NULL), COD_V_USR_MODIFICACION = ?userId ");
+				sqlProveedorExportador.append("WHERE COD_N_DECLARACION_VALOR = ?valueDeclarationNumber ");
+				sqlProveedorExportador.append("AND NUM_ANYO = ?valueDeclarationYear ");
+				sqlProveedorExportador.append("AND COD_N_VERSION = ?valueDeclarationVersion");
 				     
 				final Query queryProveedorExportador = getEntityManager().createNativeQuery(sqlProveedorExportador.toString());
 				
@@ -98,15 +97,20 @@ public class PutVDConfirmDownloadDAOImpl extends DaoBaseImpl<DeclaracionesDeValo
 				
 				// PROVEEDOR IMPORTADOR
 				final StringBuilder sqlProveedorImportador = new StringBuilder();
-				sqlProveedorImportador.append("MERGE INTO O_DECLARACION_VALOR_CAB DV USING (");
+				sqlProveedorImportador.append("MERGE INTO  O_DECLARACION_VALOR_CAB DV ");
+				sqlProveedorImportador.append("USING ( ");
 				sqlProveedorImportador.append("SELECT NUM_DOSIER, NUM_ANYO ");
-				sqlProveedorImportador.append("FROM D_DOSIER ");
-				sqlProveedorImportador.append("WHERE COD_V_AGENCIA_IMPORTACION = ?supplierId) DD ");
+				sqlProveedorImportador.append("FROM D_DOSIER DO ");
+				sqlProveedorImportador.append("LEFT JOIN D_PROVEEDOR_R P ON (P.COD_N_PROVEEDOR = DO.COD_V_AGENCIA_IMPORTACION) ");
+				sqlProveedorImportador.append("WHERE (DO.COD_V_AGENCIA_IMPORTACION = ?supplierId OR P.COD_N_LEGACY_PROVEEDOR = ?supplierId) ");
+				sqlProveedorImportador.append(") DD ");
 				sqlProveedorImportador.append("ON (DV.NUM_DOSIER = DD.NUM_DOSIER AND DV.NUM_ANYO = DD.NUM_ANYO) ");
-				sqlProveedorImportador.append("WHEN MATCHED THEN UPDATE SET ");
-				sqlProveedorImportador.append("FEC_DT_DESCARGA_IMPORTADOR = DECODE(?isDownloaded, 'S', SYSDATE, NULL), ");
-				sqlProveedorImportador.append("COD_V_USR_MODIFICACION = ?userId ");
-				sqlProveedorImportador.append("WHERE COD_N_DECLARACION_VALOR = ?valueDeclarationNumber AND NUM_ANYO = ?valueDeclarationYear AND COD_N_VERSION = ?valueDeclarationVersion");
+				sqlProveedorImportador.append("WHEN MATCHED THEN ");
+				sqlProveedorImportador.append("UPDATE ");
+				sqlProveedorImportador.append("SET FEC_DT_DESCARGA_IMPORTADOR = DECODE(?isDownloaded, 'S', systimestamp, NULL), COD_V_USR_MODIFICACION = ?userId ");
+				sqlProveedorImportador.append("WHERE COD_N_DECLARACION_VALOR = ?valueDeclarationNumber AND ");
+				sqlProveedorImportador.append("NUM_ANYO = ?valueDeclarationYear AND ");
+				sqlProveedorImportador.append("COD_N_VERSION = ?valueDeclarationVersion");
 				     
 				final Query queryProveedorImportador = getEntityManager().createNativeQuery(sqlProveedorImportador.toString());
 				
