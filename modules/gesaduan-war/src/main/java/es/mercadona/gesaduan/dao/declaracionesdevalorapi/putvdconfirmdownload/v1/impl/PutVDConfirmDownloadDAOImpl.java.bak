@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -20,10 +19,7 @@ import es.mercadona.gesaduan.jpa.declaracionesdevalor.postdv.v1.DeclaracionesDeV
 import es.mercadona.gesaduan.jpa.declaracionesdevalor.postdv.v1.DeclaracionesDeValorPostPK;
 
 @Stateless
-public class PutVDConfirmDownloadDAOImpl extends DaoBaseImpl<DeclaracionesDeValorPostPK, DeclaracionesDeValorPostJPA> implements PutVDConfirmDownloadDAO {
-
-	@Inject
-	private org.slf4j.Logger logger;	
+public class PutVDConfirmDownloadDAOImpl extends DaoBaseImpl<DeclaracionesDeValorPostPK, DeclaracionesDeValorPostJPA> implements PutVDConfirmDownloadDAO {	
 	
 	@PersistenceContext
 	private EntityManager entityM;

@@ -16,8 +16,8 @@ public class InputVDSumaryDTO extends AbstractDTO implements Serializable{
 	private String agencyId;
 	private Integer valueDeclarationNumber;
 	private Integer valueDeclarationYear;
-	private Integer dossierNumber;
-	private Integer dossierYear;
+	private Integer dossierNumber ;	
+	private Integer dossierYear;		
 	private String internalOrderId;
 	private String supplierId;
 	private String sourceName;
@@ -272,7 +272,7 @@ public class InputVDSumaryDTO extends AbstractDTO implements Serializable{
 	public void setOrder(String order) {
 		this.order = order;
 	}
-	/**
-	 * @return the valueDeclarationType
-	 */
+
+	
+	
 }

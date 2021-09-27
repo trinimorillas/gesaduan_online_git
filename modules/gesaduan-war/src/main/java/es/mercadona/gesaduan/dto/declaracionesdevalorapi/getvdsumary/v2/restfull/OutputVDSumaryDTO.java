@@ -1,4 +1,4 @@
-package es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v2.restful;
+package es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v2.restfull;
 
 import java.io.Serializable;
 import java.util.List;

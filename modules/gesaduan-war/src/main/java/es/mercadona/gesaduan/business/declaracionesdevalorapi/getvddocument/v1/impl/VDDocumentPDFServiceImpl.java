@@ -126,11 +126,12 @@ public class VDDocumentPDFServiceImpl implements VDDocumentPDFService {
 		    ficheroByte = FileUtils.readFileToByteArray(file);
 	    
 		} catch (Exception e) {
-			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE, "preparaDocumento", e.getClass().getSimpleName(), e.getMessage());	
+			this.logger.error(Constantes.FORMATO_ERROR_LOG,LOG_FILE,"preparaDocumento",e.getClass().getSimpleName(),e.getMessage());	
 			throw new ApplicationException(e.getMessage());			
 		}
 		
 		return ficheroByte;
+
 	}
 
 	private void preparaParametrosReport(OutputDeclaracionesDeValorDocCabDTO outDVDocumentoDTO,final Map<String, Object> mapParams) {

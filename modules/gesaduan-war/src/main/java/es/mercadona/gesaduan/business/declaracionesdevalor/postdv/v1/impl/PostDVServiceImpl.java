@@ -130,7 +130,9 @@ public class PostDVServiceImpl implements PostDVService {
 			if (listado != null && !listado.isEmpty()) {
 				for (VDLineDTO tmp : listado) {
 					LineaDeclaracionJPA linea = new LineaDeclaracionJPA();
-					
+					if (tmp.getLineNumber() != null) {
+						linea.setNumLinea(tmp.getLineNumber());
+					}
 					if (tmp.getProductPublicId() != null) {
 						linea.setCodMerca(tmp.getProductPublicId());
 					}
