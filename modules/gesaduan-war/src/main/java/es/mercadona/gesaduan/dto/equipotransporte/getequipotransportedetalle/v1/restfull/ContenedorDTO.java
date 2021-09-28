@@ -8,7 +8,7 @@ public class ContenedorDTO extends AbstractDTO {
 
 	private static final long serialVersionUID = 1L;
 
-	private Long numContenedor;
+	private String numContenedor;
 	private String codigoCarga;
 	private Integer codigoTipoCarga;
 	private Integer codigoSuministro;
@@ -29,11 +29,11 @@ public class ContenedorDTO extends AbstractDTO {
 	private Integer anyoDosier;
 	private List<PedidoDTO> pedido;
 
-	public Long getNumContenedor() {
+	public String getNumContenedor() {
 		return numContenedor;
 	}
 
-	public void setNumContenedor(Long numContenedor) {
+	public void setNumContenedor(String numContenedor) {
 		this.numContenedor = numContenedor;
 	}
 

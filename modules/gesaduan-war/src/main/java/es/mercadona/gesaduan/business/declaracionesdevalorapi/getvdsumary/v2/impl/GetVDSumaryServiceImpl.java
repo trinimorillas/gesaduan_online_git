@@ -5,7 +5,7 @@ import javax.inject.Inject;
 import es.mercadona.gesaduan.business.declaracionesdevalorapi.getvdsumary.v2.GetVDSumaryService;
 import es.mercadona.gesaduan.dao.declaracionesdevalorapi.getvdsumary.v2.GetVDSumaryDAO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v2.InputVDSumaryDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v2.restful.OutputVDSumaryDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v2.restfull.OutputVDSumaryDTO;
 
 
 

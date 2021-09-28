@@ -299,7 +299,7 @@ public class GetVDDocApiDAOImpl extends DaoBaseImpl<VDDocumentPK, VDDocumentJPA>
 			sql.append("GROUP BY DECLARACION_VALOR, ANYO, VERSION_N, PRODUCTO, CODIGO_TARIC ");
 			sql.append(") ");
 			sql.append("WHERE DECLARACION_VALOR = ?valueDeclarationNumber AND ANYO = ?valueDeclarationYear AND VERSION_N = ?valueDeclarationVersion ");
-			sql.append("ORDER BY CODIGO_TARIC, TIPO_LINEA, CODIGO");
+			sql.append("ORDER BY CODIGO_TARIC, TIPO_LINEA, CODIGO, TIPO, PAIS_ORIGEN");
 
 			final Query query = getEntityManager().createNativeQuery(sql.toString());
 			query.setParameter(VALUE_DECLARATION_NUMBER, input.getValueDeclarationNumber());

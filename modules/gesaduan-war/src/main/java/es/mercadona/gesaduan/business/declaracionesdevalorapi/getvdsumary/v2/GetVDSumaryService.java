@@ -1,7 +1,7 @@
 package es.mercadona.gesaduan.business.declaracionesdevalorapi.getvdsumary.v2;
 
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v2.InputVDSumaryDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v2.restful.OutputVDSumaryDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v2.restfull.OutputVDSumaryDTO;
 
 public interface GetVDSumaryService {
 

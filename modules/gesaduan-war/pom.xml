@@ -15,7 +15,7 @@
 	<artifactId>gesaduan-war</artifactId>
 	<packaging>war</packaging>
 
-	<version>2.2.5.1</version>
+	<version>0.0.1</version>
 
 	<name>Módulo web (war) de la aplicación de Servicios gesaduan</name>
 

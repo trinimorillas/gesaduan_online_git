@@ -1,10 +1,14 @@
-package es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restful;
+package es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvdsumary.v2.restfull;
 
-import es.mercadona.gesaduan.dto.declaracionesdevalor.AbstractDTO;
+import java.io.Serializable;
 
-public class InternalOrderListDTO extends AbstractDTO {
+import es.mercadona.gesaduan.dto.common.AbstractDTO;
+
+public class DataVDSumaryOrderDTO extends AbstractDTO implements Serializable {
+
 	private static final long serialVersionUID = 1L;
-	private String internalOrderId;
+	
+	private String  internalOrderId;
 
 	/**
 	 * @return the internalOrderId
@@ -20,4 +24,5 @@ public class InternalOrderListDTO extends AbstractDTO {
 		this.internalOrderId = internalOrderId;
 	}
 
+	
 }

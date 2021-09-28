@@ -2,16 +2,11 @@ package es.mercadona.gesaduan.jpa.declaracionesdevalor.postdv.v1;
 
 import java.io.Serializable;
 
-public class LineaDeclaracionPK implements Serializable{
+public class LineaDeclaracionPK implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
-	private DeclaracionesDeValorPostPK codigoDv;	
-	private Integer codMerca;
-	private String nombreTipoBulto;
+	private DeclaracionesDeValorPostPK codigoDv;
+	private Long numLinea;
 
 	public DeclaracionesDeValorPostPK getCodigoDv() {
 		return codigoDv;
@@ -21,62 +16,55 @@ public class LineaDeclaracionPK implements Serializable{
 		this.codigoDv = codigoDv;
 	}
 
-	public Integer getCodMerca() {
-		return codMerca;
-	}
-
-	public void setCodMerca(Integer codMerca) {
-		this.codMerca = codMerca;
+	/**
+	 * @return the lineNumber
+	 */
+	public Long getNumLinea() {
+		return numLinea;
 	}
 
 	/**
-	 * @return the nombreTipoBulto
+	 * @param lineNumber the lineNumber to set
 	 */
-	public String getNombreTipoBulto() {
-		return nombreTipoBulto;
-	}
-
-	/**
-	 * @param nombreTipoBulto the nombreTipoBulto to set
-	 */
-	public void setNombreTipoBulto(String nombreTipoBulto) {
-		this.nombreTipoBulto = nombreTipoBulto;
+	public void setNumLinea(Long numLinea) {
+		this.numLinea = numLinea;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((codMerca == null) ? 0 : codMerca.hashCode());
 		result = prime * result + ((codigoDv == null) ? 0 : codigoDv.hashCode());
-		result = prime * result + ((nombreTipoBulto == null) ? 0 : nombreTipoBulto.hashCode());
+		result = prime * result + ((numLinea == null) ? 0 : numLinea.hashCode());
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		LineaDeclaracionPK other = (LineaDeclaracionPK) obj;
-		if (codMerca == null) {
-			if (other.codMerca != null)
-				return false;
-		} else if (!codMerca.equals(other.codMerca))
-			return false;
 		if (codigoDv == null) {
-			if (other.codigoDv != null)
+			if (other.codigoDv != null) {
 				return false;
-		} else if (!codigoDv.equals(other.codigoDv))
+			}
+		} else if (!codigoDv.equals(other.codigoDv)) {
 			return false;
-		if (nombreTipoBulto == null) {
-			if (other.nombreTipoBulto != null)
+		}
+		if (numLinea == null) {
+			if (other.numLinea != null) {
 				return false;
-		} else if (!nombreTipoBulto.equals(other.nombreTipoBulto))
+			}
+		} else if (!numLinea.equals(other.numLinea)) {
 			return false;
+		}
 		return true;
 	}
 
@@ -84,16 +72,15 @@ public class LineaDeclaracionPK implements Serializable{
 		super();
 	}
 
-	public LineaDeclaracionPK(DeclaracionesDeValorPostPK codigoDv, Integer codMerca, String nombreTipoBulto) {
+	public LineaDeclaracionPK(DeclaracionesDeValorPostPK codigoDv, Long lineNumber) {
 		super();
 		this.codigoDv = codigoDv;
-		this.codMerca = codMerca;
-		this.nombreTipoBulto = nombreTipoBulto;
+		this.numLinea = lineNumber;
 	}
 
 	@Override
 	public String toString() {
-		return "LineaDeclaracionPK [codigoDv=" + codigoDv + ", codMerca=" + codMerca + ", nombreTipoBulto=" + nombreTipoBulto +"]";
+		return "LineaDeclaracionPK [codigoDv=" + codigoDv + ", numLinea=" + numLinea + "]";
 	}
-	
+
 }

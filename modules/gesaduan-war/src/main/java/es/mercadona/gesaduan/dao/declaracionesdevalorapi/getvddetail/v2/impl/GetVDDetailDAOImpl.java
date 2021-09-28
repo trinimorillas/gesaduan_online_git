@@ -10,21 +10,22 @@ import javax.persistence.Query;
 import es.mercadona.fwk.core.exceptions.ApplicationException;
 import es.mercadona.gesaduan.common.Constantes;
 import es.mercadona.gesaduan.dao.BaseDAO;
+
 import es.mercadona.gesaduan.dao.declaracionesdevalorapi.getvddetail.v2.GetVDDetailDAO;
 import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.InputVDDetailDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restful.DataDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restful.InternalOrderListDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restful.OutputVDDetailDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restful.SourceDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restful.TargetDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restful.VDCommonDataDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restful.VDDataDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restful.VDDeclarationIdsDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restful.VDDossierIdsDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restful.VDHeaderDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restful.VDHistoricalDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restful.VDItemDTO;
-import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restful.VDLineDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restfull.DataDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restfull.InternalOrderListDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restfull.OutputVDDetailDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restfull.SourceDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restfull.TargetDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restfull.VDCommonDataDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restfull.VDDataDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restfull.VDDeclarationIdsDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restfull.VDDossierIdsDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restfull.VDHeaderDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restfull.VDHistoricalDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restfull.VDItemDTO;
+import es.mercadona.gesaduan.dto.declaracionesdevalorapi.getvddetail.v2.restfull.VDLineDTO;
 import es.mercadona.gesaduan.jpa.declaracionesdevalor.DeclaracionesDeValorJPA;
 
 @SuppressWarnings("unchecked")
@@ -310,7 +311,7 @@ public class GetVDDetailDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 			sqlLineas.append("SELECT * "); 		
 			sqlLineas.append("FROM ( ");		
 			sqlLineas.append("SELECT "); 
-			sqlLineas.append("  DVL.COD_N_MERCA, "); 
+			sqlLineas.append("  DVL.COD_N_MERCA AS COD_N_MERCA, "); 
 			sqlLineas.append("  DVL.COD_N_TARIC,  "); 
 			sqlLineas.append("  DVL.COD_V_REA,  "); 
 			sqlLineas.append("  EAN.COD_V_EAN13, ");
@@ -320,7 +321,7 @@ public class GetVDDetailDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 			sqlLineas.append("  DECODE(PROD.TXT_FORMATO_ALTERNATIVO, NULL, CONCAT(CONCAT(PROD.NUM_FORMATO_VENTA, ' '), PROD.TXT_UNIDAD_MEDIDA), PROD.TXT_FORMATO_ALTERNATIVO) AS FORMATO, ");
 			sqlLineas.append("  PROD.TXT_MARCA, "); 
 			sqlLineas.append("  NULL, "); 
-			sqlLineas.append("  DVL.TXT_NOMBRE_BULTO_DV, "); 
+			sqlLineas.append("  DVL.TXT_NOMBRE_BULTO_DV AS TXT_NOMBRE_BULTO_DV, "); 
 			sqlLineas.append("  DVL.NUM_BULTOS, "); 
 			sqlLineas.append("  DVL.NUM_PESO_NETO, "); 
 			sqlLineas.append("  DVL.NUM_PESO_BRUTO, ");
@@ -330,10 +331,11 @@ public class GetVDDetailDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 			sqlLineas.append("  DVL.NUM_IMPORTE_TOTAL, ");
 			sqlLineas.append("  DVL.NUM_GRADO_ALCOHOL, "); 
 			sqlLineas.append("  DVL.NUM_GRADO_PLATO, "); 
-			sqlLineas.append("  DVL.COD_V_PAIS, "); 
+			sqlLineas.append("  DVL.COD_V_PAIS AS COD_V_PAIS, "); 
 			sqlLineas.append("  DVL.MCA_PRODUCTO_LPC, "); 
 			sqlLineas.append("  DVL.MCA_ERROR, ");
-			sqlLineas.append("  ROW_NUMBER() OVER(PARTITION BY DVL.COD_N_MERCA,DVL.TXT_NOMBRE_BULTO_DV ORDER BY EAN.COD_V_EAN13) NUMERO ");		
+			sqlLineas.append("  DVL.NUM_LINEA, ");			
+			sqlLineas.append("  ROW_NUMBER() OVER(PARTITION BY DVL.COD_N_MERCA,DVL.TXT_NOMBRE_BULTO_DV,DVL.COD_V_PAIS ORDER BY EAN.COD_V_EAN13) NUMERO ");		
 			sqlLineas.append("FROM O_DECLARACION_VALOR_LIN DVL ");
 			sqlLineas.append("LEFT JOIN D_PRODUCTO_R PROD ON DVL.COD_N_MERCA = PROD.COD_N_PRODUCTO ");
 			sqlLineas.append("LEFT JOIN S_DENOMINACION_PRODUCTO_I18N_R DEN ON DVL.COD_N_MERCA = DEN.COD_N_PRODUCTO AND DEN.COD_V_LOCALE = ?locale ");
@@ -343,7 +345,8 @@ public class GetVDDetailDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 			sqlLineas.append("  DVL.COD_N_DECLARACION_VALOR = ?valueDeclarationNumber AND  "); 
 			sqlLineas.append("  DVL.NUM_ANYO = ?valueDeclarationYear AND "); 
 			sqlLineas.append("  DVL.COD_N_VERSION = ?valueDeclarationVersion "); 
-			sqlLineas.append(") WHERE NUMERO = 1");			
+			sqlLineas.append(") WHERE NUMERO = 1 ");			
+			sqlLineas.append("ORDER BY COD_N_MERCA,TXT_NOMBRE_BULTO_DV,COD_V_PAIS ");			
 	
 			final Query queryLineas = getEntityManager().createNativeQuery(sqlLineas.toString());
 			queryLineas.setParameter("valueDeclarationNumber", valueDeclarationCode);
@@ -453,6 +456,9 @@ public class GetVDDetailDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 					if (tmp[22] != null) {
 						linea.setHasError(String.valueOf(tmp[22]));
 					}
+					if (tmp[23] != null) {
+						linea.setLineNumber(Long.parseLong(String.valueOf(tmp[23])));
+					}					
 					if (linea.getTaricId() == null) {
 						StringBuilder sqlTaric = new StringBuilder();
 						sqlTaric.append("SELECT TP.COD_N_TARIC FROM S_TARIC_PRODUCTO TP WHERE TP.COD_N_PRODUCTO = ?productPublicId");

@@ -152,8 +152,7 @@ public class DataVDSumaryDTO extends AbstractDTO implements Serializable {
 	public void setDispatchCode(String dispatchCode) {
 		this.dispatchCode = dispatchCode;
 	}
-	/**
-	 * @return the valueDeclarationType
-	 */
 	
+	
+
 }

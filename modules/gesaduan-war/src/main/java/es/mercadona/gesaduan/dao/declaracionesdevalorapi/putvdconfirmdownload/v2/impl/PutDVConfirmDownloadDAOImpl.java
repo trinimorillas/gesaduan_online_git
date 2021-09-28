@@ -55,71 +55,114 @@ public class PutDVConfirmDownloadDAOImpl extends DaoBaseImpl<ConfirmDownloadDVPK
 			} else {
 				descargado = "N";
 			}
+			
+			String tipoFactura = getTipoFactura(input);
 
-			if(esCompraSobreMuelle (input)) {
-				final StringBuilder sqlExisteProveedor = new StringBuilder();
-				sqlExisteProveedor.append("UPDATE O_DECLARACION_VALOR_CAB SET ");
-				sqlExisteProveedor.append("MCA_DESCARGA = ?isDownloaded, ");
-				sqlExisteProveedor.append("FEC_DT_DESCARGA = SYSDATE, ");
-				sqlExisteProveedor.append("COD_V_USR_MODIFICACION = ?userId ");
-				sqlExisteProveedor.append("WHERE COD_N_DECLARACION_VALOR = ?valueDeclarationNumber ");
-				sqlExisteProveedor.append("AND NUM_ANYO = ?valueDeclarationYear ");
-				sqlExisteProveedor.append("AND COD_N_VERSION = ?valueDeclarationVersion");
+			if(tipoFactura.equals("CSM")) {
+				final StringBuilder sqlCompraSobreMuelle = new StringBuilder();
+				sqlCompraSobreMuelle.append("UPDATE O_DECLARACION_VALOR_CAB SET ");
+				sqlCompraSobreMuelle.append("MCA_DESCARGA = ?isDownloaded, ");
+				sqlCompraSobreMuelle.append("FEC_DT_DESCARGA = SYSDATE, ");
+				sqlCompraSobreMuelle.append("FEC_DT_DESCARGA_EXPORTADOR = SYSDATE, ");
+				sqlCompraSobreMuelle.append("FEC_DT_DESCARGA_IMPORTADOR = SYSDATE, ");					
+				sqlCompraSobreMuelle.append("COD_V_USR_MODIFICACION = ?userId ");
+				sqlCompraSobreMuelle.append("WHERE COD_N_DECLARACION_VALOR = ?valueDeclarationNumber ");
+				sqlCompraSobreMuelle.append("AND NUM_ANYO = ?valueDeclarationYear ");
+				sqlCompraSobreMuelle.append("AND COD_N_VERSION = ?valueDeclarationVersion");
 				     
-				final Query queryExisteProveedor = getEntityManager().createNativeQuery(sqlExisteProveedor.toString());
+				final Query queryCompraSobreMuelle = getEntityManager().createNativeQuery(sqlCompraSobreMuelle.toString());
 
-				queryExisteProveedor.setParameter(IS_DOWNLOADED, descargado);
-				queryExisteProveedor.setParameter(USER_ID, input.getUserId());
-				queryExisteProveedor.setParameter(VALUE_DECLARATION_NUMBER, input.getValueDeclarationNumber());
-				queryExisteProveedor.setParameter(VALUE_DECLARATION_YEAR, input.getValueDeclarationYear());
-				queryExisteProveedor.setParameter(VALUE_DECLARATION_VERSION, input.getValueDeclarationVersion());
-				queryExisteProveedor.executeUpdate();
+				queryCompraSobreMuelle.setParameter(IS_DOWNLOADED, descargado);
+				queryCompraSobreMuelle.setParameter(USER_ID, input.getUserId());
+				queryCompraSobreMuelle.setParameter(VALUE_DECLARATION_NUMBER, input.getValueDeclarationNumber());
+				queryCompraSobreMuelle.setParameter(VALUE_DECLARATION_YEAR, input.getValueDeclarationYear());
+				queryCompraSobreMuelle.setParameter(VALUE_DECLARATION_VERSION, input.getValueDeclarationVersion());
+				queryCompraSobreMuelle.executeUpdate();
 			} else {
-				// PROVEEDOR EXPORTADOR
-				final StringBuilder sqlProveedorExportador = new StringBuilder();
-				sqlProveedorExportador.append("MERGE INTO O_DECLARACION_VALOR_CAB DV USING (");
-				sqlProveedorExportador.append("SELECT NUM_DOSIER, NUM_ANYO ");
-				sqlProveedorExportador.append("FROM D_DOSIER ");
-				sqlProveedorExportador.append("WHERE COD_V_AGENCIA_EXPORTACION = ?supplierId) DD ");
-				sqlProveedorExportador.append("ON (DV.NUM_DOSIER = DD.NUM_DOSIER AND DV.NUM_ANYO = DD.NUM_ANYO) ");
-				sqlProveedorExportador.append("WHEN MATCHED THEN UPDATE SET ");
-				sqlProveedorExportador.append("FEC_DT_DESCARGA_EXPORTADOR = DECODE(?isDownloaded, 'S', SYSDATE, NULL), ");
-				sqlProveedorExportador.append("COD_V_USR_MODIFICACION = ?userId ");
-				sqlProveedorExportador.append("WHERE COD_N_DECLARACION_VALOR = ?valueDeclarationNumber AND NUM_ANYO = ?valueDeclarationYear AND COD_N_VERSION = ?valueDeclarationVersion");
-				     
-				final Query queryProveedorExportador = getEntityManager().createNativeQuery(sqlProveedorExportador.toString());
-				
-				queryProveedorExportador.setParameter(SUPPLIER_ID, input.getSupplierId());
-				queryProveedorExportador.setParameter(IS_DOWNLOADED, descargado);
-				queryProveedorExportador.setParameter(USER_ID, input.getUserId());
-				queryProveedorExportador.setParameter(VALUE_DECLARATION_NUMBER, input.getValueDeclarationNumber());
-				queryProveedorExportador.setParameter(VALUE_DECLARATION_YEAR, input.getValueDeclarationYear());
-				queryProveedorExportador.setParameter(VALUE_DECLARATION_VERSION, input.getValueDeclarationVersion());
-				
-				queryProveedorExportador.executeUpdate();
-				
-				// PROVEEDOR IMPORTADOR
-				final StringBuilder sqlProveedorImportador = new StringBuilder();
-				sqlProveedorImportador.append("MERGE INTO O_DECLARACION_VALOR_CAB DV USING (");
-				sqlProveedorImportador.append("SELECT NUM_DOSIER, NUM_ANYO ");
-				sqlProveedorImportador.append("FROM D_DOSIER ");
-				sqlProveedorImportador.append("WHERE COD_V_AGENCIA_IMPORTACION = ?supplierId) DD ");
-				sqlProveedorImportador.append("ON (DV.NUM_DOSIER = DD.NUM_DOSIER AND DV.NUM_ANYO = DD.NUM_ANYO) ");
-				sqlProveedorImportador.append("WHEN MATCHED THEN UPDATE SET ");
-				sqlProveedorImportador.append("FEC_DT_DESCARGA_IMPORTADOR = DECODE(?isDownloaded, 'S', SYSDATE, NULL), ");
-				sqlProveedorImportador.append("COD_V_USR_MODIFICACION = ?userId ");
-				sqlProveedorImportador.append("WHERE COD_N_DECLARACION_VALOR = ?valueDeclarationNumber AND NUM_ANYO = ?valueDeclarationYear AND COD_N_VERSION = ?valueDeclarationVersion");
-				     
-				final Query queryProveedorImportador = getEntityManager().createNativeQuery(sqlProveedorImportador.toString());
-				
-				queryProveedorImportador.setParameter(SUPPLIER_ID, input.getSupplierId());
-				queryProveedorImportador.setParameter(IS_DOWNLOADED, descargado);
-				queryProveedorImportador.setParameter(USER_ID, input.getUserId());
-				queryProveedorImportador.setParameter(VALUE_DECLARATION_NUMBER, input.getValueDeclarationNumber());
-				queryProveedorImportador.setParameter(VALUE_DECLARATION_YEAR, input.getValueDeclarationYear());
-				queryProveedorImportador.setParameter(VALUE_DECLARATION_VERSION, input.getValueDeclarationVersion());
-				
-				queryProveedorImportador.executeUpdate();
+				if(tipoFactura.equals("PED")) {
+					// PROVEEDOR EXPORTADOR
+					final StringBuilder sqlPedidoExportador = new StringBuilder();
+					sqlPedidoExportador.append("MERGE INTO O_DECLARACION_VALOR_CAB DV USING (");
+					sqlPedidoExportador.append("SELECT NUM_DOSIER, NUM_ANYO ");
+					sqlPedidoExportador.append("FROM D_DOSIER DO ");
+					sqlPedidoExportador.append("LEFT JOIN D_PROVEEDOR_R P ON (P.COD_N_PROVEEDOR = DO.COD_V_AGENCIA_EXPORTACION) ");				
+					sqlPedidoExportador.append("WHERE (DO.COD_V_AGENCIA_EXPORTACION = ?supplierId OR P.COD_N_LEGACY_PROVEEDOR = ?supplierId)) DD ");
+					sqlPedidoExportador.append("ON (DV.NUM_DOSIER = DD.NUM_DOSIER AND DV.NUM_ANYO = DD.NUM_ANYO) ");
+					sqlPedidoExportador.append("WHEN MATCHED THEN UPDATE SET ");
+					sqlPedidoExportador.append("FEC_DT_DESCARGA_EXPORTADOR = DECODE(?isDownloaded, 'S', SYSDATE, NULL), ");
+					sqlPedidoExportador.append("COD_V_USR_MODIFICACION = ?userId ");
+					sqlPedidoExportador.append("WHERE COD_N_DECLARACION_VALOR = ?valueDeclarationNumber AND NUM_ANYO = ?valueDeclarationYear AND COD_N_VERSION = ?valueDeclarationVersion");
+					     
+					final Query queryPedidoExportador = getEntityManager().createNativeQuery(sqlPedidoExportador.toString());
+					
+					queryPedidoExportador.setParameter(SUPPLIER_ID, input.getSupplierId());
+					queryPedidoExportador.setParameter(IS_DOWNLOADED, descargado);
+					queryPedidoExportador.setParameter(USER_ID, input.getUserId());
+					queryPedidoExportador.setParameter(VALUE_DECLARATION_NUMBER, input.getValueDeclarationNumber());
+					queryPedidoExportador.setParameter(VALUE_DECLARATION_YEAR, input.getValueDeclarationYear());
+					queryPedidoExportador.setParameter(VALUE_DECLARATION_VERSION, input.getValueDeclarationVersion());
+					
+					queryPedidoExportador.executeUpdate();
+					
+					// PROVEEDOR IMPORTADOR
+					final StringBuilder sqlPedidoImportador = new StringBuilder();
+					sqlPedidoImportador.append("MERGE INTO O_DECLARACION_VALOR_CAB DV USING (");
+					sqlPedidoImportador.append("SELECT NUM_DOSIER, NUM_ANYO ");
+					sqlPedidoImportador.append("FROM D_DOSIER ");
+					sqlPedidoImportador.append("LEFT JOIN D_PROVEEDOR_R P ON (P.COD_N_PROVEEDOR = DO.COD_V_AGENCIA_IMPORTACION ) ");				
+					sqlPedidoImportador.append("WHERE (DO.COD_V_AGENCIA_IMPORTACION = ?supplierId OR P.COD_N_LEGACY_PROVEEDOR = ?supplierId)) DD ");
+					sqlPedidoImportador.append("ON (DV.NUM_DOSIER = DD.NUM_DOSIER AND DV.NUM_ANYO = DD.NUM_ANYO) ");
+					sqlPedidoImportador.append("WHEN MATCHED THEN UPDATE SET ");
+					sqlPedidoImportador.append("FEC_DT_DESCARGA_IMPORTADOR = DECODE(?isDownloaded, 'S', SYSDATE, NULL), ");
+					sqlPedidoImportador.append("COD_V_USR_MODIFICACION = ?userId ");
+					sqlPedidoImportador.append("WHERE COD_N_DECLARACION_VALOR = ?valueDeclarationNumber AND NUM_ANYO = ?valueDeclarationYear AND COD_N_VERSION = ?valueDeclarationVersion");
+					     
+					final Query queryPedidoImportador = getEntityManager().createNativeQuery(sqlPedidoImportador.toString());
+					
+					queryPedidoImportador.setParameter(SUPPLIER_ID, input.getSupplierId());
+					queryPedidoImportador.setParameter(IS_DOWNLOADED, descargado);
+					queryPedidoImportador.setParameter(USER_ID, input.getUserId());
+					queryPedidoImportador.setParameter(VALUE_DECLARATION_NUMBER, input.getValueDeclarationNumber());
+					queryPedidoImportador.setParameter(VALUE_DECLARATION_YEAR, input.getValueDeclarationYear());
+					queryPedidoImportador.setParameter(VALUE_DECLARATION_VERSION, input.getValueDeclarationVersion());
+					
+					queryPedidoImportador.executeUpdate();
+				} else {
+					if(tipoFactura.equals("DEV")) {
+						final StringBuilder sqlDevolucion = new StringBuilder();
+						
+						sqlDevolucion.append("UPDATE O_DECLARACION_VALOR_CAB DVC ");
+						sqlDevolucion.append("SET ");
+						sqlDevolucion.append("  FEC_DT_DESCARGA_EXPORTADOR= DECODE(?isDownloaded, 'S', SYSDATE, NULL)), ");
+						sqlDevolucion.append("  FEC_DT_DESCARGA_IMPORTADOR = DECODE(?isDownloaded, 'S', SYSDATE, NULL), ");
+						sqlDevolucion.append("  COD_V_USR_MODIFICACION = ?userId ");
+						sqlDevolucion.append("WHERE ");
+						sqlDevolucion.append("  DVC.COD_N_DECLARACION_VALOR = ?valueDeclarationNumber AND ");
+						sqlDevolucion.append("  DVC.NUM_ANYO = ?valueDeclarationYear AND ");
+						sqlDevolucion.append("  DVC.COD_N_VERSION = ?valueDeclarationVersion AND ");
+						sqlDevolucion.append("  EXISTS (SELECT 1 FROM D_CENTRO_R CE ");
+						sqlDevolucion.append("          WHERE CE.COD_V_CENTRO = DVC.COD_V_TIENDA AND ");
+						sqlDevolucion.append("            EXISTS (SELECT 1 FROM D_PUERTO PU ");
+						sqlDevolucion.append("                    WHERE PU.COD_V_PROVINCIA = CE.COD_N_PROVINCIA AND ");
+						sqlDevolucion.append("                      EXISTS (SELECT 1 FROM S_PUERTO_AGENCIA PA ");
+						sqlDevolucion.append("                              LEFT JOIN D_PROVEEDOR_R PAP ON (PAP.COD_N_PROVEEDOR = PA.COD_V_AGENCIA_ADUANA) "); 
+						sqlDevolucion.append("                              WHERE PU.COD_N_PUERTO = PA.COD_N_PUERTO AND ");
+						sqlDevolucion.append("                                (PA.COD_V_AGENCIA_ADUANA = ??supplierId OR PAP.COD_N_LEGACY_PROVEEDOR = ?supplierId ) ");
+						sqlDevolucion.append("                       ) ");
+						sqlDevolucion.append("            ) ");
+						sqlDevolucion.append("  ) ");				
+												     
+						final Query queryDevolucion = getEntityManager().createNativeQuery(sqlDevolucion.toString());
+
+						queryDevolucion.setParameter(SUPPLIER_ID, input.getSupplierId());						
+						queryDevolucion.setParameter(IS_DOWNLOADED, descargado);
+						queryDevolucion.setParameter(USER_ID, input.getUserId());
+						queryDevolucion.setParameter(VALUE_DECLARATION_NUMBER, input.getValueDeclarationNumber());
+						queryDevolucion.setParameter(VALUE_DECLARATION_YEAR, input.getValueDeclarationYear());
+						queryDevolucion.setParameter(VALUE_DECLARATION_VERSION, input.getValueDeclarationVersion());
+						queryDevolucion.executeUpdate();						
+					}
+				}
 			}
 			
 			result = new OutputPutVDConfirmDownloadDTO();
@@ -139,13 +182,13 @@ public class PutDVConfirmDownloadDAOImpl extends DaoBaseImpl<ConfirmDownloadDVPK
 		return result;
 	}	
 
-	private boolean esCompraSobreMuelle (InputDataDTO input) {
-		boolean retorno = false;
+	private String getTipoFactura (InputDataDTO input) {
+		String tipoFactura = "";
 		
 		try {
 			final StringBuilder sqlFactura = new StringBuilder();
 			
-			sqlFactura.append("SELECT COD_N_PROVEEDOR ");
+			sqlFactura.append("SELECT COD_V_TIPO_FACTURA ");
 			sqlFactura.append("FROM O_DECLARACION_VALOR_CAB DV ");
 			sqlFactura.append("WHERE DV.COD_N_DECLARACION_VALOR = ?valueDeclarationNumber ");
 			sqlFactura.append("AND DV.NUM_ANYO = ?valueDeclarationYear ");
@@ -157,17 +200,14 @@ public class PutDVConfirmDownloadDAOImpl extends DaoBaseImpl<ConfirmDownloadDVPK
 			queryFactura.setParameter(VALUE_DECLARATION_YEAR, input.getValueDeclarationYear());
 			queryFactura.setParameter(VALUE_DECLARATION_VERSION, input.getValueDeclarationVersion());
 			
-			Object codProveedor = queryFactura.getSingleResult();
+			tipoFactura = (String)queryFactura.getSingleResult();
 			
-			if (codProveedor != null) {
-				retorno = true;
-			}
 						
 		} catch (Exception e) {			
 			throw new ApplicationException(e.getMessage());
 		}		
 		
-		return retorno;
+		return tipoFactura;
 	}
 	
 }

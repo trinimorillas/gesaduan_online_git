@@ -6,20 +6,20 @@ public class InputDosierEquipoContenedorDTO extends AbstractDTO {
 
 	private static final long serialVersionUID = 1L;
 	
-  	private Long numContenedor;
+  	private String numContenedor;
 	private String codigoAlmacen;
 	private String fechaExpedicion;
 	
 	/**
 	 * @return the numContenedor
 	 */
-	public Long getNumContenedor() {
+	public String getNumContenedor() {
 		return numContenedor;
 	}
 	/**
 	 * @param numContenedor the numContenedor to set
 	 */
-	public void setNumContenedor(Long numContenedor) {
+	public void setNumContenedor(String numContenedor) {
 		this.numContenedor = numContenedor;
 	}
 	/**

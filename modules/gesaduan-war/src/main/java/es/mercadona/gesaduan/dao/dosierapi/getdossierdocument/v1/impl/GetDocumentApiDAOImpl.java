@@ -146,6 +146,7 @@ public class GetDocumentApiDAOImpl extends DaoBaseImpl<DocumentoDataPK, Document
 			select.append("DISTINCT TO_CHAR(D.COD_N_DECLARACION_VALOR) FACTURA "); 
 			select.append(",TO_CHAR(D.NUM_ANYO) ANYO ");
 			select.append(",TO_CHAR(D.COD_N_VERSION) VERSION ");
+			select.append(",D.COD_V_TIPO_FACTURA TIPO_FACTURA ");			
 			select.append(",TO_CHAR(D.FEC_DT_CREACION, 'DD/MM/YYYY') FECHA_DECLARACION ");
 			select.append(",TO_CHAR(D.NUM_DOSIER) DOSIER ");
 			select.append(",TO_CHAR(D.NUM_ANYO_DOSIER) ANYO_DOSIER ");
@@ -204,35 +205,36 @@ public class GetDocumentApiDAOImpl extends DaoBaseImpl<DocumentoDataPK, Document
 					outDVDocumentoCabDTO.setCodigoDeclaracion(String.valueOf(tmp[0]));
 					outDVDocumentoCabDTO.setAnyoDeclaracion(String.valueOf(tmp[1]));
 					outDVDocumentoCabDTO.setVersionDeclaracion(String.valueOf(tmp[2]));
-					outDVDocumentoCabDTO.setFechaDeclaracion(String.valueOf(tmp[3]));
-					outDVDocumentoCabDTO.setNumDosier(String.valueOf(tmp[4]));
-					outDVDocumentoCabDTO.setAnyoDosier(String.valueOf(tmp[5]));
-					outDVDocumentoCabDTO.setFechaDosier(String.valueOf(tmp[6]));		
-					outDVDocumentoCabDTO.setNombreOrigen(String.valueOf(tmp[7]));	
-					outDVDocumentoCabDTO.setProvinciaOrigen(String.valueOf(tmp[8]));
-					outDVDocumentoCabDTO.setTipoOrigen(String.valueOf(tmp[9]));
-					outDVDocumentoCabDTO.setCondicionesEntrega(String.valueOf(tmp[10]));
-					outDVDocumentoCabDTO.setExportadorNombre(String.valueOf(tmp[11]));	
-					outDVDocumentoCabDTO.setExportadorDireccion(String.valueOf(tmp[12]));	
-					outDVDocumentoCabDTO.setExportadorCP(String.valueOf(tmp[13]));
-					outDVDocumentoCabDTO.setExportadorPoblacion(String.valueOf(tmp[14]));
-					outDVDocumentoCabDTO.setExportadorProvincia(String.valueOf(tmp[15]));
-					outDVDocumentoCabDTO.setExportadorNIF(String.valueOf(tmp[16]));
-					outDVDocumentoCabDTO.setImportadorNombre(String.valueOf(tmp[17]));	
-					outDVDocumentoCabDTO.setImportadorDireccion(String.valueOf(tmp[18]));	
-					outDVDocumentoCabDTO.setImportadorCP(String.valueOf(tmp[19]));
-					outDVDocumentoCabDTO.setImportadorPoblacion(String.valueOf(tmp[20]));
-					outDVDocumentoCabDTO.setImportadorProvincia(String.valueOf(tmp[21]));
-					outDVDocumentoCabDTO.setImportadorNIF(String.valueOf(tmp[22]));
-					outDVDocumentoCabDTO.setTxtInfoREA(emptyStringOrValue(tmp[23]));
-					outDVDocumentoCabDTO.setTxtInfoLPC(emptyStringOrValue(tmp[24]));
-					outDVDocumentoCabDTO.setTxtInfoGeneral(emptyStringOrValue(tmp[25]));					
-					outDVDocumentoCabDTO.setTipoInforme(String.valueOf(tmp[26]));
-					outDVDocumentoCabDTO.setNumPedido(emptyStringOrValue(tmp[27]));		
+					outDVDocumentoCabDTO.setTipoFactura(String.valueOf(tmp[3]));					
+					outDVDocumentoCabDTO.setFechaDeclaracion(String.valueOf(tmp[4]));
+					outDVDocumentoCabDTO.setNumDosier(String.valueOf(tmp[5]));
+					outDVDocumentoCabDTO.setAnyoDosier(String.valueOf(tmp[6]));
+					outDVDocumentoCabDTO.setFechaDosier(String.valueOf(tmp[7]));		
+					outDVDocumentoCabDTO.setNombreOrigen(String.valueOf(tmp[8]));	
+					outDVDocumentoCabDTO.setProvinciaOrigen(String.valueOf(tmp[9]));
+					outDVDocumentoCabDTO.setTipoOrigen(String.valueOf(tmp[10]));
+					outDVDocumentoCabDTO.setCondicionesEntrega(String.valueOf(tmp[11]));
+					outDVDocumentoCabDTO.setExportadorNombre(String.valueOf(tmp[12]));	
+					outDVDocumentoCabDTO.setExportadorDireccion(String.valueOf(tmp[13]));	
+					outDVDocumentoCabDTO.setExportadorCP(String.valueOf(tmp[14]));
+					outDVDocumentoCabDTO.setExportadorPoblacion(String.valueOf(tmp[15]));
+					outDVDocumentoCabDTO.setExportadorProvincia(String.valueOf(tmp[16]));
+					outDVDocumentoCabDTO.setExportadorNIF(String.valueOf(tmp[17]));
+					outDVDocumentoCabDTO.setImportadorNombre(String.valueOf(tmp[18]));	
+					outDVDocumentoCabDTO.setImportadorDireccion(String.valueOf(tmp[19]));	
+					outDVDocumentoCabDTO.setImportadorCP(String.valueOf(tmp[20]));
+					outDVDocumentoCabDTO.setImportadorPoblacion(String.valueOf(tmp[21]));
+					outDVDocumentoCabDTO.setImportadorProvincia(String.valueOf(tmp[22]));
+					outDVDocumentoCabDTO.setImportadorNIF(String.valueOf(tmp[23]));
+					outDVDocumentoCabDTO.setTxtInfoREA(emptyStringOrValue(tmp[24]));
+					outDVDocumentoCabDTO.setTxtInfoLPC(emptyStringOrValue(tmp[25]));
+					outDVDocumentoCabDTO.setTxtInfoGeneral(emptyStringOrValue(tmp[26]));					
+					outDVDocumentoCabDTO.setTipoInforme(String.valueOf(tmp[27]));
+					outDVDocumentoCabDTO.setNumPedido(emptyStringOrValue(tmp[28]));		
 										
 					// Si no tiene expedicion y tiene puerto 
-					if ((tmp[28] == null) && (tmp[29] != null)) {
-						String puertoDesembarque = emptyStringOrValue(tmp[29]);
+					if ((tmp[29] == null) && (tmp[30] != null)) {
+						String puertoDesembarque = emptyStringOrValue(tmp[30]);
 						getDatosPuertos(puertoDesembarque,outDVDocumentoCabDTO);
 					}			
 					
@@ -271,6 +273,7 @@ public class GetDocumentApiDAOImpl extends DaoBaseImpl<DocumentoDataPK, Document
 			select.append(",TO_CHAR(ANYO) ");
 			select.append(",TO_CHAR(VERSION_N) ");
 			select.append(",TO_CHAR(CODIGO) ");
+			select.append(",TIPO_ITEM ");
 			select.append(",PRODUCTO ");
 			select.append(",MARCA ");
 			select.append(",TO_CHAR(CODIGO_TARIC) ");
@@ -295,6 +298,7 @@ public class GetDocumentApiDAOImpl extends DaoBaseImpl<DocumentoDataPK, Document
 			select.append(",L.NUM_ANYO ANYO ");
 			select.append(",L.COD_N_VERSION VERSION_N ");
 			select.append(",TO_CHAR(L.COD_N_MERCA) CODIGO ");
+			select.append(",'PR' TIPO_ITEM ");			
 			select.append(",DECODE(P.TXT_DENOMINA_ALTERNATIVA, NULL, DP.TXT_DESCRIPCION, P.TXT_DENOMINA_ALTERNATIVA) AS PRODUCTO ");
 			select.append(",P.TXT_MARCA MARCA ");
 			select.append(",L.COD_N_TARIC CODIGO_TARIC ");
@@ -323,6 +327,7 @@ public class GetDocumentApiDAOImpl extends DaoBaseImpl<DocumentoDataPK, Document
 			select.append(",L.NUM_ANYO ANYO ");
 			select.append(",L.COD_N_VERSION VERSION_N ");
 			select.append(",'TARIC' CODIGO ");
+			select.append(",'TA' TIPO_ITEM ");			
 			select.append(",TO_CHAR(L.COD_N_TARIC) PRODUCTO ");
 			select.append(",'' MARCA ");
 			select.append(",L.COD_N_TARIC CODIGO_TARIC ");
@@ -349,6 +354,7 @@ public class GetDocumentApiDAOImpl extends DaoBaseImpl<DocumentoDataPK, Document
 			select.append(",L.NUM_ANYO ANYO ");
 			select.append(",L.COD_N_VERSION VERSION_N ");
 			select.append(",'TOTAL' CODIGO ");
+			select.append(",'TO' TIPO_ITEM ");			
 			select.append(",'' PRODUCTO ");
 			select.append(",'' MARCA ");
 			select.append(",NULL CODIGO_TARIC ");
@@ -374,7 +380,7 @@ public class GetDocumentApiDAOImpl extends DaoBaseImpl<DocumentoDataPK, Document
 			select.append("DV.NUM_DOSIER = ?dossierNumber AND ");
 			select.append("DV.NUM_ANYO_DOSIER = ?dossierYear AND ");
 			select.append("DV.MCA_ULTIMA_VIGENTE = 'S' ");				
-			select.append("ORDER BY DECLARACION_VALOR,ANYO,VERSION_N,CODIGO_TARIC,TIPO_LINEA,CODIGO ");
+			select.append("ORDER BY DECLARACION_VALOR,ANYO,VERSION_N,CODIGO_TARIC,TIPO_LINEA,CODIGO,TIPO,PAIS_ORIGEN ");
 			
 			sql.append(select);
 			
@@ -393,23 +399,24 @@ public class GetDocumentApiDAOImpl extends DaoBaseImpl<DocumentoDataPK, Document
 					outDVDocumentoLinDTO.setAnyoDeclaracion(String.valueOf(tmp[1]));
 					outDVDocumentoLinDTO.setVersionDeclaracion(String.valueOf(tmp[2]));
 					outDVDocumentoLinDTO.setCodigoProducto(emptyStringOrValue(tmp[3]));					
-					outDVDocumentoLinDTO.setNombreProducto(emptyStringOrValue(tmp[4]));
-					outDVDocumentoLinDTO.setMarca(emptyStringOrValue(tmp[5]));
-					outDVDocumentoLinDTO.setCodigoTaric(emptyStringOrValue(tmp[6]));
-					outDVDocumentoLinDTO.setTipoLinea(emptyStringOrValue(tmp[7]));
-					outDVDocumentoLinDTO.setCodigoRea(emptyStringOrValue(tmp[8]));
-					outDVDocumentoLinDTO.setPaisOrigen(emptyStringOrValue(tmp[9]));
-					outDVDocumentoLinDTO.setLpc(emptyStringOrValue(tmp[10]));					
-					outDVDocumentoLinDTO.setNumeroBultos(formatNumber(tipoDocumento,String.valueOf(tmp[11])));
-					outDVDocumentoLinDTO.setTipoBultos(emptyStringOrValue(tmp[12]));
-					outDVDocumentoLinDTO.setPesoBruto(formatNumber(tipoDocumento,String.valueOf(tmp[13])));
-					outDVDocumentoLinDTO.setPesoNeto(formatNumber(tipoDocumento,String.valueOf(tmp[14])));
-					outDVDocumentoLinDTO.setCantidad(formatNumber(tipoDocumento,String.valueOf(tmp[15])));
-					outDVDocumentoLinDTO.setVolumen(emptyStringOrFormatNumber(tipoDocumento,tmp[16]));
-					outDVDocumentoLinDTO.setAlcohol(emptyStringOrFormatNumber(tipoDocumento,tmp[17]));
-					outDVDocumentoLinDTO.setPlato(emptyStringOrFormatNumber(tipoDocumento,tmp[18]));
-					outDVDocumentoLinDTO.setPrecio(emptyStringOrFormatNumber(tipoDocumento,tmp[19]));
-					outDVDocumentoLinDTO.setImporte(formatNumber(tipoDocumento,String.valueOf(tmp[20])));
+					outDVDocumentoLinDTO.setTipoItem(emptyStringOrValue(tmp[4]));					
+					outDVDocumentoLinDTO.setNombreProducto(emptyStringOrValue(tmp[5]));
+					outDVDocumentoLinDTO.setMarca(emptyStringOrValue(tmp[6]));
+					outDVDocumentoLinDTO.setCodigoTaric(emptyStringOrValue(tmp[7]));
+					outDVDocumentoLinDTO.setTipoLinea(emptyStringOrValue(tmp[8]));
+					outDVDocumentoLinDTO.setCodigoRea(emptyStringOrValue(tmp[9]));
+					outDVDocumentoLinDTO.setPaisOrigen(emptyStringOrValue(tmp[10]));
+					outDVDocumentoLinDTO.setLpc(emptyStringOrValue(tmp[11]));					
+					outDVDocumentoLinDTO.setNumeroBultos(formatNumber(tipoDocumento,String.valueOf(tmp[12])));
+					outDVDocumentoLinDTO.setTipoBultos(emptyStringOrValue(tmp[13]));
+					outDVDocumentoLinDTO.setPesoBruto(formatNumber(tipoDocumento,String.valueOf(tmp[14])));
+					outDVDocumentoLinDTO.setPesoNeto(formatNumber(tipoDocumento,String.valueOf(tmp[15])));
+					outDVDocumentoLinDTO.setCantidad(formatNumber(tipoDocumento,String.valueOf(tmp[16])));
+					outDVDocumentoLinDTO.setVolumen(emptyStringOrFormatNumber(tipoDocumento,tmp[17]));
+					outDVDocumentoLinDTO.setAlcohol(emptyStringOrFormatNumber(tipoDocumento,tmp[18]));
+					outDVDocumentoLinDTO.setPlato(emptyStringOrFormatNumber(tipoDocumento,tmp[19]));
+					outDVDocumentoLinDTO.setPrecio(emptyStringOrFormatNumber(tipoDocumento,tmp[20]));
+					outDVDocumentoLinDTO.setImporte(formatNumber(tipoDocumento,String.valueOf(tmp[21])));
 					outDVDocumentoLinDTO.setProcesada(false);
 					
 					lineas.add(outDVDocumentoLinDTO);
