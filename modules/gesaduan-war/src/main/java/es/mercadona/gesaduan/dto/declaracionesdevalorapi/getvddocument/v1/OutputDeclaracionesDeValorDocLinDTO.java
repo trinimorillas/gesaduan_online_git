@@ -13,6 +13,7 @@ public class OutputDeclaracionesDeValorDocLinDTO extends AbstractDTO implements 
 	private String versionDeclaracion;
 	private String codigoProducto;
 	private String nombreProducto;	
+	private String tipoItem;	
 	private String marca;
 	private String codigoTaric;
 	private String tipoLinea;
@@ -90,6 +91,19 @@ public class OutputDeclaracionesDeValorDocLinDTO extends AbstractDTO implements 
 	 */
 	public void setNombreProducto(String nombreProducto) {
 		this.nombreProducto = nombreProducto;
+	}
+	
+	/**
+	 * @return the tipoItem
+	 */
+	public String getTipoItem() {
+		return tipoItem;
+	}
+	/**
+	 * @param tipoItem the tipoItem to set
+	 */
+	public void setTipoItem(String tipoItem) {
+		this.tipoItem = tipoItem;
 	}
 	/**
 	 * @return the marca

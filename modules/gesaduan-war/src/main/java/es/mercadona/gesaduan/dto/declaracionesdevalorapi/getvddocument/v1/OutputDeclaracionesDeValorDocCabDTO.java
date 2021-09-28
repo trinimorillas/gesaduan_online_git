@@ -38,6 +38,7 @@ public class OutputDeclaracionesDeValorDocCabDTO extends AbstractDTO implements 
 	private String txtInfoLPC;
 	private String txtInfoGeneral;
 	private String tipoInforme;
+	private String tipoFactura;	
 	private byte[] ficheroPDF;
 	private byte[] ficheroCSV;	
 	private List<OutputDeclaracionesDeValorDocLinDTO> lineas;	
@@ -378,6 +379,19 @@ public class OutputDeclaracionesDeValorDocCabDTO extends AbstractDTO implements 
 	 */
 	public void setTipoInforme(String tipoInforme) {
 		this.tipoInforme = tipoInforme;
+	}
+	
+	/**
+	 * @return the tipoFactura
+	 */
+	public String getTipoFactura() {
+		return tipoFactura;
+	}
+	/**
+	 * @param tipoFactura the tipoFactura to set
+	 */
+	public void setTipoFactura(String tipoFactura) {
+		this.tipoFactura = tipoFactura;
 	}
 	/**
 	 * @return the ficheroPDF

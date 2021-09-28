@@ -63,6 +63,8 @@ public class PutDVConfirmDownloadDAOImpl extends DaoBaseImpl<ConfirmDownloadDVPK
 				sqlCompraSobreMuelle.append("UPDATE O_DECLARACION_VALOR_CAB SET ");
 				sqlCompraSobreMuelle.append("MCA_DESCARGA = ?isDownloaded, ");
 				sqlCompraSobreMuelle.append("FEC_DT_DESCARGA = SYSDATE, ");
+				sqlCompraSobreMuelle.append("FEC_DT_DESCARGA_EXPORTADOR = SYSDATE, ");
+				sqlCompraSobreMuelle.append("FEC_DT_DESCARGA_IMPORTADOR = SYSDATE, ");					
 				sqlCompraSobreMuelle.append("COD_V_USR_MODIFICACION = ?userId ");
 				sqlCompraSobreMuelle.append("WHERE COD_N_DECLARACION_VALOR = ?valueDeclarationNumber ");
 				sqlCompraSobreMuelle.append("AND NUM_ANYO = ?valueDeclarationYear ");

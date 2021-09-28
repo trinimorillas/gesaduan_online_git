@@ -311,7 +311,7 @@ public class GetVDDetailDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 			sqlLineas.append("SELECT * "); 		
 			sqlLineas.append("FROM ( ");		
 			sqlLineas.append("SELECT "); 
-			sqlLineas.append("  DVL.COD_N_MERCA, "); 
+			sqlLineas.append("  DVL.COD_N_MERCA AS COD_N_MERCA, "); 
 			sqlLineas.append("  DVL.COD_N_TARIC,  "); 
 			sqlLineas.append("  DVL.COD_V_REA,  "); 
 			sqlLineas.append("  EAN.COD_V_EAN13, ");
@@ -321,7 +321,7 @@ public class GetVDDetailDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 			sqlLineas.append("  DECODE(PROD.TXT_FORMATO_ALTERNATIVO, NULL, CONCAT(CONCAT(PROD.NUM_FORMATO_VENTA, ' '), PROD.TXT_UNIDAD_MEDIDA), PROD.TXT_FORMATO_ALTERNATIVO) AS FORMATO, ");
 			sqlLineas.append("  PROD.TXT_MARCA, "); 
 			sqlLineas.append("  NULL, "); 
-			sqlLineas.append("  DVL.TXT_NOMBRE_BULTO_DV, "); 
+			sqlLineas.append("  DVL.TXT_NOMBRE_BULTO_DV AS TXT_NOMBRE_BULTO_DV, "); 
 			sqlLineas.append("  DVL.NUM_BULTOS, "); 
 			sqlLineas.append("  DVL.NUM_PESO_NETO, "); 
 			sqlLineas.append("  DVL.NUM_PESO_BRUTO, ");
@@ -331,7 +331,7 @@ public class GetVDDetailDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 			sqlLineas.append("  DVL.NUM_IMPORTE_TOTAL, ");
 			sqlLineas.append("  DVL.NUM_GRADO_ALCOHOL, "); 
 			sqlLineas.append("  DVL.NUM_GRADO_PLATO, "); 
-			sqlLineas.append("  DVL.COD_V_PAIS, "); 
+			sqlLineas.append("  DVL.COD_V_PAIS AS COD_V_PAIS, "); 
 			sqlLineas.append("  DVL.MCA_PRODUCTO_LPC, "); 
 			sqlLineas.append("  DVL.MCA_ERROR, ");
 			sqlLineas.append("  DVL.NUM_LINEA, ");			
@@ -346,7 +346,7 @@ public class GetVDDetailDAOImpl extends BaseDAO<DeclaracionesDeValorJPA> impleme
 			sqlLineas.append("  DVL.NUM_ANYO = ?valueDeclarationYear AND "); 
 			sqlLineas.append("  DVL.COD_N_VERSION = ?valueDeclarationVersion "); 
 			sqlLineas.append(") WHERE NUMERO = 1 ");			
-			sqlLineas.append("ORDER BY DVL.COD_N_MERCA,DVL.TXT_NOMBRE_BULTO_DV,DVL.COD_V_PAIS ");			
+			sqlLineas.append("ORDER BY COD_N_MERCA,TXT_NOMBRE_BULTO_DV,COD_V_PAIS ");			
 	
 			final Query queryLineas = getEntityManager().createNativeQuery(sqlLineas.toString());
 			queryLineas.setParameter("valueDeclarationNumber", valueDeclarationCode);
