@@ -55,6 +55,8 @@ public class PutVDConfirmDownloadDAOImpl extends DaoBaseImpl<DeclaracionesDeValo
 				sqlExisteProveedor.append("UPDATE O_DECLARACION_VALOR_CAB SET ");
 				sqlExisteProveedor.append("MCA_DESCARGA = ?isDownloaded, ");
 				sqlExisteProveedor.append("FEC_DT_DESCARGA = SYSDATE, ");
+				sqlExisteProveedor.append("FEC_DT_DESCARGA_EXPORTADOR = SYSDATE, ");
+				sqlExisteProveedor.append("FEC_DT_DESCARGA_IMPORTADOR = SYSDATE, ");								
 				sqlExisteProveedor.append("COD_V_USR_MODIFICACION = ?userId ");
 				sqlExisteProveedor.append("WHERE COD_N_DECLARACION_VALOR = ?valueDeclarationNumber ");
 				sqlExisteProveedor.append("AND NUM_ANYO = ?valueDeclarationYear ");
